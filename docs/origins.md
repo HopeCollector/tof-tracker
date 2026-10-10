@@ -18,6 +18,12 @@
 
 参数、格式和复现范围见 [地图工具说明](../tools/mapgen/README.md)；验证方式见 [tests/verify_mapgen.py](../tests/verify_mapgen.py)。
 
+## Omni 柱场参数
+
+柱场示例的参数来自 `Omni_ToF-YOPO` 提交 `cf0b7f4b17712667a8bbdb1126f5e914904ece9d` 的 `Simulator/src/config/config.yaml:14,24–48`，取值与命令见 [地图工具运行示例](../tools/mapgen/README.md#运行)。采用的是该固定版本的配置，不代表所有历史训练配方。
+
+这里只采用参数，本仓仍使用上表的地图生成机制，不保证与旧工程逐点一致。
+
 ## 场景与配置
 
 场景、球体、完整位姿与点变换为本仓新实现；配置机制参考 `C5-lidar-yopo` 提交 `ab9cbfaef8216b8a47a952b40d199fd7e5cef134` 的 `configuration/omni.py`（根许可 MIT，TJU 2024），采用“JSON 显式物理参数 → 入口校验 → 传给消费者”的流程，未复制其函数、全局配置、旧阈值或默认物理尺寸。

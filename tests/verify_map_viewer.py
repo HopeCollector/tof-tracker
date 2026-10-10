@@ -46,6 +46,31 @@ def dot(a, b):
     return sum(x * y for x, y in zip(a, b))
 
 
+def interval_cells(points, size, origin):
+    """Find occupancy by physical intervals, independently of viewer bin/merge code.
+
+    Continuous-coverage fixtures use dyadic coordinates away from half-cell
+    boundaries. Decimal boundary cases below instead specify their initial bins
+    explicitly, since a second floating-point division can classify them again.
+    """
+    intervals = []
+    for axis, base in enumerate(origin):
+        lo = math.floor((min(point[axis] for point in points) - base) / size) - 1
+        hi = math.ceil((max(point[axis] for point in points) - base) / size) + 1
+        intervals.append([(index, base + index * size - size / 2,
+                           base + index * size + size / 2) for index in range(lo, hi + 1)])
+    occupied = set()
+    for point in points:
+        cell = []
+        for axis in range(3):
+            matches = [index for index, lower, upper in intervals[axis]
+                       if lower <= point[axis] < upper]
+            assert len(matches) == 1, (point, axis, matches)
+            cell.append(matches[0])
+        occupied.add(tuple(cell))
+    return occupied
+
+
 def page_summary(page):
     return json.loads(re.search(
         r'<script id="viewer-summary" type="application/json">(.*?)</script>', page).group(1))
@@ -156,7 +181,115 @@ def main():
         reverse = folder / "reverse.ply"
         reverse.write_text(ply(list(reversed(samples)), ("unit metre",)))
         assert view_map.read_map(reverse, 0.2, 7, 9).cells == limited.cells
+        assert not limited.auto_voxel_size and not limited.voxels_coarsened
+        near(limited.voxel_size, 0.2)
+        assert limited.origin == (0, 0, 0)
         checks.append("bounded display, uniform raw sampling, order-independent unique cell selection")
+
+        # The unchanged default 12,000-cell budget must preserve a complete
+        # ground and tall pillar by merging whole neighboring cells.
+        perimeter = [(x, y) for x in (-0.5, -0.25, 0, 0.25, 0.5)
+                     for y in (-0.5, -0.25, 0, 0.25, 0.5)
+                     if abs(x) == 0.5 or abs(y) == 0.5]
+        shell = [(x, y, k * 0.25) for x, y in perimeter for k in range(49)]
+        default_ground = [(-16 + i * 0.25, -16 + j * 0.25, 0)
+                          for i in range(128) for j in range(128)]
+        default_map = folder / "default-large-ground-and-pillar.ply"
+        default_points = default_ground + shell
+        default_map.write_text(ply(default_points, ("unit metre", "size_xyz 32 32 12 resolution 0.25")))
+        default_data = view_map.read_map(default_map, max_points=5)
+        assert default_data.auto_voxel_size and default_data.voxels_coarsened
+        assert not default_data.voxels_limited and len(default_data.cells) <= 12_000
+        assert default_data.coarsening_factor == 2 and default_data.coarsening_shift == 0
+        near(default_data.voxel_size, 0.5)
+        assert set(default_data.cells) == interval_cells(default_points, 0.5, (-15.875, -15.875, 0.125))
+        assert interval_cells(default_ground, 0.5, default_data.origin) == {
+            (i, j, 0) for i in range(64) for j in range(64)}
+        checks.append("default 12000-voxel budget merges all large ground/pillar regions without sampling")
+
+        ground = [(-4 + i * 0.25, -4 + j * 0.25, 0)
+                  for i in range(32) for j in range(32)]
+        analytic_points = ground + shell
+        analytic = folder / "ground-and-pillar.ply"
+        analytic.write_text(ply(analytic_points, ("unit metre", "size_xyz 8 8 12 resolution 0.25")))
+        analytic_before = hashlib.sha256(analytic.read_bytes()).hexdigest()
+        overview = view_map.read_map(analytic, max_points=5, max_voxels=120)
+        assert overview.auto_voxel_size and overview.voxels_coarsened
+        assert not overview.voxels_limited and 0 < len(overview.cells) <= 120
+        near(overview.initial_voxel_size, 0.25)
+        assert overview.initial_origin == (-4, -4, 0)
+        near(overview.resolution, 0.25)
+        expected_cells = interval_cells(analytic_points, overview.voxel_size, overview.origin)
+        assert set(overview.cells) == expected_cells, "overview discarded occupied regions"
+        assert len(overview.points) == 5
+        assert interval_cells(overview.points, overview.voxel_size, overview.origin) != expected_cells
+        ground_cells = interval_cells(ground, overview.voxel_size, overview.origin)
+        ground_axes = [{cell[axis] for cell in ground_cells} for axis in range(3)]
+        assert ground_cells == {(x, y, z) for x in ground_axes[0]
+                                for y in ground_axes[1] for z in ground_axes[2]}
+        shell_cells = interval_cells(shell, overview.voxel_size, overview.origin)
+        for x, y in {(x, y) for x, y, _ in shell_cells}:
+            layers = {z for cx, cy, z in shell_cells if (cx, cy) == (x, y)}
+            assert layers == set(range(min(layers), max(layers) + 1)), "fixture has an untested gap"
+            assert layers <= {z for cx, cy, z in overview.cells if (cx, cy) == (x, y)}, \
+                "a vertical pillar was broken into sparse fragments"
+        shuffled = folder / "ground-and-pillar-reverse-duplicate.ply"
+        shuffled.write_text(ply(list(reversed(analytic_points)) + shell + ground,
+                                 ("unit metre", "size_xyz 8 8 12 resolution 0.25")))
+        shuffled_before = hashlib.sha256(shuffled.read_bytes()).hexdigest()
+        reordered_overview = view_map.read_map(shuffled, max_points=5, max_voxels=120)
+        assert reordered_overview.cells == overview.cells
+        assert reordered_overview.voxel_size == overview.voxel_size
+        assert reordered_overview.origin == overview.origin
+        assert reordered_overview.coarsening_factor == overview.coarsening_factor
+        assert reordered_overview.coarsening_shift == overview.coarsening_shift
+        assert reordered_overview.initial_voxel_size == overview.initial_voxel_size
+        assert reordered_overview.initial_origin == overview.initial_origin
+        assert hashlib.sha256(analytic.read_bytes()).hexdigest() == analytic_before
+        assert hashlib.sha256(shuffled.read_bytes()).hexdigest() == shuffled_before
+        checks.append("independent interval coverage, continuous ground/pillar, order/duplicate invariance")
+
+        # Finite points on both sides of every axis must eventually fit one
+        # cell; a grid whose parent boundary remains at zero cannot do this.
+        tiny_points = [(-64, -32, -16), (-0.25, 0.25, -0.25), (0.25, -0.25, 0.25), (64, 32, 16)]
+        tiny = folder / "one-cell-budget.ply"
+        tiny.write_text(ply(tiny_points, ("unit metre", "size_xyz 8 8 12 resolution 0.25")))
+        tiny_before = hashlib.sha256(tiny.read_bytes()).hexdigest()
+        tiny_overview = view_map.read_map(tiny, max_points=1, max_voxels=1)
+        assert len(tiny_overview.cells) == 1 and tiny_overview.voxels_coarsened
+        assert not tiny_overview.voxels_limited
+        assert all(math.isfinite(value) for value in (*tiny_overview.origin, tiny_overview.voxel_size))
+        assert interval_cells(tiny_points, tiny_overview.voxel_size, tiny_overview.origin) == set(tiny_overview.cells)
+        assert hashlib.sha256(tiny.read_bytes()).hexdigest() == tiny_before
+        checks.append("one-cell automatic budget terminates across positive/negative XYZ without discarding input")
+
+        # These decimal half-grid points initially fall in bins 2 and 3 under
+        # the public floating-point rule. Re-dividing against the final grid
+        # would move the half-grid point to another parent. Hand-specified bins
+        # and physical box bounds ensure coarsening preserves whole children.
+        for resolution, extent, inside, boundary in ((0.1, 1, -0.3, -0.15),
+                                                      (0.2, 2, -0.6, -0.3)):
+            decimal_map = folder / f"decimal-half-grid-{resolution}.ply"
+            decimal_points = [(inside, -extent / 2, 0), (boundary, -extent / 2, 0)]
+            decimal_map.write_text(ply(decimal_points, ("unit metre",
+                                   f"size_xyz {extent} {extent} 1 resolution {resolution}")))
+            initial = view_map.read_map(decimal_map, voxel_size=resolution)
+            assert initial.cells == ((2, 0, 0), (3, 0, 0))
+            merged = view_map.read_map(decimal_map, max_voxels=1)
+            assert merged.cells == ((1, 0, 0),)
+            assert merged.coarsening_factor == 2 and merged.coarsening_shift == 0
+            near(merged.voxel_size, 2 * resolution)
+            expected_origin = (-4.5 * resolution, -4.5 * resolution, 0.5 * resolution)
+            for actual, expected in zip(merged.origin, expected_origin):
+                near(actual, expected)
+            expected_center = (-2.5 * resolution, -4.5 * resolution, 0.5 * resolution)
+            rendered = page_figure(view_map.build_html(merged, voxel_fill=1))[0]
+            assert len(rendered[1]["x"]) == 8
+            for axis, center in zip("xyz", expected_center):
+                near(min(rendered[1][axis]), center - resolution)
+                near(max(rendered[1][axis]), center + resolution)
+            assert merged.points == tuple(decimal_points), "coarsening changed decimal coordinates"
+        checks.append("decimal resolutions and half-grid boundaries retain initial bins and whole parent geometry")
 
         page = view_map.build_html(data)
         parsed = PageParser()
@@ -176,6 +309,27 @@ def main():
         assert layout["scene"]["aspectmode"] == "data"
         assert layout["scene"]["xaxis"]["title"]["text"] == "X (m)"
         assert "已达显示上限" in view_map.build_html(limited)
+        auto_page = view_map.build_html(overview)
+        auto_summary = page_summary(auto_page)
+        assert auto_summary["source_resolution_m"] == 0.25
+        assert auto_summary["initial_voxel_size_m"] == 0.25
+        assert auto_summary["initial_origin_m"] == [-4, -4, 0]
+        assert auto_summary["auto_voxel_size"] and auto_summary["voxels_coarsened"]
+        assert not auto_summary["voxels_limited"]
+        assert auto_summary["voxel_size_m"] == overview.voxel_size
+        assert auto_summary["origin_m"] == list(overview.origin)
+        assert auto_summary["coarsening_factor"] == overview.coarsening_factor
+        assert auto_summary["coarsening_shift"] == overview.coarsening_shift
+        assert auto_summary["display_voxels"] == len(expected_cells)
+        assert "源地图分辨率 0.25 m" in auto_page
+        assert f"显示网格 {overview.voxel_size:g} m" in auto_page
+        assert "自动粗化" in auto_page and "完整概览含点格" in auto_page
+        assert "概览格不能用于判断源地图的柱宽" in auto_page
+        assert "哈希抽样" not in auto_page and "非完整占用" not in auto_page
+        fixed_summary = page_summary(view_map.build_html(limited))
+        assert not fixed_summary["auto_voxel_size"] and not fixed_summary["voxels_coarsened"]
+        assert fixed_summary["voxels_limited"] and fixed_summary["voxel_size_m"] == 0.2
+        assert "非完整占用" in view_map.build_html(limited)
         assert '"modeBarButtonsToRemove": ["sendChartToCloud"]' in page
         checks.append("embedded Plotly JS, default true cubes, meter/aspect/color UI, HTML escaping/limits")
 
@@ -316,6 +470,36 @@ view_map.serve_html(sys.argv[2], port=0)
         summary = page_summary(page)["scene"]
         assert summary["background_points"] == 4 and summary["target"]["radius_m"] == 0.5
         checks.append("actual Plotly spheres, full 3D FLU axes and persistent visibility")
+
+        coarse_scene = Scene.from_ply(analytic, config,
+                                      Pose(center, (0, math.sqrt(0.5), 0, math.sqrt(0.5))), (2, 1, 1.5))
+        original_background = coarse_scene.background
+        original_spheres = (coarse_scene.vehicle, coarse_scene.target)
+        coarse_page = view_map.build_html(overview, voxel_fill=1, scene=coarse_scene)
+        coarse_summary = page_summary(coarse_page)
+        assert coarse_summary["voxels_coarsened"] and not coarse_summary["voxels_limited"]
+        assert coarse_summary["scene"]["background_points"] == len(analytic_points) > len(overview.points)
+        assert coarse_scene.background is original_background
+        assert coarse_scene.background.points_m == tuple(analytic_points)
+        assert coarse_scene.background.resolution_m == 0.25
+        assert coarse_scene.background.size_xyz_m == (8, 8, 12)
+        assert (coarse_scene.vehicle, coarse_scene.target) == original_spheres
+        traces, _ = page_figure(coarse_page)
+        assert len(traces) == 7 and len(traces[0]["x"]) == 5
+        assert list(zip(traces[0]["x"], traces[0]["y"], traces[0]["z"])) == list(overview.points)
+        assert len(traces[1]["x"]) == 8 * len(expected_cells)
+        for trace, position, radius in zip(traces[2:4], (center, (2, 1, 1.5)), (0.25, 0.5)):
+            for point in zip(trace["x"], trace["y"], trace["z"]):
+                near(math.dist(point, position), radius)
+        for trace, endpoint in zip(traces[4:], endpoints):
+            for axis, start, end in zip("xyz", center, endpoint):
+                near(trace[axis][0], start)
+                near(trace[axis][1], end)
+        for name, position, radius in zip(("vehicle", "target"), (center, (2, 1, 1.5)), (0.25, 0.5)):
+            assert coarse_summary["scene"][name]["position_m"] == list(position)
+            near(coarse_summary["scene"][name]["radius_m"], radius)
+        assert hashlib.sha256(analytic.read_bytes()).hexdigest() == analytic_before
+        checks.append("coarsened display plus Scene preserves full original background, physical radii and pitched FLU pose")
 
         before = hashlib.sha256(background.read_bytes()).hexdigest()
         config_path, scene_output = folder / "physical.json", folder / "scene.html"

@@ -18,12 +18,21 @@ class MapData:
     count: int
     comments: tuple[str, ...]
     resolution: float | None
+    initial_voxel_size: float
+    initial_origin: tuple[float, float, float]
+    auto_voxel_size: bool
+    coarsening_factor: int
+    coarsening_shift: int
     voxel_size: float
     origin: tuple[float, float, float]
     bounds: tuple[tuple[float, float], ...]
     points: tuple[tuple[float, float, float], ...]
     cells: tuple[tuple[int, int, int], ...]
     voxels_limited: bool
+
+    @property
+    def voxels_coarsened(self):
+        return self.coarsening_factor > 1
 
 
 def positive_number(value):
@@ -41,12 +50,26 @@ def voxel_index(point, size, origin=(0.0, 0.0, 0.0)):
     return tuple(math.floor(v) for v in scaled)
 
 
+def coarsen_cells(cells, factor, shift):
+    """Merge whole child cells into nested parents, retaining every occupied region.
+
+    Alternating the offset lets parent cells grow on both sides of the initial
+    origin, so finite input can also fit a one-cell budget. Integer initial-cell
+    membership is authoritative: decimal coordinates are never re-voxelized on
+    the coarser floating-point grid.
+    """
+    offset = (factor.bit_length() - 1) % 2
+    parents = {tuple((index + offset) // 2 for index in cell) for cell in cells}
+    return parents, factor * 2, shift + offset * factor
+
+
 def read_map(path, voxel_size=None, max_points=100_000, max_voxels=12_000):
     """Validate every input point; keep bounded display data without changing the PLY.
 
-    Point selection is uniform by input index. When occupied cells exceed the
-    limit, keep cells with the smallest stable hash, independent of input order.
-    Only selected cells are retained, so large input does not require a full set.
+    Point selection is uniform by input index. By default, occupied cells merge
+    into nested coarser grids when their count exceeds the budget. An explicit
+    voxel size fixes that grid and selects cells by stable hash when necessary.
+    Every point is validated; cell selection stays bounded in either mode.
     """
     if max_points < 1 or max_voxels < 1:
         raise ValueError("显示点数与体素数上限必须为正整数")
@@ -89,10 +112,12 @@ def read_map(path, voxel_size=None, max_points=100_000, max_voxels=12_000):
                     raise ValueError("size_xyz / resolution 元数据格式错误或重复")
                 sizes = tuple(positive_number(v) for v in fields[1:4])
                 resolution = positive_number(fields[5])
-        size = positive_number(voxel_size) if voxel_size is not None else resolution
-        if size is None:
+        initial_size = positive_number(voxel_size) if voxel_size is not None else resolution
+        if initial_size is None:
             raise ValueError("PLY 没有 resolution 元数据；请提供 --voxel-size（米）")
-        origin = (-sizes[0] / 2, -sizes[1] / 2, 0.0) if sizes else (0.0, 0.0, 0.0)
+        initial_origin = (-sizes[0] / 2, -sizes[1] / 2, 0.0) if sizes else (0.0, 0.0, 0.0)
+        auto_size = voxel_size is None
+        factor, shift = 1, 0
         order = [properties.index(axis) for axis in "xyz"]
         sample_count = min(count, max_points)
         indices = iter([count // 2] if sample_count == 1 else
@@ -115,7 +140,16 @@ def read_map(path, voxel_size=None, max_points=100_000, max_voxels=12_000):
             if index == next_index:
                 points.append(point)
                 next_index = next(indices, None)
-            cell = voxel_index(point, size, origin)
+            initial_cell = voxel_index(point, initial_size, initial_origin)
+            if auto_size:
+                cell = tuple((cell_index + shift) // factor for cell_index in initial_cell)
+                cells.add(cell)
+                while len(cells) > max_voxels:
+                    cells, factor, shift = coarsen_cells(cells, factor, shift)
+                    if not math.isfinite(initial_size * factor):
+                        raise ValueError("自动显示网格超出可表示的有限尺寸；请增大体素预算")
+                continue
+            cell = initial_cell
             if cell in cells:
                 continue
             rank = int.from_bytes(hashlib.blake2b(str(cell).encode("ascii"), digest_size=8).digest(), "big")
@@ -131,7 +165,12 @@ def read_map(path, voxel_size=None, max_points=100_000, max_voxels=12_000):
                     cells.add(cell)
         if any(line.strip() for line in stream):
             raise ValueError("顶点数据超出 PLY 声明数量")
-    return MapData(path, count, tuple(comments), resolution, size, origin,
+    size = initial_size * factor
+    origin = tuple(base + initial_size * ((factor - 1) / 2 - shift) for base in initial_origin)
+    if not all(math.isfinite(value) for value in origin):
+        raise ValueError("显示网格原点超出可表示的有限坐标")
+    return MapData(path, count, tuple(comments), resolution, initial_size, initial_origin,
+                   auto_size, factor, shift, size, origin,
                    tuple(tuple(v) for v in bounds), tuple(points), tuple(sorted(cells)), limited)
 
 
@@ -179,6 +218,19 @@ def sphere_mesh(center, radius, latitude_steps=16, longitude_steps=32):
         last = 1 + (latitude_steps - 2) * longitude_steps
         triangles.append((last + column, south, last + next_column))
     return vertices, triangles
+
+
+def grid_description(data):
+    source = (f"源地图分辨率 {data.resolution:g} m" if data.resolution is not None
+              else "源地图未声明分辨率")
+    display = f"显示网格 {data.voxel_size:g} m"
+    if data.voxels_coarsened:
+        display += f"（由 {data.initial_voxel_size:g} m 自动粗化，完整概览含点格）"
+    elif data.auto_voxel_size:
+        display += "（自动，完整含点格）"
+    else:
+        display += "（固定尺寸）" if data.voxels_limited else "（固定尺寸，完整含点格）"
+    return f"{source} · {display}"
 
 
 def build_html(data, point_size=3.0, voxel_fill=0.9, scene=None):
@@ -288,6 +340,10 @@ fillControl.addEventListener('change', event => {
     summary = {"source": data.source.name, "input_points": data.count,
                "display_points": len(data.points), "points_limited": len(data.points) < data.count,
                "display_voxels": len(data.cells), "voxels_limited": data.voxels_limited,
+               "source_resolution_m": data.resolution, "auto_voxel_size": data.auto_voxel_size,
+               "initial_voxel_size_m": data.initial_voxel_size, "initial_origin_m": data.initial_origin,
+               "voxels_coarsened": data.voxels_coarsened, "coarsening_factor": data.coarsening_factor,
+               "coarsening_shift": data.coarsening_shift,
                "voxel_size_m": data.voxel_size, "origin_m": data.origin, "bounds_m": data.bounds}
     if scene_info is not None:
         summary["scene"] = scene_info
@@ -295,7 +351,14 @@ fillControl.addEventListener('change', event => {
     if len(data.points) < data.count:
         point_note += "（按输入序号均匀抽样）"
     voxel_note = f"占用格展示 {len(data.cells):,} 个"
-    voxel_note += "（已达显示上限；按稳定哈希抽样，非完整占用）" if data.voxels_limited else "（完整）"
+    voxel_note += "（已达显示上限；按稳定哈希抽样，非完整占用）" if data.voxels_limited else ""
+    display_note = ""
+    if data.voxels_coarsened:
+        display_note = ("<p>当前网格自动合并了全部含点细格，未丢弃含点区域；"
+                        "概览格不能用于判断源地图的柱宽。原始点云模式展示抽样点的实际坐标。</p>")
+    elif data.voxels_limited:
+        display_note = ("<p>固定显示尺寸下，含点格超过预算，部分格子未展示；"
+                        "省略 --voxel-size 可使用自动网格，展示全部含点区域。</p>")
     comments = html.escape("\n".join(data.comments))
     safe_summary = json.dumps(summary, ensure_ascii=True).replace("<", "\\u003c").replace(
         ">", "\\u003e").replace("&", "\\u0026")
@@ -312,14 +375,15 @@ output{{min-width:38px;font-variant-numeric:tabular-nums}}#plot{{height:calc(100
 details{{font-size:12px}}pre{{white-space:pre-wrap;margin:6px 0}}@media(max-width:700px){{header{{padding:12px}}#plot{{height:65vh}}}}</style>
 </head><body><header><h1>{title}</h1>
 {scene_note}
-<p id="summary">{point_note} · {voxel_note} · 网格 {data.voxel_size:g} m · 原点 {data.origin} m</p>
+<p id="summary">{point_note} · {voxel_note} · {grid_description(data)} · 显示原点 {data.origin} m</p>
 <div class="controls"><label>显示 <select id="mode"><option value="voxels">体素</option><option value="points">原始点云</option><option value="both">叠加</option></select></label>
 <label>点大小 <input id="point-size" type="range" min="1" max="12" step="0.5" value="{point_size}"><output id="point-value">{point_size:g} px</output></label>
 <label>体素填充 <input id="voxel-fill" type="range" min="0.1" max="1" step="0.05" value="{voxel_fill}"><output id="fill-value">{voxel_fill:g}</output></label></div>
 <p>拖动旋转，滚轮缩放。XYZ 单位为米，按 Z 高度着色，三轴等比例。体素边长 = 网格 × 填充比例（松开滑块更新）。</p>
 <p>体素由全部点重新落格并去重，仅表示点采样触及的格子；不填充障碍内部，也不推断空闲空间。原始 PLY 不变。</p>
+{display_note}
 <details><summary>PLY 元数据 / 网格约定</summary><pre>{comments}</pre>
-<p>格中心 = 原点 + 整数索引 × 网格；各轴区间为 [中心 − 网格/2, 中心 + 网格/2)。有 size_xyz 时原点为 (−size_x/2, −size_y/2, 0)，否则为 (0, 0, 0)。</p></details>
+<p>格中心 = 显示原点 + 整数索引 × 显示网格；各轴区间为 [中心 − 网格/2, 中心 + 网格/2)。初始格边长为 {data.initial_voxel_size:g} m，初始原点为 {data.initial_origin} m。有 size_xyz 时初始原点为 (−size_x/2, −size_y/2, 0)，否则为 (0, 0, 0)。自动合并后显示原点可以偏移。</p></details>
 </header><div id="plot">{plot}</div><script id="viewer-summary" type="application/json">{safe_summary}</script></body></html>"""
 
 
@@ -380,7 +444,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path, help="ASCII XYZ PLY，坐标按米解释")
     parser.add_argument("--output", type=Path, help="HTML 路径；默认 outputs/map_viewer/<输入名>.html")
-    parser.add_argument("--voxel-size", type=float, help="显示网格边长（米）；默认 PLY resolution")
+    parser.add_argument("--voxel-size", type=float, help="固定显示网格边长（米）；默认从 PLY resolution 开始自动粗化以完整展示")
     parser.add_argument("--point-size", type=float, default=3, help="初始点大小 1..12 px")
     parser.add_argument("--voxel-fill", type=float, default=0.9, help="初始体素边长比例 0.1..1")
     parser.add_argument("--max-points", type=int, default=100_000, help="点显示上限，默认 100000")
@@ -418,7 +482,8 @@ def main():
                               "target": {"position_m": scene.target.pose.position_m,
                                          "radius_m": scene.target.radius_m}}, ensure_ascii=False), flush=True)
         print(f"已生成 {output}：点 {len(data.points)}/{data.count}，占用格 {len(data.cells)}"
-              f"{'（已达显示上限）' if data.voxels_limited else ''}，网格 {data.voxel_size:g} m", flush=True)
+              f"{'（已达显示上限，固定网格抽样，非完整占用）' if data.voxels_limited else ''}，"
+              f"{grid_description(data)}", flush=True)
         if args.serve:
             serve_html(output, args.host, args.port)
     except KeyboardInterrupt:

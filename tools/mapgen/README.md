@@ -9,9 +9,14 @@
 在仓库根目录通过现有 Docker 入口执行：
 
 ```bash
-just map --type pillars --seed 17 --size-x 8 --size-y 6 --size-z 3 --resolution 0.2 --count 12 --output outputs/mapgen/pillars-17.ply
-just view outputs/mapgen/pillars-17.ply
+just map --type pillars --seed 3 \
+  --size-x 60 --size-y 60 --size-z 15 --resolution 0.1 \
+  --count 500 --width-min 0.3 --width-max 1.0 \
+  --output outputs/mapgen/pillars-omni-3.ply
+just view outputs/mapgen/pillars-omni-3.ply
 ```
+
+示例采用所记录版本的 Omni 柱场参数；固定出处与适配差异见 [来源说明](../../docs/origins.md#omni-柱场参数)。柱中心独立均匀采样，没有最小间距保证，柱体可能重叠或被边界裁剪。
 
 `map` 与 `check` 会先通过内部步骤构建地图工具，构建目录为 `outputs/mapgen/build/`。输出父目录须已存在，输出文件必须是新路径；重复生成时换一个输出名。
 
