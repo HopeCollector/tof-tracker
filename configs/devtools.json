@@ -1,0 +1,4 @@
+{
+  "vehicle": {"radius_m": 0.2},
+  "target": {"radius_m": 0.3}
+}

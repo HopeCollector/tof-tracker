@@ -1,28 +1,35 @@
-# 地图查看器
+# 地图与场景查看器
 
-读取地图生成器的米制 ASCII XYZ PLY，用浏览器查看原始点云与真实立方体体素。默认显示体素，可旋转、缩放，切换原始点云或叠加；点像素尺寸与体素填充比例独立调整。它只帮助检查已准备的地图，不加载场景、目标或训练逻辑。
+读取米制 ASCII XYZ PLY，用浏览器查看原始点云与立方体显示格。默认显示体素，可旋转、缩放、切换点云或叠加，独立调整点大小与体素填充。提供飞机和目标位置时，同一页面叠加两个物理球与机体 FLU 轴。
 
 ## 运行
 
-所有 Python 执行与依赖安装都在项目 Docker 中，宿主只使用浏览器：
-
 ```bash
-just map-view
-just map-view outputs/mapgen/walls-17.ply
-just map-view outputs/mapgen/pillars-17.ply --point-size 5 --voxel-fill 1
+just view outputs/mapgen/walls-17.ply
+just view outputs/mapgen/pillars-17.ply --point-size 5 --voxel-fill 1
+just view outputs/mapgen/walls-17.ply \
+  --vehicle-position -1 0 1 --target-position 1 0.6 1.2 \
+  --vehicle-rpy-deg 15 -20 30
 ```
 
-浏览器打开终端给出的 `http://127.0.0.1:8080/<地图名>.html`。`just map-view` 保持前台运行，直到在原终端按 Ctrl+C；随后服务与临时容器退出、端口释放，再启动另一张地图。容器端绑定 `0.0.0.0`，宿主端口只发布到 `127.0.0.1`。服务只返回这一份生成的 HTML，没有目录列表，也不提供项目其他文件。具体容器入口见 [docker/README.md](../../docker/README.md)。
+浏览器打开终端给出的 `http://127.0.0.1:8080/<地图名>.html`。`just view` 保持前台运行，直到在原终端按 Ctrl+C；端口释放后可再查看另一张地图。服务只返回生成的 HTML，没有目录列表，也不提供项目其他文件。
 
 只生成 HTML、不启动服务：
 
 ```bash
 just run python tools/map_viewer/view_map.py outputs/mapgen/pillars-17.ply \
   --output outputs/map_viewer/pillars-17.html
-just map-view-check
 ```
 
-HTML 内嵌 Plotly JavaScript 和全部显示数据，无 CDN、网络服务或在线图表分享按钮，可用支持 WebGL 的浏览器直接离线打开。Python 仅依赖容器安装的 `plotly==7.1.0`，不要求 NumPy、图形桌面或 ROS。默认输出为 `outputs/map_viewer/<输入名>.html`；重新生成会更新该 HTML，输入 PLY 不变。
+工具直接执行时默认只导出，`--serve` 才启动前台服务；`just view` 自动启用服务。地图和场景默认都写到 `outputs/map_viewer/<输入名>.html`，可用 `--output` 改路径。输出不能覆盖输入 PLY 或配置。HTML 内嵌 Plotly JavaScript 和全部显示数据，无 CDN 或在线分享按钮，可用支持 WebGL 的浏览器离线打开。
+
+## 场景参数
+
+`--vehicle-position X Y Z` 与 `--target-position X Y Z` 必须成对提供，位置单位为米。飞机姿态 `--vehicle-rpy-deg ROLL PITCH YAW` 单位为度，默认 `0 0 0`，采用 `Rz(yaw) Ry(pitch) Rx(roll)`，保留完整三维姿态。任何位置、姿态或配置参数出现而两个位置不齐，都报错，不补入样例位置。
+
+两个球的半径只取自统一配置 `configs/devtools.json`，可用 `--config <路径>` 替换；配置只加载一次，内容无效时不会生成 HTML。纯地图查看不读取场景配置。蓝色球表示飞机，橙色球表示目标；红 / 绿 / 蓝线分别表示机体前 / 左 / 上轴。背景模式切换不隐藏球和机体轴，体素填充只影响背景显示。
+
+场景保存 PLY 全部原始点；页面显示仍遵循下文的点数和体素数上限。这些位置、球体和背景几何服务开发检查，不作为在线算法观测。场景、完整位姿与配置的公开 API 见 [开发辅助模块说明](../../devtools/README.md#统一配置与场景)。
 
 ## 点与体素的含义
 
@@ -40,16 +47,25 @@ HTML 内嵌 Plotly JavaScript 和全部显示数据，无 CDN、网络服务或�
 
 默认最多绘制 100,000 个原始点和 12,000 个占用格，页面与终端会说明数量和是否抽样。点按输入序号均匀抽样；体素按格子稳定哈希保留有限数量，与输入顺序无关。体素落格仍遍历全部输入点，重复格不会增加显示数量；超过上限时不声称展示完整占用。解析与选择只保留有限显示数据，坐标包围盒覆盖全部输入。
 
-可用 `--max-points` / `--max-voxels` 调整显示上限；更高数值会增加生成时间、HTML 大小与浏览器显存需求。CLI 的初始控制项为 `--point-size 1..12` 像素及 `--voxel-fill 0.1..1`。`--serve --host 127.0.0.1 --port 8080` 为 Python 服务入口，容器端口发布由 Docker 入口处理。
+可用 `--max-points` / `--max-voxels` 调整显示上限；更高数值会增加生成时间、HTML 大小与浏览器显存需求。初始控制项为 `--point-size 1..12` 像素及 `--voxel-fill 0.1..1`。工具服务参数为 `--serve --host 127.0.0.1 --port 8080`。
 
 实际调用关系：
 
 ```text
-just map-view → docker/dev.sh view → Python view_map.py
-    → read_map：流式校验 PLY、读取元数据、保留点与去重显示格
-    → cube_mesh / build_html：原始点 + 独立立方体 → 内嵌数据与 Plotly 的 HTML
-    → serve_html：仅提供生成的页面 → 浏览器旋转、缩放、切换与调整
-just map-view-check → 容器 Python tests/verify_map_viewer.py → verification.json
+just view <PLY> [选项] → view_map.py main
+    → validate_args：判断地图 / 场景模式，校验位置配对与输出路径
+    → 场景模式：load_config → Pose + Scene.from_ply（全部背景点）
+    → read_map：校验全部 PLY，保留有限点与去重显示格
+    → build_html：背景显示 + 可选物理球与 FLU 轴 → 离线 HTML
+    → serve_html：仅提供生成的页面 → 浏览器
 ```
 
-验证针对真实几何与可用行为：负坐标半开区间、重复点、XYZ 属性重排、偶数/奇数地图的 float32 地面格、立方体封闭面/朝外绕序/解析体积/边界、显示限额与输入顺序独立性、离线 HTML/转义/控件，以及真实 CLI 与 HTTP 的路径限制。结果保存在被 Git 忽略的 `outputs/map_viewer/verification.json`。实现为本项目新代码，未提取旧工程函数。
+## 测试入口
+
+[tests/verify_map_viewer.py](../../tests/verify_map_viewer.py) 检查 PLY 与边界分格、立方体和球体几何、显示限额、离线页面及控件、场景参数与配置，以及 CLI / HTTP 行为。通过项目汇总入口运行：
+
+```bash
+just check
+```
+
+查看器为本项目新实现，未提取旧工程函数。

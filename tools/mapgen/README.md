@@ -1,6 +1,6 @@
 # 离线背景地图生成工具
 
-手动运行 `offline_mapgen`，将米制尺寸、分辨率、seed 和模式转换成一份 ASCII PLY XYZ 点云。它只准备背景资产，训练读取已准备的文件；目标实体、观测、几何查询与闭环执行在后续能力中实现。
+手动运行 `offline_mapgen`，将米制尺寸、分辨率、seed 和模式转换成一份 ASCII PLY XYZ 点云。它只准备背景资产，训练读取已准备的文件；目标与飞机由 [开发辅助模块](../../devtools/README.md#统一配置与场景) 的场景接口表达。
 
 当前提供三种旧机制的适配：`pillars` 采样随机方柱壳层，`walls` 采样随机朝向和倾斜的墙体网格，`perlin` 按三维 Perlin 噪声分位阈值选择体素。源码只保留 C++17、PCL common/Eigen 和 C++ 标准库依赖，没有 ROS、CUDA、OpenCV、YAML、旧仓绝对路径或数据目录依赖。
 
@@ -9,12 +9,11 @@
 在仓库根目录通过现有 Docker 入口执行：
 
 ```bash
-just map-build
 just map --type pillars --seed 17 --size-x 8 --size-y 6 --size-z 3 --resolution 0.2 --count 12 --output outputs/mapgen/pillars-17.ply
-just map-check
+just view outputs/mapgen/pillars-17.ply
 ```
 
-`map` / `map-check` 会先构建；构建目录为 `outputs/mapgen/build/`，验证结果为 `outputs/mapgen/verification.json`。示例输出 `pillars-17.ply` 已实际生成；再执行相同生成命令会拒绝已有文件，重新试验时换一个输出名。输出父目录须已存在。
+`map` 与 `check` 会先通过内部步骤构建地图工具，构建目录为 `outputs/mapgen/build/`。输出父目录须已存在，输出文件必须是新路径；重复生成时换一个输出名。
 
 不使用 `just` 时，同样通过容器运行：
 
@@ -23,7 +22,6 @@ just map-check
 ./docker/dev.sh run cmake --build outputs/mapgen/build --parallel 2
 ./docker/dev.sh run outputs/mapgen/build/offline_mapgen --type walls --seed 17 --ceiling 1 --output outputs/mapgen/walls-ceiling-17.ply
 ./docker/dev.sh run outputs/mapgen/build/offline_mapgen --type perlin --seed 17 --fill 0.1 --output outputs/mapgen/perlin-17.ply
-./docker/dev.sh run python tests/verify_mapgen.py --binary outputs/mapgen/build/offline_mapgen --results outputs/mapgen/verification.json
 ```
 
 尺寸等未指定的参数使用下表默认值。源码、构建和验证均在项目容器内运行，不在宿主安装或运行项目依赖。
@@ -50,18 +48,21 @@ PLY 包含 `float x/y/z` 顶点，注释记录单位、尺寸、分辨率、seed
 实际调用关系为：
 
 ```text
-just map → docker/dev.sh run → offline_mapgen CLI
+just map → 内部 CMake 构建 → docker/dev.sh run → offline_mapgen CLI
     → Config 校验 → generate(Config)
     → 柱壳 / 墙网格 / Perlin 阈值 → 裁剪 + 固定地面（可选顶面）
     → 同目录临时 PLY → 原子发布到新输出路径
 ```
 
-## 实际验证与范围
+## 复现范围与测试入口
 
-2026-10-10 在现有 `tof-tracker-dev:ubuntu24.04` 中完成无警告的 CMake Release 构建。容器为 GCC 13.3、CMake 3.28.3、PCL 1.14.0、Eigen 3.4.0，没有补装依赖。`tests/verify_mapgen.py` 实际运行了三个模式，检查 PLY 声明与顶点数、有限坐标、请求范围、完整地面网格、非默认奇数网格、空障碍/顶面、奇数宽柱壳及倾斜墙保留。
+固定 seed 的复现范围限定为相同生成配置、编译工具链与标准库。这里保留上游 `std::default_random_engine`、分布和 `std::shuffle`，不保证跨标准库的随机序列一致，也不保证不同 seed 在任意配置下产生不同几何。例如 `perlin --complexity 0.5` 落在整数噪声格点，只留下地面；`fill` 是严格大于分位阈值的参数，不能理解为保证的障碍比例。
 
-在默认 `8×6×3m`、`0.2m` 网格下，seed 17/18 的同 seed 文件字节相同，不同 seed 的无序顶点集合发生变化；seed 17 点数为柱 `2926`、墙 `1599`、Perlin `2999`。另外通过 31 项拒绝检查，以及普通既存文件、符号链接、并发发布与临时文件清理检查。结果及构建日志在被 Git 忽略的 `outputs/mapgen/`。
+[tests/verify_mapgen.py](../../tests/verify_mapgen.py) 使用独立 ASCII PLY 解析和解析网格检查三个模式，覆盖坐标边界、固定地面、空障碍/顶面、奇数宽柱壳、墙倾斜、seed 行为、非法输入与输出发布保护。构建后可单独运行，或使用项目汇总检查：
 
-复现范围限定为相同生成配置、编译工具链与标准库。这里保留上游 `std::default_random_engine`、分布和 `std::shuffle`，不保证跨标准库的随机序列一致。不同 seed 改变几何是上述参数的实验证据，不能推广到所有配置：例如 `perlin --complexity 0.5` 落在整数噪声格点，只留下地面；`fill` 是严格大于分位阈值的参数，不能理解为保证的障碍比例。
+```bash
+just run python tests/verify_mapgen.py --binary outputs/mapgen/build/offline_mapgen --results outputs/mapgen/verification.json
+just check
+```
 
-本轮不验证背景的可通行性或适合训练的分布。来源与适配改动见 [docs/origins.md](../../docs/origins.md)，第三方声明见 [third_party_notices/README.md](third_party_notices/README.md)。当前上游许可链仍有明确记录的缺口，本次为本地私有适配，未对外发布。
+这些检查不验证可通行性、训练分布或算法闭环行为。来源与适配改动见 [docs/origins.md](../../docs/origins.md)，第三方声明与当前许可缺口见 [third_party_notices/README.md](third_party_notices/README.md)。
