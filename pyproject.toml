@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tof-tracker"
+version = "0.0.0"
+description = "ToF-based tracking algorithm with local training and development tools"
+readme = "README.md"
+dependencies = []
+
+# One development installation. These modules are not separate products,
+# and this package list does not define the deployed algorithm artifacts.
+[tool.setuptools]
+packages = ["tof_tracker", "training", "devtools"]
+
+[tool.setuptools.package-dir]
+tof_tracker = "src/tof_tracker"
+training = "training"
+devtools = "devtools"

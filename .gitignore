@@ -1,0 +1,19 @@
+# Project-local Python environments and caches.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Build outputs and experiment artifacts.
+build/
+dist/
+*.egg-info/
+outputs/
+
+# Editor and temporary files.
+.vscode/
+*.swp
+*~
