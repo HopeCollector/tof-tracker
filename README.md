@@ -6,16 +6,30 @@
 
 ## 当前内容与文件布局
 
-目前只有目录骨架、开发包配置和基础文档。Python 文件均为职责占位，观测生成、模型、轨迹、代价、训练和功能测试尚未实现。当前建设入口是第一检查点：先做明白“一帧观测”。
+目前算法仍处于目录骨架阶段，已有开发包配置、Docker 开发环境、独立离线地图生成器和点云 / 体素查看器。地图工具已在容器内编译、生成实际 PLY，并通过几何与 seed 对照检查；查看器已通过容器检查和实际浏览器交互检查。算法、训练和开发辅助模块的 Python 文件仍为职责占位。下一项是加载背景资产并建立最小场景，为“一帧观测”准备输入。逐项任务与验证状态见 [TODO.md](TODO.md)。
 
 ```text
  tof-tracker/
  ├── AGENTS.md                   # 项目长期协作约束
  ├── README.md                   # 目标、职责、接口与建设入口
+ ├── TODO.md                     # 建设步骤、当前状态与验证依据
+ ├── justfile                    # 常用 Docker 命令的短入口
  ├── pyproject.toml              # 一个开发安装的包配置
  ├── .gitignore                  # 环境、缓存、构建及实验产物
+ ├── .dockerignore               # Docker 构建上下文排除项
  ├── docker/
- │   └── README.md              # Docker 开发、构建与训练环境的配置入口
+ │   ├── README.md               # 全项目 Docker 执行环境与运行方法
+ │   ├── Dockerfile              # 容器镜像定义
+ │   ├── dev.sh                  # 镜像构建与容器任务入口
+ │   └── check-env.sh            # 容器内依赖与构建能力核查
+ ├── tools/
+ │   ├── mapgen/                 # 独立离线背景点云生成器；不进入训练循环
+ │   │   ├── README.md           # 参数、PLY 格式与运行例子
+ │   │   ├── CMakeLists.txt      # C++17/PCL 编译入口
+ │   │   ├── include/            # 生成配置与 Perlin 接口
+ │   │   ├── src/                # CLI、地图生成与 Perlin 实现
+ │   │   └── third_party_notices/ # 提取代码的许可文件
+ │   └── map_viewer/             # PLY 点云 / 体素查看器，生成离线交互页面
  ├── src/
  │   └── tof_tracker/            # 算法；最终交付能力的源码边界
  │       ├── __init__.py
@@ -32,7 +46,8 @@
  ├── examples/
  │   └── one_frame.py            # 第一帧的观测与解释例子；占位
  ├── tests/
- │   └── .gitkeep                # 尚无功能测试
+ │   ├── verify_mapgen.py        # 运行真实生成器并独立检查 PLY 与 seed 行为
+ │   └── verify_map_viewer.py    # 查看器解析、体素几何与离线页面检查
  └── docs/
      └── origins.md              # 实际提取的函数、公式和机制来源
 ```
@@ -47,13 +62,17 @@
 
 这是一个仓库的一次开发安装，三个导入名不代表三个独立产品，包配置也不是最终交付清单。没有总的 `fixture` 包或必须贯穿全流程的 `sim` 对象；各模块通过明确的公开接口协作。
 
-模型、轨迹、任务代价和 C++ 文件在对应能力开始时加入。地图生成工具与闭环仿真暂不加入目录骨架。实验产物写入按需创建的 `outputs/`，不混入源码。
+模型、轨迹、任务代价和算法运行所需的 C++ 文件在对应能力开始时加入。`tools/mapgen/` 和 `tools/map_viewer/` 是手动使用的开发工具，不属于上述 Python 导入名；闭环仿真暂不加入目录骨架。实验产物写入按需创建的 `outputs/`，不混入源码。
 
 ## 开发工具各自做什么
 
 ### 场景生成与场景表示
 
-地图生成工具独立离线运行，输出约定格式的地图资产。优先适配 mockamap 或旧工程中已采用的生成机制，让工具服从本项目的参数、数据格式和职责。训练读取已准备的资产，不调用地图生成器，也不把它接入训练流水线。
+`tools/mapgen/` 独立离线运行，按参数生成柱体、倾斜墙或 Perlin 背景，输出米制 XYZ 的 ASCII PLY。生成机制按函数从旧工程采用的 mockamap 实现提取，并适配本项目的参数、格式与职责；实际来源与改动见 [docs/origins.md](docs/origins.md)，详细参数见 [tools/mapgen/README.md](tools/mapgen/README.md)。训练读取已准备的资产，不调用地图生成器，也不把它接入训练流水线。
+
+生成器只准备背景点云资产。目标、可独立移动的障碍和机体位姿由后续场景模块表达；PLY 本身不包含这些实体及其身份。
+
+`tools/map_viewer/` 读取已生成的 PLY，以原始点或立方体体素显示背景。它只帮助检查资产，不定义后续场景的占据或碰撞语义。柱体随机偏移、墙体旋转后，点并不全在同一套世界栅格上；查看器的体素是显示时重新归格得到的含点单元，不会填实障碍内部或修改 PLY。操作与限制见 [tools/map_viewer/README.md](tools/map_viewer/README.md)。
 
 `devtools/scene.py` 负责加载和表达物理场景，包括背景、指定目标、其他实体及实验所需真值。传感器与几何查询使用同一份物理场景；目标不能只出现在相机提示里而从 ToF 或避障几何中消失。用于代价的安全膨胀不渲染成真实物体。
 
@@ -130,6 +149,8 @@ ToF 按 `row * 8 + col` 展开，行向下、列向右。若复用旧 Omni 模�
 
 ## 近期建设顺序
 
+Docker 基础镜像、离线地图生成器与地图查看器已通过当前检查。接下来建立最小场景，再按以下检查点推进。当前状态、可检查的完成依据及后续事项统一记录在 [TODO.md](TODO.md)。
+
 | 检查点 | 建设内容 | 审阅依据 |
 |---|---|---|
 | 一帧观测 | 输入定义、最小场景、四路 ToF、前向目标 mask 与紧凑提示 | 物体如何形成观测，深度格子的来源，遮挡与姿态的影响 |
@@ -150,11 +171,63 @@ ToF 按 `row * 8 + col` 展开，行向下、列向右。若复用旧 Omni 模�
 
 ## 运行与依赖
 
-目前没有可运行的观测例子、训练入口或功能测试。`examples/one_frame.py` 和 `training/train.py` 都只是占位，直接执行不会生成结果。
+目前可运行的能力是离线地图生成、点云 / 体素查看及相应验证。观测例子和训练入口仍未实现；`examples/one_frame.py` 和 `training/train.py` 都只是占位，直接执行不会生成结果。
 
-项目的开发、构建与训练在 Docker 中运行，容器镜像和运行配置放在 [docker/](docker/README.md)。目前仅建立目录入口，尚无可构建的 Dockerfile 或容器启动命令。`.vscode/` 属于本地编辑器配置，不纳入版本管理。
+**整个项目的开发、构建、训练、测试与工具运行都在 Docker 中执行，依赖只安装在容器内。** 容器镜像、运行配置和实际命令见 [docker/README.md](docker/README.md)。宿主提供现有 Docker、源码和产物目录；未经另行明确授权，不安装项目依赖、不修改宿主服务或全局配置。`.vscode/` 属于本地编辑器配置，不纳入版本管理。
 
-开发包使用 setuptools，暂未声明运行依赖或命令入口。基础镜像和首批计算、可视化依赖在环境搭建时明确；本轮无需安装软件、启动容器服务或生成地图资产。
+在仓库根目录使用已有的 `just`：
+
+```bash
+just                         # 查看命令帮助
+just build                   # 构建开发镜像
+just shell                   # 进入开发容器
+just check                   # 检查开发环境
+just run cmake --version     # 在容器内执行命令
+just map-build               # 编译离线地图生成器
+just map --help              # 查看生成器参数；自动先构建
+just map-check               # 检查真实 PLY、几何与 seed 行为；自动先构建
+just map-view outputs/mapgen/pillars-17.ply  # 前台查看地图，Ctrl-C 退出
+just map-view-check          # 检查查看器的解析、体素几何和页面生成
+```
+
+`justfile` 只调用现有 `docker/dev.sh`，由它统一处理镜像、挂载和用户权限；`just` 本身是宿主的薄编排入口，项目程序仍在容器内执行。
+
+例如，按 8×6×3 米、0.2 米分辨率和 12 次柱体采样生成背景资产：
+
+```bash
+just map --type pillars --seed 17 \
+  --size-x 8 --size-y 6 --size-z 3 --resolution 0.2 --count 12 \
+  --output outputs/mapgen/pillars-17.ply
+```
+
+这组参数已生成 2926 个点。输出文件必须不存在，父目录必须已存在；示例的父目录由 `map-build` 创建。重复运行时换一个新的输出文件名。输入尺寸须为分辨率的整数倍；X/Y 以零为中心，Z 从零向上。格式与各模式的参数约束见 [tools/mapgen/README.md](tools/mapgen/README.md)。
+
+实际调用关系为：
+
+```text
+just map-build → docker/dev.sh run → CMake → outputs/mapgen/build/offline_mapgen
+just map <参数> → map-build → docker/dev.sh run → offline_mapgen → 指定 PLY 文件
+just map-check → map-build → docker/dev.sh run → tests/verify_mapgen.py → outputs/mapgen/verification.json
+```
+
+2026-10-10 的容器检查覆盖三种模式的 PLY 解析、有限坐标、指定范围和完整地面网格；在当前测试参数下，seed 17 的重复输出逐字节一致，seed 18 的无序点集发生变化。另有解析几何、退化情况、非法输入和输出保护检查。不同配置可能生成相同几何，例如 Perlin 的 `--complexity 0.5` 可退化为纯地面；不同 seed 不保证任意配置都产生不同地图。实际结果记录在 `outputs/mapgen/verification.json`。
+
+查看地图：
+
+```bash
+just build                   # 首次使用查看器或修改依赖后重建镜像
+just map-view outputs/mapgen/pillars-17.ply
+```
+
+命令生成 `outputs/map_viewer/pillars-17.html`，随后保持前台运行；浏览器打开 [http://127.0.0.1:8080](http://127.0.0.1:8080)。看完在原终端按 Ctrl-C，服务和临时容器一起退出，释放端口后就能启动另一张地图。默认显示体素，可切换原始点或叠加显示，拖动旋转、滚轮缩放，并调节点的像素大小与体素填充比例。格长默认读取 PLY 的 `resolution`；换格长时传入 `--voxel-size 0.3`。
+
+端口只是这个命令提供的本地访问方式，渲染本身不依赖 HTTP。HTML 内嵌 Plotly 和显示数据，退出后仍可用支持 WebGL 的浏览器直接打开保存的文件。只生成文件的方法见 [查看器说明](tools/map_viewer/README.md)。
+
+实际调用为 `just map-view <PLY> → docker/dev.sh view → 容器内 view_map.py → PLY 读取、归格、立方体网格 → HTML + 前台服务 → 浏览器`。Python 依赖安装在镜像的 `viewer` 开发依赖组；浏览器显示不需要为宿主安装 Python 包或配置图形窗口。
+
+2026-10-10 的查看器验证通过 8 组容器检查，包括负坐标归格、重复点、奇偶尺寸地面、闭合立方体体积及离线页面。实际浏览器已检查点云 / 体素切换、两种大小调节、旋转和缩放；柱体示例完整显示 2926 个点或 2546 个体素，效果图在 `outputs/map_viewer/preview.jpg`。查看器的显示数量限制、输入范围和网格约定见 [tools/map_viewer/README.md](tools/map_viewer/README.md)。
+
+`tof-tracker-dev:ubuntu24.04` 已实际构建，并通过容器内项目安装与导入、C++17/CMake/Eigen/PCL 编译和点云读写检查，挂载产物归宿主调用者所有。观测、算法与训练能力仍待实现。开发包使用 setuptools；查看器的 Plotly 依赖与在线算法分开声明。具体环境证据见 [docker/README.md](docker/README.md)，能力建设进度见 [TODO.md](TODO.md)。
 
 每个能力实现后，本节补上实际可用的运行命令、输出位置和验证方法。占位文件、构建成功和导入成功均不代表对应算法能力已实现。
 
@@ -164,6 +237,6 @@ ToF 按 `row * 8 + col` 展开，行向下、列向右。若复用旧 Omni 模�
 
 已核对的根版本为 `b99e67d66210af5e431b844df3ed48d696185ad4`，锁定 C5 `ab9cbfaef8216b8a47a952b40d199fd7e5cef134` 和 Omni `cf0b7f4b17712667a8bbdb1126f5e914904ece9d`。接口参考为旧目录中的 `docs/tracking-algorithm-system-agreement-v0.1.md`；该文件未纳入上述根提交，引用内容时需单独记录其实际版本。
 
-地图生成的上游参考为 [HKUST-Aerial-Robotics/mockamap](https://github.com/HKUST-Aerial-Robotics/mockamap)。本仓库当前没有提取旧代码；实际采用的函数、公式和机制在 [docs/origins.md](docs/origins.md) 记录来源版本、许可、改动与验证。旧权重、数据和实验结论只按实际需要作为对照使用。
+地图生成的上游参考为 [HKUST-Aerial-Robotics/mockamap](https://github.com/HKUST-Aerial-Robotics/mockamap)。本仓库已提取并适配离线地图生成所需的机制；实际采用的函数、公式和机制在 [docs/origins.md](docs/origins.md) 记录来源版本、许可、改动与验证。旧权重、数据和实验结论只按实际需要作为对照使用。
 
 协作方式见 [AGENTS.md](AGENTS.md)：每次交付一个可理解的小能力，用户审阅当前层后再进入下一层。

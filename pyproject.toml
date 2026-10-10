@@ -9,6 +9,9 @@ description = "ToF-based tracking algorithm with local training and development 
 readme = "README.md"
 dependencies = []
 
+[project.optional-dependencies]
+viewer = ["plotly==7.1.0"]
+
 # One development installation. These modules are not separate products,
 # and this package list does not define the deployed algorithm artifacts.
 [tool.setuptools]
