@@ -26,7 +26,7 @@ map-build:
     ./docker/dev.sh run cmake -S tools/mapgen -B outputs/mapgen/build -DCMAKE_BUILD_TYPE=Release
     ./docker/dev.sh run cmake --build outputs/mapgen/build --parallel 2
 
-# 在容器内生成离线 PLY 地图，保留各参数的边界
+# 在容器内生成离线地图
 map +args: map-build
     ./docker/dev.sh run outputs/mapgen/build/offline_mapgen "$@"
 

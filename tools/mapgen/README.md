@@ -1,73 +1,46 @@
-# 离线背景地图生成工具
+# 离线地图生成工具
 
-手动运行 `offline_mapgen`，将米制尺寸、分辨率、seed 和模式转换成一份 ASCII PLY XYZ 点云。它只准备背景资产，训练读取已准备的文件；目标与飞机由 [开发辅助模块](../../devtools/README.md#统一配置与场景) 的场景接口表达。
+准备训练与仿真使用的静态背景资产。柱场输出为 OBJ：每个障碍是独立闭合 mesh，地面是单独的平面；尺寸直接按米解释。地图生成器独立离线运行，不在训练循环中调用。采样与 ESDF 尚未实现。
 
-当前提供三种旧机制的适配：`pillars` 采样随机方柱壳层，`walls` 采样随机朝向和倾斜的墙体网格，`perlin` 按三维 Perlin 噪声分位阈值选择体素。源码只保留 C++17、PCL common/Eigen 和 C++ 标准库依赖，没有 ROS、CUDA、OpenCV、YAML、旧仓绝对路径或数据目录依赖。
+## 生成与查看
 
-## 运行
-
-在仓库根目录通过现有 Docker 入口执行：
+在仓库根目录运行：
 
 ```bash
 just map --type pillars --seed 3 \
-  --size-x 60 --size-y 60 --size-z 15 --resolution 0.1 \
-  --count 500 --width-min 0.3 --width-max 1.0 \
-  --output outputs/mapgen/pillars-omni-3.ply
-just view outputs/mapgen/pillars-omni-3.ply
+  --size-x 60 --size-y 60 --size-z 15 --count 500 \
+  --width-min 0.3 --width-max 1.0 \
+  --output outputs/mapgen/pillars-3.obj
+just view outputs/mapgen/pillars-3.obj
 ```
 
-示例采用所记录版本的 Omni 柱场参数；固定出处与适配差异见 [来源说明](../../docs/origins.md#omni-柱场参数)。柱中心独立均匀采样，没有最小间距保证，柱体可能重叠或被边界裁剪。
+`map` 自动先构建工具。输出父目录须已存在，输出路径须为新文件；重复生成时换一个文件名。场景查看参数见 [查看器说明](../map_viewer/README.md)。所有运行与检查均在 Docker 中执行。
 
-`map` 与 `check` 会先通过内部步骤构建地图工具，构建目录为 `outputs/mapgen/build/`。输出父目录须已存在，输出文件必须是新路径；重复生成时换一个输出名。
-
-不使用 `just` 时，同样通过容器运行：
-
-```bash
-./docker/dev.sh run cmake -S tools/mapgen -B outputs/mapgen/build -DCMAKE_BUILD_TYPE=Release
-./docker/dev.sh run cmake --build outputs/mapgen/build --parallel 2
-./docker/dev.sh run outputs/mapgen/build/offline_mapgen --type walls --seed 17 --ceiling 1 --output outputs/mapgen/walls-ceiling-17.ply
-./docker/dev.sh run outputs/mapgen/build/offline_mapgen --type perlin --seed 17 --fill 0.1 --output outputs/mapgen/perlin-17.ply
-```
-
-尺寸等未指定的参数使用下表默认值。源码、构建和验证均在项目容器内运行，不在宿主安装或运行项目依赖。
-
-## 输入与输出约定
+## Mesh 参数与格式
 
 | 参数 | 含义与默认值 |
 |---|---|
-| `--output` | 必填的新 PLY 文件路径；原子发布，拒绝已有文件、目录和符号链接 |
-| `--type` / `--seed` | `pillars` / `3`；其他模式为 `walls`、`perlin`，seed 为 uint32 |
-| `--size-x/y/z` / `--resolution` | `8/6/3` 米 / `0.2` 米；正数，尺寸须为分辨率的整数倍 |
-| `--count` / `--width-min/max` | 柱或墙尝试生成 `12` 个，宽度在 `0.6..1.2` 米均匀采样；count 可为 0 |
-| `--wall-thickness` / `--ceiling` | 墙厚 `0.2` 米 / 不加顶面 `0`；顶面开启为 `1` |
-| `--complexity` / `--fill` | Perlin 频率因子 `0.02` / 分位阈值参数 `0.1`；`0 < complexity <= 0.5`，`0 < fill < 1` |
-| `--fractal` / `--attenuation` | Perlin octave 数 `1`（支持 1..16）/ 正幅度因子 `0.1` |
-| `--max-points` | 默认 `5000000`；限制候选采样数和输出点数，并限制 Perlin 完整求值网格规模 |
+| `--output` | 必填；`.obj` 选择 mesh 输出，目前仅支持 `pillars` |
+| `--type` / `--seed` | `pillars` / `3` |
+| `--size-x/y/z` | 地图范围，默认 `8/6/3` 米 |
+| `--count` | 随机方柱数量，默认 `12`；可为 0，此时只有地面 |
+| `--width-min/max` | 方柱原始边长的均匀采样范围，默认 `0.6..1.2` 米 |
+| `--height-min/max` | 方柱高度的均匀采样范围；省略时分别取 `0.1*size_z` 和 `size_z` |
 
-XYZ 单位为米，XY 以零为中心，Z 向上、地面为零。输出点在 `[-size_x/2, size_x/2] × [-size_y/2, size_y/2] × [0, size_z]` 内，超界点会裁掉；`--count` 不保证每个障碍完整留在边界内。几何先用 double 计算和裁剪，再转 PCL float；分辨率细于地图最远坐标处 float 间距时拒绝输入。
+XY 以零为中心，地面为 Z=0，Z 向上。柱中心在 XY 范围内独立均匀采样，允许重叠；贴边柱体与地图范围求交，裁剪后仍闭合，所以它的最终边长可以小于所采样的原始边长。高度与边长须为正，采样分辨率不参与 mesh 尺寸定义。
 
-所有模式都有固定地面网格：X 为 `-size_x/2 + i*resolution`，`i=0..size_x/resolution-1`；Y 同理。地面不依赖随机障碍的包围盒，上边界没有额外补点。墙模式可在 Z=`size_z` 增加相同顶面网格。柱壳、墙网格及 Perlin 点沿用各自采样机制，可能出现重合点；没有继承旧体素滤波。
+一个 OBJ 保存全部对象：`pillar_0` 等障碍各自拥有顶点和三角面，`ground` 为覆盖完整 XY 范围的平面。坐标单位、地图范围、seed 和生成参数写在注释中。物体身份保留在资产里，查看时不抽样或膨胀。这个文件尚未定义点云采样或 ESDF 占据规则。
 
-PLY 包含 `float x/y/z` 顶点，注释记录单位、尺寸、分辨率、seed 与生成参数。它是点云资产，没有三角面、物体身份、追踪目标或动态语义，不能仅凭点云把连续空间判定为实心或空闲。
+## 旧点云输出
 
-实际调用关系为：
-
-```text
-just map → 内部 CMake 构建 → docker/dev.sh run → offline_mapgen CLI
-    → Config 校验 → generate(Config)
-    → 柱壳 / 墙网格 / Perlin 阈值 → 裁剪 + 固定地面（可选顶面）
-    → 同目录临时 PLY → 原子发布到新输出路径
-```
-
-## 复现范围与测试入口
-
-固定 seed 的复现范围限定为相同生成配置、编译工具链与标准库。这里保留上游 `std::default_random_engine`、分布和 `std::shuffle`，不保证跨标准库的随机序列一致，也不保证不同 seed 在任意配置下产生不同几何。例如 `perlin --complexity 0.5` 落在整数噪声格点，只留下地面；`fill` 是严格大于分位阈值的参数，不能理解为保证的障碍比例。
-
-[tests/verify_mapgen.py](../../tests/verify_mapgen.py) 使用独立 ASCII PLY 解析和解析网格检查三个模式，覆盖坐标边界、固定地面、空障碍/顶面、奇数宽柱壳、墙倾斜、seed 行为、非法输入与输出发布保护。构建后可单独运行，或使用项目汇总检查：
+`.ply` 保留旧的 `pillars`、`walls` 和 `perlin` 点云生成方式，用于已有资产和对照；不是从 OBJ 采样得到的点云。它的 `--resolution` 控制旧采样网格，尺寸须为其整数倍，旧柱壳的跨度不等于配置的宽高。
 
 ```bash
-just run python tests/verify_mapgen.py --binary outputs/mapgen/build/offline_mapgen --results outputs/mapgen/verification.json
-just check
+just map --type walls --seed 17 --resolution 0.2 \
+  --output outputs/mapgen/walls-17.ply
+just view outputs/mapgen/walls-17.ply
 ```
 
-这些检查不验证可通行性、训练分布或算法闭环行为。来源与适配改动见 [docs/origins.md](../../docs/origins.md)，第三方声明与当前许可缺口见 [third_party_notices/README.md](third_party_notices/README.md)。
+Mesh 输出不接受 `--resolution`、`--max-points` 或墙体、Perlin 专用参数；高度范围参数只用于 mesh。完整参数见 `just run outputs/mapgen/build/offline_mapgen --help`。
+
+固定 seed 的复现范围限于相同配置、编译工具链与标准库。检查由 `just check` 运行，覆盖职责见 [verify_mapgen.py](../../tests/verify_mapgen.py)。参考出处与适配见 [来源说明](../../docs/origins.md)，许可声明见 [第三方声明](third_party_notices/README.md)。

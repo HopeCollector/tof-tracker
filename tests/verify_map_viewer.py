@@ -15,6 +15,7 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 
 from devtools.config import SceneConfig
+from devtools.mesh import MeshMap
 from devtools.scene import Pose, Scene
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +29,30 @@ def ply(points, comments=("unit metre", "size_xyz 8 6 3 resolution 0.2"), proper
               "end_header"]
     rows = [" ".join(str(point["xyz".index(axis)]) for axis in properties) for point in points]
     return "\n".join(header + rows) + "\n"
+
+
+def obj_boxes():
+    """Two exact rectangular solids and a separate plane, independently of mapgen."""
+    faces = ((1, 3, 2), (1, 4, 3), (5, 6, 7), (5, 7, 8),
+             (1, 2, 6), (1, 6, 5), (2, 3, 7), (2, 7, 6),
+             (3, 4, 8), (3, 8, 7), (4, 1, 5), (4, 5, 8))
+    objects = []
+    for name, lower, upper in (("box_<one>", (0.4, -0.7, 0), (1, 0.1, 1.4)),
+                                ("box_two", (-1.4, 0.75, 0), (-1, 1.25, 2))):
+        x, y, z = lower
+        X, Y, Z = upper
+        objects.append((name, ((x, y, z), (X, y, z), (X, Y, z), (x, Y, z),
+                               (x, y, Z), (X, y, Z), (X, Y, Z), (x, Y, Z)), faces))
+    objects.append(("ground", ((-3, -2, 0), (3, -2, 0), (3, 2, 0), (-3, 2, 0)),
+                    ((1, 2, 3), (1, 3, 4))))
+    rows = ["# unit metre", "# size_xyz 6 4 3", "# </script><script>window.invalid = 1</script>"]
+    offset = 0
+    for name, vertices, triangles in objects:
+        rows.append("o " + name)
+        rows.extend("v " + " ".join(str(v) for v in vertex) for vertex in vertices)
+        rows.extend("f " + " ".join(str(index + offset) for index in triangle) for triangle in triangles)
+        offset += len(vertices)
+    return "\n".join(rows) + "\n", objects
 
 
 def near(a, b):
@@ -566,6 +591,89 @@ view_map.serve_html(sys.argv[2], port=0)
         assert hashlib.sha256(default_config.read_bytes()).hexdigest() == default_before
         assert hashlib.sha256(background.read_bytes()).hexdigest() == before
         checks.append("paired CLI positions use default physical configuration and identity FLU attitude")
+
+        mesh_source = folder / "exact & <map>.obj"
+        mesh_text, expected_objects = obj_boxes()
+        mesh_source.write_text(mesh_text, encoding="ascii")
+        mesh_before = hashlib.sha256(mesh_source.read_bytes()).hexdigest()
+        mesh_map = MeshMap.from_obj(mesh_source)
+        mesh_page = view_map.build_mesh_html(mesh_map)
+        mesh_traces, mesh_layout = page_figure(mesh_page)
+        assert len(mesh_traces) == 3, "each obstacle must not create a separate draw call"
+        assert mesh_traces[0]["type"] == mesh_traces[1]["type"] == "mesh3d"
+        expected_vertices = [point for _, vertices, _ in expected_objects[:2] for point in vertices]
+        assert list(zip(*(mesh_traces[0][axis] for axis in "xyz"))) == expected_vertices
+        expected_faces = [tuple(index - 1 + offset for index in face)
+                          for offset, (_, _, faces) in zip((0, 8), expected_objects[:2]) for face in faces]
+        assert list(zip(*(mesh_traces[0][axis] for axis in "ijk"))) == expected_faces
+        assert list(zip(*(mesh_traces[1][axis] for axis in "xyz"))) == list(expected_objects[2][1])
+        assert list(zip(*(mesh_traces[1][axis] for axis in "ijk"))) == [(0, 1, 2), (0, 2, 3)]
+        assert mesh_traces[0]["customdata"] == ["box_&lt;one&gt;"] * 8 + ["box_two"] * 8
+        assert len(mesh_traces[2]["x"]) == 24 * 3, "box wireframe must contain 12 edges, no face diagonals"
+        for mesh in mesh_map.objects[:2]:
+            assert len(view_map.mesh_edges(mesh)) == 12
+        assert mesh_layout["scene"]["aspectmode"] == "data"
+        parsed = PageParser()
+        parsed.feed(mesh_page)
+        assert not parsed.external
+        assert {"mesh-mode", "ground-visible", "reset-camera", "map"} <= parsed.controls.keys()
+        assert not {"point-size", "voxel-fill", "mode"} & parsed.controls.keys()
+        assert "box_<one>" not in mesh_page and "window.invalid = 1</script>" not in mesh_page
+        mesh_summary = page_summary(mesh_page)
+        assert mesh_summary["format"] == "obj" and mesh_summary["obstacle_count"] == 2
+        assert mesh_summary["input_vertices"] == mesh_summary["display_vertices"] == 20
+        assert mesh_summary["input_triangles"] == mesh_summary["display_triangles"] == 26
+        assert mesh_summary["bounds_m"] == [[-3, 3], [-2, 2], [0, 2]]
+        assert "完整显示原始 mesh" in mesh_page and "[0, 1, 2]" in mesh_page
+        checks.append("exact independent OBJ vertices/faces, all objects retained, crease-only edges and mesh-specific offline controls")
+
+        mesh_scene = Scene.from_obj(mesh_source, config,
+                                    Pose(center, (0, math.sqrt(0.5), 0, math.sqrt(0.5))), (2, 1, 1.5))
+        scene_mesh_page = view_map.build_mesh_html(mesh_map, scene=mesh_scene)
+        rendered = page_figure(scene_mesh_page)[0]
+        assert len(rendered) == 8
+        for trace, sphere in zip(rendered[3:5], (mesh_scene.vehicle, mesh_scene.target)):
+            for point in zip(*(trace[axis] for axis in "xyz")):
+                near(math.dist(point, sphere.pose.position_m), sphere.radius_m)
+        length = config.vehicle_radius_m * 2.5
+        pitched_endpoints = ((center[0], center[1], center[2] - length),
+                             (center[0], center[1] + length, center[2]),
+                             (center[0] + length, center[1], center[2]))
+        for trace, endpoint in zip(rendered[5:], pitched_endpoints):
+            for axis, end in zip("xyz", endpoint):
+                near(trace[axis][1], end)
+        state = page_summary(scene_mesh_page)["scene"]
+        assert state["background_vertices"] == 20 and state["background_triangles"] == 26
+        assert mesh_scene.background.objects == mesh_map.objects
+        assert "{visible: [mode !== 'wire', groundControl.checked, mode !== 'solid']}, [0, 1, 2]" in scene_mesh_page
+        checks.append("mesh scene preserves full geometry, physical spheres and pitched FLU axes; background controls exclude actors")
+
+        mesh_output = folder / "mesh.html"
+        mesh_command = [sys.executable, str(entry), str(mesh_source), "--output", str(mesh_output)]
+        result = subprocess.run(mesh_command, cwd=ROOT, capture_output=True, text=True, timeout=30)
+        assert result.returncode == 0 and mesh_output.is_file(), result.stderr
+        assert "scene" not in page_summary(mesh_output.read_text())
+        result = subprocess.run([*mesh_command, "--vehicle-position", "0.2", "-0.3", "1",
+                                 "--target-position", "2", "1", "1.5", "--vehicle-rpy-deg", "0", "90", "0"],
+                                cwd=ROOT, capture_output=True, text=True, timeout=30)
+        assert result.returncode == 0, result.stderr
+        state = page_summary(mesh_output.read_text())["scene"]
+        assert state["vehicle"]["position_m"] == [0.2, -0.3, 1]
+        near(state["vehicle"]["radius_m"], expected_config["vehicle"]["radius_m"])
+        for option, value in (("--voxel-size", "0.2"), ("--point-size", "3"),
+                               ("--voxel-fill", "0.9"), ("--max-points", "100000"), ("--max-voxels", "12000")):
+            rejected_output = folder / "rejected-mesh.html"
+            rejected = subprocess.run([sys.executable, str(entry), str(mesh_source), "--output", str(rejected_output),
+                                       option, value], cwd=ROOT, capture_output=True, text=True, timeout=30)
+            assert rejected.returncode != 0 and option in rejected.stderr
+            assert not rejected_output.exists(), "OBJ accepted irrelevant PLY control"
+        protected_output = folder / "input-alias.html"
+        protected_output.hardlink_to(mesh_source)
+        rejected = subprocess.run([sys.executable, str(entry), str(mesh_source), "--output", str(protected_output)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=30)
+        assert rejected.returncode != 0 and "不能覆盖" in rejected.stderr
+        assert hashlib.sha256(mesh_source.read_bytes()).hexdigest() == mesh_before
+        checks.append("OBJ CLI selects mesh/scene automatically, refuses irrelevant PLY parameters and protects source aliases")
 
         incomplete = [
             ["--vehicle-position", "0", "0", "1"],

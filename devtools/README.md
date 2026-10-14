@@ -1,17 +1,20 @@
 # 场景、观测与几何查询
 
-`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现完整背景点云、飞机球、目标球和三维位姿；传感器与 ESDF 仍为占位。
+`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现完整背景 mesh / 点云、飞机球、目标球和三维位姿；传感器与 ESDF 仍为占位。
 
 | 文件 | 当前职责 |
 |---|---|
 | [`config.py`](config.py) | 已实现：读取、校验不可变物理配置 |
+| [`mesh.py`](mesh.py) | 已实现：读取独立闭合障碍和地面平面的 OBJ 资产 |
 | [`scene.py`](scene.py) | 已实现：`PointCloudMap`、`Pose`、`Sphere`、`Scene` 及状态替换 |
 | [`sensors.py`](sensors.py) | 占位：指定机体位姿下的四路 ToF 与前向相机观测 |
 | [`esdf.py`](esdf.py) | 占位：距离场构建、加载及批量可微几何查询 |
 
 ## 统一配置与场景
 
-背景由独立离线[地图生成器](../tools/mapgen/README.md)准备，训练读取已有资产。PLY 只保存米制背景点，静态障碍已在其中；飞机、目标与机体姿态由 `Scene` 表达。
+背景由独立离线[地图生成器](../tools/mapgen/README.md)准备，训练读取已有资产。OBJ 保存独立闭合障碍和地面平面，旧 PLY 保存背景点；飞机、目标与机体姿态由 `Scene` 表达。
+
+`MeshMap.from_obj()` 保留完整对象，每个 `MeshObject` 包含名称、米制顶点和局部三角面索引。障碍分别闭合，可以重叠；地面为 Z=0 的开放平面。加载时不采样、不构建占据或 ESDF。`Scene.from_map()` 按扩展名选择 OBJ 或 PLY，也可显式使用 `from_obj()` / `from_ply()`。
 
 `PointCloudMap.from_ply()` 读取本项目支持的非空 ASCII XYZ PLY，保留全部点、原序、重复点、注释和可选尺寸 / 分辨率元数据。`bounds_m` 是实际点坐标的范围。它不抽样、不归格、不填充内部；目前也不定义背景占据、空闲区域、射线命中或碰撞语义。
 
@@ -23,7 +26,7 @@
 
 ## 最小调用例子
 
-先按地图生成器说明准备 `outputs/mapgen/pillars-17.ply`。在仓库根目录运行 `just run` 进入开发容器，再在容器内用 Python 执行：
+先按地图生成器说明准备 `outputs/mapgen/pillars-3.obj`。在仓库根目录运行 `just run` 进入开发容器，再在容器内用 Python 执行：
 
 ```python
 from math import sqrt
@@ -31,8 +34,8 @@ from devtools.config import load_config
 from devtools.scene import Pose, Scene
 
 config = load_config("configs/devtools.json")
-scene = Scene.from_ply(
-    "outputs/mapgen/pillars-17.ply", config,
+scene = Scene.from_map(
+    "outputs/mapgen/pillars-3.obj", config,
     vehicle_pose=Pose((-1, 0, 1)), target_position_m=(1, 0.6, 1.2),
 )
 next_scene = scene.with_target_position((1.5, 0.6, 1.2)).with_vehicle_pose(
@@ -43,9 +46,9 @@ print(scene.target.pose.position_m)  # (1.0, 0.6, 1.2)，旧状态保留
 print(next_scene.vehicle.pose.body_to_world((1, 0, 0)))  # 约 (-0.5, 0, 0)
 ```
 
-调用关系是 `load_config → Scene.from_ply → 完整背景 + 两个物理球 → 状态替换得到新 Scene`。输入为已有 PLY、半径配置和世界状态，输出为可供开发后端使用的场景快照。所有项目运行与验证均在 Docker 中执行，通用入口见 [docker/README.md](../docker/README.md)。
+输入为已有地图、半径配置和世界状态，输出为可供开发后端使用的场景快照。所有项目运行与验证均在 Docker 中执行，通用入口见 [docker/README.md](../docker/README.md)。
 
-[共用查看器](../tools/map_viewer/README.md) 可显示背景、两个球与机体轴。场景始终保留完整背景；查看器按显示上限抽样原始点或保留部分含点显示格，显示格不定义真实占据，也不修改场景。
+[共用查看器](../tools/map_viewer/README.md) 可显示背景、两个球与机体轴。Mesh 完整显示真实表面；旧点云的显示格不定义真实占据，也不修改场景。
 
 验证方法入口为 [`tests/verify_scene.py`](../tests/verify_scene.py)，覆盖完整背景、配置和 PLY 拒绝情况、球体、独立三维旋转与逆变换、不可变更新；场景显示与 CLI 由 [`tests/verify_map_viewer.py`](../tests/verify_map_viewer.py) 检查。在仓库根目录用 `just check` 运行现有检查，或在容器中调用对应脚本；脚本需提供 `--results` 路径。
 
@@ -57,7 +60,7 @@ print(next_scene.vehicle.pose.body_to_world((1, 0, 0)))  # 约 (-0.5, 0, 0)
 
 - ToF 和相机的安装姿态、视场及相机成像参数。
 - ToF 每格的射线采样与聚合、距离指射线长度还是光轴深度，以及量程和无返回编码；最大填充值不代表已知空闲，旧 C5 的距离阈值不是本项目规格。
-- 背景点如何形成可命中表面、边界 / 越界如何处理，以及背景与目标球的最近有效命中规则。
+- 背景 mesh 与目标球的最近有效命中规则，以及边界 / 越界如何处理。
 - 目标 mask 的逐像素遮挡和 mask 到紧凑框的规则；投影矩形不能直接当成可见目标 mask。
 
 ESDF 尚未构建或查询距离场。它负责回答批量轨迹采样点到物体表面的距离，并保留训练所需的计算图或提供明确导数；任务代价、惩罚权重、反传与参数更新属于训练。距离和边界语义须与场景物理事实一致，查询位置所需的梯度逐条验证，具体后端在实现时选择。

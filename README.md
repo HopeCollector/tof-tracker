@@ -4,7 +4,7 @@
 
 最终交付模型及其输入适配、轨迹处理、选轨和判断逻辑，部署运行路径使用 C++。Python 用于研发与训练；场景、传感器、几何查询和实验工具服务算法开发。
 
-当前可用的是 Docker 开发环境、离线地图生成器、地图与场景查看器，以及包含背景点云和两个球体的最小场景。算法、训练、传感器和 ESDF 尚未实现。
+当前可用的是 Docker 开发环境、离线地图生成器、地图与场景查看器，以及包含背景和两个球体的最小场景。算法、训练、传感器和 ESDF 尚未实现。
 
 ## 目录布局
 
@@ -14,7 +14,7 @@
 | `training/` | 采样配方、组批和优化更新；[训练职责与流程](training/README.md) |
 | `devtools/` | 场景、传感器、真值和几何查询；[场景接口与开发工具](devtools/README.md) |
 | `configs/` | 统一物理配置，当前包含飞机与目标半径；[配置用法](devtools/README.md#统一配置与场景) |
-| `tools/mapgen/` | 独立离线地图生成器；[参数与 PLY 格式](tools/mapgen/README.md) |
+| `tools/mapgen/` | 独立离线地图生成器；[参数与地图格式](tools/mapgen/README.md) |
 | `tools/map_viewer/` | 地图与场景查看器；[查看参数与显示约定](tools/map_viewer/README.md) |
 | `docker/` | 全项目容器环境与通用运行入口；[构建、依赖与挂载](docker/README.md) |
 | `tests/` | 地图、场景和查看器检查，由 `just check` 运行 |
@@ -30,9 +30,9 @@
 
 ```bash
 just build                                      # 构建开发镜像
-just map --output outputs/mapgen/demo.ply        # 生成背景；自动先构建地图工具
-just view outputs/mapgen/demo.ply               # 查看地图
-just view outputs/mapgen/demo.ply \
+just map --output outputs/mapgen/demo.obj        # 生成背景；自动先构建地图工具
+just view outputs/mapgen/demo.obj               # 查看地图
+just view outputs/mapgen/demo.obj \
   --vehicle-position -1 0 1 --target-position 1 0.6 1.2  # 查看场景
 just check                                      # 运行现有检查
 just run                                        # 进入容器 Bash
@@ -43,7 +43,6 @@ just run cmake --version                         # 在容器内执行命令
 
 ## 接下来
 
-- 传感器采样前，先为柱场和地面增加 mesh 输出与准确显示；点云和 ESDF 从同一几何派生，明确实体与裁剪语义。入口为 [地图生成器](tools/mapgen/README.md) 和 [查看器](tools/map_viewer/README.md)。
 - 明确传感器规格，从同一场景生成四路 ToF、前向目标 mask 和提示；从 [devtools 的传感器职责](devtools/README.md#传感器与几何查询) 与 `devtools/sensors.py` 开始。
 - 实现三维轨迹重建、代价和公开几何查询，检查所需梯度；分别归入 `src/tof_tracker/`、`training/` 和 `devtools/esdf.py`。
 - 完成少量样本的训练、保存和重载；入口为 [training/train.py](training/train.py)，职责见 [训练说明](training/README.md)。

@@ -13,6 +13,7 @@ from pathlib import Path
 from tof_tracker.geometry import Transform
 
 from .config import SceneConfig, _positive_number
+from .mesh import MeshMap
 
 
 Vector3 = tuple[float, float, float]
@@ -192,25 +193,46 @@ class PointCloudMap:
 class Scene:
     """An immutable physical snapshot, before sensing or distance-field queries."""
 
-    background: PointCloudMap
+    background: PointCloudMap | MeshMap
     vehicle: Sphere
     target: Sphere
 
     def __post_init__(self):
-        if not isinstance(self.background, PointCloudMap):
-            raise ValueError("background must be a PointCloudMap")
+        if not isinstance(self.background, (PointCloudMap, MeshMap)):
+            raise ValueError("background must be a PointCloudMap or MeshMap")
         if not isinstance(self.vehicle, Sphere) or not isinstance(self.target, Sphere):
             raise ValueError("vehicle and target must be Sphere instances")
 
     @classmethod
     def from_ply(cls, path: str | Path, config: SceneConfig, vehicle_pose: Pose,
                  target_position_m: Vector3) -> "Scene":
-        """Combine a background asset, explicit sphere sizes and world state."""
+        """Load an original point-cloud background and explicit world state."""
+        return cls._from_background(PointCloudMap.from_ply(path), config, vehicle_pose, target_position_m)
+
+    @classmethod
+    def from_obj(cls, path: str | Path, config: SceneConfig, vehicle_pose: Pose,
+                 target_position_m: Vector3) -> "Scene":
+        """Load a complete mesh background and explicit world state."""
+        return cls._from_background(MeshMap.from_obj(path), config, vehicle_pose, target_position_m)
+
+    @classmethod
+    def from_map(cls, path: str | Path, config: SceneConfig, vehicle_pose: Pose,
+                 target_position_m: Vector3) -> "Scene":
+        """Select OBJ mesh or legacy PLY points from the asset's extension."""
+        suffix = Path(path).suffix.lower()
+        if suffix == ".obj":
+            return cls.from_obj(path, config, vehicle_pose, target_position_m)
+        if suffix == ".ply":
+            return cls.from_ply(path, config, vehicle_pose, target_position_m)
+        raise ValueError("scene map must be an .obj mesh or .ply point cloud")
+
+    @classmethod
+    def _from_background(cls, background, config, vehicle_pose, target_position_m):
         if not isinstance(config, SceneConfig):
             raise ValueError("config must be a SceneConfig")
         vehicle = Sphere(vehicle_pose, config.vehicle_radius_m)
         target = Sphere(Pose(target_position_m), config.target_radius_m)
-        return cls(PointCloudMap.from_ply(path), vehicle, target)
+        return cls(background, vehicle, target)
 
     def with_vehicle_pose(self, pose: Pose) -> "Scene":
         """Replace only vehicle state, retaining the same background and target."""

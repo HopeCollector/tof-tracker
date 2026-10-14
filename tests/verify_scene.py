@@ -1,4 +1,4 @@
-"""Verify full scene loading, strict facts, immutable updates and 3D geometry."""
+"""Verify complete PLY/OBJ scenes, strict geometry, immutable state and poses."""
 
 import argparse
 from dataclasses import FrozenInstanceError
@@ -10,6 +10,7 @@ import struct
 import tempfile
 
 from devtools.config import SceneConfig, load_config
+from devtools.mesh import MeshMap, MeshObject
 from devtools.scene import PointCloudMap, Pose, Scene, Sphere
 
 
@@ -53,6 +54,41 @@ def euler_point(point, roll, pitch, yaw):
     y, z = math.cos(roll)*y - math.sin(roll)*z, math.sin(roll)*y + math.cos(roll)*z
     x, z = math.cos(pitch)*x + math.sin(pitch)*z, -math.sin(pitch)*x + math.cos(pitch)*z
     return (math.cos(yaw)*x - math.sin(yaw)*y, math.sin(yaw)*x + math.cos(yaw)*y, z)
+
+
+def mesh_obj():
+    """Independent rectangular plane and 2 x 2 x 3 m closed box, in OBJ order."""
+    return """# unit metre
+# size_xyz 8 6 4
+o ground
+v -4 -3 0
+v 4 -3 0
+v 4 3 0
+v -4 3 0
+f 1 2 3
+f 1 3 4
+o pillar_0
+v -1 -2 0
+v 1 -2 0
+v 1 0 0
+v -1 0 0
+v -1 -2 3
+v 1 -2 3
+v 1 0 3
+v -1 0 3
+f 5 7 6
+f 5 8 7
+f 9 10 11
+f 9 11 12
+f 5 6 10
+f 5 10 9
+f 6 7 11
+f 6 11 10
+f 7 8 12
+f 7 12 11
+f 8 5 9
+f 8 9 12
+"""
 
 
 def main():
@@ -212,6 +248,103 @@ def main():
         rejected(lambda: scene.with_vehicle_pose((0, 0, 0)))
         rejected(lambda: scene.with_target_position((0, 0)))
         checks.append("independent vehicle/target updates share background; original snapshot/radii retained; invalid updates rejected")
+
+        mesh_source = folder / "physical.obj"
+        mesh_text = mesh_obj()
+        mesh_source.write_text(mesh_text, encoding="ascii")
+        mesh_before = hashlib.sha256(mesh_source.read_bytes()).hexdigest()
+        mesh_scene = Scene.from_map(mesh_source, config, Pose((1, 2, 3)), (-2, 1, 2))
+        mesh = mesh_scene.background
+        assert isinstance(mesh, MeshMap) and mesh.source == mesh_source
+        assert mesh.comments == ("unit metre", "size_xyz 8 6 4")
+        assert mesh.size_xyz_m == (8, 6, 4) and mesh.bounds_m == ((-4, 4), (-3, 3), (0, 3))
+        assert mesh.vertex_count == 12 and mesh.triangle_count == 14
+        assert tuple((obj.name, obj.kind) for obj in mesh.objects) == (("ground", "ground"), ("pillar_0", "obstacle"))
+        ground, obstacle = mesh.objects
+        assert ground.triangles == ((0, 1, 2), (0, 2, 3))
+        assert obstacle.triangles[0] == (0, 2, 1) and obstacle.triangles[-1] == (3, 4, 7)
+        assert set(obstacle.vertices_m) == {(x, y, z) for x in (-1, 1) for y in (-2, 0) for z in (0, 3)}
+        # Analytic box geometry independently checks every face normal, closure and volume.
+        incidences, volume6 = {}, 0.0
+        for a_index, b_index, c_index in obstacle.triangles:
+            a, b, c = (obstacle.vertices_m[index] for index in (a_index, b_index, c_index))
+            u, v = tuple(b[k] - a[k] for k in range(3)), tuple(c[k] - a[k] for k in range(3))
+            normal = (u[1]*v[2] - u[2]*v[1], u[2]*v[0] - u[0]*v[2], u[0]*v[1] - u[1]*v[0])
+            face_center = tuple((a[k] + b[k] + c[k])/3 for k in range(3))
+            assert sum(normal[k] * (face_center[k] - (0, -1, 1.5)[k]) for k in range(3)) > 0
+            volume6 += (a[0]*(b[1]*c[2] - b[2]*c[1])
+                        + a[1]*(b[2]*c[0] - b[0]*c[2]) + a[2]*(b[0]*c[1] - b[1]*c[0]))
+            for first, second in ((a_index, b_index), (b_index, c_index), (c_index, a_index)):
+                incidences.setdefault(tuple(sorted((first, second))), []).append((first, second))
+        close(volume6/6, 12)
+        assert all(len(edges) == 2 and edges[0] == edges[1][::-1] for edges in incidences.values())
+        assert mesh_scene.vehicle.radius_m == config.vehicle_radius_m and mesh_scene.target.radius_m == config.target_radius_m
+        updated_mesh_scene = mesh_scene.with_vehicle_pose(mixed).with_target_position((7, 8, 9))
+        assert updated_mesh_scene.background is mesh and mesh_scene.vehicle.pose.position_m == (1, 2, 3)
+        assert Scene.from_obj(mesh_source, config, Pose((0, 0, 1)), (2, 3, 1)).background == mesh
+        assert isinstance(Scene.from_map(source, config, Pose((0, 0, 1)), (2, 3, 1)).background, PointCloudMap)
+        rejected(lambda: Scene.from_map(folder / "wrong.stl", config, Pose((0, 0, 1)), (2, 3, 1)))
+        rejected(lambda: setattr(mesh, "objects", ()), FrozenInstanceError)
+        rejected(lambda: setattr(obstacle, "vertices_m", ()), FrozenInstanceError)
+        assert hashlib.sha256(mesh_source.read_bytes()).hexdigest() == mesh_before
+        checks.append("complete OBJ object-local indices, independent analytic box normals/closure/volume, exact bounds, configured spheres and shared background")
+
+        ground_only = mesh_text.split("o pillar_0")[0]
+        mesh_source.write_text(ground_only, encoding="ascii")
+        assert MeshMap.from_obj(mesh_source).vertex_count == 4
+        box_lines = mesh_text.split("o pillar_0\n")[1].splitlines()
+        box_vertices = [line for line in box_lines if line.startswith("v ")]
+        box_faces = [line for line in box_lines if line.startswith("f ")]
+        shifted_faces = ["f " + " ".join(str(int(index) + 8) for index in line.split()[1:])
+                         for line in box_faces]
+        overlapping_text = mesh_text + "o pillar_1\n" + "\n".join(box_vertices + shifted_faces) + "\n"
+        mesh_source.write_text(overlapping_text, encoding="ascii")
+        overlapping_map = MeshMap.from_obj(mesh_source)
+        assert overlapping_map.vertex_count == 20 and overlapping_map.triangle_count == 26
+        assert overlapping_map.objects[1].vertices_m == overlapping_map.objects[2].vertices_m
+        disconnected_obstacle = (ground_only + "o pillar_0\n"
+                                 + "\n".join(box_vertices * 2 + box_faces + shifted_faces) + "\n")
+        mesh_source.write_text(mesh_text.replace("# unit metre\n", "").replace("# size_xyz 8 6 4\n", ""), encoding="ascii")
+        assert MeshMap.from_obj(mesh_source).size_xyz_m is None
+        reversed_obstacle = "\n".join(" ".join((fields[0], fields[1], fields[3], fields[2]))
+                                      if fields[:1] == ["f"] else line
+                                      for line in mesh_text.splitlines()
+                                      for fields in [line.split()]) + "\n"
+        # Leave the ground upward while reversing the complete obstacle.
+        reversed_obstacle = ground_only + "o pillar_0" + reversed_obstacle.split("o pillar_0")[1]
+        invalid_obj = [
+            "", "v 0 0 0\n", "o ground\n", mesh_text + "mtllib unused.mtl\n",
+            mesh_text + "f 8 9 12\n", disconnected_obstacle,
+            mesh_text.replace("o pillar_0", "o ground"), mesh_text.replace("o ground", "g ground"),
+            mesh_text.replace("v -1 -2 0", "v nan -2 0"), mesh_text.replace("v -1 -2 0", "v 0 inf 0"),
+            mesh_text.replace("v -1 -2 0", "v -1 -2"), mesh_text.replace("f 5 7 6", "f 5 5 6"),
+            mesh_text.replace("f 5 7 6", "f 5 7 1"), mesh_text.replace("f 5 7 6", "f 5 7 13"),
+            mesh_text.replace("f 5 7 6", "f -5 7 6"), mesh_text.replace("f 5 7 6", "f 5/1 7/1 6/1"),
+            mesh_text.replace("f 5 7 6", "f 5 7 6 8"), mesh_text.replace("f 5 7 6\n", ""),
+            mesh_text.replace("f 5 7 6", "f 5 6 7"), reversed_obstacle,
+            mesh_text.replace("f 5 7 6", "v 0 0 0\nf 5 7 6"),
+            mesh_text.replace("f 5 7 6", "f 5 7 6\nv 0 0 0"),
+            mesh_text.replace("v -1 -2 3", "v -1 -2 0"),
+            mesh_text.replace("f 1 2 3", "f 1 3 2"),
+            mesh_text.replace("unit metre", "unit centimetre"),
+            mesh_text + "# unit metre\n", mesh_text + "# size_xyz 8 6 4\n",
+            mesh_text.replace("size_xyz 8 6 4", "size_xyz 8 6 4 resolution 0.1"),
+            mesh_text.replace("size_xyz 8 6 4", "size_xyz 8 6 2"),
+            mesh_text.replace("v -4 -3 0", "v -3 -3 0"),
+            mesh_text.replace("size_xyz 8 6 4", "size_xyz 8 0 4"),
+        ]
+        for text in invalid_obj:
+            mesh_source.write_text(text, encoding="ascii")
+            rejected(lambda: MeshMap.from_obj(mesh_source))
+        mutable_vertices = [list(vertex) for vertex in obstacle.vertices_m]
+        mutable_faces = [list(face) for face in obstacle.triangles]
+        copied = MeshObject("pillar_copy", mutable_vertices, mutable_faces, "obstacle")
+        mutable_vertices[0][0], mutable_faces[0][0] = 100, 7
+        assert copied.vertices_m == obstacle.vertices_m and copied.triangles == obstacle.triangles
+        rejected(lambda: MeshObject("pillar_bad", obstacle.vertices_m, ((True, 2, 1),), "obstacle"))
+        rejected(lambda: MeshMap(mesh_source, (obstacle,)))
+        rejected(lambda: MeshMap(mesh_source, (ground, obstacle, obstacle)))
+        checks.append("ground-only and independent overlapping objects; optional metadata; strict OBJ features/units/indices/bounds; degenerate/open/inward/disconnected surfaces rejected; immutable copied mesh storage")
 
     result = {"status": "passed", "checks": checks, "check_groups": len(checks),
               "full_point_count": 100_007, "units": "metres",

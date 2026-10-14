@@ -14,7 +14,7 @@
 | Perlin 计算与种子 | `Simulator/src/include/perlinnoise.hpp`、`Simulator/src/src/perlinnoise.cpp` | `tools/mapgen/include/perlinnoise.hpp`、`tools/mapgen/src/perlinnoise.cpp` | 保留版权说明和 fade/lerp/grad/seed 机制；排列扩展从副本插入，整数坐标先模 256 再转 int，避免 vector 自区间插入和大输入转换越界 |
 | 地面机制参考 | `Simulator/src/src/maps.cpp`，`Maps::generateGround` | `tools/mapgen/src/maps.cpp`，新写 `Generator::plane` | 改用请求范围与整数步进生成固定地面；旧实现按随机障碍包围盒铺地面，空障碍不可靠且地面随 seed 改变 |
 
-`Config`、CLI、输入校验、点云边界裁剪与 ASCII PLY 保存为本仓新实现。仅公开 `Config` 与 `generate(Config)`，生成器内部状态留在源文件；去除 ROS、CUDA、OpenCV、YAML、全局配置路径和旧传感器/训练目录约定，未采用迷宫、森林、房间、镜像延拓或体素滤波。
+`Config`、CLI、输入校验、点云边界裁剪与 ASCII PLY 保存为本仓新实现。OBJ 方柱与地面、实体边界裁剪及对象化保存也为本仓新实现：参考随机中心和尺寸分布，但按真实米制尺寸定义实体，不沿用旧柱壳的网格跨度。公共生成接口见 `tools/mapgen/include/maps.hpp`，生成器内部状态留在源文件；去除 ROS、CUDA、OpenCV、YAML、全局配置路径和旧传感器/训练目录约定，未采用迷宫、森林、房间、镜像延拓或体素滤波。
 
 参数、格式和复现范围见 [地图工具说明](../tools/mapgen/README.md)；验证方式见 [tests/verify_mapgen.py](../tests/verify_mapgen.py)。
 
@@ -22,7 +22,7 @@
 
 柱场示例的参数来自 `Omni_ToF-YOPO` 提交 `cf0b7f4b17712667a8bbdb1126f5e914904ece9d` 的 `Simulator/src/config/config.yaml:14,24–48`，取值与命令见 [地图工具运行示例](../tools/mapgen/README.md#运行)。采用的是该固定版本的配置，不代表所有历史训练配方。
 
-这里只采用参数，本仓仍使用上表的地图生成机制，不保证与旧工程逐点一致。
+这里只采用参数。PLY 使用上表的点云机制，OBJ 使用本仓的实体几何定义；不保证与旧工程逐点一致。
 
 ## 场景与配置
 

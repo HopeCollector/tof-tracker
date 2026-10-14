@@ -7,7 +7,10 @@
 #include <pcl/point_types.h>
 #include <cstddef>
 #include <cstdint>
+#include <array>
+#include <optional>
 #include <string>
+#include <vector>
 
 namespace offline_map {
 using Cloud = pcl::PointCloud<pcl::PointXYZ>;
@@ -23,6 +26,8 @@ struct Config {
   int count = 12;
   double width_min = 0.6;
   double width_max = 1.2;
+  std::optional<double> height_min;
+  std::optional<double> height_max;
   double wall_thickness = 0.2;
   bool ceiling = false;
   double complexity = 0.02;
@@ -34,5 +39,15 @@ struct Config {
 // One fresh background map per call. No target/entity, renderer, training,
 // ROS, dataset-layout or globally compiled path settings are involved.
 Cloud::Ptr generate(const Config& config);
+
+// Vertices are in world metres. Faces index only this object's own vertices;
+// the writer translates them to OBJ's file-wide one-based indices.
+struct MeshObject {
+  std::string name;
+  std::vector<std::array<double, 3>> vertices;
+  std::vector<std::array<std::size_t, 3>> triangles;
+};
+using MeshMap = std::vector<MeshObject>;
+MeshMap generateMesh(const Config& config);
 } // namespace offline_map
 #endif
