@@ -7,9 +7,6 @@ RUN apt-get update \
         ca-certificates \
         cmake \
         git \
-        libeigen3-dev \
-        libpcl-dev \
-        pkg-config \
         python3 \
         python3-setuptools \
         python3-venv \

@@ -1,6 +1,6 @@
 # 地图与场景查看器
 
-在浏览器中查看 OBJ mesh 或旧 ASCII XYZ PLY。提供飞机和目标位置时，同一页面叠加两个物理球与机体 FLU 轴。
+在浏览器中查看 OBJ mesh。提供飞机和目标位置时，同一页面叠加两个物理球与机体 FLU 轴。
 
 ## 运行
 
@@ -33,11 +33,5 @@ OBJ 完整显示真实几何，XYZ 按米解释，三轴等比例。页面提供
 `--vehicle-position X Y Z` 与 `--target-position X Y Z` 是米制世界位置，须成对提供。飞机姿态 `--vehicle-rpy-deg ROLL PITCH YAW` 单位为度，默认 `0 0 0`；姿态或配置参数也要求同时提供两个位置。
 
 两个球的半径取自 `configs/devtools.json`，可用 `--config <路径>` 替换，配置用法见 [配置说明](../../devtools/README.md#统一配置与场景)。蓝色球表示飞机，橙色球表示目标；红 / 绿 / 蓝线分别表示机体前 / 左 / 上轴。背景显示控件不改变这些物体。
-
-## 旧点云查看
-
-`.ply` 仍可切换体素、原始点云和叠加模式，调整 `--point-size`（1..12 像素）与 `--voxel-fill`（0.1..1）。默认最多显示 100,000 个点和 12,000 个显示格，可用 `--max-points` / `--max-voxels` 调整。
-
-默认从地图分辨率开始，显示格超限时自动变粗，保留全部含点区域的概览。`--voxel-size <米>` 固定显示格长，超限时抽样并提示非完整展示；缺少分辨率元数据的 PLY 须提供此参数。显示格只表示点云触及的区域，不能据此判断真实障碍尺寸或内部占据。上述点云选项不适用于 OBJ。
 
 完整参数见 `just run python tools/map_viewer/view_map.py --help`。检查由 `just check` 运行，覆盖职责见 [verify_map_viewer.py](../../tests/verify_map_viewer.py)。

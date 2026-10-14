@@ -20,27 +20,15 @@ just view outputs/mapgen/pillars-3.obj
 
 | 参数 | 含义与默认值 |
 |---|---|
-| `--output` | 必填；`.obj` 选择 mesh 输出，目前仅支持 `pillars` |
+| `--output` | 必填；输出路径须为 `.obj` |
 | `--type` / `--seed` | `pillars` / `3` |
 | `--size-x/y/z` | 地图范围，默认 `8/6/3` 米 |
 | `--count` | 随机方柱数量，默认 `12`；可为 0，此时只有地面 |
 | `--width-min/max` | 方柱原始边长的均匀采样范围，默认 `0.6..1.2` 米 |
 | `--height-min/max` | 方柱高度的均匀采样范围；省略时分别取 `0.1*size_z` 和 `size_z` |
 
-XY 以零为中心，地面为 Z=0，Z 向上。柱中心在 XY 范围内独立均匀采样，允许重叠；贴边柱体与地图范围求交，裁剪后仍闭合，所以它的最终边长可以小于所采样的原始边长。高度与边长须为正，采样分辨率不参与 mesh 尺寸定义。
+XY 以零为中心，地面为 Z=0，Z 向上。柱中心在 XY 范围内独立均匀采样，允许重叠；贴边柱体与地图范围求交，裁剪后仍闭合，所以它的最终边长可以小于所采样的原始边长。高度与边长须为正。
 
-一个 OBJ 保存全部对象：`pillar_0` 等障碍各自拥有顶点和三角面，`ground` 为覆盖完整 XY 范围的平面。坐标单位、地图范围、seed 和生成参数写在注释中。物体身份保留在资产里，查看时不抽样或膨胀。这个文件尚未定义点云采样或 ESDF 占据规则。
+一个 OBJ 保存全部对象：`pillar_0` 等障碍各自拥有顶点和三角面，`ground` 为覆盖完整 XY 范围的平面。坐标单位、地图范围、seed 和生成参数写在注释中。物体身份保留在资产里，查看时不抽样或膨胀；占据与 ESDF 由后续消费者处理。
 
-## 旧点云输出
-
-`.ply` 保留旧的 `pillars`、`walls` 和 `perlin` 点云生成方式，用于已有资产和对照；不是从 OBJ 采样得到的点云。它的 `--resolution` 控制旧采样网格，尺寸须为其整数倍，旧柱壳的跨度不等于配置的宽高。
-
-```bash
-just map --type walls --seed 17 --resolution 0.2 \
-  --output outputs/mapgen/walls-17.ply
-just view outputs/mapgen/walls-17.ply
-```
-
-Mesh 输出不接受 `--resolution`、`--max-points` 或墙体、Perlin 专用参数；高度范围参数只用于 mesh。完整参数见 `just run outputs/mapgen/build/offline_mapgen --help`。
-
-固定 seed 的复现范围限于相同配置、编译工具链与标准库。检查由 `just check` 运行，覆盖职责见 [verify_mapgen.py](../../tests/verify_mapgen.py)。参考出处与适配见 [来源说明](../../docs/origins.md)，许可声明见 [第三方声明](third_party_notices/README.md)。
+完整参数见 `just run outputs/mapgen/build/offline_mapgen --help`。固定 seed 的复现范围限于相同配置、编译工具链与标准库。检查由 `just check` 运行，覆盖职责见 [verify_mapgen.py](../../tests/verify_mapgen.py)。参考出处见 [来源说明](../../docs/origins.md)。

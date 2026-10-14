@@ -38,7 +38,7 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 
 - `Dockerfile` 固定官方 Ubuntu 24.04 基础镜像 digest，发行版包取自构建时的 Ubuntu 软件源。
 - `dev.sh` 显式使用现有本机 `unix:///var/run/docker.sock`，不修改 Docker 服务、用户组或宿主配置。
-- `check-env.sh` 在容器内检查项目导入、C++17/Eigen/PCL 编译和实际点云读写。
+- `check-env.sh` 在容器内检查项目导入、C++17 编译和文件读写。
 - 根 `.dockerignore` 排除 Git、编辑器设置、本地环境、缓存、产物和常见本地凭据目录。
 
 运行时只挂载本仓库，使用调用者的 UID/GID；不挂用户主目录、Docker socket 或其他仓库，不传递用户全局配置与凭据。`HOME` 和缓存位于容器 `/tmp`。容器退出后删除，源码修改和 `outputs/` 产物保留在项目中并归调用者所有。
@@ -47,7 +47,7 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 
 ## 验证入口
 
-环境检查入口为 [check-env.sh](check-env.sh)，检查 Python 开发安装与三个包导入、C++17/CMake/Eigen/PCL 编译、PCD 写入读回和文件归属；临时源码与构建文件在容器 `/tmp`。可单独运行：
+环境检查入口为 [check-env.sh](check-env.sh)，检查 Python 开发安装与三个包导入、C++17/CMake 编译、文件写入读回和文件归属；临时源码与构建文件在容器 `/tmp`。可单独运行：
 
 ```bash
 just run bash docker/check-env.sh
