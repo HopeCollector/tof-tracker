@@ -21,3 +21,6 @@ packages = ["tof_tracker", "training", "devtools"]
 tof_tracker = "src/tof_tracker"
 training = "training"
 devtools = "devtools"
+
+[tool.pyright]
+extends = ".vscode/pyrightconfig.json"
