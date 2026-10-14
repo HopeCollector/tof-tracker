@@ -1,11 +1,11 @@
-"""Immutable development geometry: a complete background and two spheres.
+"""Immutable development scenes and public, filtered world geometry snapshots.
 
 World positions are metres. Body axes follow FLU (+X forward, +Y left, +Z up).
 Geometry is ground truth for development backends, not online observations.
-This module does not advance dynamics or infer occupied/free space from points.
+This module does not advance dynamics or compute occupancy.
 """
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field, replace
 import math
 from pathlib import Path
@@ -13,11 +13,31 @@ from pathlib import Path
 from tof_tracker.geometry import Transform
 
 from .config import SceneConfig, _positive_number
-from .mesh import MeshMap
+from .mesh import MeshMap, MeshObject
 
 
 Vector3 = tuple[float, float, float]
 Quaternion = tuple[float, float, float, float]
+
+
+def _reference_time(value):
+    if value is None:
+        return None
+    if type(value) not in (int, float):
+        raise ValueError("t_ref must be finite seconds in the caller's clock domain, or None")
+    try:
+        result = float(value)
+    except OverflowError as exc:
+        raise ValueError("t_ref must be finite seconds") from exc
+    if not math.isfinite(result):
+        raise ValueError("t_ref must be finite seconds")
+    return result
+
+
+def _object_id(value):
+    if not isinstance(value, str) or not value or any(c.isspace() for c in value):
+        raise ValueError("object_id must be one nonempty string token")
+    return value
 
 
 def _finite_vector(value, length, name):
@@ -95,144 +115,160 @@ class Sphere:
         object.__setattr__(self, "radius_m", _positive_number(self.radius_m, "radius_m"))
 
 
-@dataclass(frozen=True)
-class PointCloudMap:
-    """All original XYZ points, without display sampling, voxelization or filling.
+_WORLD_IDENTITY_POSE = Pose((0.0, 0.0, 0.0))
 
-    resolution_m and size_xyz_m are optional source metadata, not a declaration
-    of occupied volume. bounds_m are the actual point extrema along X, Y and Z.
+
+@dataclass(frozen=True)
+class SceneObject:
+    """Stable identity and role attached to existing immutable geometry.
+
+    Mesh vertices already lie in W, so their pose is the world identity.
+    A sphere retains its world center and body-to-world attitude in geometry.pose.
+    Geometry is shared; this record does not convert spheres into triangles.
     """
 
-    points_m: tuple[Vector3, ...]
-    source: Path
-    comments: tuple[str, ...] = ()
-    resolution_m: float | None = None
-    size_xyz_m: Vector3 | None = None
-    bounds_m: tuple[tuple[float, float], ...] = field(init=False)
+    object_id: str
+    role: str
+    geometry: MeshObject | Sphere
 
     def __post_init__(self):
-        points = tuple(_finite_vector(point, 3, "background point") for point in self.points_m)
-        if not points:
-            raise ValueError("background point cloud must not be empty")
-        comments = tuple(self.comments)
-        if not all(isinstance(comment, str) for comment in comments):
-            raise ValueError("background comments must be strings")
-        object.__setattr__(self, "points_m", points)
-        object.__setattr__(self, "source", Path(self.source))
-        object.__setattr__(self, "comments", comments)
-        if self.resolution_m is not None:
-            object.__setattr__(self, "resolution_m", _positive_number(self.resolution_m, "resolution_m"))
-        if self.size_xyz_m is not None:
-            sizes = _finite_vector(self.size_xyz_m, 3, "size_xyz_m")
-            object.__setattr__(self, "size_xyz_m", tuple(_positive_number(v, "size_xyz_m") for v in sizes))
-        object.__setattr__(self, "bounds_m", tuple((min(p[k] for p in points), max(p[k] for p in points))
-                                                   for k in range(3)))
+        _object_id(self.object_id)
+        if isinstance(self.geometry, MeshObject):
+            valid_roles = (self.geometry.kind,)
+        elif isinstance(self.geometry, Sphere):
+            valid_roles = ("vehicle", "target")
+        else:
+            raise ValueError("geometry must be a MeshObject or Sphere")
+        if not isinstance(self.role, str) or self.role not in valid_roles:
+            raise ValueError("object role must match its geometry")
 
     @property
-    def count(self) -> int:
-        return len(self.points_m)
+    def pose(self) -> Pose:
+        return self.geometry.pose if isinstance(self.geometry, Sphere) else _WORLD_IDENTITY_POSE
 
-    @classmethod
-    def from_ply(cls, path: str | Path) -> "PointCloudMap":
-        """Load complete metre XYZ data from the project's ASCII PLY subset."""
-        path = Path(path)
-        with path.open(encoding="ascii") as stream:
-            if stream.readline().strip() != "ply" or stream.readline().strip() != "format ascii 1.0":
-                raise ValueError("only format ascii 1.0 PLY is supported")
-            count, properties, comments = None, [], []
-            for line_number in range(3, 259):
-                line = stream.readline()
-                if not line or len(line) > 16_384:
-                    raise ValueError("PLY header lacks end_header or contains an overlong line")
-                fields = line.strip().split()
-                if not fields:
-                    raise ValueError("PLY header contains an empty line")
-                if fields == ["end_header"]:
-                    break
-                if fields[0] == "comment":
-                    comments.append(line.strip()[8:])
-                elif fields[:2] == ["element", "vertex"] and len(fields) == 3 and count is None:
-                    count = int(fields[2])
-                elif fields[0] == "property" and count is not None and len(fields) == 3:
-                    if fields[1] not in {"float", "double", "float32", "float64"}:
-                        raise ValueError("XYZ must use float or double scalar properties")
-                    properties.append(fields[2])
-                else:
-                    raise ValueError(f"unsupported PLY header field on line {line_number}")
-            else:
-                raise ValueError("PLY header too long or missing end_header")
-            if count is None or count <= 0 or sorted(properties) != ["x", "y", "z"]:
-                raise ValueError("PLY must declare nonempty vertex data with exactly x/y/z properties")
 
-            resolution, sizes = None, None
-            for comment in comments:
-                fields = comment.split()
-                if fields[:1] == ["unit"] and fields != ["unit", "metre"]:
-                    raise ValueError("PLY unit must be metre; coordinates are not converted")
-                if fields[:1] == ["size_xyz"]:
-                    if len(fields) != 6 or fields[4] != "resolution" or sizes is not None:
-                        raise ValueError("size_xyz / resolution metadata is malformed or duplicated")
-                    sizes = tuple(_positive_number(float(v), "size_xyz") for v in fields[1:4])
-                    resolution = _positive_number(float(fields[5]), "resolution")
-            order = [properties.index(axis) for axis in "xyz"]
-            points = []
-            for index in range(count):
-                fields = stream.readline().split()
-                if len(fields) != 3:
-                    raise ValueError(f"vertex {index + 1} is missing or does not contain three values")
-                point = tuple(float(fields[k]) for k in order)
-                if not all(math.isfinite(v) for v in point):
-                    raise ValueError(f"vertex {index + 1} contains nonfinite coordinates")
-                points.append(point)
-            if any(line.strip() for line in stream):
-                raise ValueError("vertex data exceeds the PLY declared count")
-        return cls(tuple(points), path, tuple(comments), resolution, sizes)
+@dataclass(frozen=True)
+class GeometrySnapshot:
+    """Selected world geometry at a caller-supplied reference time.
+
+    map_bounds_m describes the declared map domain, not the extrema of vertices.
+    None means the asset has no declared domain. Selection never
+    changes this metadata or decides visibility, occupancy or collision policy.
+    """
+
+    objects: tuple[SceneObject, ...]
+    t_ref: float | None
+    map_bounds_m: tuple[tuple[float, float], ...] | None
+
+    def __post_init__(self):
+        if isinstance(self.objects, (str, bytes, Mapping)):
+            raise ValueError("objects must contain SceneObject instances")
+        try:
+            objects = tuple(self.objects)
+        except TypeError as exc:
+            raise ValueError("objects must contain SceneObject instances") from exc
+        if any(not isinstance(obj, SceneObject) for obj in objects):
+            raise ValueError("objects must contain SceneObject instances")
+        if len({obj.object_id for obj in objects}) != len(objects):
+            raise ValueError("snapshot object IDs must be unique")
+        bounds = self.map_bounds_m
+        if bounds is not None:
+            if not isinstance(bounds, Sequence) or isinstance(bounds, (str, bytes)) or len(bounds) != 3:
+                raise ValueError("map_bounds_m must contain three finite increasing coordinate intervals")
+            bounds = tuple(_finite_vector(interval, 2, "map bounds interval") for interval in bounds)
+            if any(low >= high for low, high in bounds):
+                raise ValueError("map bounds intervals must be increasing")
+        object.__setattr__(self, "objects", objects)
+        object.__setattr__(self, "t_ref", _reference_time(self.t_ref))
+        object.__setattr__(self, "map_bounds_m", bounds)
+
+    @property
+    def frame(self) -> str:
+        return "W"
+
+    @property
+    def unit(self) -> str:
+        return "metre"
+
+    def get_object(self, object_id: str) -> SceneObject:
+        """Return the selected object with this ID; reject unknown IDs."""
+        _object_id(object_id)
+        for obj in self.objects:
+            if obj.object_id == object_id:
+                return obj
+        raise ValueError(f"unknown object ID {object_id!r} in this geometry snapshot")
 
 
 @dataclass(frozen=True)
 class Scene:
-    """An immutable physical snapshot, before sensing or distance-field queries."""
+    """Immutable world facts, before sensing or distance-field queries.
 
-    background: PointCloudMap | MeshMap
+    t_ref is finite seconds in the caller's clock domain; None means unknown.
+    Replacing a pose or position retains this time and does not advance a clock.
+    """
+
+    background: MeshMap
     vehicle: Sphere
     target: Sphere
+    t_ref: float | None = None
+    _geometry: GeometrySnapshot = field(init=False, repr=False, compare=False)
 
     def __post_init__(self):
-        if not isinstance(self.background, (PointCloudMap, MeshMap)):
-            raise ValueError("background must be a PointCloudMap or MeshMap")
+        if not isinstance(self.background, MeshMap):
+            raise ValueError("background must be a MeshMap")
         if not isinstance(self.vehicle, Sphere) or not isinstance(self.target, Sphere):
             raise ValueError("vehicle and target must be Sphere instances")
-
-    @classmethod
-    def from_ply(cls, path: str | Path, config: SceneConfig, vehicle_pose: Pose,
-                 target_position_m: Vector3) -> "Scene":
-        """Load an original point-cloud background and explicit world state."""
-        return cls._from_background(PointCloudMap.from_ply(path), config, vehicle_pose, target_position_m)
+        object.__setattr__(self, "t_ref", _reference_time(self.t_ref))
+        objects = tuple(SceneObject("map/" + obj.name, obj.kind, obj) for obj in self.background.objects)
+        objects += (SceneObject("vehicle", "vehicle", self.vehicle),
+                    SceneObject("target", "target", self.target))
+        sizes = self.background.size_xyz_m
+        bounds = None if sizes is None else ((-sizes[0]/2, sizes[0]/2),
+                                             (-sizes[1]/2, sizes[1]/2), (0.0, sizes[2]))
+        object.__setattr__(self, "_geometry", GeometrySnapshot(objects, self.t_ref, bounds))
 
     @classmethod
     def from_obj(cls, path: str | Path, config: SceneConfig, vehicle_pose: Pose,
-                 target_position_m: Vector3) -> "Scene":
+                 target_position_m: Vector3, *, t_ref: float | None = None) -> "Scene":
         """Load a complete mesh background and explicit world state."""
-        return cls._from_background(MeshMap.from_obj(path), config, vehicle_pose, target_position_m)
-
-    @classmethod
-    def from_map(cls, path: str | Path, config: SceneConfig, vehicle_pose: Pose,
-                 target_position_m: Vector3) -> "Scene":
-        """Select OBJ mesh or legacy PLY points from the asset's extension."""
-        suffix = Path(path).suffix.lower()
-        if suffix == ".obj":
-            return cls.from_obj(path, config, vehicle_pose, target_position_m)
-        if suffix == ".ply":
-            return cls.from_ply(path, config, vehicle_pose, target_position_m)
-        raise ValueError("scene map must be an .obj mesh or .ply point cloud")
-
-    @classmethod
-    def _from_background(cls, background, config, vehicle_pose, target_position_m):
         if not isinstance(config, SceneConfig):
             raise ValueError("config must be a SceneConfig")
         vehicle = Sphere(vehicle_pose, config.vehicle_radius_m)
         target = Sphere(Pose(target_position_m), config.target_radius_m)
-        return cls(background, vehicle, target)
+        return cls(MeshMap.from_obj(path), vehicle, target, t_ref)
+
+    def get_geometry(self, *, include_ids=None, exclude_ids=()) -> GeometrySnapshot:
+        """Return geometry selected by exact object IDs, retaining source order.
+
+        None includes all IDs; an empty include iterable selects none. Exclusion
+        takes precedence. Both filters accept ID iterables, reject strings and
+        unknown IDs or mappings, and affect only this return value. Entities and shapes are
+        shared with the unfiltered snapshot; this is no visibility computation.
+        """
+        known_ids = {obj.object_id for obj in self._geometry.objects}
+
+        def checked_ids(values, name):
+            if isinstance(values, (str, bytes, Mapping)):
+                raise ValueError(f"{name} must be an iterable of object ID strings, not a string or mapping")
+            try:
+                iterator = iter(values)
+            except TypeError as exc:
+                raise ValueError(f"{name} must be an iterable of object ID strings") from exc
+            selected = set()
+            for value in iterator:
+                _object_id(value)
+                if value not in known_ids:
+                    raise ValueError(f"unknown object ID {value!r} in {name}")
+                selected.add(value)
+            return selected
+
+        included = known_ids if include_ids is None else checked_ids(include_ids, "include_ids")
+        excluded = checked_ids(exclude_ids, "exclude_ids")
+        if included == known_ids and not excluded:
+            return self._geometry
+        objects = tuple(obj for obj in self._geometry.objects
+                        if obj.object_id in included and obj.object_id not in excluded)
+        return GeometrySnapshot(objects, self.t_ref, self._geometry.map_bounds_m)
 
     def with_vehicle_pose(self, pose: Pose) -> "Scene":
         """Replace only vehicle state, retaining the same background and target."""

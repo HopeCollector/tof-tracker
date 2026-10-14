@@ -1,28 +1,28 @@
 # 场景、观测与几何查询
 
-`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现完整背景 mesh / 点云、飞机球、目标球和三维位姿；传感器与 ESDF 仍为占位。
+`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球和三维位姿；传感器与 ESDF 仍为占位。
 
 | 文件 | 当前职责 |
 |---|---|
 | [`config.py`](config.py) | 已实现：读取、校验不可变物理配置 |
 | [`mesh.py`](mesh.py) | 已实现：读取独立闭合障碍和地面平面的 OBJ 资产 |
-| [`scene.py`](scene.py) | 已实现：`PointCloudMap`、`Pose`、`Sphere`、`Scene` 及状态替换 |
+| [`scene.py`](scene.py) | 已实现：场景加载、按对象 ID 读取几何、球体状态替换 |
 | [`sensors.py`](sensors.py) | 占位：指定机体位姿下的四路 ToF 与前向相机观测 |
 | [`esdf.py`](esdf.py) | 占位：距离场构建、加载及批量可微几何查询 |
 
 ## 统一配置与场景
 
-背景由独立离线[地图生成器](../tools/mapgen/README.md)准备，训练读取已有资产。OBJ 保存独立闭合障碍和地面平面，旧 PLY 保存背景点；飞机、目标与机体姿态由 `Scene` 表达。
+背景由独立离线[地图生成器](../tools/mapgen/README.md)准备，训练读取已有资产。OBJ 保存独立闭合障碍和地面平面；飞机、目标与机体姿态由 `Scene` 表达。
 
-`MeshMap.from_obj()` 保留完整对象，每个 `MeshObject` 包含名称、米制顶点和局部三角面索引。障碍分别闭合，可以重叠；地面为 Z=0 的开放平面。加载时不采样、不构建占据或 ESDF。`Scene.from_map()` 按扩展名选择 OBJ 或 PLY，也可显式使用 `from_obj()` / `from_ply()`。
-
-`PointCloudMap.from_ply()` 读取本项目支持的非空 ASCII XYZ PLY，保留全部点、原序、重复点、注释和可选尺寸 / 分辨率元数据。`bounds_m` 是实际点坐标的范围。它不抽样、不归格、不填充内部；目前也不定义背景占据、空闲区域、射线命中或碰撞语义。
+`MeshMap.from_obj()` 保留完整对象，每个 `MeshObject` 包含名称、米制顶点和局部三角面索引。障碍分别闭合，可以重叠；地面为 Z=0 的开放平面。`Scene.from_obj()` 加载背景并添加飞机、目标。加载时不采样、不构建占据或 ESDF。
 
 [统一配置](../configs/devtools.json) 当前仅接受 `vehicle.radius_m` 和 `target.radius_m`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给场景；半径须有限且为正，布尔值、缺项、未知字段和重复 JSON 键会被拒绝。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。后续传感器参数也归此配置，但当前加载器尚不接受这些字段。
 
 `Pose` 使用米制三维位置和机体 FLU 到世界的单位 `quaternion_xyzw`：X 向前、Y 向左、Z 向上。四元数只允许 `1e-6` 内的范数舍入误差并归一化；完整横滚、俯仰和 Z 分量均保留，不作水平回正。`body_to_world()` 与 `world_to_body()` 变换点的位置，包含平移。
 
-`Scene` 是不可变物理快照。`with_vehicle_pose()` / `with_target_position()` 返回新场景，共享完整背景并保留旧状态；它们只设置状态，不推进动力学。目标球与背景是传感器、遮挡和几何查询共同使用的物理事实，目标不能只出现在相机提示里。用于代价的安全膨胀不渲染成真实物体。
+`Scene` 是不可变物理快照。创建时可传入调用者时钟域中的秒制 `t_ref`，省略表示时间未指定。`with_vehicle_pose()` / `with_target_position()` 返回新场景，共享完整背景并保留原参考时间；它们只设置状态，不推进动力学。目标球与背景是传感器、遮挡和几何查询共同使用的物理事实，目标不能只出现在相机提示里。用于代价的安全膨胀不渲染成真实物体。
+
+消费者通过 `scene.get_geometry()` 读取只读的世界系米制几何快照，按 `object_id` 取得对象及其角色、原始几何和位姿。飞机与目标 ID 为 `vehicle`、`target`；OBJ 对象为 `map/<原对象名>`。`include_ids` / `exclude_ids` 只筛选本次返回值，排除优先，未知 ID 报错；几何数据继续共享。筛选不改变时间或声明地图范围，缺少范围元数据时 `map_bounds_m` 为 `None`。可见性与占据判断由消费者完成，完整参数约定见源码。
 
 ## 最小调用例子
 
@@ -34,23 +34,25 @@ from devtools.config import load_config
 from devtools.scene import Pose, Scene
 
 config = load_config("configs/devtools.json")
-scene = Scene.from_map(
+scene = Scene.from_obj(
     "outputs/mapgen/pillars-3.obj", config,
-    vehicle_pose=Pose((-1, 0, 1)), target_position_m=(1, 0.6, 1.2),
+    vehicle_pose=Pose((-1, 0, 1)), target_position_m=(1, 0.6, 1.2), t_ref=0.0,
 )
+sensor_geometry = scene.get_geometry(exclude_ids={"vehicle"})
+target_only = scene.get_geometry(include_ids={"target"})
 next_scene = scene.with_target_position((1.5, 0.6, 1.2)).with_vehicle_pose(
     Pose((-0.5, 0, 1), (0, sqrt(0.5), 0, sqrt(0.5)))
 )
-assert next_scene.background is scene.background
-print(scene.target.pose.position_m)  # (1.0, 0.6, 1.2)，旧状态保留
-print(next_scene.vehicle.pose.body_to_world((1, 0, 0)))  # 约 (-0.5, 0, 0)
+assert target_only.get_object("target") is sensor_geometry.get_object("target")
+print(target_only.get_object("target").pose.position_m)  # (1.0, 0.6, 1.2)，旧快照保留
+print(next_scene.get_geometry().get_object("vehicle").pose.body_to_world((1, 0, 0)))  # 约 (-0.5, 0, 0)
 ```
 
 输入为已有地图、半径配置和世界状态，输出为可供开发后端使用的场景快照。所有项目运行与验证均在 Docker 中执行，通用入口见 [docker/README.md](../docker/README.md)。
 
-[共用查看器](../tools/map_viewer/README.md) 可显示背景、两个球与机体轴。Mesh 完整显示真实表面；旧点云的显示格不定义真实占据，也不修改场景。
+[共用查看器](../tools/map_viewer/README.md) 可显示背景、两个球与机体轴，完整显示真实表面。
 
-验证方法入口为 [`tests/verify_scene.py`](../tests/verify_scene.py)，覆盖完整背景、配置和 PLY 拒绝情况、球体、独立三维旋转与逆变换、不可变更新；场景显示与 CLI 由 [`tests/verify_map_viewer.py`](../tests/verify_map_viewer.py) 检查。在仓库根目录用 `just check` 运行现有检查，或在容器中调用对应脚本；脚本需提供 `--results` 路径。
+场景检查入口为 [`tests/verify_scene.py`](../tests/verify_scene.py)，显示与 CLI 检查入口为 [`tests/verify_map_viewer.py`](../tests/verify_map_viewer.py)。在仓库根目录用 `just check` 运行现有检查，或在容器中调用对应脚本；脚本需提供 `--results` 路径。
 
 ## 传感器与几何查询
 

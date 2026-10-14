@@ -1,4 +1,9 @@
-"""Verify complete PLY/OBJ scenes, strict geometry, immutable state and poses."""
+"""Verify complete scenes and their public, immutable geometry-query contract.
+
+Known OBJ geometry checks world units, object identity, filtering and time
+metadata independently of sensing or distance-field implementations. Existing
+asset, sphere and pose checks also cover strict input validation and updates.
+"""
 
 import argparse
 from dataclasses import FrozenInstanceError
@@ -11,15 +16,7 @@ import tempfile
 
 from devtools.config import SceneConfig, load_config
 from devtools.mesh import MeshMap, MeshObject
-from devtools.scene import PointCloudMap, Pose, Scene, Sphere
-
-
-def ply(points, comments=("unit metre", "size_xyz 8 6 3 resolution 0.2"), properties="xyz"):
-    header = ["ply", "format ascii 1.0", *("comment " + value for value in comments),
-              f"element vertex {len(points)}", *("property double " + axis for axis in properties),
-              "end_header"]
-    rows = [" ".join(str(point["xyz".index(axis)]) for axis in properties) for point in points]
-    return "\n".join(header + rows) + "\n"
+from devtools.scene import GeometrySnapshot, Pose, Scene, SceneObject, Sphere
 
 
 def close(a, b):
@@ -91,6 +88,137 @@ f 8 9 12
 """
 
 
+def verify_geometry_contract(mesh_scene, mesh_source, config, checks):
+    """Read real, target-only and updated snapshots without changing scene facts."""
+    mesh_before = hashlib.sha256(mesh_source.read_bytes()).hexdigest()
+    full = mesh_scene.get_geometry()
+    expected_ids = ("map/ground", "map/pillar_0", "vehicle", "target")
+    assert tuple(obj.object_id for obj in full.objects) == expected_ids
+    assert tuple(obj.role for obj in full.objects) == ("ground", "obstacle", "vehicle", "target")
+    assert isinstance(full.objects, tuple) and full.frame == "W" and full.unit == "metre"
+    assert full.t_ref == -1.25 and full.map_bounds_m == ((-4, 4), (-3, 3), (0, 4))
+    # The declared map domain is deliberately larger than the actual mesh Z extent.
+    assert mesh_scene.background.bounds_m[2] == (0, 3)
+    expected_geometries = (*mesh_scene.background.objects, mesh_scene.vehicle, mesh_scene.target)
+    for obj, geometry in zip(full.objects, expected_geometries):
+        assert obj.geometry is geometry and full.get_object(obj.object_id) is obj
+        if isinstance(geometry, Sphere):
+            assert obj.pose is geometry.pose
+        else:
+            assert obj.pose.position_m == (0, 0, 0)
+            assert obj.pose.quaternion_xyzw == (0, 0, 0, 1)
+    ground = full.get_object("map/ground").geometry
+    obstacle = full.get_object("map/pillar_0").geometry
+    assert set(ground.vertices_m) == {(x, y, 0) for x in (-4, 4) for y in (-3, 3)}
+    assert set(obstacle.vertices_m) == {(x, y, z) for x in (-1, 1) for y in (-2, 0) for z in (0, 3)}
+    for object_id, center, radius in (("vehicle", (1, 2, 3), 0.2), ("target", (-2, 1, 2), 0.3)):
+        geometry = full.get_object(object_id).geometry
+        assert geometry.pose.position_m == center
+        close(geometry.radius_m, radius)
+    checks.append("public mesh snapshot preserves independently known entities, world geometry, physical radii and declared domain/time")
+
+    visible = mesh_scene.get_geometry(exclude_ids={"vehicle"})
+    target_only = mesh_scene.get_geometry(include_ids=["target"])
+    assert tuple(obj.object_id for obj in visible.objects) == ("map/ground", "map/pillar_0", "target")
+    assert tuple(obj.object_id for obj in target_only.objects) == ("target",)
+    assert target_only.get_object("target").geometry is visible.get_object("target").geometry
+    # Include order never reorders source entities; exclusion wins over inclusion.
+    selected = mesh_scene.get_geometry(include_ids=("target", "map/pillar_0", "vehicle"),
+                                       exclude_ids=("vehicle",))
+    assert tuple(obj.object_id for obj in selected.objects) == ("map/pillar_0", "target")
+    generated = mesh_scene.get_geometry(include_ids=(object_id for object_id in reversed(expected_ids)))
+    assert tuple(obj.object_id for obj in generated.objects) == expected_ids
+    empty = mesh_scene.get_geometry(include_ids=[])
+    excluded = mesh_scene.get_geometry(exclude_ids=expected_ids)
+    assert empty.objects == excluded.objects == ()
+    for snapshot in (visible, target_only, selected, generated, empty, excluded):
+        assert snapshot.frame == full.frame and snapshot.unit == full.unit
+        assert snapshot.t_ref == full.t_ref and snapshot.map_bounds_m == full.map_bounds_m
+        for obj in snapshot.objects:
+            assert obj is full.get_object(obj.object_id)
+            assert obj.geometry is full.get_object(obj.object_id).geometry
+    mutable_selection = ["target"]
+    isolated = mesh_scene.get_geometry(include_ids=mutable_selection)
+    mutable_selection.append("vehicle")
+    assert tuple(obj.object_id for obj in isolated.objects) == ("target",)
+    rejected(lambda: setattr(target_only, "objects", ()), FrozenInstanceError)
+    rejected(lambda: setattr(target_only, "t_ref", 100), FrozenInstanceError)
+    rejected(lambda: setattr(target_only, "frame", "B"), FrozenInstanceError)
+    rejected(lambda: setattr(target_only, "unit", "centimetre"), FrozenInstanceError)
+    rejected(lambda: setattr(target_only, "map_bounds_m", None), FrozenInstanceError)
+    target = target_only.get_object("target")
+    for field_name, value in (("object_id", "other"), ("role", "obstacle"), ("geometry", obstacle)):
+        rejected(lambda field_name=field_name, value=value: setattr(target, field_name, value), FrozenInstanceError)
+    rejected(lambda: setattr(target.geometry, "radius_m", 50), FrozenInstanceError)
+    rejected(lambda: setattr(target.pose, "position_m", (100, 0, 0)), FrozenInstanceError)
+    rejected(lambda: visible.get_object("vehicle"))
+    for bad in ("target", b"target", {"target": True}, 42, False):
+        rejected(lambda bad=bad: mesh_scene.get_geometry(include_ids=bad))
+        rejected(lambda bad=bad: mesh_scene.get_geometry(exclude_ids=bad))
+    rejected(lambda: mesh_scene.get_geometry(exclude_ids=None))
+    for bad_id in ("unknown", "", " ", 1, True, None):
+        rejected(lambda bad_id=bad_id: mesh_scene.get_geometry(include_ids=[bad_id]))
+        rejected(lambda bad_id=bad_id: mesh_scene.get_geometry(exclude_ids=[bad_id]))
+        rejected(lambda bad_id=bad_id: full.get_object(bad_id))
+    for bad_id in ("", " ", 1, True, None):
+        rejected(lambda bad_id=bad_id: SceneObject(bad_id, "target", mesh_scene.target))
+    rejected(lambda: SceneObject("bad", "background", mesh_scene.target))
+    rejected(lambda: SceneObject("bad", "obstacle", None))
+    rejected(lambda: GeometrySnapshot((target, target), full.t_ref, full.map_bounds_m))
+    rejected(lambda: GeometrySnapshot((None,), full.t_ref, full.map_bounds_m))
+    for bounds in (((0, 1),), ((0, 1), (0, 1), (0, 0)),
+                   ((0, 1), (0, 1), (0, math.inf)), ((0, 1), (0, 1), (False, 1))):
+        rejected(lambda bounds=bounds: GeometrySnapshot((target,), full.t_ref, bounds))
+    mutable_objects = [target]
+    copied_snapshot = GeometrySnapshot(mutable_objects, full.t_ref, full.map_bounds_m)
+    mutable_objects.clear()
+    assert copied_snapshot.objects == (target,) and copied_snapshot.objects[0] is target
+    assert tuple(obj.object_id for obj in mesh_scene.get_geometry().objects) == expected_ids
+    assert hashlib.sha256(mesh_source.read_bytes()).hexdigest() == mesh_before
+    checks.append("sensor-style real/target-only reads share immutable geometry; deterministic filters preserve metadata and reject unknown/invalid IDs")
+
+    moved_pose = Pose((2, -3, 1), euler_quaternion(0.2, -0.3, 0.4))
+    moved_vehicle = mesh_scene.with_vehicle_pose(moved_pose)
+    moved_target = mesh_scene.with_target_position((3, -1, 2))
+    both = moved_vehicle.with_target_position((3, -1, 2))
+    for changed in (moved_vehicle, moved_target, both):
+        snapshot = changed.get_geometry()
+        assert changed.background is mesh_scene.background
+        assert tuple(obj.object_id for obj in snapshot.objects) == expected_ids
+        assert snapshot.t_ref == full.t_ref and snapshot.map_bounds_m == full.map_bounds_m
+        for object_id in expected_ids[:2]:
+            assert snapshot.get_object(object_id).geometry is full.get_object(object_id).geometry
+    assert moved_vehicle.get_geometry().get_object("vehicle").pose is moved_pose
+    assert moved_vehicle.get_geometry().get_object("target").geometry is full.get_object("target").geometry
+    assert moved_target.get_geometry().get_object("vehicle").geometry is full.get_object("vehicle").geometry
+    assert both.get_geometry().get_object("target").pose.position_m == (3, -1, 2)
+    assert full.get_object("vehicle").pose.position_m == (1, 2, 3)
+    assert full.get_object("target").pose.position_m == (-2, 1, 2)
+    assert target_only.get_object("target").pose.position_m == (-2, 1, 2)
+
+    # Source extrema are data bounds, not an inferred scene volume or occupancy.
+    unnamed_bounds = MeshMap(mesh_source, mesh_scene.background.objects)
+    unbounded_scene = Scene(unnamed_bounds, mesh_scene.vehicle, mesh_scene.target)
+    assert unbounded_scene.get_geometry().map_bounds_m is None
+    assert unbounded_scene.get_geometry().get_object("map/pillar_0").geometry is obstacle
+    assert unnamed_bounds.bounds_m == mesh_scene.background.bounds_m
+    checks.append("stable IDs/time across independent state updates and old snapshots; mesh extrema do not imply a declared map domain")
+
+    builders = (
+        lambda value: Scene(mesh_scene.background, mesh_scene.vehicle, mesh_scene.target, t_ref=value),
+        lambda value: Scene.from_obj(mesh_source, config, Pose((1, 2, 3)), (-2, 1, 2), t_ref=value),
+    )
+    for builder in builders:
+        for value in (None, 0, -7, 2.5):
+            timed = builder(value)
+            assert timed.t_ref == value and timed.get_geometry().t_ref == value
+            assert timed.with_target_position((1, 0, 0)).with_vehicle_pose(moved_pose).t_ref == value
+        for bad in (True, False, "1.25", [], math.nan, math.inf, -math.inf):
+            rejected(lambda bad=bad, builder=builder: builder(bad))
+    assert Scene.from_obj(mesh_source, config, Pose((0, 0, 1)), (2, 3, 1)).t_ref is None
+    checks.append("optional finite snapshot time propagates through constructors and updates; absent time stays unknown and invalid values are rejected")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results", type=Path, required=True)
@@ -131,54 +259,10 @@ def main():
             rejected(lambda: load_config(config_path))
         checks.append("single explicit JSON read, immutable radii, exact keys/types/ranges, duplicate-key rejection")
 
-        # Binary-exact fractions make every parsed point independently comparable.
-        points = tuple((i / 1024, -(i % 11) / 8, (i % 17) / 16) for i in range(100_005))
-        points += ((-123.5, 4.25, 8.75), points[123])
-        source = folder / "full.ply"
-        comments = ("unit metre", "size_xyz 8 6 3 resolution 0.2", "complete background fixture")
-        source.write_text(ply(points, comments, properties="zyx"), encoding="ascii")
-        before = hashlib.sha256(source.read_bytes()).hexdigest()
-        scene = Scene.from_ply(source, config, Pose((1, -2, 3)), (4, 5, 6))
+        source = folder / "physical.obj"
+        source.write_text(mesh_obj(), encoding="ascii")
+        scene = Scene.from_obj(source, config, Pose((1, -2, 3)), (4, 5, 6))
         background = scene.background
-        assert background.points_m == points and background.count == 100_007
-        assert background.points_m[-1] == points[123], "duplicate points must be retained"
-        assert background.source == source and background.comments == comments
-        assert background.size_xyz_m == (8, 6, 3)
-        close(background.resolution_m, 0.2)
-        assert background.bounds_m == ((-123.5, 100_004 / 1024), (-10 / 8, 4.25), (0, 8.75))
-        assert hashlib.sha256(source.read_bytes()).hexdigest() == before
-        rejected(lambda: setattr(background, "points_m", ()), FrozenInstanceError)
-        rejected(lambda: background.points_m[0].__setitem__(0, 1), AttributeError)
-        checks.append("all 100007 points preserved in original order, duplicate retention, metadata/extrema, unchanged PLY")
-
-        plain = folder / "plain.ply"
-        plain.write_text(ply([(1, 2, 3), (-4, 5, -6)], comments=()), encoding="ascii")
-        plain_map = PointCloudMap.from_ply(plain)
-        assert plain_map.resolution_m is None and plain_map.size_xyz_m is None
-        assert plain_map.comments == () and plain_map.bounds_m == ((-4, 1), (2, 5), (-6, 3))
-        basic = ply([(1, 2, 3), (-4, 5, -6)])
-        invalid_ply = [
-            "not a PLY\n", ply([]), basic.replace("ascii", "binary_little_endian"),
-            basic.replace("element vertex 2", "element vertex -1"),
-            basic.replace("element vertex 2", "element vertex 1"),
-            basic.replace("element vertex 2", "element vertex 3"),
-            basic.replace("property double z", "property double x"),
-            basic.replace("property double z", "property int z"),
-            basic.replace("property double z", "property list uchar float z"),
-            basic.replace("end_header", "element face 0\nend_header"),
-            basic.replace("end_header\n", ""), basic.replace("unit metre", "unit centimetre"),
-            basic.replace("resolution 0.2", "resolution 0"),
-            basic.replace("resolution 0.2", "resolution nan"),
-            basic.replace("size_xyz 8 6 3", "size_xyz 8 -6 3"),
-            basic.replace("size_xyz 8 6 3 resolution", "size_xyz 8 6 resolution"),
-            basic.replace("end_header", "comment size_xyz 8 6 3 resolution 0.2\nend_header"),
-            basic.replace("1 2 3", "1 bad 3"), basic.replace("1 2 3", "1 2"),
-            ply([(math.nan, 0, 0)]), ply([(0, math.inf, 0)]), ply([(0, 0, -math.inf)]),
-        ]
-        for text in invalid_ply:
-            plain.write_text(text, encoding="ascii")
-            rejected(lambda: PointCloudMap.from_ply(plain))
-        checks.append("optional metadata, strict ASCII XYZ format/count/unit/metadata, nonfinite-point rejection")
 
         assert scene.vehicle.pose.position_m == (1, -2, 3)
         assert scene.target.pose.position_m == (4, 5, 6)
@@ -249,11 +333,11 @@ def main():
         rejected(lambda: scene.with_target_position((0, 0)))
         checks.append("independent vehicle/target updates share background; original snapshot/radii retained; invalid updates rejected")
 
-        mesh_source = folder / "physical.obj"
+        mesh_source = source
         mesh_text = mesh_obj()
         mesh_source.write_text(mesh_text, encoding="ascii")
         mesh_before = hashlib.sha256(mesh_source.read_bytes()).hexdigest()
-        mesh_scene = Scene.from_map(mesh_source, config, Pose((1, 2, 3)), (-2, 1, 2))
+        mesh_scene = Scene.from_obj(mesh_source, config, Pose((1, 2, 3)), (-2, 1, 2), t_ref=-1.25)
         mesh = mesh_scene.background
         assert isinstance(mesh, MeshMap) and mesh.source == mesh_source
         assert mesh.comments == ("unit metre", "size_xyz 8 6 4")
@@ -282,12 +366,11 @@ def main():
         updated_mesh_scene = mesh_scene.with_vehicle_pose(mixed).with_target_position((7, 8, 9))
         assert updated_mesh_scene.background is mesh and mesh_scene.vehicle.pose.position_m == (1, 2, 3)
         assert Scene.from_obj(mesh_source, config, Pose((0, 0, 1)), (2, 3, 1)).background == mesh
-        assert isinstance(Scene.from_map(source, config, Pose((0, 0, 1)), (2, 3, 1)).background, PointCloudMap)
-        rejected(lambda: Scene.from_map(folder / "wrong.stl", config, Pose((0, 0, 1)), (2, 3, 1)))
         rejected(lambda: setattr(mesh, "objects", ()), FrozenInstanceError)
         rejected(lambda: setattr(obstacle, "vertices_m", ()), FrozenInstanceError)
         assert hashlib.sha256(mesh_source.read_bytes()).hexdigest() == mesh_before
         checks.append("complete OBJ object-local indices, independent analytic box normals/closure/volume, exact bounds, configured spheres and shared background")
+        verify_geometry_contract(mesh_scene, mesh_source, config, checks)
 
         ground_only = mesh_text.split("o pillar_0")[0]
         mesh_source.write_text(ground_only, encoding="ascii")
@@ -302,6 +385,14 @@ def main():
         overlapping_map = MeshMap.from_obj(mesh_source)
         assert overlapping_map.vertex_count == 20 and overlapping_map.triangle_count == 26
         assert overlapping_map.objects[1].vertices_m == overlapping_map.objects[2].vertices_m
+        namespaced_text = overlapping_text.replace("o pillar_0", "o target").replace("o pillar_1", "o vehicle")
+        mesh_source.write_text(namespaced_text, encoding="ascii")
+        namespaced = Scene.from_obj(mesh_source, config, Pose((0, 0, 1)), (2, 3, 1)).get_geometry()
+        assert tuple(obj.object_id for obj in namespaced.objects) == ("map/ground", "map/target", "map/vehicle", "vehicle", "target")
+        assert namespaced.get_object("map/target").role == namespaced.get_object("map/vehicle").role == "obstacle"
+        assert isinstance(namespaced.get_object("target").geometry, Sphere)
+        assert isinstance(namespaced.get_object("vehicle").geometry, Sphere)
+        checks.append("map object names target/vehicle remain independent from namespaced dynamic sphere IDs")
         disconnected_obstacle = (ground_only + "o pillar_0\n"
                                  + "\n".join(box_vertices * 2 + box_faces + shifted_faces) + "\n")
         mesh_source.write_text(mesh_text.replace("# unit metre\n", "").replace("# size_xyz 8 6 4\n", ""), encoding="ascii")
@@ -347,9 +438,9 @@ def main():
         checks.append("ground-only and independent overlapping objects; optional metadata; strict OBJ features/units/indices/bounds; degenerate/open/inward/disconnected surfaces rejected; immutable copied mesh storage")
 
     result = {"status": "passed", "checks": checks, "check_groups": len(checks),
-              "full_point_count": 100_007, "units": "metres",
+              "mesh_vertex_count": mesh.vertex_count, "mesh_triangle_count": mesh.triangle_count, "units": "metres",
               "quaternion": "unit xyzw body-to-world, norm tolerance 1e-6 with rounding correction",
-              "scope": "physical scene loading/state/transforms; sensing, ESDF, collision and dynamics are not implemented"}
+              "scope": "physical scene loading/state/transforms and public filtered geometry snapshots; sensing, ESDF, collision and dynamics are not implemented"}
     args.results.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(f"scene: {len(checks)} check groups passed; result: {args.results}")
 
