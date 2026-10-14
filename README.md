@@ -43,6 +43,7 @@ just run cmake --version                         # 在容器内执行命令
 
 ## 接下来
 
+- 传感器采样前，先为柱场和地面增加 mesh 输出与准确显示；点云和 ESDF 从同一几何派生，明确实体与裁剪语义。入口为 [地图生成器](tools/mapgen/README.md) 和 [查看器](tools/map_viewer/README.md)。
 - 明确传感器规格，从同一场景生成四路 ToF、前向目标 mask 和提示；从 [devtools 的传感器职责](devtools/README.md#传感器与几何查询) 与 `devtools/sensors.py` 开始。
 - 实现三维轨迹重建、代价和公开几何查询，检查所需梯度；分别归入 `src/tof_tracker/`、`training/` 和 `devtools/esdf.py`。
 - 完成少量样本的训练、保存和重载；入口为 [training/train.py](training/train.py)，职责见 [训练说明](training/README.md)。

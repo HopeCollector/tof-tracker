@@ -410,16 +410,6 @@ def serve_html(path, host="127.0.0.1", port=8080):
         server.serve_forever()
 
 
-def quaternion_from_rpy_degrees(angles):
-    """Body FLU to world rotation Rz(yaw) Ry(pitch) Rx(roll), stored xyzw."""
-    roll, pitch, yaw = (math.radians(value) / 2 for value in angles)
-    sr, cr = math.sin(roll), math.cos(roll)
-    sp, cp = math.sin(pitch), math.cos(pitch)
-    sy, cy = math.sin(yaw), math.cos(yaw)
-    return (sr * cp * cy - cr * sp * sy, cr * sp * cy + sr * cp * sy,
-            cr * cp * sy - sr * sp * cy, cr * cp * cy + sr * sp * sy)
-
-
 def validate_args(parser, args):
     """Resolve the requested mode and reject incomplete scenes before any output."""
     scene_requested = any(value is not None for value in (
@@ -464,11 +454,13 @@ def main():
     try:
         scene = None
         if scene_requested:
+            from tof_tracker.geometry import quaternion_from_rpy_degrees
             from devtools.config import load_config
             from devtools.scene import Pose, Scene
 
             config = load_config(args.config)
-            pose = Pose(args.vehicle_position, quaternion_from_rpy_degrees(args.vehicle_rpy_deg))
+            quaternion = tuple(float(value) for value in quaternion_from_rpy_degrees(args.vehicle_rpy_deg))
+            pose = Pose(args.vehicle_position, quaternion)
             scene = Scene.from_ply(args.input, config, pose, args.target_position)
         data = read_map(args.input, args.voxel_size, args.max_points, args.max_voxels)
         page = build_html(data, args.point_size, args.voxel_fill, scene=scene)

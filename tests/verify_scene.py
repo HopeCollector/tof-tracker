@@ -175,12 +175,16 @@ def main():
         roll, pitch, yaw = (math.radians(d) for d in (30, -40, 75))
         mixed = Pose((1.25, -2.75, 3.5), euler_quaternion(roll, pitch, yaw))
         equivalent = Pose(mixed.position_m, tuple(-q for q in mixed.quaternion_xyzw))
+        transform = mixed.as_transform("B_ref", "W")
+        assert transform.source_frame == "B_ref" and transform.target_frame == "W"
         for point in ((0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1), (2.3, -4.1, 0.7)):
             expected = tuple(v + p for v, p in zip(euler_point(point, roll, pitch, yaw), mixed.position_m))
             actual = mixed.body_to_world(point)
             close_vector(actual, expected)
             close_vector(mixed.world_to_body(expected), point)
             close_vector(equivalent.body_to_world(point), expected)
+            close_vector(transform.apply_points(point), expected)
+            close_vector(transform.apply_vectors(point), euler_point(point, roll, pitch, yaw))
             close(math.dist(actual, mixed.position_m), math.hypot(*point))
         mutable_position, mutable_quaternion = [1, 2, 3], [0, 0, 0, 1]
         pose = Pose(mutable_position, mutable_quaternion)

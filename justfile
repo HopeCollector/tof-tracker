@@ -12,12 +12,9 @@ build:
 vscode:
     bash docker/export-vscode.sh
 
-# 在容器内运行环境、地图、场景及查看器检查
+# 运行项目检查
 check: map-build
-    ./docker/dev.sh run bash docker/check-env.sh
-    ./docker/dev.sh run python tests/verify_mapgen.py --binary outputs/mapgen/build/offline_mapgen --results outputs/mapgen/verification.json
-    ./docker/dev.sh run python tests/verify_scene.py --results outputs/scene/verification.json
-    ./docker/dev.sh run python tests/verify_map_viewer.py --results outputs/map_viewer/verification.json
+    ./docker/dev.sh run python tests/run_checks.py
 
 # 在容器内执行命令；无参数进入 Bash
 run *args:

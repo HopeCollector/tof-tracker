@@ -2,8 +2,6 @@
 
 整个项目共用 `tof-tracker-dev:ubuntu24.04`。开发、依赖安装、编译、训练和测试均在容器内执行；宿主只提供现有 Docker、源码目录和项目产物目录。本目录保存环境配置、通用容器入口与环境检查；项目使用入口见 [项目 README](../README.md#使用方法)。
 
-当前 CPU 基础包括 Python 3.12、容器内 `/opt/venv`、C++17 编译器、CMake、Eigen 和 PCL。`pyproject.toml` 的 `viewer` 开发选项安装 Plotly 7.1.0；算法包当前没有运行依赖。未预装训练框架或 GPU/ROS 环境。
-
 ## 构建与通用运行
 
 在仓库根目录运行：
@@ -15,7 +13,7 @@ just run cmake --version     # 在容器内执行命令
 just check                   # 运行环境与现有工具的全部检查
 ```
 
-`docker/dev.sh` 只提供 `build` 与 `run`。`build` 在镜像内安装项目的 `.[viewer]` 开发依赖；`run` 负责挂载、用户权限、终端和可选端口，不选择业务脚本。
+`docker/dev.sh` 只提供 `build` 与 `run`。`build` 按项目配置在镜像内安装依赖；`run` 负责挂载、用户权限、终端和可选端口，不选择业务脚本。
 
 ```text
 just build → dev.sh build → Dockerfile → 编译依赖 + /opt/venv 中的项目安装
@@ -55,4 +53,4 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 just run bash docker/check-env.sh
 ```
 
-`just check` 自动构建地图工具，再运行环境、地图生成、场景和共用查看器检查。各模块的测试入口见相应说明；环境检查不覆盖算法、训练、CUDA 或部署路径。
+`just check` 自动构建地图工具并运行现有检查，覆盖范围见各模块说明；环境检查不覆盖算法、训练、CUDA 或部署路径。

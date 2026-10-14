@@ -10,6 +10,8 @@ from dataclasses import dataclass, field, replace
 import math
 from pathlib import Path
 
+from tof_tracker.geometry import Transform
+
 from .config import SceneConfig, _positive_number
 
 
@@ -55,26 +57,27 @@ class Pose:
         object.__setattr__(self, "position_m", position)
         object.__setattr__(self, "quaternion_xyzw", tuple(q / norm for q in quaternion))
 
-    def _rotation(self):
-        x, y, z, w = self.quaternion_xyzw
-        return ((1 - 2 * (y*y + z*z), 2 * (x*y - z*w), 2 * (x*z + y*w)),
-                (2 * (x*y + z*w), 1 - 2 * (x*x + z*z), 2 * (y*z - x*w)),
-                (2 * (x*z - y*w), 2 * (y*z + x*w), 1 - 2 * (x*x + y*y)))
+    def as_transform(self, source_frame: str = "B", target_frame: str = "W") -> Transform:
+        """Adapt this body-to-world snapshot to the shared numerical transform.
+
+        Frame names label the body's FLU frame and the scene's world frame;
+        changing a label does not change the pose's body-to-world meaning.
+        """
+        return Transform.from_quaternion(source_frame, target_frame,
+                                         self.position_m, self.quaternion_xyzw)
 
     def body_to_world(self, point_b_m: Vector3) -> Vector3:
         """Transform one body-frame point: p_world = R * p_body + position_m."""
         point = _finite_vector(point_b_m, 3, "point_b_m")
-        rotation = self._rotation()
-        result = tuple(sum(row[k] * point[k] for k in range(3)) + offset
-                       for row, offset in zip(rotation, self.position_m))
+        transformed = self.as_transform().apply_points(point)
+        result = tuple(float(value) for value in transformed)
         return _finite_vector(result, 3, "transformed point")
 
     def world_to_body(self, point_w_m: Vector3) -> Vector3:
-        """Inverse point transform using the transpose of the unit rotation."""
+        """Transform one world-frame point through the inverse body pose."""
         point = _finite_vector(point_w_m, 3, "point_w_m")
-        delta = _finite_vector(tuple(v - p for v, p in zip(point, self.position_m)), 3, "point delta")
-        rotation = self._rotation()
-        result = tuple(sum(rotation[k][axis] * delta[k] for k in range(3)) for axis in range(3))
+        transformed = self.as_transform().inverse().apply_points(point)
+        result = tuple(float(value) for value in transformed)
         return _finite_vector(result, 3, "transformed point")
 
 

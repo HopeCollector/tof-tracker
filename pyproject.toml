@@ -7,7 +7,7 @@ name = "tof-tracker"
 version = "0.0.0"
 description = "ToF-based tracking algorithm with local training and development tools"
 readme = "README.md"
-dependencies = []
+dependencies = ["numpy>=2.0"]
 
 [project.optional-dependencies]
 viewer = ["plotly==7.1.0"]
