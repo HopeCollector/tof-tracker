@@ -8,6 +8,10 @@ default:
 build:
     ./docker/dev.sh build
 
+# 导出容器依赖供宿主 VS Code 使用
+vscode:
+    bash docker/export-vscode.sh
+
 # 在容器内运行环境、地图、场景及查看器检查
 check: map-build
     ./docker/dev.sh run bash docker/check-env.sh
