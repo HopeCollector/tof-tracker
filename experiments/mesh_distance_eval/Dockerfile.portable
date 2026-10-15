@@ -1,0 +1,38 @@
+# Independent Linux amd64 experiment image. Build from the repository root:
+# docker build --platform linux/amd64 -f experiments/mesh_distance_eval/Dockerfile.portable -t tof-tracker-mesh-distance:portable .
+# Runtime GPU access uses the host's existing NVIDIA Container Toolkit and --gpus all.
+# Ubuntu digest verified against the official Docker Hub API on 2026-10-15:
+# https://hub.docker.com/v2/repositories/library/ubuntu/tags/24.04
+FROM ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
+
+RUN test "$(dpkg --print-architecture)" = amd64 \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates cmake g++ git make python3 python3-venv \
+    && rm -rf /var/lib/apt/lists/* \
+    && python3 -m venv /opt/venv
+
+ENV PATH="/opt/venv/bin:${PATH}" \
+    LANG=C.UTF-8 \
+    PYTHONPATH=/workspace:/workspace/src \
+    PYTHONPYCACHEPREFIX=/tmp/python-cache \
+    HOME=/tmp \
+    XDG_CACHE_HOME=/tmp/mesh-distance-cache \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+# Torch's cu128 wheel installs its CUDA runtime dependencies. Warp's PyPI 1.15
+# wheel contains its native CUDA 12.9 libraries and JIT compiler; no nvcc needed.
+# https://pytorch.org/get-started/previous-versions/#v271
+# https://nvidia.github.io/warp/v1.15/user_guide/installation.html
+# Base and primary package versions are pinned; apt/transitive packages resolve
+# at build time. The resulting image digest is the exact environment identity.
+RUN python -m pip install --no-cache-dir --only-binary=:all: \
+        numpy==2.2.6 warp-lang==1.15.0 trimesh==4.8.3 \
+    && python -m pip install --no-cache-dir --only-binary=:all: \
+        torch==2.7.1+cu128 --index-url https://download.pytorch.org/whl/cu128 \
+    && python -m pip check
+
+# Source is mounted at runtime. This image does not import ROS or nvblox.
+WORKDIR /workspace
+ENTRYPOINT []
+CMD ["bash"]

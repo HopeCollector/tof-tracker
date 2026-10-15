@@ -16,3 +16,9 @@ OBJ 实体、地面平面、CLI、校验和文件保存为本仓实现，未采�
 场景、球体、完整位姿与点变换为本仓实现。配置机制参考 `C5-lidar-yopo` 提交 `ab9cbfaef8216b8a47a952b40d199fd7e5cef134` 的 `configuration/omni.py`（根许可 MIT，TJU 2024），采用“JSON 显式物理参数 → 入口校验 → 传给消费者”的流程，未复制其函数、全局配置、旧阈值或默认物理尺寸。
 
 当前接口见[开发辅助模块说明](../devtools/README.md#统一配置与场景)，验证入口见 [verify_scene.py](../tests/verify_scene.py)。
+
+## GPU mesh 距离实验
+
+`experiments/mesh_distance_eval/` 通过 NVIDIA Warp `1.15.0`（官方源码 `ffa038b1adf3927a8e893d4536f1a7562f17d749`，Apache-2.0）公开 API 创建 BVH、查询最近面与绕数符号；以自写 Torch 三角形距离或自写 Tape 桥接验证位置梯度。仅借鉴上述 C5 固定版本 `planning_geometry.py` 的“离散选面、原始位置张量重算距离”机制，没有复制其函数、体素几何、CPU cKDTree 或旧阈值。实验代码不依赖旧仓路径。
+
+PhysicsNeMo 与 Kaolin 只作官方源码调研，没有引入其代码或运行依赖。固定来源、逐文件许可和接口边界的权威记录见[实验调研](../experiments/mesh_distance_eval/RESEARCH.md)；独立 oracle、训练链路与动态验证见 [verify.py](../experiments/mesh_distance_eval/verify.py)，定向数值回归见 [review_regressions.py](../experiments/mesh_distance_eval/review_regressions.py)。
