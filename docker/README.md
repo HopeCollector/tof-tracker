@@ -11,6 +11,8 @@ just build                   # 构建共享开发镜像
 just run                     # 进入容器内 Bash
 just run cmake --version     # 在容器内执行命令
 just check                   # 运行环境与现有工具的全部检查
+just check-sensors           # 在 GPU 中核查传感器
+just run --gpu python examples/one_frame.py --help
 ```
 
 `docker/dev.sh` 只提供 `build` 与 `run`。`build` 按项目配置在镜像内安装依赖；`run` 负责挂载、用户权限、终端和可选端口，不选择业务脚本。
@@ -28,9 +30,18 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 ./docker/dev.sh run python -c 'import tof_tracker, devtools, training; print("imports OK")'
 ```
 
-`run` 保留各个参数的边界，含空格的参数照常加引号。管道、重定向等语法需显式交给容器内 shell，例如 `just run bash -c 'python --version && cmake --version'`。通用入口的可选参数为 `run [--web] [--] [命令及参数]`；`--web` 只发布 `127.0.0.1:8080:8080`，可用 `--` 结束入口选项。
+`run` 保留各个参数的边界，含空格的参数照常加引号。管道、重定向等语法需显式交给容器内 shell，例如 `just run bash -c 'python --version && cmake --version'`。通用入口的可选参数为 `run [--web] [--gpu] [--] [命令及参数]`；`--web` 只发布 `127.0.0.1:8080:8080`，可用 `--` 结束入口选项。
 
 源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。不要在宿主创建项目 Python 环境，也不要在 `run` 中用 root 临时补装依赖。
+
+`sensors` extra 固定 ModernGL / glcontext，镜像同时安装 GLVND 的 EGL/GL 运行库。传感器用无窗口 EGL，不需要 X server。`--gpu` 通过已有 NVIDIA Container Toolkit 暴露 GPU 和 `graphics,utility` 驱动能力；不改变宿主服务、安装或用户组。未暴露 GPU、EGL 初始化失败或检测到软件渲染时，传感器报错，不静默退回 CPU。当前入口不自动提供 CUDA 的 `compute` 能力，后续训练若需要再显式配置。
+
+独立 worktree 可使用单独镜像标签，避免重建覆盖其他任务的镜像；build/run 使用同一变量即可：
+
+```bash
+TOF_TRACKER_DEV_IMAGE=tof-tracker-sensors:dev ./docker/dev.sh build
+TOF_TRACKER_DEV_IMAGE=tof-tracker-sensors:dev ./docker/dev.sh run --gpu python tests/verify_sensors.py --results outputs/sensors/verification.json
+```
 
 宿主 VS Code 的依赖提示缓存用 `just vscode` 导出到 `.vscode/pylance-site-packages/`，目录自动创建；分析版本与依赖路径写入 `.vscode/pyrightconfig.json`。镜像重建后重新运行即可刷新。导出入口见 [export-vscode.sh](export-vscode.sh)。
 

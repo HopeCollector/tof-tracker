@@ -1,4 +1,24 @@
 {
   "vehicle": {"radius_m": 0.2},
-  "target": {"radius_m": 0.3}
+  "target": {"radius_m": 0.3},
+  "sensors": {
+    "tof": {
+      "width": 8, "height": 8,
+      "hfov_deg": 60, "vfov_deg": 60,
+      "min_range_m": 0.05, "max_range_m": 12
+    },
+    "camera": {
+      "width": 160, "height": 120,
+      "hfov_deg": 80, "vfov_deg": 60,
+      "min_range_m": 0.01, "max_range_m": 30
+    },
+    "tof_mounts": {
+      "right": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, -0.7071067811865475, 0.7071067811865476]},
+      "front": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, 0, 1]},
+      "left": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, 0.7071067811865475, 0.7071067811865476]},
+      "rear": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, 1, 0]}
+    },
+    "camera_mount": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, 0, 1]},
+    "min_visible_fraction": 0.2
+  }
 }

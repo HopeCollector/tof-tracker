@@ -7,6 +7,8 @@ RUN apt-get update \
         ca-certificates \
         cmake \
         git \
+        libegl1 \
+        libgl1 \
         python3 \
         python3-setuptools \
         python3-venv \
@@ -26,6 +28,6 @@ COPY pyproject.toml README.md ./
 COPY src ./src
 COPY devtools ./devtools
 COPY training ./training
-RUN python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer]'
+RUN python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer,sensors]'
 
 CMD ["bash"]

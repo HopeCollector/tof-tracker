@@ -226,14 +226,15 @@ def main():
     args.results.parent.mkdir(parents=True, exist_ok=True)
     checks = []
     config = load_config(Path(__file__).resolve().parents[1] / "configs" / "devtools.json")
-    assert config == SceneConfig(0.2, 0.3)
+    assert config == SceneConfig(0.2, 0.3, config.sensors)
+    assert config.sensors is not None
     with tempfile.TemporaryDirectory(prefix="scene-check-", dir=args.results.parent) as temp:
         folder = Path(temp)
         config_path = folder / "facts.json"
         config_path.write_text('{"vehicle":{"radius_m":0.2},"target":{"radius_m":0.3}}')
         first_config = load_config(config_path)
         config_path.write_text('{"vehicle":{"radius_m":0.7},"target":{"radius_m":0.8}}')
-        assert first_config == config and load_config(config_path) == SceneConfig(0.7, 0.8)
+        assert first_config == SceneConfig(0.2, 0.3) and load_config(config_path) == SceneConfig(0.7, 0.8)
         rejected(lambda: setattr(config, "vehicle_radius_m", 1), FrozenInstanceError)
         invalid_config = [
             {}, [], {"vehicle": {"radius_m": 0.2}},

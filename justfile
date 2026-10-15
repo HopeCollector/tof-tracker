@@ -16,6 +16,10 @@ vscode:
 check: map-build
     ./docker/dev.sh run python tests/run_checks.py
 
+# 在真实 GPU 上运行传感器解析几何与行为检查
+check-sensors:
+    ./docker/dev.sh run --gpu python tests/verify_sensors.py --results outputs/sensors/verification.json
+
 # 在容器内执行命令；无参数进入 Bash
 run *args:
     ./docker/dev.sh run "$@"
