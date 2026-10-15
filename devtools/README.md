@@ -1,12 +1,13 @@
 # 场景、观测与几何查询
 
-`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球和三维位姿；传感器与 ESDF 仍为占位。
+`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿与可微轨迹解析；传感器与 ESDF 仍为占位。
 
 | 文件 | 当前职责 |
 |---|---|
 | [`config.py`](config.py) | 已实现：读取、校验不可变物理配置 |
 | [`mesh.py`](mesh.py) | 已实现：读取独立闭合障碍和地面平面的 OBJ 资产 |
 | [`scene.py`](scene.py) | 已实现：场景加载、按对象 ID 读取几何、球体状态替换 |
+| [`trajectory.py`](trajectory.py) | 已实现：三维五次 / 航向三次边界解析与 Torch 可微采样 |
 | [`sensors.py`](sensors.py) | 占位：指定机体位姿下的四路 ToF 与前向相机观测 |
 | [`esdf.py`](esdf.py) | 占位：距离场构建、加载及批量可微几何查询 |
 
@@ -79,4 +80,47 @@ ESDF 尚未构建或查询距离场。它负责回答批量轨迹采样点到物
 
 ## 开发用轨迹解析
 
-轨迹解析尚未实现，归属 `devtools`。训练和开发评价将初始状态、算法输出的终点 `(p, v, a, yaw, vyaw)` 与持续时间 `T` 交给解析工具，得到多项式系数并按需采样，保留训练所需梯度。实际飞行中的解析与执行归系统，算法交付接口只输出末状态。航向解析所需的初始角速度由系统或开发调用者提供，当前模型输入不因此自动扩展。
+[`trajectory.py`](trajectory.py) 是不依赖场景、传感器或 ESDF 的纯数学工具：
+
+```text
+调用者提供初始状态 + 算法终点状态 + T
+    → fit_trajectory() → PolynomialTrajectory（系数、T）
+    → .sample(time) → TrajectoryState（p、v、a、yaw、yaw_rate）
+```
+
+它只服务训练和开发评价。实际飞行中的解析、坐标转换与执行归系统，算法交付接口只输出末状态。一次调用中全部平移状态属于固定 `B_ref=B(t_ref)`，完整保留三维和 Z 分量；工具不旋转坐标、不推进本体系，也不读取世界位姿或模型内部状态。本体系起点位置可由调用者明确给零，当前速度和加速度仍须提供。起始 yaw 与 yaw_rate 同样必须由系统或开发调用者明确给出，不能根据平移状态猜测，也不因此扩展模型输入。yaw 是调用者选定的一致角度约定，独立的标量航向多项式不构造完整三维姿态。
+
+### 状态、系数与采样
+
+`TrajectoryState(position, velocity, acceleration, yaw, yaw_rate)` 的五项均为必填 Tensor；终点的 `yaw_rate` 对应算法输出 `vyaw`。
+
+| 输入 / 输出 | 形状与单位 |
+|---|---|
+| position / velocity / acceleration | `(*batch,3)`；米、米/秒、米/秒² |
+| yaw / yaw_rate | `(*batch)`；弧度、弧度/秒，无隐含末尾单维 |
+| duration | `(*batch)`；秒，有限且严格 `T>0` |
+| position_coefficients | `(*batch,6,3)`，依次为 `c0…c5` |
+| yaw_coefficients | `(*batch,4)`，依次为 `b0…b3` |
+
+系数按归一化时间 **`u=t/T` 的升幂**排列：`p(t)=Σ c_k u^k`，`yaw(t)=Σ b_k u^k`。这不是直接乘秒制 `t^k` 的系数；如外部消费者需要后者，第 k 项须除以 `T^k`。平移满足起止 p/v/a 共六个条件，航向满足起止 yaw/yaw_rate 共四个条件。采样的 v、a、yaw_rate 已换回对秒的导数。
+
+所有输入只接受同 dtype、同 device 的有限、strided Torch `float32` 或 `float64` Tensor，不隐式转换列表、NumPy、整数或半精度。`fit_trajectory(initial, terminal, duration, *, yaw_mode="unwrapped")` 对全部状态字段与 T 的批次维按 Torch 规则广播；例如初态 `(B,1,3)`、终态 `(K,3)`、T `(B,1)` 得到 `(B,K)` 批次。`PolynomialTrajectory` 的直接构造要求系数和 T 的批次形状完全一致。
+
+`.sample(time)` 接受秒制标量或 `(*time_batch,S)`：最后一维固定为采样点数，前面的维与轨迹批次广播。共同时间网格用 `(S,)`；每条轨迹一个时间用 `(*batch,1)`。标量也保留 `S=1`，不会挤掉单批次维。返回平移形状 `(*broadcast_batch,S,3)`，航向为 `(*broadcast_batch,S)`，允许空批次与空采样网格并保留相应维度。
+
+`time` 必须逐轨迹处于 `[0,T]`，支持重复、无序时间，不截断也不外推。形状不兼容、dtype/device 不一致、非有限值、非正 T 和越界时间报错；非 Tensor / 不支持的 dtype/layout 抛 `TypeError`，其他上述输入错误抛 `ValueError`。不设置旧任务的最小时长阈值。极端尺度仍受浮点精度限制，系数或采样结果发生非有限溢出也会报错；这不保证有限结果在所有尺度都有良好数值精度。校验会读取 Tensor 的有效性判断，在 CUDA 上需要同步，当前接口不承诺无同步或 `torch.compile` 支持。返回对象只冻结字段绑定，Tensor 及其源数据应按只读使用。
+
+### 航向分支与梯度
+
+默认 `yaw_mode="unwrapped"` 按输入连续角度原值求解，允许有意的多圈转动。可显式指定 `"shortest"`，将终点替换成 `yaw0 + delta`，其中 `delta∈[-π,π)`，恰好半圈时选 `-π`。例如 `179°→-179°` 在最短分支下到达 `181°`；默认分支到达 `-179°`。输出不再 wrap，采样中跨 π 保持连续。最短分支在奇数倍 π 的差值处不连续，该处无有效分支选择梯度；其余位置保留所选分支的梯度。
+
+解析和采样保留对全部初末状态、T 与采样时间的计算图。`time` 是独立的秒制 Tensor 时，T 梯度表示固定时刻下改变时长；`time=T*fractions` 时也包含采样时刻随 T 移动的链式梯度。工具不 detach、不经 NumPy、不缓存固定 T 的求解矩阵，不计算训练代价或更新模型。
+
+在仓库根目录执行 `just build` 后，可运行：
+
+```bash
+just run python examples/trajectory.py
+just run python tests/verify_trajectory.py --results outputs/trajectory/verification.json
+```
+
+完整例子见 [`examples/trajectory.py`](../examples/trajectory.py)：输入非零三维速度、加速度、初末航向状态与 `T=2s`，输出 `0,T/2,T` 的状态和一个数学探针到终点位置 / T 的梯度。独立解析、边界、广播、内部导数与 double gradcheck 见 [`tests/verify_trajectory.py`](../tests/verify_trajectory.py)，同样纳入 `just check`。这些验证不代表模型训练或闭环飞行已经实现。五次公式来源和航向推导边界见[参考来源](../docs/origins.md#开发用轨迹解析)。

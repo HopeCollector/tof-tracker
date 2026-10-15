@@ -26,6 +26,10 @@ COPY pyproject.toml README.md ./
 COPY src ./src
 COPY devtools ./devtools
 COPY training ./training
-RUN python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer]'
+# Use the CPU wheel in the common image; CUDA experiments can use a separate
+# compatible PyTorch image without changing this math module or host installs.
+RUN python -m pip install --no-cache-dir \
+        --index-url https://download.pytorch.org/whl/cpu 'torch==2.9.1' \
+    && python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer,trajectory]'
 
 CMD ["bash"]
