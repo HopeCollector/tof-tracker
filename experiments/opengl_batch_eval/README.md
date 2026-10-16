@@ -1,6 +1,6 @@
 # OpenGL 多视角批处理实验
 
-本目录验证现有 OpenGL 几何内核能否以一份场景接收一批 CUDA Pose，并返回 GPU 张量；正式 `devtools/sensors.py` 保持原样。测量结论见 [REPORT.md](REPORT.md)，本页描述接口、复现方式和边界。
+本目录验证原 OpenGL 几何内核能否以一份场景接收一批 CUDA Pose，并返回 GPU 张量。测量结论见 [REPORT.md](REPORT.md)，本页描述接口、复现方式和边界。正式 sensor 后续已接入批量核心；本实验的串行对照固定引用 [sensor_reference.py](../sensor_reference.py)，保持历史基线。
 
 ## 数据流与接口
 
@@ -63,9 +63,9 @@ bash experiments/opengl_batch_eval/run.sh outputs/opengl_batch_eval/reproduce \
 
 ## 来源、验证和适用边界
 
-几何排列、球体离散、投影、像素中心平面求交、径向深度顺序和 guard shell 复用/适配自当前 [sensors.py](../../devtools/sensors.py)。保留现有 D24 深度附件、`clip z=0 / w=forward` 的裁剪规则，新增实例索引、layer 路由和批量 Pose SSBO；未替换几何求交公式。原工程出处与许可仍见 [origins.md](../../docs/origins.md)。
+几何排列、球体离散、投影、像素中心平面求交、径向深度顺序和 guard shell 复用/适配自原 sensor（现冻结为 [sensor_reference.py](../sensor_reference.py)）。保留原 D24 深度附件、`clip z=0 / w=forward` 的裁剪规则，新增实例索引、layer 路由和批量 Pose SSBO；未替换几何求交公式。原工程出处与许可仍见 [origins.md](../../docs/origins.md)。
 
-验证复用前一实验的确定性 [fixtures.py](../pytorch3d_render_eval/fixtures.py)、比较器与 [tests/verify_sensors.py](../../tests/verify_sensors.py) 独立几何 oracle：分别检查公开 sensor、原始 GL 深度/ID、GPU 后处理、批量/单张/逆序一致性，以及原地 CUDA Pose 更新、输出所有权、CUDA stream 和共享几何。既有基线 oracle 失败单独保留；batch 验证通过表示对齐及无新增 oracle 回归，不代表消除了基线的所有边界误差。比较下载在计时之外执行。
+验证复用前一实验的确定性 [fixtures.py](../pytorch3d_render_eval/fixtures.py)、比较器与 [verify_sensor_reference.py](../../tests/verify_sensor_reference.py) 独立几何 oracle：分别检查串行 sensor、原始 GL 深度/ID、GPU 后处理、批量/单张/逆序一致性，以及原地 CUDA Pose 更新、输出所有权、CUDA stream 和共享几何。既有基线 oracle 失败单独保留；batch 验证通过表示对齐及无新增 oracle 回归，不代表消除了基线的所有边界误差。比较下载在计时之外执行。
 
 另有 [verify_batches.py](verify_batches.py) 对三个场景、两种模式、全部六个 B 的每层输出逐像素比较。它在计时后作为独立验证工具加入，不改变被测渲染器或 worker；原测量指纹与额外验证脚本 SHA 分别保存。完成上面的扫描后，在仓库根目录执行：
 

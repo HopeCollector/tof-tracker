@@ -7,7 +7,8 @@
 | [`config.py`](config.py) | 已实现：读取、校验不可变物理配置 |
 | [`mesh.py`](mesh.py) | 已实现：读取独立闭合障碍和地面平面的 OBJ 资产 |
 | [`scene.py`](scene.py) | 已实现：场景加载、按对象 ID 读取几何、球体状态替换 |
-| [`sensors.py`](sensors.py) | 已实现：单幅视线距离、四路 ToF、前向可见目标 mask 与框提示；[接口与用法](sensors.md) |
+| [`rendering.py`](rendering.py) | 已实现：单份场景、多视角批量 GL 渲染与 CUDA 输出；移动球体只更新对象变换 |
+| [`sensors.py`](sensors.py) | 已实现：GPU 批量视线距离、四路 ToF、可见目标 mask 与框；[接口与用法](sensors.md) |
 | [`esdf.py`](esdf.py) | 占位：距离场构建、加载及批量可微几何查询 |
 
 ## 统一配置与场景
@@ -56,7 +57,7 @@ print(next_scene.get_geometry().get_object("vehicle").pose.body_to_world((1, 0, 
 
 ## 传感器与几何查询
 
-传感器已使用配置、完整采样位姿与场景生成单幅欧氏视线距离，采用 GPU mesh 投影、光栅化和最近表面深度测试。同场景一次准备后可共享给多个位姿，四路 ToF 由外部四次采样组装。前向相机用最近表面身份生成实际可见目标 mask，按可见/无遮挡面积比例门控半开框提示。
+传感器以配置、完整 CUDA `[B,4,4]` 视角位姿和场景生成批量欧氏视线距离；一份 VBO 通过 instanced draw 渲染所有视角，输出直接留在 GPU。四路 ToF 展平到 `4N` 视角一次采样，相机全场和目标各一次；后处理按批生成实际可见 mask、可见比例与半开框提示。`renderer.sync(scene.get_geometry(...))` 在批次间同步目标移动，只更新对象变换；公开 `get_geometry()` 仍返回世界坐标事实。更换地图、半径或对象结构需重建 renderer。
 
 原始距离为有限米制值、完整覆盖下确认超量程的正 `inf`、或无可信测量的 `NaN`；未知地图范围不会当作已知空闲。开发参数、像素中心采样、噪声扩展边界、调用例子与验证入口统一见[传感器说明](sensors.md)。闭环评价由执行端提供当前位姿。命中与真值只用于解释和监督，算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
 

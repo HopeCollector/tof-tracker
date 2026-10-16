@@ -163,7 +163,9 @@ def main():
                    "gpu_processes_before": command(["nvidia-smi"]),
                    "source_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                                      for p in [*HERE.glob("*.py"), *(ROOT / "devtools").glob("*.py"),
-                                               ROOT / "src/tof_tracker/geometry.py"]},
+                                               ROOT / "src/tof_tracker/geometry.py",
+                                               ROOT / "experiments/sensor_reference.py",
+                                               ROOT / "tests/verify_sensor_reference.py"]},
                    "packages": command([sys.executable, "-m", "pip", "freeze"])}
     rev = Path("/opt/pytorch3d-source-revision")
     environment["pytorch3d_revision"] = rev.read_text().strip() if rev.exists() else None

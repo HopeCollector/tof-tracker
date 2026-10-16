@@ -29,7 +29,7 @@ sys.path.insert(0, str(ROOT))
 
 from devtools.config import DepthConfig
 from devtools.scene import Pose
-from devtools.sensors import MeshSensor
+from experiments.sensor_reference import MeshSensor
 from experiments.pytorch3d_render_eval.backend import P3DRenderer
 from experiments.pytorch3d_render_eval.fixtures import (
     CONFIG, depth_comparison, load_scene, make_poses,
@@ -58,7 +58,7 @@ class Case:
 def _reference_helpers():
     """Reuse independent fixtures/oracles, never the verification script main."""
     spec = importlib.util.spec_from_file_location(
-        "sensor_independent_oracles", ROOT / "tests/verify_sensors.py")
+        "sensor_independent_oracles", ROOT / "tests/verify_sensor_reference.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module

@@ -18,7 +18,7 @@ from pytorch3d.structures import Meshes
 from devtools.config import DepthConfig
 from devtools.mesh import MeshObject
 from devtools.scene import Sphere
-from devtools.sensors import _sphere_mesh
+from experiments.sensor_reference import _sphere_mesh
 
 
 PYTORCH3D_SHA = "88e182f989c80836f4bd744e0d9cb1852762ce01"

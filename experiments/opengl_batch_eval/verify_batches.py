@@ -143,7 +143,7 @@ def main():
         os.environ["PYTORCH3D_EVAL_MAP_DIR"] = str(args.map_dir.resolve())
     import numpy as np
     import torch
-    from devtools.sensors import MeshSensor
+    from experiments.sensor_reference import MeshSensor
     from experiments.opengl_batch_eval.backend import GLBatchRenderer
     from experiments.opengl_batch_eval.run_eval import source_hashes
     from experiments.pytorch3d_render_eval import fixtures, validate as common

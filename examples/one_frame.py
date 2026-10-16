@@ -13,10 +13,12 @@ from pathlib import Path
 import time
 
 import numpy as np
+import torch
 
 from devtools.config import load_config
 from devtools.scene import Pose, Scene
-from devtools.sensors import MeshSensor, TOF_ORDER, mounted_pose, sample_rig
+from devtools.rendering import BatchRenderer
+from devtools.sensors import TOF_ORDER, mounted_pose, poses_to_tensor, sample_depth, sample_rig
 from tof_tracker.geometry import quaternion_from_rpy_degrees
 
 
@@ -55,7 +57,7 @@ def _depth_plot(figure, values, row, col, coloraxis, label):
         hoverongaps=False, name="状态"), row=row, col=col)
 
 
-def _html(rig, config, summary):
+def _html(data, config, summary):
     import plotly.graph_objects as go
     import plotly.io as pio
     from plotly.subplots import make_subplots
@@ -65,17 +67,17 @@ def _html(rig, config, summary):
         rows=3, cols=2, row_heights=[0.32, 0.32, 0.36],
         vertical_spacing=0.08, horizontal_spacing=0.12,
         subplot_titles=(*labels, "前向相机 · 视线距离", "前向相机 · 最近表面可见目标 mask"))
-    for index, values in enumerate(rig.tof_m):
+    for index, values in enumerate(data["tof_m"]):
         _depth_plot(figure, values, index // 2 + 1, index % 2 + 1,
                     "coloraxis", labels[index])
-    _depth_plot(figure, rig.camera.depth.range_m, 3, 1, "coloraxis2", "相机")
-    mask = rig.camera.target_mask.astype("u1")
+    _depth_plot(figure, data["camera_range_m"], 3, 1, "coloraxis2", "相机")
+    mask = data["target_mask"].astype("u1")
     figure.add_trace(go.Heatmap(
         x=list(range(config.camera.width)), y=list(range(config.camera.height)), z=mask,
         zmin=0, zmax=1, colorscale=[[0, "#f1f5f9"], [1, "#f59e0b"]], showscale=False,
         hovertemplate="row=%{y}, col=%{x}<br>最近表面为目标：%{z}<extra></extra>",
         name="可见目标"), row=3, col=2)
-    hint = rig.target_hint
+    hint = data["target_hint"]
     bounds = None
     if hint[0] > 0:
         bounds = (round(float(hint[1]) * config.camera.width),
@@ -126,7 +128,7 @@ details{{margin:14px 0}}pre{{white-space:pre-wrap;overflow-wrap:anywhere;font-si
 <p><span class="key" style="background:#cbd5e1">灰色 +inf</span>：至最大量程的线段完整覆盖且没有有效表面；
 <span class="key" style="background:#e8b7da">粉色 NaN</span>：未知覆盖、过近表面或无有效返回。
 两者在原始 NPZ 中保持不同值。最大填充值不代表已知空闲。</p>
-<p>目标可见比例 {rig.camera.visible_fraction:.3f}，无遮挡有效目标像素 {rig.camera.unoccluded_pixels}，
+<p>目标可见比例 {summary['camera']['visible_fraction']:.3f}，无遮挡有效目标像素 {summary['camera']['unoccluded_target_pixels']}，
 检测阈值 {config.min_visible_fraction:g}。{detection}。
 橙色 mask 来自全场景最近表面测试；红色框仅在通过阈值时包住可见像素。</p>
 <p>这是无噪声的理想针孔开发观测。配置中的视场、量程、安装位姿及阈值均为开发假设，
@@ -167,14 +169,34 @@ def main():
     front_mount = sensor_config.tof_mounts[TOF_ORDER.index("front")]
     sensor_poses = tuple(mounted_pose(pose, front_mount) for pose in body_samples)
     begin = time.perf_counter()
-    with MeshSensor(scene) as sensor:
+    with BatchRenderer(scene.get_geometry(exclude_ids={"vehicle"})) as renderer:
+        body_tensor = poses_to_tensor([body_pose], device=renderer.device)
+        sensor_tensor = poses_to_tensor(sensor_poses, device=renderer.device)
+        torch.cuda.synchronize(renderer.device)
         prepared = time.perf_counter()
-        rig = sample_rig(sensor, sensor_config, body_pose)
+        rig = sample_rig(renderer, sensor_config, body_tensor)
+        torch.cuda.synchronize(renderer.device)
         sampled = time.perf_counter()
-        many = sensor.sample_many(sensor_config.tof, sensor_poses)
+        many = sample_depth(renderer, sensor_config.tof, sensor_tensor)
+        torch.cuda.synchronize(renderer.device)
         finished = time.perf_counter()
-        backend = dict(sensor.renderer_info)
-        triangle_count, uploads = sensor.triangle_count, sensor.geometry_uploads
+        backend = renderer.geometry_info
+        triangle_count, uploads = renderer.triangle_count, backend["geometry_uploads"]
+    # Explicit export boundary: normal sensor outputs and postprocessing remain
+    # on CUDA. Only the offline NPZ/HTML example downloads these arrays.
+    data = {
+        "tof_m": rig.tof_m[0].cpu().numpy(),
+        "target_hint": rig.target_hint[0].cpu().numpy(),
+        "camera_range_m": rig.camera.depth.range_m[0].cpu().numpy(),
+        "target_mask": rig.camera.target_mask[0].cpu().numpy(),
+        "camera_object_index": rig.camera.depth.object_index[0].cpu().numpy(),
+        "object_ids": np.asarray(rig.camera.depth.object_ids),
+        "t_ref": np.asarray(scene.t_ref),
+        "scene_version": np.asarray(rig.scene_version),
+        "sample_many_range_m": many.range_m.cpu().numpy(),
+        "sample_many_positions_m": np.asarray([pose.position_m for pose in sensor_poses]),
+        "sample_many_quaternions_xyzw": np.asarray([pose.quaternion_xyzw for pose in sensor_poses]),
+    }
     summary = {
         "map": str(source), "config": str(configuration), "t_ref": scene.t_ref,
         "assumptions": "Noiseless ideal pinhole development configuration; not hardware specifications.",
@@ -184,40 +206,33 @@ def main():
         "triangles": triangle_count, "geometry_uploads": uploads,
         "map_bounds_m": scene.get_geometry().map_bounds_m,
         "tof_order": list(TOF_ORDER),
-        "tof": {name: _statistics(values) for name, values in zip(TOF_ORDER, rig.tof_m)},
-        "camera": {**_statistics(rig.camera.depth.range_m),
-                   "visible_target_pixels": int(np.count_nonzero(rig.camera.target_mask)),
-                   "unoccluded_target_pixels": rig.camera.unoccluded_pixels,
-                   "visible_fraction": rig.camera.visible_fraction,
-                   "target_hint": rig.target_hint.tolist()},
-        "sample_many": {"view": "front ToF", "mode": "sequential GPU render and readback on one context",
+        "tof": {name: _statistics(values) for name, values in zip(TOF_ORDER, data["tof_m"])},
+        "camera": {**_statistics(data["camera_range_m"]),
+                   "visible_target_pixels": int(np.count_nonzero(data["target_mask"])),
+                   "unoccluded_target_pixels": int(rig.camera.unoccluded_pixels[0].cpu()),
+                   "visible_fraction": float(rig.camera.visible_fraction[0].cpu()),
+                   "target_hint": data["target_hint"].tolist()},
+        "sample_many": {"view": "front ToF", "mode": "one instanced draw; CUDA output and batched postprocessing",
                         "body_pose_changes": ["reference", "body +X 0.25 m", "world yaw +15 degrees"],
                         "sensor_poses": [asdict(pose) for pose in sensor_poses],
-                        "frames": [_statistics(frame.range_m) for frame in many]},
+                        "frames": [_statistics(frame) for frame in data["sample_many_range_m"]]},
         "timing_seconds": {"prepare_scene_gpu": prepared - begin,
                            "first_rig_sample": sampled - prepared,
                            "sample_many_three_poses": finished - sampled,
-                           "sample_many_mean_per_pose": (finished - sampled) / len(many)},
+                           "sample_many_mean_per_pose": (finished - sampled) / len(sensor_poses)},
     }
     # Serialize before creating output, so invalid summary floats never leave a
     # misleading partially written result. A fresh directory protects all inputs.
     serialized = json.dumps(summary, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
-    document = _html(rig, sensor_config, summary)
+    document = _html(data, sensor_config, summary)
     output.mkdir(parents=True, exist_ok=False)
-    np.savez_compressed(
-        output / "observations.npz", tof_m=rig.tof_m, target_hint=rig.target_hint,
-        camera_range_m=rig.camera.depth.range_m, target_mask=rig.camera.target_mask,
-        camera_object_index=rig.camera.depth.object_index,
-        object_ids=np.asarray(rig.camera.depth.object_ids), t_ref=np.asarray(scene.t_ref),
-        sample_many_range_m=np.stack([frame.range_m for frame in many]),
-        sample_many_positions_m=np.asarray([pose.position_m for pose in sensor_poses]),
-        sample_many_quaternions_xyzw=np.asarray([pose.quaternion_xyzw for pose in sensor_poses]))
+    np.savez_compressed(output / "observations.npz", **data)
     (output / "summary.json").write_text(serialized, encoding="utf-8")
     (output / "one_frame.html").write_text(document, encoding="utf-8")
     print(json.dumps({"output": str(output), "html": str(output / "one_frame.html"),
-                      "tof_shape": list(rig.tof_m.shape),
-                      "camera_shape": list(rig.camera.depth.range_m.shape),
-                      "target_hint": rig.target_hint.tolist(), "renderer": backend},
+                      "tof_shape": list(data["tof_m"].shape),
+                      "camera_shape": list(data["camera_range_m"].shape),
+                      "target_hint": data["target_hint"].tolist(), "renderer": backend},
                      ensure_ascii=False, allow_nan=False))
 
 

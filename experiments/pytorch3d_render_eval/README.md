@@ -2,6 +2,8 @@
 
 本目录只验证现有场景、不同 Pose batch、CUDA 输出及批量后处理的可行性与成本，不替换正式传感器，也不确定最终后端。结论和保留的数据见 [REPORT.md](REPORT.md)。
 
+正式 sensor 后续已接入 OpenGL 批量核心。本实验的 `current` / `current_gpu` 对照与球体离散固定引用 [sensor_reference.py](../sensor_reference.py)，独立 oracle 引用冻结的 [verify_sensor_reference.py](../../tests/verify_sensor_reference.py)，避免改变历史对照含义。
+
 ## 调用与输入输出
 
 ```text

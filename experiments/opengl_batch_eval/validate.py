@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from devtools.scene import Pose
-from devtools.sensors import MeshSensor
+from experiments.sensor_reference import MeshSensor
 from experiments.pytorch3d_render_eval import validate as common
 from experiments.pytorch3d_render_eval.fixtures import CONFIG, load_scene, make_poses
 

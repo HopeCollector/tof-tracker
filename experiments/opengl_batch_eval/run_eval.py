@@ -21,7 +21,7 @@ def source_hashes():
     sources = [p for folder in (HERE, ROOT / "experiments/pytorch3d_render_eval", ROOT / "devtools")
                for p in folder.rglob("*") if p.is_file() and p.suffix in suffixes]
     sources += [ROOT / "src/tof_tracker/geometry.py", ROOT / "configs/devtools.json",
-                ROOT / "tests/verify_sensors.py"]
+                ROOT / "experiments/sensor_reference.py", ROOT / "tests/verify_sensor_reference.py"]
     sources += [p for p in HERE.glob("Dockerfile*") if p.is_file()]
     return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(set(sources))}
 

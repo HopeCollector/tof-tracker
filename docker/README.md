@@ -34,7 +34,7 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 
 源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。不要在宿主创建项目 Python 环境，也不要在 `run` 中用 root 临时补装依赖。
 
-`sensors` extra 固定 ModernGL / glcontext，镜像同时安装 GLVND 的 EGL/GL 运行库。传感器用无窗口 EGL，不需要 X server。`--gpu` 通过已有 NVIDIA Container Toolkit 暴露 GPU 和 `graphics,utility` 驱动能力；不改变宿主服务、安装或用户组。未暴露 GPU、EGL 初始化失败或检测到软件渲染时，传感器报错，不静默退回 CPU。当前入口不自动提供 CUDA 的 `compute` 能力，后续训练若需要再显式配置。
+`sensors` extra 固定 ModernGL / glcontext / PyTorch；镜像从官方 CUDA 12.8 wheel 源安装 `torch==2.7.1+cu128`，同时安装 GLVND 的 EGL/GL 运行库。传感器用无窗口 EGL，不需要 X server；要求 OpenGL 4.5、layered instancing 扩展和 NVIDIA CUDA/GL 互操作。`--gpu` 通过已有 NVIDIA Container Toolkit 暴露 GPU 和 `compute,graphics,utility` 驱动能力，不改变宿主服务、安装或用户组。未暴露 GPU、EGL/CUDA 初始化失败或检测到软件渲染时明确报错。核心的输入、输出及传感器后处理使用 CUDA 张量，不需要自行编译 C++/CUDA 绑定。
 
 独立 worktree 可使用单独镜像标签，避免重建覆盖其他任务的镜像；build/run 使用同一变量即可：
 

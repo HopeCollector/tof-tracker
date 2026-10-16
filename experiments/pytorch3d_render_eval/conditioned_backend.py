@@ -16,7 +16,7 @@ from pytorch3d.renderer import MeshRasterizer, PerspectiveCameras, Rasterization
 from devtools.config import DepthConfig
 from devtools.mesh import MeshObject
 from devtools.scene import Sphere
-from devtools.sensors import _sphere_mesh
+from experiments.sensor_reference import _sphere_mesh
 
 from .backend import P3DRenderer as BaseP3DRenderer
 

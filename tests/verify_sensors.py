@@ -1,602 +1,714 @@
-"""Verify GPU sensing against independent pinhole and analytic geometry facts.
+"""Docker checks for public batched CUDA sensors and transform-only scene sync.
 
-Fixtures are constructed here from metre-valued boxes, a plane and spheres.
-No old renderer or private rasterization routine supplies expected results.
-Run inside the project's graphics-capable Docker environment.
+Independent ray/box/plane/sphere facts and the frozen sequential GL reference
+are separate oracles. CPU downloads below are explicit assertion boundaries;
+the public observation path returns owned CUDA tensors throughout.
 """
 
+from __future__ import annotations
+
 import argparse
-from copy import deepcopy
 from dataclasses import FrozenInstanceError, replace
+import importlib.util
 import json
 import math
 from pathlib import Path
+import sys
 import tempfile
-import time
+import threading
+import traceback
 from unittest.mock import patch
 
 import numpy as np
+import torch
 
-from devtools.config import DepthConfig, MountConfig, SceneConfig, SensorConfig, load_config
-from devtools.mesh import MeshMap, MeshObject
-from devtools.scene import Pose, Scene, Sphere
-from devtools.sensors import MeshSensor, mounted_pose, pixel_directions, sample_rig
-
-
-ORIGIN = (0.0, 0.0, 20.0)
-IDENTITY = (0.0, 0.0, 0.0, 1.0)
-BOX_FACES = ((0, 2, 1), (0, 3, 2), (4, 5, 6), (4, 6, 7),
-             (0, 1, 5), (0, 5, 4), (1, 2, 6), (1, 6, 5),
-             (2, 3, 7), (2, 7, 6), (3, 0, 4), (3, 4, 7))
+from devtools.config import DepthConfig, MountConfig, SensorConfig, load_config
+from devtools import _sensor_processing as processing
+from devtools.mesh import MeshObject
+from devtools.rendering import BatchRenderer, RasterBatch
+from devtools.scene import GeometrySnapshot, Pose, SceneObject, Sphere
+from devtools.sensors import (CameraBatch, DepthBatch, RigBatch, mounted_poses,
+                             poses_to_tensor, sample_camera, sample_depth, sample_rig)
 
 
-def rejected(action, error=ValueError):
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+_SPEC = importlib.util.spec_from_file_location("frozen_sensor_checks", ROOT / "tests" / "verify_sensor_reference.py")
+ref = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(ref)
+ATOL_M = 2e-5
+
+
+def host(value):
+    """Explicit consumer-side tensor download for assertions only."""
+    return value.detach().cpu().numpy()
+
+
+def rejected(action, errors=(TypeError, ValueError)):
     try:
         action()
-    except error:
+    except errors:
         return
     raise AssertionError("invalid operation was accepted")
 
 
-def close(actual, expected, tolerance=2e-5):
-    assert np.allclose(actual, expected, rtol=0, atol=tolerance), (actual, expected)
+def close(actual, expected, atol=ATOL_M):
+    assert np.allclose(actual, expected, rtol=0, atol=atol, equal_nan=True), (
+        np.asarray(actual).shape, np.asarray(expected).shape,
+        float(np.nanmax(np.abs(np.asarray(actual) - np.asarray(expected)))))
 
 
-def readonly(array):
-    assert not array.flags.writeable
-    rejected(lambda: array.setflags(write=True))
-    rejected(lambda: array.__setitem__((...,), 0))
+def same_ranges(actual, expected, atol=ATOL_M):
+    actual, expected = np.asarray(actual), np.asarray(expected)
+    assert actual.shape == expected.shape
+    categories = {
+        "finite": np.isfinite,
+        "positive_infinity": np.isposinf,
+        "unavailable": np.isnan,
+    }
+    for name, classify in categories.items():
+        differing = np.argwhere(classify(actual) != classify(expected))
+        assert not len(differing), (name, differing[:12].tolist(), len(differing))
+    assert not np.isneginf(actual).any()
+    finite = np.isfinite(expected)
+    difference = np.abs(actual[finite] - expected[finite])
+    maximum = float(difference.max(initial=0))
+    assert maximum <= atol, (maximum, atol)
+    return {"finite_max_abs_m": maximum, "finite_pixels": int(finite.sum()),
+            "empty_pixels": int(np.isposinf(actual).sum()),
+            "unavailable_pixels": int(np.isnan(actual).sum())}
 
 
-def quaternion(roll=0.0, pitch=0.0, yaw=0.0):
-    """Independent elementary Euler-angle quaternion, with radian inputs."""
-    sr, cr = math.sin(roll / 2), math.cos(roll / 2)
-    sp, cp = math.sin(pitch / 2), math.cos(pitch / 2)
-    sy, cy = math.sin(yaw / 2), math.cos(yaw / 2)
-    return (sr*cp*cy - cr*sp*sy, cr*sp*cy + sr*cp*sy,
-            cr*cp*sy - sr*sp*cy, cr*cp*cy + sr*sp*sy)
+def depth_host(value):
+    return {"range_m": host(value.range_m), "object_index": host(value.object_index),
+            "object_ids": value.object_ids, "t_ref": value.t_ref,
+            "scene_version": value.scene_version}
 
 
-def rotate_euler(vector, roll, pitch, yaw):
-    """Rotate by Rx, then Ry, then Rz, independently of the shared Transform."""
-    x, y, z = vector
-    y, z = math.cos(roll)*y - math.sin(roll)*z, math.sin(roll)*y + math.cos(roll)*z
-    x, z = math.cos(pitch)*x + math.sin(pitch)*z, -math.sin(pitch)*x + math.cos(pitch)*z
-    return np.array((math.cos(yaw)*x - math.sin(yaw)*y,
-                     math.sin(yaw)*x + math.cos(yaw)*y, z))
+def camera_host(value):
+    return {**depth_host(value.depth), "target_mask": host(value.target_mask),
+            "target_hint": host(value.target_hint),
+            "visible_fraction": host(value.visible_fraction),
+            "unoccluded_pixels": host(value.unoccluded_pixels)}
 
 
-def reference_rays(config):
-    """Explicit pinhole pixel centers: rows down, columns right, FLU axes."""
-    rays = np.empty((config.height, config.width, 3), dtype=float)
-    for row in range(config.height):
-        for col in range(config.width):
-            left = (1 - 2 * (col + 0.5) / config.width) * math.tan(math.radians(config.hfov_deg) / 2)
-            up = (1 - 2 * (row + 0.5) / config.height) * math.tan(math.radians(config.vfov_deg) / 2)
-            length = math.sqrt(1 + left*left + up*up)
-            rays[row, col] = (1 / length, left / length, up / length)
-    return rays
+def reference(scene, config, poses, *, camera=False, threshold=0):
+    with ref.MeshSensor(scene) as sensor:
+        if camera:
+            frames = [sensor.camera(config, pose, threshold) for pose in poses]
+            return {"range_m": np.stack([frame.depth.range_m for frame in frames]),
+                    "object_index": np.stack([frame.depth.object_index for frame in frames]),
+                    "object_ids": frames[0].depth.object_ids,
+                    "target_mask": np.stack([frame.target_mask for frame in frames]),
+                    "target_hint": np.stack([frame.target_hint for frame in frames]),
+                    "visible_fraction": np.asarray([frame.visible_fraction for frame in frames]),
+                    "unoccluded_pixels": np.asarray([frame.unoccluded_pixels for frame in frames])}
+        frames = sensor.sample_many(config, poses)
+        return {"range_m": np.stack([frame.range_m for frame in frames]),
+                "object_index": np.stack([frame.object_index for frame in frames]),
+                "object_ids": frames[0].object_ids}
 
 
-def box(name, bounds):
-    (x0, x1), (y0, y1), (z0, z1) = bounds
-    vertices = ((x0, y0, z0), (x1, y0, z0), (x1, y1, z0), (x0, y1, z0),
-                (x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1))
-    return MeshObject(name, vertices, BOX_FACES, "obstacle")
+def compare(actual, expected, *, atol=ATOL_M):
+    record = same_ranges(actual["range_m"], expected["range_m"], atol)
+    assert actual["object_ids"] == expected["object_ids"]
+    differences = np.argwhere(actual["object_index"] != expected["object_index"])
+    assert not len(differences), ("object_index", differences[:12].tolist(), len(differences))
+    for name in ("target_mask", "target_hint", "unoccluded_pixels"):
+        if name in expected:
+            assert np.array_equal(actual[name], expected[name]), name
+    if "visible_fraction" in expected:
+        close(actual["visible_fraction"], expected["visible_fraction"], 1e-15)
+    return record
 
 
-def scene(boxes=(), *, size=(100.0, 100.0, 100.0), target=(-20.0, 0.0, 20.0),
-          radius=0.3, declared=True):
-    sx, sy, _ = size
-    ground = MeshObject("ground", ((-sx/2, -sy/2, 0), (sx/2, -sy/2, 0),
-                                   (sx/2, sy/2, 0), (-sx/2, sy/2, 0)),
-                        ((0, 1, 2), (0, 2, 3)), "ground")
-    background = MeshMap(Path("analytic-sensor-fixture.obj"),
-                         (ground, *(box(name, bounds) for name, bounds in boxes)),
-                         size_xyz_m=size if declared else None)
-    return Scene(background, Sphere(Pose(ORIGIN), 0.2), Sphere(Pose(target), radius), 12.5)
+def tensor_contract(value, batch, config, device):
+    depth = value.depth if isinstance(value, CameraBatch) else value
+    assert isinstance(depth, DepthBatch)
+    assert depth.range_m.shape == depth.object_index.shape == (batch, config.height, config.width)
+    assert depth.range_m.device == depth.object_index.device == device
+    assert depth.range_m.dtype == torch.float32 and depth.object_index.dtype == torch.int64
+    assert depth.range_m.is_cuda and depth.object_index.is_cuda
+    assert not depth.range_m.requires_grad
+    assert isinstance(depth.object_ids, tuple) and "vehicle" not in depth.object_ids
+    assert isinstance(depth.scene_version, int)
+    if isinstance(value, CameraBatch):
+        for item, shape, dtype in ((value.target_mask, depth.range_m.shape, torch.bool),
+                                   (value.target_hint, (batch, 5), torch.float32),
+                                   (value.visible_fraction, (batch,), torch.float64),
+                                   (value.unoccluded_pixels, (batch,), torch.int64)):
+            assert item.shape == shape and item.device == device and item.dtype == dtype
+    rejected(lambda: setattr(depth, "range_m", None), (FrozenInstanceError,))
 
 
-def ray_box(origin, direction, bounds):
-    """Analytic slab intersection with an axis-aligned closed box."""
-    entering, leaving = -math.inf, math.inf
-    for value, delta, (low, high) in zip(origin, direction, bounds):
-        if abs(delta) < 1e-14:
-            if value < low or value > high:
-                return math.inf
-            continue
-        first, second = (low - value) / delta, (high - value) / delta
-        entering, leaving = max(entering, min(first, second)), min(leaving, max(first, second))
-    if entering > leaving or leaving <= 0:
-        return math.inf
-    return entering if entering > 0 else leaving
+def snapshot(scene):
+    return scene.get_geometry(exclude_ids={"vehicle"})
 
 
-def box_image(config, origin, boxes, angles=(0.0, 0.0, 0.0)):
-    ranges = np.full((config.height, config.width), math.inf)
-    identities = np.full(ranges.shape, -1, dtype=int)
-    rays = reference_rays(config)
-    for row in range(config.height):
-        for col in range(config.width):
-            direction = rotate_euler(rays[row, col], *angles)
-            candidates = [ray_box(origin, direction, bounds) for _, bounds in boxes]
-            nearest = min(candidates)
-            if nearest <= config.max_range_m:
-                ranges[row, col] = nearest
-                identities[row, col] = candidates.index(nearest)
-    return ranges, identities
+def render_depth(scene, config, poses):
+    expected = reference(scene, config, poses)
+    with BatchRenderer(snapshot(scene)) as renderer:
+        matrices = poses_to_tensor(poses, device=renderer.device)
+        value = sample_depth(renderer, config, matrices)
+        tensor_contract(value, len(poses), config, renderer.device)
+        assert value.t_ref == scene.t_ref
+        actual = depth_host(value)
+        record = compare(actual, expected)
+    return actual, expected, record
 
 
-def finite_summary(values):
-    """Consumer-side example: unavailable ranges never enter a finite mean."""
-    array = np.asarray(values)
-    valid = array[np.isfinite(array)]
-    return {"finite_count": int(valid.size), "mean_m": float(valid.mean()) if valid.size else None,
-            "empty_count": int(np.count_nonzero(np.isposinf(array))),
-            "unavailable_count": int(np.count_nonzero(np.isnan(array)))}
+def independent_box_result(actual, expected_reference, config, poses, boxes, angles):
+    """Keep pre-existing edge disagreements explicit and reject new ones."""
+    distances, indices = [], []
+    for pose in poses:
+        distance, index = ref.box_image(config, pose.position_m, boxes, angles)
+        distances.append(distance)
+        indices.append(index)
+    distance, index = np.stack(distances), np.stack(indices)
+    for classify in (np.isfinite, np.isnan, np.isposinf):
+        assert np.array_equal(classify(actual["range_m"]), classify(distance))
+        assert np.array_equal(classify(expected_reference["range_m"]), classify(distance))
+    finite_distance = np.isfinite(distance)
+    baseline_error = np.zeros(distance.shape)
+    actual_error = np.zeros(distance.shape)
+    baseline_error[finite_distance] = np.abs(expected_reference["range_m"][finite_distance] - distance[finite_distance])
+    actual_error[finite_distance] = np.abs(actual["range_m"][finite_distance] - distance[finite_distance])
+    known_distance_failures = baseline_error > ATOL_M
+    assert np.array_equal(actual_error > ATOL_M, known_distance_failures)
+    assert np.all(actual_error[~known_distance_failures] <= ATOL_M)
+    expected_names = np.asarray(["map/" + name for name, _ in boxes], dtype=object)
+    finite = index >= 0
+    oracle_names = expected_names[index[finite]]
+    baseline_names = np.asarray(expected_reference["object_ids"], dtype=object)[expected_reference["object_index"][finite]]
+    actual_names = np.asarray(actual["object_ids"], dtype=object)[actual["object_index"][finite]]
+    baseline_mismatches = baseline_names != oracle_names
+    actual_mismatches = actual_names != oracle_names
+    assert np.array_equal(actual_mismatches, baseline_mismatches)
+    examples = []
+    for location in np.argwhere(known_distance_failures):
+        at = tuple(location)
+        examples.append({"batch_row_col": location.tolist(),
+                         "analytic_range_m": float(distance[at]),
+                         "frozen_reference_range_m": float(expected_reference["range_m"][at]),
+                         "formal_sensor_range_m": float(actual["range_m"][at]),
+                         "analytic_object_id": str(expected_names[index[at]]),
+                         "frozen_reference_object_id": expected_reference["object_ids"][expected_reference["object_index"][at]],
+                         "formal_sensor_object_id": actual["object_ids"][actual["object_index"][at]]})
+    return {"oracle_identity_disagreement_pixels": int(actual_mismatches.sum()),
+            "frozen_reference_identity_disagreement_pixels": int(baseline_mismatches.sum()),
+            "oracle_distance_disagreement_pixels": int(known_distance_failures.sum()),
+            "independent_oracle_status": "known_reference_failure" if examples else "passed",
+            "known_reference_failures": examples,
+            "policy": "same per-pixel errors as frozen reference; all other pixels retain 2e-5 m acceptance; all new disagreements fail"}
 
 
-def record_renderer(sensor, renderers):
-    assert sensor.renderer_info["GL_VENDOR"] and sensor.renderer_info["GL_VERSION"]
-    assert not any(tag in sensor.renderer_info["GL_RENDERER"].lower()
-                   for tag in ("llvmpipe", "softpipe", "swrast", "software", "lavapipe"))
-    if sensor.renderer_info not in renderers:
-        renderers.append(dict(sensor.renderer_info))
-
-
-def verify_config(folder, checks):
-    source = Path(__file__).resolve().parents[1] / "configs" / "devtools.json"
-    value = json.loads(source.read_text(encoding="utf-8"))
-    config = load_config(source)
-    sensors = config.sensors
-    assert isinstance(sensors, SensorConfig)
-    assert sensors.tof == DepthConfig(8, 8, 60, 60, 0.05, 12)
-    assert sensors.camera == DepthConfig(160, 120, 80, 60, 0.01, 30)
-    assert sensors.min_visible_fraction == 0.2
-    for mount, direction in zip(sensors.tof_mounts, ((0, -1, 0), (1, 0, 0), (0, 1, 0), (-1, 0, 0))):
-        close(mount.position_m, (0, 0, 0))
-        close(mount.as_transform().apply_vectors((1, 0, 0)), direction, 1e-10)
-    close(sensors.camera_mount.as_transform().apply_vectors((1, 0, 0)), (1, 0, 0))
-    for instance, name, other in ((sensors.tof, "width", 10), (sensors, "tof_mounts", ()),
-                                  (sensors.camera_mount, "position_m", (1, 2, 3)), (config, "sensors", None)):
-        rejected(lambda instance=instance, name=name, other=other: setattr(instance, name, other), FrozenInstanceError)
-    position, rotation = [1, 2, 3], [0, 0, 0, 1.0000005]
-    copied_mount = MountConfig(position, rotation)
-    position[0], rotation[3] = 99, 0
-    assert copied_mount.position_m == (1, 2, 3)
-    close(copied_mount.quaternion_xyzw, IDENTITY, 1e-10)
-    mounts = list(sensors.tof_mounts)
-    copied_sensors = replace(sensors, tof_mounts=mounts)
-    mounts.clear()
-    assert copied_sensors.tof_mounts == sensors.tof_mounts
-    for field in ("width", "height"):
-        for bad in (True, False, 0, -1, 1.0, 4097, "8", None, math.inf, math.nan):
-            rejected(lambda field=field, bad=bad: replace(sensors.tof, **{field: bad}))
-    rejected(lambda: replace(sensors.camera, width=4096, height=4096))
-    assert DepthConfig(4096, 1, 60, 60, 0, 1).width == 4096
-    assert DepthConfig(1024, 1024, 60, 60, 0, 1).height == 1024
-    for field in ("hfov_deg", "vfov_deg", "min_range_m", "max_range_m"):
-        for bad in (True, False, "1", None, math.nan, math.inf, -math.inf, 10**400):
-            rejected(lambda field=field, bad=bad: replace(sensors.tof, **{field: bad}))
-    for field in ("hfov_deg", "vfov_deg"):
-        for bad in (0, -1, 179, 180):
-            rejected(lambda field=field, bad=bad: replace(sensors.tof, **{field: bad}))
-    for minimum, maximum in ((-1, 2), (1, 1), (2, 1), (0, 0)):
-        rejected(lambda minimum=minimum, maximum=maximum:
-                 DepthConfig(8, 8, 60, 60, minimum, maximum))
-    for bad in (True, False, -0.1, 1.1, math.nan, math.inf, "0.2", None):
-        rejected(lambda bad=bad: replace(sensors, min_visible_fraction=bad))
-    assert replace(sensors, min_visible_fraction=0).min_visible_fraction == 0
-    assert replace(sensors, min_visible_fraction=1).min_visible_fraction == 1
-    rejected(lambda: replace(sensors, tof=replace(sensors.tof, width=7)))
-    for bad in ((), sensors.tof_mounts[:3], (*sensors.tof_mounts, sensors.camera_mount),
-                (None, *sensors.tof_mounts[1:]), "four", None):
-        rejected(lambda bad=bad: replace(sensors, tof_mounts=bad))
-    rejected(lambda: replace(sensors, camera_mount=None))
-    rejected(lambda: replace(sensors, camera={}))
-    rejected(lambda: SceneConfig(0.2, 0.3, {}))
-    for bad in ((0, 0), (0, 0, 0, 0), (0, math.inf, 0), (0, False, 0), "000"):
-        rejected(lambda bad=bad: MountConfig(bad, IDENTITY))
-    for bad in ((0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 2),
-                (0, 0, 0, 1.000002), (0, 0, True, 0), (0, 0, math.nan, 1)):
-        rejected(lambda bad=bad: MountConfig((0, 0, 0), bad))
-
-    path = folder / "config.json"
-    path.write_text(json.dumps(value), encoding="utf-8")
-    reads, original = [], Path.read_text
-
-    def count_read(file_path, *args, **kwargs):
-        reads.append(file_path)
-        return original(file_path, *args, **kwargs)
-
-    with patch.object(Path, "read_text", count_read):
-        assert load_config(path) == config
-    assert reads == [path]
-    legacy = {name: value[name] for name in ("vehicle", "target")}
-    path.write_text(json.dumps(legacy), encoding="utf-8")
-    assert load_config(path) == SceneConfig(0.2, 0.3)
-    invalid = []
-    for key in value["sensors"]:
-        altered = deepcopy(value)
-        del altered["sensors"][key]
-        invalid.append(altered)
-    for route in ((), ("sensors",), ("sensors", "tof"), ("sensors", "camera"),
-                  ("sensors", "tof_mounts"), ("sensors", "tof_mounts", "right"),
-                  ("sensors", "camera_mount")):
-        altered = deepcopy(value)
-        node = altered
-        for key in route:
-            node = node[key]
-        node["unknown"] = 1
-        invalid.append(altered)
-    for name in ("tof", "camera"):
-        for key in value["sensors"][name]:
-            altered = deepcopy(value)
-            del altered["sensors"][name][key]
-            invalid.append(altered)
-    for name in ("position_m", "quaternion_xyzw"):
-        altered = deepcopy(value)
-        del altered["sensors"]["camera_mount"][name]
-        invalid.append(altered)
-    for key in ("width", "hfov_deg", "min_range_m"):
-        altered = deepcopy(value)
-        altered["sensors"]["tof"][key] = True
-        invalid.append(altered)
-    altered = deepcopy(value)
-    del altered["sensors"]["tof_mounts"]["rear"]
-    invalid.append(altered)
-    for bad in (None, [], {}, True):
-        altered = deepcopy(value)
-        altered["sensors"] = bad
-        invalid.append(altered)
-    for altered in invalid:
-        path.write_text(json.dumps(altered), encoding="utf-8")
-        rejected(lambda: load_config(path))
-    text = json.dumps(value)
-    path.write_text(text.replace('"width": 8', '"width": 8, "width": 8', 1), encoding="utf-8")
-    rejected(lambda: load_config(path))
-    checks.append("immutable explicit sensor facts; strict finite/nonboolean values, ranges/FOV/resolution/8x8/mounts; one JSON read, legacy compatibility and complete exact-key sensor schema")
-    return sensors
-
-
-def verify_planes_and_pixels(checks, errors, renderers):
+def verify_planes_and_boxes():
+    records = {}
     config = DepthConfig(9, 7, 60, 45, 0, 12)
-    rays = reference_rays(config)
-    close(pixel_directions(config), rays, 1e-12)
-    assert rays[0, 0, 1] > 0 and rays[0, 0, 2] > 0
-    assert rays[-1, -1, 1] < 0 and rays[-1, -1, 2] < 0
-    wall = ("far_wall", ((6, 7), (-10, 10), (10, 30)))
-    nearer = ("upper_left", ((3, 3.5), (0.4, 1.8), (20.4, 21.8)))
-    boxes = (wall, nearer)
-    with MeshSensor(scene(boxes)) as sensor:
-        record_renderer(sensor, renderers)
-        frame = sensor.sample(config, Pose(ORIGIN))
-        expected, identity = box_image(config, ORIGIN, boxes)
-        assert np.all(np.isfinite(frame.range_m))
-        close(frame.range_m, expected)
-        errors["box_nearest_surface_max_abs_m"] = float(np.max(abs(frame.range_m - expected)))
-        actual_names = np.array(frame.object_ids, dtype=object)[frame.object_index]
-        expected_names = np.where(identity == 0, "map/far_wall", "map/upper_left")
-        assert np.array_equal(actual_names, expected_names)
-        near_pixels = np.argwhere(identity == 1)
-        assert len(near_pixels) and np.all(near_pixels[:, 0] < config.height // 2)
-        assert np.all(near_pixels[:, 1] < config.width // 2)
-        close(frame.range_m[config.height//2, config.width//2], 6)
-        assert frame.range_m[0, -1] > 6.1
-        assert "vehicle" not in frame.object_ids and frame.t_ref == 12.5
-        readonly(frame.range_m)
-        readonly(frame.object_index)
-        rejected(lambda: setattr(frame, "range_m", None), FrozenInstanceError)
-        assert frame.range_m.shape == frame.object_index.shape == (7, 9)
+    boxes = (("far_wall", ((6, 7), (-10, 10), (10, 30))),
+             ("upper_left", ((3, 3.5), (0.4, 1.8), (20.4, 21.8))))
+    poses = (Pose(ref.ORIGIN), Pose((0.125, 0, 20)), Pose((0.25, 0, 20)))
+    actual, expected, records["boxes_vs_frozen_reference"] = render_depth(ref.scene(boxes), config, poses)
+    records["boxes_independent"] = independent_box_result(actual, expected, config, poses, boxes, (0, 0, 0))
+    assert [item["batch_row_col"] for item in records["boxes_independent"]["known_reference_failures"]] == [
+        [1, 2, 0], [1, 2, 1], [1, 2, 2], [1, 2, 3]]
+    assert actual["range_m"][0, 0, -1] > 6.1
+    assert actual["object_ids"][actual["object_index"][0, 0, 0]] == "map/upper_left"
 
-    downward = DepthConfig(5, 3, 60, 40, 0, 10)
-    angles = (0.0, math.pi/2, 0.0)
-    ground_errors = []
+    config = DepthConfig(5, 3, 60, 40, 0, 10)
+    angles = (0, math.pi / 2, 0)
+    poses = (Pose((0, 0, 4), ref.quaternion(*angles)),)
+    analytic = np.asarray([[4 / -ref.rotate_euler(ray, *angles)[2]
+                            for ray in row] for row in ref.reference_rays(config)])
     for declared in (True, False):
-        with MeshSensor(scene(declared=declared)) as sensor:
-            record_renderer(sensor, renderers)
-            frame = sensor.sample(downward, Pose((0, 0, 4), quaternion(*angles)))
-            expected = np.array([[4 / -rotate_euler(ray, *angles)[2] for ray in row]
-                                 for row in reference_rays(downward)])
-            assert np.all(np.isfinite(frame.range_m))
-            close(frame.range_m, expected)
-            assert np.all(frame.object_index == frame.object_ids.index("map/ground"))
-            close(frame.range_m[1, 2], 4)
-            ground_errors.append(float(np.max(abs(frame.range_m - expected))))
-    errors["ground_plane_max_abs_m"] = max(ground_errors)
+        actual, _, records[f"ground_declared_{declared}"] = render_depth(ref.scene(declared=declared), config, poses)
+        same_ranges(actual["range_m"][0], analytic)
+        assert np.all(actual["object_index"] == actual["object_ids"].index("map/ground"))
 
-    # A wide-FOV triangle clipped across the camera plane previously lost
-    # millimetres in interpolated positions, making this in-range hit look empty.
-    # Compute the world ray independently by quaternion-vector multiplication,
-    # then intersect the known x=1 wall plane analytically.
-    witness_config = DepthConfig(64, 48, 120, 100, 0.05, 12)
-    witness_origin = (-0.5481651582549905, -1.4890260899279797, 11.00635970341665)
-    witness_quaternion = (-0.28231015743329757, 0.26836274025745954,
-                          -0.45667413895892944, 0.799831948260142)
-    normalized = np.asarray(witness_quaternion) / math.hypot(*witness_quaternion)
-    vector = reference_rays(witness_config)[8, 55]
-    direction = vector + 2 * np.cross(normalized[:3],
-                                      np.cross(normalized[:3], vector) + normalized[3] * vector)
-    expected_distance = (1 - witness_origin[0]) / direction[0]
-    close(expected_distance, 11.9949247515, 1e-8)
-    witness_wall = ("wide_fov_wall", ((1, 1.5), (-15, 15), (0, 20)))
-    with MeshSensor(scene((witness_wall,), size=(40, 40, 20))) as sensor:
-        record_renderer(sensor, renderers)
-        witness = sensor.sample(witness_config, Pose(witness_origin, witness_quaternion))
-        actual_distance = witness.range_m[8, 55]
-        assert np.isfinite(actual_distance)
-        close(actual_distance, expected_distance, 2e-5)
-        assert abs(actual_distance - expected_distance) < 2e-5
-        assert witness.object_ids[witness.object_index[8, 55]] == "map/wide_fov_wall"
-        errors["wide_fov_clipped_wall_witness_abs_m"] = float(abs(actual_distance - expected_distance))
-    checks.append("independent pinhole row/column signs, plane/closed-box Euclidean distances, nearest surfaces and asymmetric upper-left occlusion; metadata-boundary ground and wide-FOV clipped-wall regressions; vehicle self-geometry excluded")
+    config = DepthConfig(64, 48, 120, 100, .05, 12)
+    origin = (-.5481651582549905, -1.4890260899279797, 11.00635970341665)
+    quaternion = (-.28231015743329757, .26836274025745954, -.45667413895892944, .799831948260142)
+    unit = np.asarray(quaternion) / math.hypot(*quaternion)
+    ray = ref.reference_rays(config)[8, 55]
+    direction = ray + 2 * np.cross(unit[:3], np.cross(unit[:3], ray) + unit[3] * ray)
+    expected_distance = (1 - origin[0]) / direction[0]
+    wall = ("wide_fov_wall", ((1, 1.5), (-15, 15), (0, 20)))
+    actual, _, records["wide_fov_witness"] = render_depth(ref.scene((wall,), size=(40, 40, 20)), config, (Pose(origin, quaternion),))
+    close(actual["range_m"][0, 8, 55], expected_distance)
+    records["witness_independent_abs_m"] = float(abs(actual["range_m"][0, 8, 55] - expected_distance))
+    return records
 
 
-def verify_range_and_coverage(checks, renderers):
+def verify_range_and_coverage():
+    records = {}
     wall = ("wall", ((4, 5), (-8, 8), (10, 30)))
     base = DepthConfig(1, 1, 60, 60, 0, 8)
-    measured = []
-    with MeshSensor(scene((wall,))) as sensor:
-        record_renderer(sensor, renderers)
-        for config in (replace(base, min_range_m=4), replace(base, max_range_m=4)):
-            frame = sensor.sample(config, Pose(ORIGIN))
-            close(frame.range_m[0, 0], 4)
-            measured.append(frame.range_m[0, 0])
-        too_close = sensor.sample(replace(base, min_range_m=4.25), Pose(ORIGIN))
-        assert np.isnan(too_close.range_m[0, 0])
-        assert too_close.object_ids[too_close.object_index[0, 0]] == "map/wall"
-        beyond = sensor.sample(replace(base, max_range_m=3.5), Pose(ORIGIN))
-        assert np.isposinf(beyond.range_m[0, 0])
-        measured.extend((too_close.range_m[0, 0], beyond.range_m[0, 0]))
-    crossing_near = ("crossing_camera_plane", ((-1, 0.05), (-1, 1), (19, 21)))
-    with MeshSensor(scene((wall, crossing_near))) as sensor:
-        record_renderer(sensor, renderers)
-        frame = sensor.sample(DepthConfig(3, 3, 60, 60, 0.1, 8), Pose(ORIGIN))
-        assert np.all(np.isnan(frame.range_m))
-        assert np.all(frame.object_index == frame.object_ids.index("map/crossing_camera_plane"))
-    # This observed surface is just beyond max and within float32 uncertainty.
-    # It must remain unavailable, rather than becoming a supposedly clear ray.
+    poses = (Pose(ref.ORIGIN),)
+    for name, config, classify in (("inclusive_min", replace(base, min_range_m=4), np.isfinite),
+                                    ("inclusive_max", replace(base, max_range_m=4), np.isfinite),
+                                    ("too_close", replace(base, min_range_m=4.25), np.isnan),
+                                    ("beyond_range", replace(base, max_range_m=3.5), np.isposinf)):
+        actual, _, records[name] = render_depth(ref.scene((wall,)), config, poses)
+        assert classify(actual["range_m"]).all()
+    crossing = ("crossing_camera_plane", ((-1, .05), (-1, 1), (19, 21)))
+    actual, _, records["camera_plane_crossing_occluder"] = render_depth(
+        ref.scene((wall, crossing)), DepthConfig(3, 3, 60, 60, .1, 8), poses)
+    assert np.isnan(actual["range_m"]).all()
+    assert np.all(actual["object_index"] == actual["object_ids"].index("map/crossing_camera_plane"))
     near_max = ("near_max_wall", ((12.000001, 12.5), (-8, 8), (10, 30)))
-    with MeshSensor(scene((near_max,))) as sensor:
-        near_max_frame = sensor.sample(replace(base, max_range_m=12), Pose(ORIGIN))
-        assert np.isnan(near_max_frame.range_m[0, 0])
-        assert near_max_frame.object_ids[near_max_frame.object_index[0, 0]] == "map/near_max_wall"
+    actual, _, records["uncertain_near_max"] = render_depth(ref.scene((near_max,)), replace(base, max_range_m=12), poses)
+    assert np.isnan(actual["range_m"]).all()
     for declared in (True, False):
-        with MeshSensor(scene(declared=declared)) as sensor:
-            record_renderer(sensor, renderers)
-            frame = sensor.sample(base, Pose(ORIGIN))
-            assert (np.isposinf if declared else np.isnan)(frame.range_m[0, 0])
-            measured.append(frame.range_m[0, 0])
-        with MeshSensor(scene((wall,), declared=declared)) as sensor:
-            close(sensor.sample(base, Pose(ORIGIN)).range_m[0, 0], 4)
-    small = (10.0, 10.0, 10.0)
-    with MeshSensor(scene(size=small, target=(-3, -3, 5))) as sensor:
-        record_renderer(sensor, renderers)
-        assert np.isnan(sensor.sample(base, Pose((0, 0, 5))).range_m[0, 0])
+        actual, _, records[f"empty_declared_{declared}"] = render_depth(ref.scene(declared=declared), base, poses)
+        assert (np.isposinf if declared else np.isnan)(actual["range_m"]).all()
+        _, _, records[f"hit_declared_{declared}"] = render_depth(ref.scene((wall,), declared=declared), base, poses)
+    small = (10, 10, 10)
+    origin = (Pose((0, 0, 5)),)
+    actual, _, records["uncovered_empty"] = render_depth(ref.scene(size=small, target=(-3, -3, 5)), base, origin)
+    assert np.isnan(actual["range_m"]).all()
     within = ("within_domain", ((4, 4.5), (-1, 1), (4, 6)))
-    with MeshSensor(scene((within,), size=small, target=(-3, -3, 5))) as sensor:
-        close(sensor.sample(base, Pose((0, 0, 5))).range_m[0, 0], 4)
-        # Even a surface inside the domain cannot establish the unknown segment
-        # from an out-of-domain camera origin to that surface.
-        outside = sensor.sample(base, Pose((6, 0, 5), quaternion(yaw=math.pi)))
-        assert np.isnan(outside.range_m[0, 0]) and outside.object_index[0, 0] >= 0
-    with MeshSensor(scene(size=small, target=(6, 0, 5), radius=0.25)) as sensor:
-        frame = sensor.sample(base, Pose((0, 0, 5)))
-        assert np.isnan(frame.range_m[0, 0])
-        assert frame.object_ids[frame.object_index[0, 0]] == "target"
-        camera = sensor.camera(base, Pose((0, 0, 5)), 0)
-        assert camera.unoccluded_pixels == 0 and camera.visible_fraction == 0
-        assert not np.any(camera.target_mask) and not np.any(camera.target_hint)
-        outside_camera = sensor.camera(base, Pose((6, 0, 5), quaternion(yaw=math.pi)), 0)
-        assert not np.any(outside_camera.target_hint) and outside_camera.unoccluded_pixels == 0
-    # The nearest target point lies exactly on x=5, while its center is outside
-    # the domain. A non-binary origin exposes float32 hit reconstruction error;
-    # finite-hit boundary rounding must agree for full and target-only views.
-    with MeshSensor(scene(size=small, target=(5.5, 0, 5), radius=0.5)) as sensor:
-        camera = sensor.camera(base, Pose((-0.123, 0, 5)), 1)
-        close(camera.depth.range_m[0, 0], 5.123)
-        assert camera.unoccluded_pixels == 1 and camera.visible_fraction == 1
-        assert camera.target_mask[0, 0] and np.array_equal(camera.target_hint, (1, 0, 0, 1, 1))
-    summary = finite_summary(measured)
-    assert summary == {"finite_count": 2, "mean_m": 4.0, "empty_count": 2, "unavailable_count": 2}
-    assert finite_summary([math.inf, math.nan])["mean_m"] is None
-    assert finite_summary([])["mean_m"] is None
-    checks.append("inclusive min/max and uncertain near-max hits remain NaN; too-close and camera-plane-crossing occluders block farther surfaces; covered empty=inf, unknown=NaN; out-of-domain hits/origins rejected and partial-domain valid hits retained; finite-only aggregation")
-    return summary
+    domain_scene = ref.scene((within,), size=small, target=(-3, -3, 5))
+    poses = (Pose((0, 0, 5)), Pose((6, 0, 5), ref.quaternion(yaw=math.pi)))
+    actual, _, records["in_domain_hit_outside_origin"] = render_depth(domain_scene, base, poses)
+    assert actual["range_m"][0, 0, 0] == 4 and np.isnan(actual["range_m"][1, 0, 0])
+    return records
 
 
-def analytic_sphere(config, center, radius, origin=ORIGIN):
-    rays = reference_rays(config)
-    relative = np.asarray(center) - origin
-    projection = rays @ relative
-    discriminant = projection*projection - (relative @ relative - radius*radius)
-    hits = (discriminant >= 0) & (projection > 0)
-    ranges = np.full(hits.shape, math.inf)
-    ranges[hits] = projection[hits] - np.sqrt(discriminant[hits])
-    return hits, ranges, discriminant
+def render_camera(scene, config, poses, threshold):
+    expected = reference(scene, config, poses, camera=True, threshold=threshold)
+    with BatchRenderer(snapshot(scene)) as renderer:
+        matrices = poses_to_tensor(poses, device=renderer.device)
+        value = sample_camera(renderer, config, matrices, threshold)
+        tensor_contract(value, len(poses), config, renderer.device)
+        actual = camera_host(value)
+        record = compare(actual, expected)
+    return actual, expected, record
 
 
-def verify_camera(checks, errors, renderers):
-    config = DepthConfig(80, 60, 60, 45, 0.01, 15)
-    center, radius = (6.0, 0.0, 20.0), 1.2
-    analytic_mask, analytic_range, discriminant = analytic_sphere(config, center, radius)
-    with MeshSensor(scene(target=center, radius=radius)) as sensor:
-        record_renderer(sensor, renderers)
-        camera = sensor.camera(config, Pose(ORIGIN), 1)
-        assert camera.visible_fraction == 1 and camera.target_hint[0] == 1
-        assert camera.unoccluded_pixels == int(np.count_nonzero(camera.target_mask)) > 0
-        disagreements = int(np.count_nonzero(camera.target_mask ^ analytic_mask))
-        assert disagreements <= 4, disagreements
-        interior = analytic_mask & camera.target_mask & (discriminant > 0.1)
-        differences = camera.depth.range_m[interior] - analytic_range[interior]
-        assert len(differences) and float(np.min(differences)) >= -2e-5
-        assert float(np.max(differences)) < 0.006
-        errors["sphere_interior_max_abs_m"] = float(np.max(abs(differences)))
-        errors["sphere_silhouette_disagreement_pixels"] = disagreements
-        empty = sensor.camera(replace(config, max_range_m=2), Pose(ORIGIN), 0)
-        assert empty.unoccluded_pixels == 0 and empty.visible_fraction == 0
-        assert not np.any(empty.target_hint) and not np.any(empty.target_mask)
-        for bad in (True, False, -0.1, 1.1, math.nan, math.inf, "0.2", None, 10**400):
-            rejected(lambda bad=bad: sensor.camera(config, Pose(ORIGIN), bad))
+def verify_camera():
+    records = {}
+    config = DepthConfig(80, 60, 60, 45, .01, 15)
+    center, radius = (6, 0, 20), 1.2
+    poses = (Pose(ref.ORIGIN), Pose((0, .125, 20)), Pose((0, -.125, 20)))
+    clear_scene = ref.scene(target=center, radius=radius)
+    actual, _, records["clear"] = render_camera(clear_scene, config, poses, 1)
+    analytic_mask, analytic_distance, discriminant = ref.analytic_sphere(config, center, radius)
+    disagreements = int(np.count_nonzero(actual["target_mask"][0] ^ analytic_mask))
+    assert disagreements <= 4, disagreements
+    interior = analytic_mask & actual["target_mask"][0] & (discriminant > .1)
+    delta = actual["range_m"][0][interior] - analytic_distance[interior]
+    assert len(delta) and delta.min() >= -ATOL_M and delta.max() < .006
+    records["sphere_independent"] = {"silhouette_disagreement_pixels": disagreements,
+                                      "interior_max_abs_m": float(np.abs(delta).max())}
+    assert np.all(actual["visible_fraction"] == 1) and np.all(actual["target_hint"][:, 0] == 1)
+    actual, _, records["zero_denominator"] = render_camera(clear_scene, replace(config, max_range_m=2), poses, 0)
+    assert not actual["target_mask"].any() and not actual["target_hint"].any()
+    assert not actual["unoccluded_pixels"].any() and not actual["visible_fraction"].any()
 
     half = ("half_occluder", ((3, 3.2), (0, 3), (16, 24)))
-    with MeshSensor(scene((half,), target=center, radius=radius)) as sensor:
-        record_renderer(sensor, renderers)
-        camera = sensor.camera(config, Pose(ORIGIN), 0.4)
-        visible = camera.target_mask
-        expected_visible = analytic_mask & (reference_rays(config)[..., 1] < 0)
-        assert np.count_nonzero(visible ^ expected_visible) <= 4
-        assert 0.48 <= camera.visible_fraction <= 0.52
-        assert camera.visible_fraction == np.count_nonzero(visible) / camera.unoccluded_pixels
-        assert camera.unoccluded_pixels > 10 * np.count_nonzero(visible) / 6
-        assert camera.target_hint[0] == 1
-        rows, cols = np.nonzero(visible)
-        expected_box = (1, cols.min()/80, rows.min()/60, (cols.max()+1)/80, (rows.max()+1)/60)
-        close(camera.target_hint, expected_box, 1e-7)
-        assert np.all(cols >= 40) and np.all(camera.target_hint[1:] >= 0)
-        assert np.all(camera.target_hint[1:] <= 1)
-        assert np.all(camera.depth.object_index[visible] == camera.depth.object_ids.index("target"))
-        assert np.all(np.isfinite(camera.depth.range_m[visible]))
-        assert sensor.camera(config, Pose(ORIGIN), camera.visible_fraction).target_hint[0] == 1
-        assert not np.any(sensor.camera(config, Pose(ORIGIN), 0.6).target_hint)
-        readonly(camera.target_mask)
-        readonly(camera.target_hint)
-        rejected(lambda: setattr(camera, "visible_fraction", 0), FrozenInstanceError)
+    half_scene = ref.scene((half,), target=center, radius=radius)
+    actual, _, records["half_occlusion"] = render_camera(half_scene, config, poses, .4)
+    visible = actual["target_mask"][0]
+    independent_visible = analytic_mask & (ref.reference_rays(config)[..., 1] < 0)
+    assert np.count_nonzero(visible ^ independent_visible) <= 4
+    assert .48 <= actual["visible_fraction"][0] <= .52
+    assert actual["visible_fraction"][0] == np.count_nonzero(visible) / actual["unoccluded_pixels"][0]
+    rows, cols = np.nonzero(visible)
+    close(actual["target_hint"][0], (1, cols.min()/80, rows.min()/60, (cols.max()+1)/80, (rows.max()+1)/60), 1e-7)
+    assert np.all(cols >= 40)
+    for name, threshold, detected in (("inclusive_threshold", float(actual["visible_fraction"][0]), True),
+                                       ("threshold_reject", .6, False)):
+        observed, _, records[name] = render_camera(half_scene, config, (poses[0],), threshold)
+        assert bool(observed["target_hint"][0, 0]) == detected
     full = ("full_occluder", ((3, 3.2), (-3, 3), (16, 24)))
-    with MeshSensor(scene((full,), target=center, radius=radius)) as sensor:
-        camera = sensor.camera(config, Pose(ORIGIN), 0)
-        assert camera.unoccluded_pixels > 0 and camera.visible_fraction == 0
-        assert not np.any(camera.target_mask) and not np.any(camera.target_hint)
-    checks.append("analytic sphere interior/silhouette bounds account for declared mesh approximation; visible target mask, target-only denominator, half-open normalized box, inclusive visibility threshold, full occlusion and zero-denominator rejection")
+    actual, _, records["full_occlusion"] = render_camera(ref.scene((full,), target=center, radius=radius), config, poses, 0)
+    assert actual["unoccluded_pixels"].min() > 0
+    assert not actual["visible_fraction"].any() and not actual["target_hint"].any() and not actual["target_mask"].any()
+
+    one = DepthConfig(1, 1, 60, 60, 0, 8)
+    actual, _, records["target_outside_declared_domain"] = render_camera(
+        ref.scene(size=(10, 10, 10), target=(6, 0, 5), radius=.25), one, (Pose((0, 0, 5)),), 0)
+    assert not actual["unoccluded_pixels"].any() and not actual["target_hint"].any()
+    actual, _, records["target_exact_domain_boundary"] = render_camera(
+        ref.scene(size=(10, 10, 10), target=(5.5, 0, 5), radius=.5), one, (Pose((-.123, 0, 5)),), 1)
+    close(actual["range_m"][0, 0, 0], 5.123)
+    assert actual["target_mask"].all() and actual["visible_fraction"][0] == 1
+    assert np.array_equal(actual["target_hint"][0], (1, 0, 0, 1, 1))
+    return records
 
 
-class PublicOnlyScene(Scene):
-    """Fail if a sensing backend reaches past the public geometry boundary."""
-
-    def __getattribute__(self, name):
-        if name in {"background", "vehicle", "target", "_geometry"}:
-            try:
-                armed = object.__getattribute__(self, "boundary_armed")
-            except AttributeError:
-                armed = False
-            if armed:
-                raise AssertionError(f"sensor read internal scene attribute {name}")
-        return super().__getattribute__(name)
-
-    def get_geometry(self, *, include_ids=None, exclude_ids=()):
-        assert include_ids is None and set(exclude_ids) == {"vehicle"}
-        self.boundary_calls.append((include_ids, tuple(sorted(exclude_ids))))
-        return self.boundary_snapshot
-
-
-def verify_poses_and_batch(checks, errors, renderers):
+def verify_batch_and_runtime():
+    records = {}
     wall = ("wall", ((4, 5), (-8, 8), (10, 30)))
-    base = scene((wall,))
-    guarded = PublicOnlyScene(base.background, base.vehicle, base.target, base.t_ref)
-    snapshot = Scene.get_geometry(guarded, exclude_ids={"vehicle"})
-    object.__setattr__(guarded, "boundary_snapshot", snapshot)
-    object.__setattr__(guarded, "boundary_calls", [])
-    object.__setattr__(guarded, "boundary_armed", True)
+    base = ref.scene((wall,))
     config = DepthConfig(7, 5, 30, 20, 0, 12)
-    angles = tuple(math.radians(value) for value in (18, -14, 12))
-    pose = Pose(ORIGIN, quaternion(*angles))
-    poses = tuple(Pose((0.1 * (index % 3), 0, 20), quaternion(*angles)) for index in range(48))
-    with MeshSensor(guarded) as sensor:
-        record_renderer(sensor, renderers)
-        first = sensor.sample(config, pose)
-        expected, _ = box_image(config, ORIGIN, (wall,), angles)
-        close(first.range_m, expected)
-        errors["full_roll_pitch_yaw_box_max_abs_m"] = float(np.max(abs(first.range_m - expected)))
-        before = first.range_m.copy()
-        started = time.perf_counter()
-        frames = sensor.sample_many(config, poses)
-        elapsed = time.perf_counter() - started
-        assert len(frames) == len(poses)
-        for result, current_pose in zip(frames, poses):
-            expected, _ = box_image(config, current_pose.position_m, (wall,), angles)
-            close(result.range_m, expected)
-            assert result.t_ref == 12.5
-        assert np.array_equal(first.range_m, before)
-        assert sensor.geometry_uploads == 1 and sensor.triangle_count > 14
-        assert guarded.boundary_calls == [(None, ("vehicle",))]
-        assert sensor.sample_many(config, ()) == ()
-        rejected(lambda: sensor.sample(None, pose), TypeError)
-        rejected(lambda: sensor.sample(config, ORIGIN), TypeError)
-        renderer_info = dict(sensor.renderer_info)
-    sensor.close()
-    rejected(lambda: sensor.sample(config, pose), RuntimeError)
-    rejected(lambda: sensor.sample_many(config, (pose,)), RuntimeError)
-    rejected(lambda: sensor.camera(config, pose, 0.2), RuntimeError)
-    assert np.array_equal(first.range_m, before)
-    assert elapsed > 0 and math.isfinite(elapsed)
+    angles = tuple(math.radians(x) for x in (18, -14, 12))
+    poses = tuple(Pose((.125*(index % 3), 0, 20), ref.quaternion(*angles)) for index in range(48))
+    expected = reference(base, config, poses)
+    with BatchRenderer(snapshot(base)) as renderer:
+        records["renderer"] = renderer.renderer_info
+        assert not any(tag in renderer.renderer_info["GL_RENDERER"].lower()
+                       for tag in ("llvmpipe", "softpipe", "software", "lavapipe"))
+        matrices = poses_to_tensor(poses, device=renderer.device)
+        close(host(matrices), np.stack([pose.as_transform().matrix for pose in poses]), 1e-7)
+        before = dict(renderer.geometry_info)
+        value = sample_depth(renderer, config, matrices)
+        assert renderer.geometry_info["instanced_draw_count"] - before["instanced_draw_count"] == 1
+        tensor_contract(value, 48, config, renderer.device)
+        saved = depth_host(value)
+        records["48_views_frozen_reference"] = compare(saved, expected)
+        records["48_views_independent"] = independent_box_result(saved, expected, config, poses, (wall,), angles)
+        reverse = depth_host(sample_depth(renderer, config, matrices.flip(0)))
+        for key in ("range_m", "object_index"):
+            reverse[key] = reverse[key][::-1]
+        compare(reverse, saved, atol=0)
+        single = depth_host(sample_depth(renderer, config, matrices[7:8]))
+        selected = {key: (array[7:8] if isinstance(array, np.ndarray) else array) for key, array in saved.items()}
+        compare(single, selected, atol=0)
+        raw = renderer.render(matrices[:1], config, only_object="map/wall")
+        assert isinstance(raw, RasterBatch) and raw.distance_m.shape == raw.object_index.shape == (1, 5, 7)
+        assert raw.distance_m.device == raw.object_index.device == renderer.device
+        assert raw.distance_m.dtype == torch.float32 and raw.object_index.dtype == torch.int64
+        assert raw.map_bounds_m == snapshot(base).map_bounds_m
+        assert raw.scene_version == value.scene_version and raw.t_ref == value.t_ref
+        same_ranges(host(raw.distance_m), saved["range_m"][:1], 0)
+        assert np.array_equal(host(raw.object_index), saved["object_index"][:1])
+        shifted_poses = tuple(Pose((pose.position_m[0]+.25, 0, 20), pose.quaternion_xyzw) for pose in poses)
+        shifted_expected = reference(base, config, shifted_poses)
+        matrices[:, 0, 3].add_(.25)
+        shifted = depth_host(sample_depth(renderer, config, matrices))
+        records["mutated_cuda_pose_storage"] = compare(shifted, shifted_expected)
+        assert np.any(shifted["range_m"] != saved["range_m"])
+        current, alternate = torch.cuda.current_stream(renderer.device), torch.cuda.Stream(device=renderer.device)
+        alternate.wait_stream(current)
+        with torch.cuda.stream(alternate):
+            streamed = sample_depth(renderer, config, matrices)
+        current.wait_stream(alternate)
+        compare(depth_host(streamed), shifted, atol=0)
+        matrices[:, 0, 3].sub_(.25)
+        restored = depth_host(sample_depth(renderer, config, matrices))
+        compare(restored, saved, atol=0)
+        compare(depth_host(value), saved, atol=0)
+        large_poses = tuple(Pose((.125*(index % 3), 0, 20)) for index in range(256))
+        large_matrices = poses_to_tensor(large_poses, device=renderer.device)
+        large = sample_depth(renderer, DepthConfig(8, 8, 60, 60, .05, 12), large_matrices)
+        tensor_contract(large, 256, DepthConfig(8, 8, 60, 60, .05, 12), renderer.device)
+        large_expected = reference(base, DepthConfig(8, 8, 60, 60, .05, 12), large_poses)
+        records["256_views_frozen_reference"] = compare(depth_host(large), large_expected)
+        after = dict(renderer.geometry_info)
+        for key in ("scene_geometry_buffer_name", "scene_geometry_buffer_bytes", "geometry_uploads"):
+            assert before[key] == after[key], key
+        assert after["geometry_uploads"] == 1 and after["cpu_image_readbacks"] == after["per_view_draw_calls"] == 0
+        thread_failures = []
+        def other_thread():
+            for operation in (lambda: renderer.render(matrices, config), renderer.close):
+                try:
+                    operation()
+                except RuntimeError:
+                    continue
+                except Exception as error:
+                    thread_failures.append(f"wrong cross-thread error: {type(error).__name__}: {error}")
+                    continue
+                thread_failures.append("cross-thread operation accepted")
+        worker = threading.Thread(target=other_thread)
+        worker.start()
+        worker.join()
+        assert not thread_failures, thread_failures
+        for invalid in (matrices.cpu(), matrices.to(torch.float64), matrices[:, :3, :], matrices[:0]):
+            rejected(lambda invalid=invalid: sample_depth(renderer, config, invalid))
+        rejected(lambda: sample_depth(renderer, None, matrices))
+        rejected(lambda: sample_camera(renderer, config, matrices, True))
+        rejected(lambda: renderer.render(matrices, config, only_object="missing"))
+        rejected(lambda: poses_to_tensor((ref.ORIGIN,)))
+        rejected(lambda: poses_to_tensor(()))
+        compare(depth_host(value), saved, atol=0)
+        records["shared_geometry"] = {key: after[key] for key in
+                                     ("scene_geometry_buffer_name", "scene_geometry_buffer_bytes", "geometry_uploads",
+                                      "cpu_image_readbacks", "per_view_draw_calls")}
+    renderer.close()
+    compare(depth_host(value), saved, atol=0)
+    rejected(lambda: sample_depth(renderer, config, matrices), (RuntimeError,))
+    return records
 
-    body_angles = tuple(math.radians(value) for value in (23, -31, 48))
-    mount_angles = tuple(math.radians(value) for value in (-17, 21, -12))
-    body = Pose((1, 2, 3), quaternion(*body_angles))
-    mount = MountConfig((0.4, -0.2, 0.1), quaternion(*mount_angles))
-    composed = mounted_pose(body, mount)
-    expected_origin = np.array(body.position_m) + rotate_euler(mount.position_m, *body_angles)
-    close(composed.position_m, expected_origin, 1e-10)
-    for vector in ((1, 0, 0), (0, 1, 0), (0, 0, 1)):
-        expected_direction = rotate_euler(rotate_euler(vector, *mount_angles), *body_angles)
-        close(composed.as_transform().apply_vectors(vector), expected_direction, 1e-10)
-    rejected(lambda: mounted_pose(ORIGIN, mount), TypeError)
-    rejected(lambda: mounted_pose(body, Pose((0, 0, 0))), TypeError)
-    checks.append("full roll/pitch/yaw and translated mounts preserve independent Euler geometry; sample_many preserves pose order/time, reuses one public snapshot/upload and leaves earlier images immutable; explicit/idempotent close rejects further sampling")
-    return {"poses": len(poses), "pixels_per_pose": config.width * config.height,
-            "sample_many_seconds": elapsed, "poses_per_second": len(poses) / elapsed,
-            "geometry_uploads": 1, "renderer_info": renderer_info,
-            "scope": "measured only for this small analytic fixture; sequential GPU render/readback loop"}
 
-
-def verify_rig(sensors, checks, errors, renderers):
+def verify_rig():
     walls = (("right", ((-20, 20), (-2.5, -2), (1, 39))),
              ("front", ((4, 4.5), (-20, 20), (1, 39))),
              ("left", ((-20, 20), (6, 6.5), (1, 39))),
              ("rear", ((-8.5, -8), (-20, 20), (1, 39))))
-    # Keep the target behind this fixture's walls, so all ToF expected values
-    # come solely from analytic boxes. The camera remains externally assembled.
-    with MeshSensor(scene(walls, target=(30, 30, 20), radius=0.5)) as sensor:
-        record_renderer(sensor, renderers)
-        rig_config = replace(sensors, camera=DepthConfig(24, 18, 80, 60, 0.01, 30))
-        rig = sample_rig(sensor, rig_config, Pose(ORIGIN))
-        assert rig.tof_m.shape == (4, 8, 8) and rig.target_hint.shape == (5,)
-        assert rig.t_ref == rig.camera.depth.t_ref == 12.5
-        max_error = 0.0
-        for channel, yaw, distance in zip(rig.tof_m, (-math.pi/2, 0, math.pi/2, math.pi), (2, 4, 6, 8)):
-            expected, _ = box_image(rig_config.tof, ORIGIN, walls, (0, 0, yaw))
-            close(channel, expected, 3e-5)
-            max_error = max(max_error, float(np.max(abs(channel - expected))))
-            local = reference_rays(rig_config.tof)[3, 3]
-            close(channel[3, 3], distance / local[0], 3e-5)
-        errors["right_front_left_rear_rig_max_abs_m"] = max_error
-        readonly(rig.tof_m)
-        readonly(rig.target_hint)
-        rejected(lambda: setattr(rig, "tof_m", None), FrozenInstanceError)
-        rejected(lambda: sample_rig(sensor, None, Pose(ORIGIN)), TypeError)
-        assert sensor.geometry_uploads == 1
-    checks.append("external rig assembly yields raw (right,front,left,rear)x8x8 row-major ranges, matches independent four-wall intersections and common scene time; camera and immutable hint remain separate")
+    base = ref.scene(walls, target=(30, 30, 20), radius=.5)
+    config = replace(load_config(ROOT / "configs" / "devtools.json").sensors,
+                     camera=DepthConfig(24, 18, 80, 60, .01, 30))
+    body_angles = tuple(math.radians(x) for x in (23, -31, 48))
+    mount_angles = tuple(math.radians(x) for x in (-17, 21, -12))
+    custom = MountConfig((.4, -.2, .1), ref.quaternion(*mount_angles))
+    config = replace(config, tof_mounts=(custom, *config.tof_mounts[1:]), camera_mount=custom)
+    poses = (Pose((0, 0, 20), ref.quaternion(*body_angles)), Pose((.25, -.125, 20), ref.quaternion(*body_angles)))
+    with ref.MeshSensor(base) as sensor:
+        expected = [ref.sample_rig(sensor, config, pose) for pose in poses]
+    with BatchRenderer(snapshot(base)) as renderer:
+        matrices = poses_to_tensor(poses, device=renderer.device)
+        mounts = host(mounted_poses(matrices, config.tof_mounts))
+        for body_index, body in enumerate(poses):
+            for mount_index, mount in enumerate(config.tof_mounts):
+                close(mounts[body_index, mount_index], ref.mounted_pose(body, mount).as_transform().matrix, 2e-6)
+        first_mount = config.tof_mounts[0]
+        independent_origin = np.asarray(poses[0].position_m) + ref.rotate_euler(first_mount.position_m, *body_angles)
+        close(mounts[0, 0, :3, 3], independent_origin, 2e-6)
+        for vector in np.eye(3):
+            independent_direction = ref.rotate_euler(ref.rotate_euler(vector, *mount_angles), *body_angles)
+            close(mounts[0, 0, :3, :3] @ vector, independent_direction, 2e-7)
+        before = renderer.geometry_info["instanced_draw_count"]
+        rig = sample_rig(renderer, config, matrices)
+        assert isinstance(rig, RigBatch) and rig.tof_m.shape == (2, 4, 8, 8)
+        assert rig.tof_m.dtype == torch.float32 and rig.tof_m.device == renderer.device
+        assert rig.target_hint.shape == (2, 5) and rig.target_hint.device == renderer.device
+        assert rig.scene_version == rig.camera.depth.scene_version and rig.t_ref == rig.camera.depth.t_ref == 12.5
+        assert renderer.geometry_info["instanced_draw_count"] - before == 3
+        same_ranges(host(rig.tof_m), np.stack([item.tof_m for item in expected]), 3e-5)
+        close(host(rig.target_hint), np.stack([item.target_hint for item in expected]), 1e-7)
+        for body_index, pose in enumerate(poses):
+            rays = ref.reference_rays(config.tof)
+            independent = np.empty((8, 8))
+            origin = np.asarray(pose.position_m) + ref.rotate_euler(custom.position_m, *body_angles)
+            for row in range(8):
+                for col in range(8):
+                    direction = ref.rotate_euler(ref.rotate_euler(rays[row, col], *mount_angles), *body_angles)
+                    independent[row, col] = min(ref.ray_box(origin, direction, bounds) for _, bounds in walls)
+            independent[independent > config.tof.max_range_m] = math.inf
+            same_ranges(host(rig.tof_m)[body_index, 0], independent, 3e-5)
+        tensor_contract(rig.camera, len(poses), config.camera, renderer.device)
+    return {"body_poses": 2, "tof_views": 8, "full_and_target_camera_views": 4,
+            "instanced_draws": 3, "mount_geometry": "independent Euler composition and slab intersections"}
+
+
+def verify_metadata_and_allocation_failure():
+    """Invalid metadata must not allocate; partial GPU setup fails closed."""
+    wall = ("wall", ((4, 5), (-8, 8), (10, 30)))
+    config = DepthConfig(3, 3, 60, 60, 0, 12)
+    with BatchRenderer(snapshot(ref.scene((wall,)))) as renderer:
+        matrices = poses_to_tensor((Pose(ref.ORIGIN),), device=renderer.device)
+        original = sample_depth(renderer, config, matrices)
+        saved = depth_host(original)
+        memory_before = dict(renderer.memory_info)
+        draws_before = renderer.geometry_info["instanced_draw_count"]
+        for invalid_config in (replace(config, width=4, max_range_m=1e40),
+                               replace(config, width=4, hfov_deg=1e-300),
+                               replace(config, width=4, vfov_deg=1e-300)):
+            rejected(lambda invalid_config=invalid_config: renderer.render(matrices, invalid_config),
+                     (ValueError,))
+            assert renderer.memory_info == memory_before
+            assert renderer.geometry_info["instanced_draw_count"] == draws_before
+        compare(depth_host(sample_depth(renderer, config, matrices)), saved, atol=0)
+        with patch.object(renderer._cuda, "register", side_effect=RuntimeError("injected registration failure")):
+            try:
+                renderer.render(matrices, replace(config, width=5, height=4))
+            except RuntimeError as error:
+                assert "injected registration failure" in str(error)
+            else:
+                raise AssertionError("injected allocation failure was not propagated")
+        rejected(lambda: renderer.render(matrices, config), (RuntimeError,))
+        compare(depth_host(original), saved, atol=0)
+    renderer.close()
+    return {"invalid_metadata_cases": 3, "allocation_failure": "propagated and closed",
+            "previous_output": "retained after failed allocation and close"}
+
+
+def verify_postprocess_cache_streams():
+    """Consume a still-pending cache from an unrelated stream, without GL."""
+    config = DepthConfig(5, 3, 60, 60, 1, 8)
+    bounds = ((-5, 5), (-5, 5), (0, 10))
+    distances = np.full((2, 3, 5), 2, dtype=np.float32)
+    identities = np.zeros((2, 3, 5), dtype=np.int64)
+    identities[0, 0, 0], distances[0, 0, 0] = -1, 0
+    distances[0, 0, 1], distances[0, 0, 2] = .5, 8.000001
+    expected = np.full((2, 3, 5), math.nan, dtype=np.float32)
+    expected[0] = 2
+    expected[0, 0, 0], expected[0, 0, 1], expected[0, 0, 2] = math.inf, math.nan, math.nan
+    # Slab/segment facts independently establish these values: the first
+    # camera is at x=-4, where all 8 m segments are covered; the second is at
+    # x=3.5 and every 2 m hit is outside x<=5. The 0.5 m hit is below min, while
+    # 8.000001 m is inside the float32 uncertainty band beyond max.
+    matrices = poses_to_tensor((Pose((-4, 0, 5)), Pose((3.5, 0, 5))))
+    distance_a = torch.tensor(distances, device=matrices.device)
+    identity_a = torch.tensor(identities, device=matrices.device)
+    distance_b, identity_b, matrices_b = distance_a.clone(), identity_a.clone(), matrices.clone()
+    first = torch.cuda.Stream(device=matrices.device)
+    second = torch.cuda.Stream(device=matrices.device)
+    if not hasattr(torch.cuda, "_sleep"):
+        raise RuntimeError("CUDA _sleep is required for this deterministic pending-cache race probe")
+    torch.cuda.synchronize(matrices.device)
+    # Warm the kernels and each stream's allocator before creating the race;
+    # a first cudaMalloc/kernel load can otherwise synchronize a short delay.
+    # Use different FOV values so recycled stale rays cannot equal the intended
+    # constants. With 120-degree rays several x=3.5 hits lie inside the domain;
+    # all corresponding 60-degree rays lie outside it.
+    warm_config = replace(config, hfov_deg=120, vfov_deg=120)
+    with torch.cuda.stream(first):
+        warm_a = processing.postprocess_depth(distance_a, identity_a, matrices, warm_config, bounds)
+        torch.cuda._sleep(1)
+    with torch.cuda.stream(second):
+        warm_b = processing.postprocess_depth(distance_b, identity_b, matrices_b, warm_config, bounds)
+    torch.cuda.synchronize(matrices.device)
+    del warm_a, warm_b
+    processing.clear_caches()
+    original_arange = torch.arange
+    inserted = []
+    def delayed_first_arange(*args, **kwargs):
+        # Insert after the small bounds upload, so a pageable host-to-device
+        # constant copy cannot accidentally drain the intended delay.
+        if not inserted:
+            torch.cuda._sleep(100_000_000)
+            inserted.append(True)
+        return original_arange(*args, **kwargs)
+    with torch.cuda.stream(first):
+        with patch.object(processing.torch, "arange", side_effect=delayed_first_arange):
+            output_a = processing.postprocess_depth(distance_a, identity_a, matrices, config, bounds)
+        # Inspect readiness only; do not wait for the producer event here.
+        _, cache_ready = processing._pixel_constants(config.height, config.width,
+                                                     config.hfov_deg, config.vfov_deg,
+                                                     matrices.device)
+    assert inserted and not cache_ready.query(), "probe failed to create a genuinely pending cache"
+    with torch.cuda.stream(second):
+        output_b = processing.postprocess_depth(distance_b, identity_b, matrices_b, config, bounds)
+    # No second.wait_stream(first) is issued: the module's ready event is the
+    # only cross-stream dependency for its shared pixel and bounds constants.
+    second.synchronize()
+    first.synchronize()
+    same_ranges(host(output_a), expected, 0)
+    same_ranges(host(output_b), expected, 0)
+    return {"independent_input_buffers": True, "producer_cache_was_pending": True,
+            "explicit_consumer_wait_stream": False, "GL_interop": False,
+            "finite_pixels": int(np.isfinite(expected).sum()),
+            "empty_pixels": int(np.isposinf(expected).sum()),
+            "unavailable_pixels": int(np.isnan(expected).sum())}
+
+
+def verify_target_sync():
+    config = DepthConfig(80, 60, 60, 45, .01, 15)
+    occluder = ("half_occluder", ((3, 3.2), (0, 3), (16, 24)))
+    first = ref.scene((occluder,), target=(6, 0, 20), radius=1.2)
+    moved = first.with_target_position((6, -2.5, 20))
+    final = moved.with_target_position(first.target.pose.position_m)
+    poses = (Pose(ref.ORIGIN), Pose((0, -.125, 20)), Pose((.125, .125, 20)))
+    snapshots = tuple(snapshot(scene) for scene in (first, moved, final))
+    for current_scene, current_snapshot in zip((first, moved, final), snapshots):
+        assert current_scene.background is first.background
+        assert current_snapshot.frame == "W" and current_snapshot.unit == "metre"
+        assert current_snapshot.get_object("target").geometry.pose.position_m == current_scene.target.pose.position_m
+        for before, after in zip(snapshots[0].objects[:-1], current_snapshot.objects[:-1]):
+            assert before.geometry is after.geometry
+    cold, baseline = [], []
+    for current_scene, current_snapshot in zip((first, moved, final), snapshots):
+        baseline.append(reference(current_scene, config, poses, camera=True, threshold=.4))
+        with BatchRenderer(current_snapshot) as renderer:
+            matrices = poses_to_tensor(poses, device=renderer.device)
+            cold.append(camera_host(sample_camera(renderer, config, matrices, .4)))
+    records = {}
+    with BatchRenderer(snapshots[0]) as renderer:
+        matrices = poses_to_tensor(poses, device=renderer.device)
+        immutable_geometry = dict(renderer.geometry_info)
+        value = sample_camera(renderer, config, matrices, .4)
+        saved = camera_host(value)
+        initial_version = value.depth.scene_version
+        assert renderer.sync(snapshots[0]) == initial_version
+        initial_updates = renderer.geometry_info["object_transform_updates"]
+        initial_bytes = renderer.geometry_info["object_transform_upload_bytes"]
+        versions, fractions = [initial_version], [float(host(value.visible_fraction)[0])]
+        compare(saved, cold[0], atol=0)
+        for index, current_snapshot in enumerate(snapshots[1:], 1):
+            version = renderer.sync(current_snapshot)
+            assert version == versions[-1] + 1
+            versions.append(version)
+            measured = sample_camera(renderer, config, matrices, .4)
+            tensor_contract(measured, len(poses), config, renderer.device)
+            actual = camera_host(measured)
+            assert measured.depth.scene_version == version and measured.depth.t_ref == first.t_ref
+            records[f"sync_{index}_cold_renderer"] = compare(actual, cold[index], atol=0)
+            records[f"sync_{index}_frozen_reference"] = compare(actual, baseline[index])
+            fractions.append(float(actual["visible_fraction"][0]))
+            info = renderer.geometry_info
+            for name in ("scene_geometry_buffer_name", "scene_geometry_buffer_bytes", "geometry_uploads"):
+                assert info[name] == immutable_geometry[name], name
+            assert info["object_transform_updates"] == initial_updates + index
+            assert info["object_transform_upload_bytes"] == initial_bytes + index * 64
+            compare(camera_host(value), saved, atol=0)
+        assert fractions[1] > fractions[0] + .2, fractions
+        assert fractions[0] == fractions[2]
+        records["versions"] = versions
+        records["visible_fraction_A_B_A"] = fractions
+        records["moving_objects_uploaded_bytes"] = renderer.geometry_info["object_transform_upload_bytes"] - initial_bytes
+        stable = camera_host(sample_camera(renderer, config, matrices, .4))
+        stable_info = dict(renderer.geometry_info)
+        target = snapshots[-1].get_object("target")
+        changed_radius = replace(target, geometry=Sphere(target.geometry.pose, 1.3))
+        changed_id = replace(target, object_id="renamed_target")
+        map_object = snapshots[-1].objects[0]
+        map_shape = map_object.geometry
+        changed_mesh = replace(map_object, geometry=MeshObject(map_shape.name, map_shape.vertices_m,
+                                                              ((0, 1, 3), (1, 2, 3)), map_shape.kind))
+        invalid = (replace(snapshots[-1], objects=(*snapshots[-1].objects[:-1], changed_radius)),
+                   replace(snapshots[-1], objects=(*snapshots[-1].objects[:-1], changed_id)),
+                   replace(snapshots[-1], objects=(changed_mesh, *snapshots[-1].objects[1:])),
+                   replace(snapshots[-1], objects=snapshots[-1].objects[:-1]))
+        for current_snapshot in invalid:
+            rejected(lambda current_snapshot=current_snapshot: renderer.sync(current_snapshot))
+            now = renderer.geometry_info
+            for name in ("scene_version", "geometry_uploads", "object_transform_updates", "object_transform_upload_bytes"):
+                assert now[name] == stable_info[name], name
+            compare(camera_host(sample_camera(renderer, config, matrices, .4)), stable, atol=0)
+        timed = replace(snapshots[-1], t_ref=99)
+        new_version = renderer.sync(timed)
+        assert new_version == versions[-1] + 1
+        timed_output = sample_camera(renderer, config, matrices, .4)
+        assert timed_output.depth.t_ref == 99 and value.depth.t_ref == 12.5
+        assert timed_output.depth.scene_version == new_version and value.depth.scene_version == initial_version
+        for name in ("geometry_uploads", "object_transform_updates", "object_transform_upload_bytes"):
+            assert renderer.geometry_info[name] == stable_info[name], name
+        compare(camera_host(timed_output), stable, atol=0)
+        compare(camera_host(value), saved, atol=0)
+    compare(camera_host(value), saved, atol=0)
+    return records
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--results", type=Path, required=True)
+    parser.add_argument("--results", required=True, type=Path)
     args = parser.parse_args()
     args.results.parent.mkdir(parents=True, exist_ok=True)
-    checks, errors, renderers = [], {}, []
-    with tempfile.TemporaryDirectory(prefix="sensor-check-", dir=args.results.parent) as temporary:
-        sensors = verify_config(Path(temporary), checks)
-        verify_planes_and_pixels(checks, errors, renderers)
-        finite_ranges = verify_range_and_coverage(checks, renderers)
-        verify_camera(checks, errors, renderers)
-        performance = verify_poses_and_batch(checks, errors, renderers)
-        verify_rig(sensors, checks, errors, renderers)
-    result = {"status": "passed", "checks": checks, "check_groups": len(checks),
-              "renderer_info": renderers, "measured_errors": errors,
-              "finite_range_example": finite_ranges, "batch_fixture_performance": performance,
-              "scope": "noiseless GPU pinhole pixel-center mesh sensing; no hardware/noise/zone-response or training claim"}
+    torch.set_grad_enabled(False)
+    torch.set_num_threads(4)
+    result = {"status": "running", "backend": "formal OpenGL layered CUDA sensor",
+              "device": torch.cuda.get_device_name(), "checks": [],
+              "acceptance": {"finite_atol_m": ATOL_M, "new_category_or_identity_errors": 0,
+                             "camera_mask_hint_count_errors": 0, "moving_vs_cold_atol_m": 0},
+              "scope": "noiseless mesh pinhole observations; explicit assertion downloads only"}
+    def run(name, action):
+        try:
+            detail = action()
+            result["checks"].append({"name": name, "status": "passed", "detail": detail})
+            print(f"{name}: passed", flush=True)
+        except Exception as error:
+            result["checks"].append({"name": name, "status": "failed", "error_type": type(error).__name__,
+                                     "error": str(error), "traceback": traceback.format_exc()})
+            print(f"{name}: failed: {type(error).__name__}: {error}", flush=True)
+    with tempfile.TemporaryDirectory(prefix="sensor-config-", dir=args.results.parent) as folder:
+        config_checks = []
+        run("strict_sensor_config", lambda: (ref.verify_config(Path(folder), config_checks), config_checks)[1])
+    for name, action in (("independent_planes_boxes_wide_fov", verify_planes_and_boxes),
+                         ("range_and_coverage", verify_range_and_coverage),
+                         ("batched_camera_visibility", verify_camera),
+                         ("batch_order_storage_stream_thread", verify_batch_and_runtime),
+                         ("external_rig_mounts", verify_rig),
+                         ("metadata_and_allocation_failure", verify_metadata_and_allocation_failure),
+                         ("postprocess_pending_cache_streams", verify_postprocess_cache_streams),
+                         ("target_A_B_A_transform_sync", verify_target_sync)):
+        run(name, action)
+    result["status"] = "passed" if all(check["status"] == "passed" for check in result["checks"]) else "failed"
+    result["check_groups"] = len(result["checks"])
     args.results.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-    print(f"sensors: {len(checks)} check groups passed; result: {args.results}")
+    print(f"sensors: {result['status']}; result: {args.results}")
+    raise SystemExit(0 if result["status"] == "passed" else 1)
 
 
 if __name__ == "__main__":

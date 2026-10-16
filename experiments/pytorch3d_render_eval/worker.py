@@ -14,7 +14,7 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from devtools.sensors import MeshSensor
+from experiments.sensor_reference import MeshSensor
 from experiments.pytorch3d_render_eval.fixtures import CONFIG, load_scene, make_poses, poses_tensor
 from experiments.pytorch3d_render_eval.postprocess import postprocess_depth, postprocess_camera
 

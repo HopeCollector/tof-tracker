@@ -23,7 +23,7 @@ import torch
 from devtools.config import DepthConfig
 from devtools.mesh import MeshObject
 from devtools.scene import Sphere
-from devtools.sensors import _FRAGMENT_SHADER, _sphere_mesh
+from experiments.sensor_reference import _FRAGMENT_SHADER, _sphere_mesh
 
 from experiments.opengl_batch_eval.gl_api import CUDA, GL
 
