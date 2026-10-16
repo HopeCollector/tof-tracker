@@ -19,6 +19,7 @@ def main():
          "--results", "outputs/mapgen/verification.json"],
         [sys.executable, "tests/verify_geometry.py", "--results", "outputs/geometry/verification.json"],
         [sys.executable, "tests/verify_scene.py", "--results", "outputs/scene/verification.json"],
+        [sys.executable, "tests/verify_trajectory.py", "--results", "outputs/trajectory/verification.json"],
         [sys.executable, "tests/verify_map_viewer.py", "--results", "outputs/map_viewer/verification.json"],
     ]
     for command in checks:
