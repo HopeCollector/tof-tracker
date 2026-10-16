@@ -32,8 +32,6 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 
 源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。不要在宿主创建项目 Python 环境，也不要在 `run` 中用 root 临时补装依赖。
 
-共享镜像安装 `viewer` 与 `trajectory` 开发依赖，其中 Torch 2.9.1 使用官方 CPU wheel。轨迹数学同样接受兼容 Torch 环境中的 CUDA Tensor；GPU 实验需另选带 CUDA 的容器并显式启用 GPU，共享入口当前不启用 CUDA。不在宿主安装 CUDA 或 Torch。
-
 宿主 VS Code 的依赖提示缓存用 `just vscode` 导出到 `.vscode/pylance-site-packages/`，目录自动创建；分析版本与依赖路径写入 `.vscode/pyrightconfig.json`。镜像重建后重新运行即可刷新。导出入口见 [export-vscode.sh](export-vscode.sh)。
 
 ## 文件、权限与生命期

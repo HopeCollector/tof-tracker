@@ -7,11 +7,10 @@ name = "tof-tracker"
 version = "0.0.0"
 description = "ToF-based tracking algorithm with local training and development tools"
 readme = "README.md"
-dependencies = ["numpy>=2.0"]
+dependencies = ["numpy>=2.0", "torch==2.9.1"]
 
 [project.optional-dependencies]
 viewer = ["plotly==7.1.0"]
-trajectory = ["torch==2.9.1"]
 
 # One development installation. These modules are not separate products,
 # and this package list does not define the deployed algorithm artifacts.

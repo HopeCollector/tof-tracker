@@ -2,8 +2,12 @@
 
 No frame conversion, environment query, controller or optimizer lives here.
 All translation data in one call uses the same fixed frame (normally B_ref).
-Quintic boundary equations reference YOPO-tracker's Poly5Solver; see
-docs/origins.md and tools/mapgen/third_party_notices/YOPO-tracker-LICENSE.
+Quintic boundary equations reference YOPO-tracker commit
+89c4d6f9140c269c58a6e5dc3fe6b93b58580219, YOPO/policy/poly_solver.py,
+Poly5Solver.__init__ (MIT, copyright 2024 TJU-Aerial-Robotics / Tianjin
+University, China). Normalized-time residuals and Horner evaluation replace
+the NumPy matrix to retain boundary/duration gradients. License text:
+tools/mapgen/third_party_notices/YOPO-tracker-LICENSE.
 Yaw's cubic Hermite polynomial is derived from its four boundary conditions.
 """
 

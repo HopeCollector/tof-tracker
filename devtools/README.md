@@ -80,47 +80,27 @@ ESDF 尚未构建或查询距离场。它负责回答批量轨迹采样点到物
 
 ## 开发用轨迹解析
 
-[`trajectory.py`](trajectory.py) 是不依赖场景、传感器或 ESDF 的纯数学工具：
+[`fit_trajectory(initial, terminal, T)`](trajectory.py) 从初末状态解析三维五次和航向三次多项式，供训练与开发评价采样。全部平移状态在同一固定 `B_ref` 表达；初始位置、速度、加速度、yaw 和 yaw_rate 均由调用者提供。
 
-```text
-调用者提供初始状态 + 算法终点状态 + T
-    → fit_trajectory() → PolynomialTrajectory（系数、T）
-    → .sample(time) → TrajectoryState（p、v、a、yaw、yaw_rate）
+`TrajectoryState(position, velocity, acceleration, yaw, yaw_rate)` 使用米、秒、弧度，末端 `yaw_rate` 对应 `vyaw`。平移字段为 `(*batch,3)`，航向字段和 T 为 `(*batch)`；输入采用相同 dtype/device 的有限 float32/float64 Tensor，批次维支持广播。
+
+返回的平移 / 航向系数形状分别为 `(*batch,6,3)` / `(*batch,4)`，按 **`u=t/T` 升幂**排列。`.sample(time)` 输入秒制标量或 `(*time_batch,S)`，时间批次与轨迹批次广播，返回平移 `(*batch,S,3)`、航向 `(*batch,S)`；速度和加速度是对秒的导数。要求 `T>0`、`0≤time≤T`，非法输入报错。
+
+默认 `yaw_mode="unwrapped"` 使用原始连续角度；`"shortest"` 将角差选到 `[-π,π)`，输出仍连续展开，奇数倍 π 的分支处不连续。解析与采样保留对初末状态、T、time 的梯度；`time=T*fractions` 时也包含采样时刻随 T 移动的链式梯度。
+
+在开发容器的 Python 中运行：
+
+```python
+import torch
+from devtools.trajectory import TrajectoryState, fit_trajectory
+
+initial = TrajectoryState(torch.zeros(3), torch.tensor([1., -.5, .25]),
+                          torch.tensor([.2, .4, -.1]), torch.tensor(.3), torch.tensor(.2))
+terminal = TrajectoryState(torch.tensor([3., 1., -.5]), torch.tensor([.5, 0., -.25]),
+                           torch.zeros(3), torch.tensor(.8), torch.tensor(-.1))
+trajectory = fit_trajectory(initial, terminal, torch.tensor(2.))
+samples = trajectory.sample(torch.tensor([0., 1., 2.]))
+print(samples.position)
 ```
 
-它只服务训练和开发评价。实际飞行中的解析、坐标转换与执行归系统，算法交付接口只输出末状态。一次调用中全部平移状态属于固定 `B_ref=B(t_ref)`，完整保留三维和 Z 分量；工具不旋转坐标、不推进本体系，也不读取世界位姿或模型内部状态。本体系起点位置可由调用者明确给零，当前速度和加速度仍须提供。起始 yaw 与 yaw_rate 同样必须由系统或开发调用者明确给出，不能根据平移状态猜测，也不因此扩展模型输入。yaw 是调用者选定的一致角度约定，独立的标量航向多项式不构造完整三维姿态。
-
-### 状态、系数与采样
-
-`TrajectoryState(position, velocity, acceleration, yaw, yaw_rate)` 的五项均为必填 Tensor；终点的 `yaw_rate` 对应算法输出 `vyaw`。
-
-| 输入 / 输出 | 形状与单位 |
-|---|---|
-| position / velocity / acceleration | `(*batch,3)`；米、米/秒、米/秒² |
-| yaw / yaw_rate | `(*batch)`；弧度、弧度/秒，无隐含末尾单维 |
-| duration | `(*batch)`；秒，有限且严格 `T>0` |
-| position_coefficients | `(*batch,6,3)`，依次为 `c0…c5` |
-| yaw_coefficients | `(*batch,4)`，依次为 `b0…b3` |
-
-系数按归一化时间 **`u=t/T` 的升幂**排列：`p(t)=Σ c_k u^k`，`yaw(t)=Σ b_k u^k`。这不是直接乘秒制 `t^k` 的系数；如外部消费者需要后者，第 k 项须除以 `T^k`。平移满足起止 p/v/a 共六个条件，航向满足起止 yaw/yaw_rate 共四个条件。采样的 v、a、yaw_rate 已换回对秒的导数。
-
-所有输入只接受同 dtype、同 device 的有限、strided Torch `float32` 或 `float64` Tensor，不隐式转换列表、NumPy、整数或半精度。`fit_trajectory(initial, terminal, duration, *, yaw_mode="unwrapped")` 对全部状态字段与 T 的批次维按 Torch 规则广播；例如初态 `(B,1,3)`、终态 `(K,3)`、T `(B,1)` 得到 `(B,K)` 批次。`PolynomialTrajectory` 的直接构造要求系数和 T 的批次形状完全一致。
-
-`.sample(time)` 接受秒制标量或 `(*time_batch,S)`：最后一维固定为采样点数，前面的维与轨迹批次广播。共同时间网格用 `(S,)`；每条轨迹一个时间用 `(*batch,1)`。标量也保留 `S=1`，不会挤掉单批次维。返回平移形状 `(*broadcast_batch,S,3)`，航向为 `(*broadcast_batch,S)`，允许空批次与空采样网格并保留相应维度。
-
-`time` 必须逐轨迹处于 `[0,T]`，支持重复、无序时间，不截断也不外推。形状不兼容、dtype/device 不一致、非有限值、非正 T 和越界时间报错；非 Tensor / 不支持的 dtype/layout 抛 `TypeError`，其他上述输入错误抛 `ValueError`。不设置旧任务的最小时长阈值。极端尺度仍受浮点精度限制，系数或采样结果发生非有限溢出也会报错；这不保证有限结果在所有尺度都有良好数值精度。校验会读取 Tensor 的有效性判断，在 CUDA 上需要同步，当前接口不承诺无同步或 `torch.compile` 支持。返回对象只冻结字段绑定，Tensor 及其源数据应按只读使用。
-
-### 航向分支与梯度
-
-默认 `yaw_mode="unwrapped"` 按输入连续角度原值求解，允许有意的多圈转动。可显式指定 `"shortest"`，将终点替换成 `yaw0 + delta`，其中 `delta∈[-π,π)`，恰好半圈时选 `-π`。例如 `179°→-179°` 在最短分支下到达 `181°`；默认分支到达 `-179°`。输出不再 wrap，采样中跨 π 保持连续。最短分支在奇数倍 π 的差值处不连续，该处无有效分支选择梯度；其余位置保留所选分支的梯度。
-
-解析和采样保留对全部初末状态、T 与采样时间的计算图。`time` 是独立的秒制 Tensor 时，T 梯度表示固定时刻下改变时长；`time=T*fractions` 时也包含采样时刻随 T 移动的链式梯度。工具不 detach、不经 NumPy、不缓存固定 T 的求解矩阵，不计算训练代价或更新模型。
-
-在仓库根目录执行 `just build` 后，可运行：
-
-```bash
-just run python examples/trajectory.py
-just run python tests/verify_trajectory.py --results outputs/trajectory/verification.json
-```
-
-完整例子见 [`examples/trajectory.py`](../examples/trajectory.py)：输入非零三维速度、加速度、初末航向状态与 `T=2s`，输出 `0,T/2,T` 的状态和一个数学探针到终点位置 / T 的梯度。独立解析、边界、广播、内部导数与 double gradcheck 见 [`tests/verify_trajectory.py`](../tests/verify_trajectory.py)，同样纳入 `just check`。这些验证不代表模型训练或闭环飞行已经实现。五次公式来源和航向推导边界见[参考来源](../docs/origins.md#开发用轨迹解析)。
+完整参数与来源见 [`trajectory.py`](trajectory.py)；验证见 [`verify_trajectory.py`](../tests/verify_trajectory.py)，由 `just check` 运行。
