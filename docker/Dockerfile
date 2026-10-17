@@ -30,7 +30,7 @@ COPY devtools ./devtools
 COPY training ./training
 # CUDA 12.8 wheels support the Blackwell GPU used by the sensor checks. Install
 # the explicit CUDA build first; it also satisfies the sensors extra pin.
-RUN python -m pip install --no-cache-dir torch==2.7.1+cu128 --index-url https://download.pytorch.org/whl/cu128 \
+RUN python -m pip install --no-cache-dir torch==2.9.1+cu128 --index-url https://download.pytorch.org/whl/cu128 \
     && python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer,sensors]'
 ENV PYTHONPYCACHEPREFIX=/tmp/runtime-python-cache
 

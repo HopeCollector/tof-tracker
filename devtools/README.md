@@ -1,6 +1,6 @@
 # 场景、观测与几何查询
 
-`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿与 GPU mesh 传感器；ESDF 仍为占位。
+`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿、GPU mesh 传感器与可微轨迹解析；ESDF 仍为占位。
 
 | 文件 | 当前职责 |
 |---|---|
@@ -9,6 +9,7 @@
 | [`scene.py`](scene.py) | 已实现：场景加载、按对象 ID 读取几何、球体状态替换 |
 | [`rendering.py`](rendering.py) | 已实现：单份场景、多视角批量 GL 渲染与 CUDA 输出；移动球体只更新对象变换 |
 | [`sensors.py`](sensors.py) | 已实现：GPU 批量视线距离、四路 ToF、可见目标 mask 与框；[接口与用法](sensors.md) |
+| [`trajectory.py`](trajectory.py) | 已实现：三维五次 / 航向三次边界解析与 Torch 可微采样 |
 | [`esdf.py`](esdf.py) | 占位：距离场构建、加载及批量可微几何查询 |
 
 ## 统一配置与场景
@@ -71,4 +72,27 @@ ESDF 尚未构建或查询距离场。它负责回答批量轨迹采样点到物
 
 ## 开发用轨迹解析
 
-轨迹解析尚未实现，归属 `devtools`。训练和开发评价将初始状态、算法输出的终点 `(p, v, a, yaw, vyaw)` 与持续时间 `T` 交给解析工具，得到多项式系数并按需采样，保留训练所需梯度。实际飞行中的解析与执行归系统，算法交付接口只输出末状态。航向解析所需的初始角速度由系统或开发调用者提供，当前模型输入不因此自动扩展。
+[`fit_trajectory(initial, terminal, T)`](trajectory.py) 从初末状态解析三维五次和航向三次多项式，供训练与开发评价采样。全部平移状态在同一固定 `B_ref` 表达；初始位置、速度、加速度、yaw 和 yaw_rate 均由调用者提供。
+
+`TrajectoryState(position, velocity, acceleration, yaw, yaw_rate)` 使用米、秒、弧度，末端 `yaw_rate` 对应 `vyaw`。平移字段为 `(*batch,3)`，航向字段和 T 为 `(*batch)`；输入采用相同 dtype/device 的有限 float32/float64 Tensor，批次维支持广播。
+
+返回的平移 / 航向系数形状分别为 `(*batch,6,3)` / `(*batch,4)`，按 **`u=t/T` 升幂**排列。`.sample(time)` 输入秒制标量或 `(*time_batch,S)`，时间批次与轨迹批次广播，返回平移 `(*batch,S,3)`、航向 `(*batch,S)`；速度和加速度是对秒的导数。要求 `T>0`、`0≤time≤T`，非法输入报错。
+
+默认 `yaw_mode="unwrapped"` 使用原始连续角度；`"shortest"` 将角差选到 `[-π,π)`，输出仍连续展开，奇数倍 π 的分支处不连续。解析与采样保留对初末状态、T、time 的梯度；`time=T*fractions` 时也包含采样时刻随 T 移动的链式梯度。
+
+在开发容器的 Python 中运行：
+
+```python
+import torch
+from devtools.trajectory import TrajectoryState, fit_trajectory
+
+initial = TrajectoryState(torch.zeros(3), torch.tensor([1., -.5, .25]),
+                          torch.tensor([.2, .4, -.1]), torch.tensor(.3), torch.tensor(.2))
+terminal = TrajectoryState(torch.tensor([3., 1., -.5]), torch.tensor([.5, 0., -.25]),
+                           torch.zeros(3), torch.tensor(.8), torch.tensor(-.1))
+trajectory = fit_trajectory(initial, terminal, torch.tensor(2.))
+samples = trajectory.sample(torch.tensor([0., 1., 2.]))
+print(samples.position)
+```
+
+完整参数与来源见 [`trajectory.py`](trajectory.py)；验证见 [`verify_trajectory.py`](../tests/verify_trajectory.py)，由 `just check` 运行。
