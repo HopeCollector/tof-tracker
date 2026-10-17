@@ -43,6 +43,7 @@ struct Options {
     glm::vec3 hi{0.8f};
     std::uint32_t query_count = 4096;
     std::uint32_t threads = 1;
+    bool morton_index = false;
 };
 
 std::uint32_t unsigned_arg(const std::string& value) {
@@ -69,7 +70,7 @@ Options parse_options(int argc, char** argv) {
         throw std::runtime_error(
             "Usage: export_sdflib mesh.obj output_prefix startDepth maxDepth error "
             "[continuity=1|0] [--bounds minx miny minz maxx maxy maxz] "
-            "[--query-count N] [--threads N]");
+            "[--query-count N] [--threads N] [--morton-index]");
     }
     Options options{argv[1], argv[2], unsigned_arg(argv[3]), unsigned_arg(argv[4]), float_arg(argv[5])};
     int argument = 6;
@@ -88,6 +89,8 @@ Options parse_options(int argc, char** argv) {
             options.query_count = unsigned_arg(argv[argument++]);
         } else if (option == "--threads" && argument < argc) {
             options.threads = unsigned_arg(argv[argument++]);
+        } else if (option == "--morton-index") {
+            options.morton_index = true;
         } else {
             throw std::runtime_error("Unknown option or missing arguments: " + option);
         }
@@ -101,6 +104,9 @@ Options parse_options(int argc, char** argv) {
     if (options.start_depth > 10 || options.max_depth < options.start_depth ||
         options.max_depth > 30 || options.error < 0.0f || options.threads == 0) {
         throw std::runtime_error("Require startDepth <= 10, startDepth <= maxDepth <= 30, error >= 0, threads > 0");
+    }
+    if (options.morton_index && options.max_depth > 20) {
+        throw std::runtime_error("Morton uint64 export requires maxDepth <= 20");
     }
     return options;
 }
@@ -167,6 +173,7 @@ struct Leaf {
     std::uint32_t depth;
     std::uint32_t node_index;
     Coefficients coefficients;
+    glm::uvec3 position;
 };
 
 Coefficients read_coefficients(const Sdf& sdf, std::uint32_t node_index) {
@@ -181,24 +188,30 @@ Coefficients read_coefficients(const Sdf& sdf, std::uint32_t node_index) {
     return result;
 }
 
-std::vector<Leaf> collect_leaves(const Sdf& sdf, std::uint32_t start_depth) {
+std::vector<Leaf> collect_leaves(const Sdf& sdf, std::uint32_t start_depth, bool morton_index) {
     const auto& data = sdf.getOctreeData();
     const auto& bounds = sdf.getGridBoundingBox();
     const auto grid = sdf.getStartGridSize();
+    if (morton_index && data.size() > (std::uint64_t{1} << 30)) {
+        throw std::runtime_error("Upstream packed tree exceeds its 30-bit address capacity");
+    }
     std::vector<Leaf> leaves;
     std::function<void(std::uint32_t, std::uint32_t, glm::uvec3)> visit;
     visit = [&](std::uint32_t node_index, std::uint32_t depth, glm::uvec3 position) {
         const auto& node = data.at(node_index);
         if (depth > sdf.getOctreeMaxDepth()) throw std::runtime_error("Tree exceeds declared maxDepth");
         if (node.isLeaf()) {
-            if (node_index >= kExactFloatIntegerLimit || leaves.size() >= kExactFloatIntegerLimit) {
+            if (!morton_index && (node_index >= kExactFloatIntegerLimit || leaves.size() >= kExactFloatIntegerLimit)) {
                 throw std::runtime_error("Float32 row format cannot represent this tree's ids exactly");
+            }
+            if (leaves.size() >= std::numeric_limits<std::uint32_t>::max()) {
+                throw std::runtime_error("Leaf rows exceed uint32 capacity");
             }
             const double size = std::ldexp(static_cast<double>(bounds.getSize().x), -static_cast<int>(depth));
             // Integer dyadic coordinates give shared planes identical float32 lo.
             const glm::vec3 lo(glm::dvec3(bounds.min) + glm::dvec3(position) * size);
             leaves.push_back({lo, static_cast<float>(size), depth, node_index,
-                              read_coefficients(sdf, node_index)});
+                              read_coefficients(sdf, node_index), position});
             return;
         }
         const auto children = node.getChildrenIndex();
@@ -219,6 +232,54 @@ std::vector<Leaf> collect_leaves(const Sdf& sdf, std::uint32_t start_depth) {
         }
     }
     return leaves;
+}
+
+std::uint64_t morton_code(glm::uvec3 position, std::uint32_t depth) {
+    std::uint64_t code = 0;
+    for (std::uint32_t bit = 0; bit < depth; ++bit) {
+        for (std::uint32_t axis = 0; axis < 3; ++axis) {
+            code |= std::uint64_t{(position[axis] >> bit) & 1u} << (3 * bit + axis);
+        }
+    }
+    return code;
+}
+
+template<typename T>
+void write_integer(std::ofstream& stream, T value) {
+    stream.write(reinterpret_cast<const char*>(&value), sizeof(value));
+    if (!stream) throw std::runtime_error("Failed writing integer export");
+}
+
+void export_morton_index(const Options& options, const std::vector<Leaf>& leaves) {
+    struct Interval { std::uint64_t start, end; std::uint32_t row; };
+    std::vector<Interval> intervals;
+    intervals.reserve(leaves.size());
+    std::ofstream nodes(options.prefix + ".node_indices.bin", std::ios::binary);
+    for (std::size_t row = 0; row < leaves.size(); ++row) {
+        const Leaf& leaf = leaves[row];
+        const auto shift = 3 * (options.max_depth - leaf.depth);
+        const auto start = morton_code(leaf.position, leaf.depth) << shift;
+        intervals.push_back({start, start + (std::uint64_t{1} << shift), static_cast<std::uint32_t>(row)});
+        write_integer(nodes, leaf.node_index);
+    }
+    std::sort(intervals.begin(), intervals.end(), [](const Interval& a, const Interval& b) { return a.start < b.start; });
+    std::ofstream keys(options.prefix + ".morton.bin", std::ios::binary);
+    std::ofstream rows(options.prefix + ".morton_leaf_ids.bin", std::ios::binary);
+    std::uint64_t previous_end = 0;
+    for (const auto& interval : intervals) {
+        if (interval.start != previous_end || interval.end <= interval.start) {
+            throw std::runtime_error("Morton leaf intervals overlap or leave a domain gap");
+        }
+        write_integer(keys, interval.start);
+        write_integer(keys, interval.end);
+        write_integer(rows, interval.row);
+        previous_end = interval.end;
+    }
+    if (previous_end != (std::uint64_t{1} << (3 * options.max_depth))) {
+        throw std::runtime_error("Morton leaf intervals do not cover the complete cube");
+    }
+    nodes.close(); keys.close(); rows.close();
+    if (!nodes || !keys || !rows) throw std::runtime_error("Failed closing Morton export files");
 }
 
 struct Location {
@@ -287,12 +348,15 @@ void write_vector(std::ostream& output, glm::vec3 vector) {
 }
 
 void export_result(const Options& options, const sdflib::Mesh& mesh, const Sdf& sdf, double build_seconds) {
-    const auto leaves = collect_leaves(sdf, options.start_depth);
+    const auto leaves = collect_leaves(sdf, options.start_depth, options.morton_index);
     std::unordered_map<std::uint32_t, std::uint32_t> leaf_rows;
     const auto directory = std::filesystem::path(options.prefix).parent_path();
     if (!directory.empty()) std::filesystem::create_directories(directory);
+    if (options.morton_index) export_morton_index(options, leaves);
     std::ofstream leaf_file(options.prefix + ".leaves.bin", std::ios::binary);
     std::ofstream query_file(options.prefix + ".queries.bin", std::ios::binary);
+    std::ofstream query_ids;
+    if (options.morton_index) query_ids.open(options.prefix + ".query_leaf_ids.bin", std::ios::binary);
     if (!leaf_file || !query_file) throw std::runtime_error("Cannot create output files");
     std::size_t nonfinite_coefficients = 0;
     std::vector<std::size_t> depth_counts(options.max_depth + 1, 0);
@@ -300,7 +364,7 @@ void export_result(const Options& options, const sdflib::Mesh& mesh, const Sdf& 
         const Leaf& leaf = leaves[index];
         leaf_rows.emplace(leaf.node_index, static_cast<std::uint32_t>(index));
         std::array<float, 70> row{leaf.lo.x, leaf.lo.y, leaf.lo.z, leaf.size,
-                                  static_cast<float>(leaf.depth), static_cast<float>(leaf.node_index)};
+                                  static_cast<float>(leaf.depth), options.morton_index ? -1.0f : static_cast<float>(leaf.node_index)};
         std::copy(leaf.coefficients.begin(), leaf.coefficients.end(), row.begin() + 6);
         for (float coefficient : leaf.coefficients) nonfinite_coefficients += !std::isfinite(coefficient);
         ++depth_counts[leaf.depth];
@@ -318,6 +382,7 @@ void export_result(const Options& options, const sdflib::Mesh& mesh, const Sdf& 
         }
         const Location location = locate(sdf, point);
         const auto row_index = leaf_rows.at(location.node_index);
+        if (options.morton_index) write_integer(query_ids, row_index);
         glm::vec3 native_gradient;
         const float distance = sdf.getDistance(point, native_gradient);
         const glm::vec3 raw_gradient = Interpolation::interpolateGradient(
@@ -327,16 +392,22 @@ void export_result(const Options& options, const sdflib::Mesh& mesh, const Sdf& 
         nonfinite_values += !std::isfinite(distance);
         write_row(query_file, std::array<float, 11>{point.x, point.y, point.z, distance,
             native_gradient.x, native_gradient.y, native_gradient.z,
-            raw_gradient.x, raw_gradient.y, raw_gradient.z, static_cast<float>(row_index)});
+            raw_gradient.x, raw_gradient.y, raw_gradient.z,
+            row_index < kExactFloatIntegerLimit ? static_cast<float>(row_index) : -1.0f});
     }
     leaf_file.close();
     query_file.close();
+    if (options.morton_index) {
+        query_ids.close();
+        if (!query_ids) throw std::runtime_error("Failed closing integer query leaf ids");
+    }
     if (!leaf_file || !query_file) throw std::runtime_error("Failed closing binary export files");
 
     std::ofstream metadata(options.prefix + ".json");
     if (!metadata) throw std::runtime_error("Cannot create metadata file");
     metadata << std::setprecision(std::numeric_limits<double>::max_digits10);
-    metadata << "{\n  \"format_version\": 1,\n  \"upstream_revision_expected\": " << json_string(SDFLIB_EXPECTED_REVISION)
+    metadata << "{\n  \"format_version\": " << (options.morton_index ? 2 : 1)
+             << ",\n  \"upstream_revision_expected\": " << json_string(SDFLIB_EXPECTED_REVISION)
              << ",\n  \"octree_source_sha256\": " << json_string(SDFLIB_OCTREE_SOURCE_SHA256)
              << ",\n  \"interpolation_source_sha256\": " << json_string(SDFLIB_INTERPOLATION_SOURCE_SHA256)
              << ",\n  \"mesh_path\": " << json_string(options.mesh_path)
@@ -359,7 +430,19 @@ void export_result(const Options& options, const sdflib::Mesh& mesh, const Sdf& 
         if (depth) metadata << ',';
         metadata << depth_counts[depth];
     }
-    metadata << "],\n  \"interpolation\": \"TriCubicInterpolation\","
+    metadata << ']';
+    if (options.morton_index) {
+        metadata << ",\n  \"morton_index\": {\"depth\":" << options.max_depth
+                 << ",\"interval_dtype\":\"<u8\",\"interval_columns\":2,\"interval_suffix\":\".morton.bin\","
+                 << "\"interval_semantics\":\"sorted [start,end), complete cube, x bit first then y,z\","
+                 << "\"leaf_ids_dtype\":\"<u4\",\"leaf_ids_suffix\":\".morton_leaf_ids.bin\","
+                 << "\"leaf_ids_semantics\":\"interval row to original leaves.bin row\"},"
+                 << "\n  \"node_indices_dtype\":\"<u4\",\"node_indices_suffix\":\".node_indices.bin\","
+                 << "\n  \"node_indices_semantics\":\"original leaf row order; float leaf column 5 is always -1\","
+                 << "\n  \"query_leaf_ids_dtype\":\"<u4\",\"query_leaf_ids_suffix\":\".query_leaf_ids.bin\","
+                 << "\n  \"query_leaf_ids_semantics\":\"exact original leaf row per native query; float query column 10 is -1 if not exactly representable\"";
+    }
+    metadata << ",\n  \"interpolation\": \"TriCubicInterpolation\","
              << "\n  \"coefficient_order\": \"x_fastest: i+4*j+16*k\","
              << "\n  \"polynomial\": \"sum c[i+4*j+16*k] * u_x^i * u_y^j * u_z^k, u=(point-lo)/size, i,j,k=0..3\","
              << "\n  \"dtype\": \"<f4\",\n  \"leaf_columns\": 70,"

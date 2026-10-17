@@ -44,3 +44,10 @@ target_compile_definitions(export_sdflib PRIVATE
     SDFLIB_EXPECTED_REVISION="8db373ef71d65be24badf6ae10750a932bbc223b"
     SDFLIB_OCTREE_SOURCE_SHA256="${octree_source_sha256}"
     SDFLIB_INTERPOLATION_SOURCE_SHA256="${interpolation_source_sha256}")
+
+# Raw-value regression for the actual-map adaptation; no octree or GPU needed.
+add_executable(mesh_value_probe mesh_value_probe.cpp)
+target_compile_features(mesh_value_probe PRIVATE cxx_std_17)
+target_link_libraries(mesh_value_probe PRIVATE SdfLib)
+target_compile_definitions(mesh_value_probe PRIVATE
+    SDFLIB_INTERPOLATION_SOURCE_SHA256="${interpolation_source_sha256}")

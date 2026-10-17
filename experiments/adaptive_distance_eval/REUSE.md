@@ -1,6 +1,6 @@
 # SdfLib 复用边界
 
-审查固定提交 [`8db373ef71d65be24badf6ae10750a932bbc223b`](https://github.com/UPC-ViRVIG/SdfLib/tree/8db373ef71d65be24badf6ae10750a932bbc223b)，本地来源为 `outputs/adaptive_distance_eval/vendor/SdfLib`。本文是源码审查与实验接口依据，不代表已完成编译、数值验证或性能测量。
+审查固定提交 [`8db373ef71d65be24badf6ae10750a932bbc223b`](https://github.com/UPC-ViRVIG/SdfLib/tree/8db373ef71d65be24badf6ae10750a932bbc223b)，本地来源为 `outputs/adaptive_distance_eval/vendor/SdfLib`。本文是源码审查与实验接口依据；实测证据分别见[小场报告](REPORT.md)和[实际地图报告](REAL_MAP_REPORT.md)。
 
 ## 许可与最小复用范围
 
@@ -69,3 +69,7 @@
 源码含 OpenGL 4.6 compute shader 用于 GPU 渲染查询，但构造器中的 GPU 分支被注释；这里未发现现成 CUDA/Torch 批量可微接口：[shader:1–13](https://github.com/UPC-ViRVIG/SdfLib/blob/8db373ef71d65be24badf6ae10750a932bbc223b/src/render_engine/shaders/sdfOctreeRender.comp#L1-L13)、[构造分支:74–82](https://github.com/UPC-ViRVIG/SdfLib/blob/8db373ef71d65be24badf6ae10750a932bbc223b/src/sdf/OctreeSdf.cpp#L74-L82)。不能把这些 GPU 源文件当作已验证的训练后端。
 
 本实验应分别验证：导出值与上游 CPU 标量查询一致；Torch 原始梯度与有限差分/`interpolateVertexValues` 一致；同层及粗细接缝的值与原始梯度差；独立解析或 mesh oracle 的值/梯度误差；最大深度未达目标的情况。前两项只验证实现一致性，后几项才涉及场的近似质量。建树、导出/传输、查询与反传的耗时分别报告。
+
+实际地图另使用 v2 导出：叶子行保持 70 个 float32，但行内原生编号置 −1，原生节点/查询叶编号独立存 uint32；Morton 区间端点为 uint64，映射到叶行用 uint32。Torch 常驻起点与映射各 int64，加位置/尺寸/64 系数共约 288 字节/叶，不需要 `8^D` 最细层稠密索引。该格式仍受上游 30 位紧凑地址容量限制，不能靠换导出格式规避原始树容量。导出器的容量检查发生在构造器返回后，上游构建本身没有相应的前置保护；超大树可能在此之前截断索引并失败，不能把事后检查当成建树安全保证。
+
+真实柱地图还需要两项明确适配：[实体并集与地面语义](REAL_MAP_REPORT.md#对象与建图)、[稳定原始 mesh 样本](NODAL_PATCH.md#实际地图的显式可选适配)。它们不是上游原生支持的任意几何 oracle、Torch 或精确布尔并集能力；小场原版结果继续保留。

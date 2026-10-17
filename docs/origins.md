@@ -20,3 +20,5 @@ OBJ 实体、地面平面、CLI、校验和文件保存为本仓实现，未采�
 ## 自适应距离场实验
 
 `experiments/adaptive_distance_eval/` 在 Docker 中调用 SdfLib 固定提交 `8db373ef71d65be24badf6ae10750a932bbc223b`（MIT，Copyright 2023 Eduard Pujol）的公开八叉树构建、三次 Hermite 插值和粗细格连续构造。Torch 查询为本仓按公开系数布局编写，轨迹直接使用主分支 `devtools/trajectory.py`，不复制旧工程。复用范围、原生梯度语义和必要适配见 [REUSE.md](../experiments/adaptive_distance_eval/REUSE.md)，验证入口见[实验说明](../experiments/adaptive_distance_eval/README.md)。完整依赖源码及许可保留在实验镜像，未加入在线算法依赖。
+
+实际地图扩展仅在独立源码副本中启用[原始节点共享和稳定三角形样本适配](../experiments/adaptive_distance_eval/NODAL_PATCH.md#实际地图的显式可选适配)。最近面查询使用该版本内置 `TriangleMeshDistance.h`（MIT，Copyright 2021 José Antonio Fernández Fernández）；选面后按平面投影与边段残差重新计算原始距离/梯度，避免原重算与近零消减。实体并集外露矩形适配、独立解析 oracle、Morton 导出及 Torch 查询为本仓实现，不引入参考仓运行依赖。此几何适配明确限于地图工具生成的轴对齐柱盒与地面，验证与限制见[实际地图报告](../experiments/adaptive_distance_eval/REAL_MAP_REPORT.md)。

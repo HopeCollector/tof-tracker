@@ -66,3 +66,55 @@ GPU 叶子定位使用最细层整型索引表，只保存叶子编号，不保�
 输出包含 mesh、实际叶子系数、原生查询、几何/接缝 NPZ、轨迹 JSON、全部测时样本和源文件哈希。二进制产物放 `outputs/`，不纳入 Git。
 
 进程成功退出表示测量链路完成，**不代表候选满足连续性要求**。请分别查看 `results.json` 的 `assessment.integration_passed`、`adaptive_seam_acceptance_passed` 和距离检查；本次原版与共享节点版的接缝验收均为 false。
+
+## 实际地图与批量轨迹实验
+
+本轮已按用户要求停止测试：局部建场、精度/接缝及批量查询反传已完成；两次最细允许 0.025 m 的全图构建 OOM，较浅全图在导出前主动停止。64×50 实际地图优化、全图吞吐及下列完整 runner 端到端重放未完成。已有证据和适用边界见 [REAL_MAP_REPORT.md](REAL_MAP_REPORT.md)。
+
+```bash
+bash experiments/adaptive_distance_eval/run_real_map.sh outputs/adaptive_distance_eval/real-map-reproduce
+# 可指定已有的完整 pillar OBJ；默认会先离线生成 seed23、500柱、60×60×15m 的资产
+bash experiments/adaptive_distance_eval/run_real_map.sh outputs/adaptive_distance_eval/real-map-another path/to/map.obj
+# 重放全图最细0.025m、1mm判据；本机12GiB容器在此配置触发过OOM
+ADAPTIVE_SDF_FULL_MAX_DEPTH=12 ADAPTIVE_SDF_FULL_ERROR_M=.001 bash experiments/adaptive_distance_eval/run_real_map.sh outputs/adaptive_distance_eval/real-map-1mm
+```
+
+当前实际地图适配只支持地图生成器的轴对齐闭合柱盒与矩形地面，默认要求完整 500 柱。它经公开场景几何接口读取，保留重叠，将实体并集的外露矩形三角化，并把开放地面明确适配为远处闭合的 slab；原始 OBJ 不修改。独立 float64 矩形距离与原始盒占据提供几何对照。
+
+经用户确认，全图允许粗起始叶：102.4 m 包围立方域从 12.8 m 起始格细分，实际查询只允许原图 60×60×15 m 区域。最细 0.025 m 的两次全图构建均触发 OOM；当前 runner 默认限制到 depth 9、最细 **0.2 m**，用于完成全图优化和测速，不当成原精度目标通过。另取真实地图 6.4 m 立方局部，保留相同全部几何，比较固定 0.2 m 和 0.2→0.025 m 的场。`sparse_field.py` 使用 Morton 区间及一次 `searchsorted` 定位叶子，避免按最细分辨率分配全域稠密索引；多项式与梯度求值复用原实现。
+
+当前 runner 默认全图细分误差启发式为 **2 mm**，局部仍为 **1 mm**。全图 1 mm 运行在约 29.27 分钟后触发 12 GiB 容器 OOM；2 mm、同样 depth 12 的运行在约 27.16 分钟后再次 OOM，均未导出字段。`ADAPTIVE_SDF_FULL_ERROR_M` 与 `ADAPTIVE_SDF_FULL_MAX_DEPTH` 分别调整启发式和深度上限；二者都不是最大误差保证。分阶段运行时在 `--stage prepare --full-termination-error-m .002 --full-max-depth 9` 写入配置，后续 build 从 manifest 读取，不能靠 build 时换参数覆盖已有声明。
+
+runner 当前内存限额为 14 GiB、内存加现有 swap 总限额 20 GiB。原 1 mm 失败试验使用 12/14 GiB；重放其准确资源条件还需相应调整容器参数。2 mm、depth 12 的试验途中增加到 14/20 GiB 仍 OOM；不能据此证明 1 mm 在更大内存下也必然失败，或推断最终峰值。
+
+`real_map_evaluate.py` 分别支持 `--stage prepare/build/evaluate`，建好后可以只重跑评估，不重建地图。`--field` 可选择 full、roi-coarse 或 roi-adaptive；默认全跑。输出目录保留实际系数、Morton 索引、独立精度检查、边界抽查、每条优化历史、有限差分与两张科学图。主要调用关系为：
+
+```text
+完整 OBJ → real_map_geometry：外露实体并集 mesh + 独立解析 oracle
+    → 适配 SdfLib 离线建树 → v2 叶子/Morton 导出 → SparseAdaptiveField
+fit_trajectory → 96个训练时刻 → 距离代价/锚定/jerk → 十参数反传与回溯更新
+    → 513个独立时刻的 oracle 复查，以及固定终点/时长对照
+```
+
+全图查询示例（在同一 Docker 镜像内）：
+
+```python
+import json
+from pathlib import Path
+import torch
+from experiments.adaptive_distance_eval.sparse_field import SparseAdaptiveField
+
+output = Path("outputs/adaptive_distance_eval/real-map-reproduce")
+logical = json.loads((output / "manifest.json").read_text())["geometry"]["logical_bounds"]
+field = SparseAdaptiveField(output / "full", "cuda", logical_bounds=logical)
+points = torch.tensor([[2., 0., 3.]], device="cuda", requires_grad=True)
+distance = field.query(points)  # 米制有符号距离；固定地图
+distance.sum().backward()
+print(distance.detach(), points.grad)
+```
+
+全图查询应传入原图 `logical_bounds`，否则类的默认允许域是 SdfLib 完整包围立方体。`raw_value_checks.py` 在建树前检查地面、地面两侧及默认 seed23 的两个已知原始采样反例；它通过独立 `mesh_value_probe` 调实际编译的 Hermite 原语，不依赖历史 `outputs/`。指定其他完整柱图时，固定 seed23 反例明确跳过，仍检查该图可用的自由地面点。
+
+查询与反传另做常驻 GPU 微基准，真实优化默认使用 eager Torch；可选编译查询只作为独立吞吐对照。编译首调、建图、加载/上传、稳态点查询和完整轨迹链分别记录。微基准的 `first_call_ms` 仅指该测时函数的第一次调用，前面已有精度检查和优化，不能理解为冷启动；加载/上传前也已读取原生对照，文件页缓存可能已热。代价下降由回溯机制约束，几何改善另看独立结果；安全余量不足、机体半径侵犯、中心进入 mesh 分别统计。密集时刻检查仍不是连续碰撞证明。
+
+本轮结果与适配原因见 [REAL_MAP_REPORT.md](REAL_MAP_REPORT.md)。原版及小盒子严格连续性实验仍保留在前述 [REPORT.md](REPORT.md)。

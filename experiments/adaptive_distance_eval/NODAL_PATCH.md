@@ -47,3 +47,23 @@ outputs/adaptive_distance_eval/build-nodal/export_sdflib \
 完整复测见 [REPORT.md](REPORT.md)：原生值/导数、几何与轨迹反传检查已完成，
 全量接缝检查仍未通过。盒子残留约 1 mm 跳变，独立精确局部坐标复核排除了叶子
 定位舍入，数据强烈支持粗格继承与原始节点不一致；具体构建分支尚未插桩确认。
+
+## 实际地图的显式可选适配
+
+默认参数继续生成上述已测的 1 μm 补丁，字节及 SHA-256 不变。实际地图使用：
+
+```bash
+python -m experiments.adaptive_distance_eval.nodal_patch --source /opt/SdfLib \
+  --destination outputs/adaptive_distance_eval/vendor/SdfLib-real-map \
+  --node-key-step-m .0125 --robust-mesh-values
+```
+
+`.0125 m` 是最小 `.025 m` 格子的半格原始采样间距，适用于本实验对齐后的全图和局部 dyadic 网格。缓存除键外保存首次位置；同键位置在任意轴相差达到 `step/4` 就报错，避免错误配置静默合并相邻节点。实际 bounds/depth 以字段导出 JSON 为准。这不是任意网格的自动尺度推断。
+
+`--robust-mesh-values` 另处理真实地图暴露的两项原始采样错误：上游 `TriangleUtils` 对某些钝角面的区域分类错误，以及 tmd 近零处二次距离展开消减造成的虚假最近点/梯度。最终 v4 先用完整不可变 mesh 的 tmd BVH 选面，再用 double 直接比较该面的内部平面投影和三条截断边段的平方残差，重算最近点与距离；不使用 tmd 返回的距离大小或最近点。面内部的符号来自有向平面；边/顶点保留 tmd 的伪法向符号（包括负零）。非零梯度为 `(p-q)/signed_norm(p-q)`，数值零使用选面的有向单位法向。
+
+数值零阈值为 `64 * double epsilon * max(点/顶点范数、边长)`，只压掉 double 舍入残差，没有加入毫米级表面吸附。中轴和边角仍可能有多个合法方向。混合导数依旧置零，粗细继承、细分与系数构造不变。这既没有指定山脊平滑宽度，也没有修复所有插值接缝。
+
+上游原来的选面查询仍会运行，适配还会在进程内建一个额外 BVH，接受重复离线工作。tmd 仍负责全局选面和边角符号；重算只保证选中三角形上的稳定计算，不能证明该 BVH 对所有竞争面都选对。完整闭合、有向 mesh 前提仍成立才可使用，输入几何仍是 float32。每进程单 mesh、单建树、单线程的约定不变。
+
+独立原始样本回归、失败对照与实际地图结果见 [REAL_MAP_REVIEW.md](REAL_MAP_REVIEW.md) 和 [REAL_MAP_REPORT.md](REAL_MAP_REPORT.md)。`ADAPTATION.json` 记录实际生成头文件、tmd 原始头文件哈希及其 MIT 许可，所有上游许可随独立源码副本保留。仅使用 `--node-key-step-m` 而不启用 robust 时，原始 mesh 重算机制不变，不能将其当作 v4 的等价配置。
