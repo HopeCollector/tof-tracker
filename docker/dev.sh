@@ -27,7 +27,7 @@ case "${1:-}" in
         while [[ "${1:-}" == --web || "${1:-}" == --gpu ]]; do
             case "$1" in
                 --web) run_args+=(--publish 127.0.0.1:8080:8080) ;;
-                --gpu) run_args+=(--gpus all --env NVIDIA_DRIVER_CAPABILITIES=compute,graphics,utility) ;;
+                --gpu) run_args+=(--gpus all --env NVIDIA_DRIVER_CAPABILITIES=compute,utility) ;;
             esac
             shift
         done

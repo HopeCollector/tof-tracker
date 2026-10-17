@@ -34,13 +34,13 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 
 源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。不要在宿主创建项目 Python 环境，也不要在 `run` 中用 root 临时补装依赖。
 
-`sensors` extra 固定 ModernGL / glcontext / PyTorch；镜像从官方 CUDA 12.8 wheel 源安装 `torch==2.7.1+cu128`，同时安装 GLVND 的 EGL/GL 运行库。传感器用无窗口 EGL，不需要 X server；要求 OpenGL 4.5、layered instancing 扩展和 NVIDIA CUDA/GL 互操作。`--gpu` 通过已有 NVIDIA Container Toolkit 暴露 GPU 和 `compute,graphics,utility` 驱动能力，不改变宿主服务、安装或用户组。未暴露 GPU、EGL/CUDA 初始化失败或检测到软件渲染时明确报错。核心的输入、输出及传感器后处理使用 CUDA 张量，不需要自行编译 C++/CUDA 绑定。
+项目基础依赖与 main 统一为 PyTorch 2.9.1；镜像从官方 CUDA 12.8 wheel 源安装 `torch==2.9.1+cu128`，并固定 `warp-lang==1.15.0`。正式传感器使用 Warp mesh BVH、解析球与 Torch CUDA 后处理，不依赖 OpenGL/EGL，也不需要本仓编译 C++/CUDA 绑定。`--gpu` 通过已有 NVIDIA Container Toolkit 暴露 GPU 和 `compute,utility` 驱动能力，不改变宿主服务、安装或用户组；宿主需已有支持镜像 CUDA 运行时的 NVIDIA 驱动。传感器输入输出与后处理结果保留为 CUDA 张量，接口见[传感器说明](../devtools/sensors.md)。
 
 独立 worktree 可使用单独镜像标签，避免重建覆盖其他任务的镜像；build/run 使用同一变量即可：
 
 ```bash
 TOF_TRACKER_DEV_IMAGE=tof-tracker-sensors:dev ./docker/dev.sh build
-TOF_TRACKER_DEV_IMAGE=tof-tracker-sensors:dev ./docker/dev.sh run --gpu python tests/verify_sensors.py --results outputs/sensors/verification.json
+TOF_TRACKER_DEV_IMAGE=tof-tracker-sensors:dev ./docker/dev.sh run --gpu python tests/verify_ray_sensors.py --results outputs/sensors/ray-verification.json
 ```
 
 宿主 VS Code 的依赖提示缓存用 `just vscode` 导出到 `.vscode/pylance-site-packages/`，目录自动创建；分析版本与依赖路径写入 `.vscode/pyrightconfig.json`。镜像重建后重新运行即可刷新。导出入口见 [export-vscode.sh](export-vscode.sh)。

@@ -5,7 +5,7 @@ specifications. Mounts retain full sensor-FLU to body-FLU rigid transforms.
 """
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 import math
 from pathlib import Path
@@ -45,10 +45,10 @@ def _finite_vector(value, length, name):
 
 @dataclass(frozen=True)
 class DepthConfig:
-    """Pinhole depth sampling and radial range, in degrees and metres.
+    """Pinhole angular grid and radial range, in degrees and metres.
 
-    Development rendering is limited to 4096 samples per axis and 1,048,576
-    total pixels. Width and height are positive integers, excluding booleans.
+    Each cell contains samples_per_axis squared rays at uniform subcell
+    centres on the image plane. Width and height describe output cells.
     """
 
     width: int
@@ -57,6 +57,7 @@ class DepthConfig:
     vfov_deg: float
     min_range_m: float
     max_range_m: float
+    samples_per_axis: int = 1
 
     def __post_init__(self):
         for name in ("width", "height"):
@@ -65,6 +66,12 @@ class DepthConfig:
                 raise ValueError(f"{name} must be an integer in [1, 4096]")
         if self.width * self.height > 1_048_576:
             raise ValueError("depth resolution must not exceed 1,048,576 pixels")
+        if (isinstance(self.samples_per_axis, bool)
+                or not isinstance(self.samples_per_axis, int)
+                or not 1 <= self.samples_per_axis <= 16):
+            raise ValueError("samples_per_axis must be an integer in [1, 16]")
+        if self.width * self.height * self.samples_per_axis ** 2 > 16_777_216:
+            raise ValueError("a view must not exceed 16,777,216 rays")
         for name in ("hfov_deg", "vfov_deg"):
             number = _finite_number(getattr(self, name), name)
             if not 0 < number < 179:
@@ -107,17 +114,14 @@ class MountConfig:
 
 @dataclass(frozen=True)
 class SensorConfig:
-    """Development sampling, mounts, and target visible-fraction threshold.
-
-    ``tof_mounts`` always follows right/front/left/rear order. Visible fraction
-    uses the target-only depth view as its denominator, not the full image.
-    """
+    """Physical depth sampling and mounts, without target recognition policy."""
 
     tof: DepthConfig
     camera: DepthConfig
     tof_mounts: tuple[MountConfig, MountConfig, MountConfig, MountConfig]
     camera_mount: MountConfig
-    min_visible_fraction: float
+    tof_depth_quantile: float = 0.2
+    tof_signal_floor: float = 0.08
 
     def __post_init__(self):
         if not isinstance(self.tof, DepthConfig) or not isinstance(self.camera, DepthConfig):
@@ -130,11 +134,43 @@ class SensorConfig:
             raise ValueError("tof_mounts must contain four MountConfig values in right/front/left/rear order")
         if not isinstance(self.camera_mount, MountConfig):
             raise ValueError("camera_mount must be a MountConfig")
-        threshold = _finite_number(self.min_visible_fraction, "min_visible_fraction")
-        if not 0 <= threshold <= 1:
-            raise ValueError("min_visible_fraction must be in [0, 1]")
         object.__setattr__(self, "tof_mounts", tuple(mounts))
-        object.__setattr__(self, "min_visible_fraction", threshold)
+        quantile = _finite_number(self.tof_depth_quantile, "tof_depth_quantile")
+        if not 0 <= quantile <= 1:
+            raise ValueError("tof_depth_quantile must be in [0, 1]")
+        object.__setattr__(self, "tof_depth_quantile", quantile)
+        object.__setattr__(self, "tof_signal_floor", _positive_number(self.tof_signal_floor,
+                                                                     "tof_signal_floor"))
+
+
+@dataclass(frozen=True)
+class SamplingRuntimeConfig:
+    """Sampling work-set target as a fraction of total device memory.
+
+    Execution also respects currently available memory. This is a chunking
+    budget, not a driver-enforced limit on training or other GPU users.
+    """
+
+    max_gpu_memory_fraction: float = 0.5
+
+    def __post_init__(self):
+        value = _finite_number(self.max_gpu_memory_fraction, "max_gpu_memory_fraction")
+        if not 0 < value <= 1:
+            raise ValueError("max_gpu_memory_fraction must be in (0, 1]")
+        object.__setattr__(self, "max_gpu_memory_fraction", value)
+
+
+@dataclass(frozen=True)
+class PerceptionConfig:
+    """Development environment's simulated external target recognition."""
+
+    min_visible_fraction: float = 0.2
+
+    def __post_init__(self):
+        value = _finite_number(self.min_visible_fraction, "min_visible_fraction")
+        if not 0 <= value <= 1:
+            raise ValueError("min_visible_fraction must be in [0, 1]")
+        object.__setattr__(self, "min_visible_fraction", value)
 
 
 @dataclass(frozen=True)
@@ -144,12 +180,18 @@ class SceneConfig:
     vehicle_radius_m: float
     target_radius_m: float
     sensors: SensorConfig | None = None
+    sampling_runtime: SamplingRuntimeConfig = field(default_factory=SamplingRuntimeConfig)
+    perception: PerceptionConfig = field(default_factory=PerceptionConfig)
 
     def __post_init__(self):
         for name in ("vehicle_radius_m", "target_radius_m"):
             object.__setattr__(self, name, _positive_number(getattr(self, name), name))
         if self.sensors is not None and not isinstance(self.sensors, SensorConfig):
             raise ValueError("sensors must be SensorConfig or None")
+        if not isinstance(self.sampling_runtime, SamplingRuntimeConfig):
+            raise ValueError("sampling_runtime must be SamplingRuntimeConfig")
+        if not isinstance(self.perception, PerceptionConfig):
+            raise ValueError("perception must be PerceptionConfig")
 
 
 def _unique_object(pairs):
@@ -167,10 +209,18 @@ def _exact_keys(value, expected, name):
 
 
 def _load_sensors(value):
-    _exact_keys(value, ("tof", "camera", "tof_mounts", "camera_mount", "min_visible_fraction"), "sensors")
+    required = {"tof", "camera", "tof_mounts", "camera_mount"}
+    optional = {"tof_depth_quantile", "tof_signal_floor"}
+    if not isinstance(value, dict) or not required <= set(value) <= required | optional:
+        raise ValueError("sensors must contain tof, camera, tof_mounts, camera_mount; "
+                         "optional fields are tof_depth_quantile and tof_signal_floor")
     depths = {}
     for name in ("tof", "camera"):
-        _exact_keys(value[name], _DEPTH_FIELDS, f"sensors.{name}")
+        fields = value[name]
+        if (not isinstance(fields, dict)
+                or not set(_DEPTH_FIELDS) <= set(fields) <= set(_DEPTH_FIELDS) | {"samples_per_axis"}):
+            raise ValueError(f"sensors.{name} must contain {', '.join(_DEPTH_FIELDS)}; "
+                             "samples_per_axis is optional")
         depths[name] = DepthConfig(**value[name])
     _exact_keys(value["tof_mounts"], TOF_DIRECTIONS, "sensors.tof_mounts")
     mounts = []
@@ -180,21 +230,29 @@ def _load_sensors(value):
         mounts.append(MountConfig(**mount))
     _exact_keys(value["camera_mount"], _MOUNT_FIELDS, "sensors.camera_mount")
     return SensorConfig(depths["tof"], depths["camera"], tuple(mounts),
-                        MountConfig(**value["camera_mount"]), value["min_visible_fraction"])
+                        MountConfig(**value["camera_mount"]),
+                        value.get("tof_depth_quantile", 0.2), value.get("tof_signal_floor", 0.08))
 
 
 def load_config(path: str | Path) -> SceneConfig:
     """Read an explicit JSON path once; reject missing, extra and invalid facts.
 
     Legacy vehicle/target-only files remain valid, with sensors=None. If a
-    sensors object is present, all sensor fields and all four mounts must be
-    supplied; no omitted values or unknown fields are silently accepted.
+    sensors object is present, its required fields and all four mounts must be
+    supplied. Optional sampling fields retain backwards-compatible defaults;
+    unknown fields are rejected.
     """
     value = json.loads(Path(path).read_text(encoding="utf-8"), object_pairs_hook=_unique_object)
-    if not isinstance(value, dict) or set(value) not in (
-            {"vehicle", "target"}, {"vehicle", "target", "sensors"}):
-        raise ValueError("configuration must contain vehicle, target, and optionally sensors")
+    required, optional = {"vehicle", "target"}, {"sensors", "sampling_runtime", "perception"}
+    if not isinstance(value, dict) or not required <= set(value) <= required | optional:
+        raise ValueError("configuration must contain vehicle, target; optional sensors, sampling_runtime, perception")
     for name in ("vehicle", "target"):
         _exact_keys(value[name], ("radius_m",), name)
     sensors = _load_sensors(value["sensors"]) if "sensors" in value else None
-    return SceneConfig(value["vehicle"]["radius_m"], value["target"]["radius_m"], sensors)
+    for key, fields in (("sampling_runtime", ("max_gpu_memory_fraction",)),
+                        ("perception", ("min_visible_fraction",))):
+        if key in value:
+            _exact_keys(value[key], fields, key)
+    return SceneConfig(value["vehicle"]["radius_m"], value["target"]["radius_m"], sensors,
+                       SamplingRuntimeConfig(**value.get("sampling_runtime", {})),
+                       PerceptionConfig(**value.get("perception", {})))

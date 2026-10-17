@@ -17,14 +17,12 @@ OBJ 实体、地面平面、CLI、校验和文件保存为本仓实现，未采�
 
 当前接口见[开发辅助模块说明](../devtools/README.md#统一配置与场景)，验证入口见 [verify_scene.py](../tests/verify_scene.py)。
 
-## GPU mesh 传感器
+## GPU 射线与传感器
 
-投影、光栅候选面的像素中心平面求交、径向深度排序、覆盖判断、可见 mask 与框为本仓新实现，没有提取旧射线内核或矩形 mask。后端通过 [ModernGL 5.12.0](https://pypi.org/project/moderngl/5.12.0/)（MIT）与 [glcontext 3.0.0](https://pypi.org/project/glcontext/3.0.0/)（MIT）调用 EGL/OpenGL；依赖由容器安装，不复制其源代码。接口依据见 [ModernGL EGL context](https://moderngl.readthedocs.io/en/5.12.0/topics/context.html) 与 [NVIDIA 容器 graphics 能力](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html)。
+正式核心使用 [Warp 1.15.0](https://github.com/NVIDIA/warp/tree/v1.15.0)（Apache-2.0）的 `Mesh` / `mesh_query_ray` 构建和查询静态 mesh BVH，通过 `from_torch` 与当前 CUDA stream 接入 Torch 张量。解析球求交、紧凑起点索引、距离与身份输出、场景更新和软预算为本仓实现；未复制 Warp 的原生源码，没有自写 C++/CUDA 扩展或绑定。PyTorch 2.9.1+cu128（BSD-3-Clause）由 Docker 安装，用于张量、安装外参和批量后处理，未复制其源码；依赖版本见 [Dockerfile](../docker/Dockerfile)。
 
-只读对照过 `C5-lidar-yopo` 的 `ab9cbfaef8216b8a47a952b40d199fd7e5cef134`：`simulation/Simulator/src/include/tof_renderer.hpp` 的 `renderToFSenseMImage` 用于理解采样、测距处理与输出的阶段职责；`target_geometry.hpp` 的 `projectVisibleTarget` / `renderMono8Mask` 用于核对可见性与矩形填充的差别。其根许可及 `simulation/LICENSE.upstream` 为 MIT，TJU-Aerial-Robotics 2024。没有复制函数，没有采用其子射线分位、噪声参数、2 m / 4 m 阈值或整框 mask。
+ToF 的信号权重与加权分位累计分布公式参考 `Omni_ToF-YOPO` 固定提交 `cf0b7f4b17712667a8bbdb1126f5e914904ece9d`，`Simulator/src/src/test_simulator_cuda.cpp:50–132` 的 `renderToFSenseMImage` / `weightedQuantileDepth`。正式路径为本仓重新表达的批量 Torch 运算，保留被选子射线的真实径向距离、身份与命中点；未复制其体素射线内核、CUDA 工具库、ROS 适配或噪声实现。参考根许可为 MIT，署名与许可全文保存在[历史参考测量档案](rendering-exploration/snapshots/zone-20261017/experiments/reference_tof_perf/third_party_notices/Omni_ToF-YOPO-LICENSE)。
 
-开发 FOV、量程、分辨率、安装外参与识别阈值在[传感器配置说明](../devtools/sensors.md#当前显式开发假设)中明确为示例。器件名义 FOV 的对照来源为 [Nooploop TOFSense-M 官方 FAQ Q5](https://support.nooploop.com/cn/tofsense/FAQ-for-tOfsense/)，不作为当前示例的标定数据。独立解析几何和行为验证入口为 [verify_sensors.py](../tests/verify_sensors.py)。
+像素内子射线、已知地图域与量程分类、混合 ToF/camera 查询、流式组装和外层模拟识别为本仓实现。外层识别用全场景采样身份计算可见子射线，用同批方向的 Torch 解析球求交计算无遮挡分母；未采用整框填充或额外目标渲染。开发分辨率、FOV、量程、安装外参、归约及识别阈值见[传感器配置](../devtools/sensors.md#配置)，不作为完整设备标定。独立几何与资源行为验证见 [verify_ray_sensors.py](../tests/verify_ray_sensors.py)。
 
-正式批量核心由本仓 [OpenGL 批量实验](../experiments/opengl_batch_eval/README.md)的 layered texture array、instanced draw、Pose SSBO 与 CUDA/PBO 互操作机制整理，传感器 GPU 后处理由本仓 [PyTorch3D 对比实验](../experiments/pytorch3d_render_eval/README.md)中的张量实现提取。正式路径不依赖实验模块或 PyTorch3D；本次增加球体局部网格与对象变换表，公开世界几何接口不变。PyTorch 2.7.1+cu128 由 Docker 安装，用于 CUDA 张量和后处理，未复制其源码；GL/CUDA 函数通过 ctypes 调用运行库，无自编译原生绑定。版本、显存和运行边界见[传感器接口](../devtools/sensors.md)。
-
-原串行 sensor 固定在提交 `104c3ee1f167a2c4f3578672d2a6f86180c53012`，保留为 [sensor_reference.py](../experiments/sensor_reference.py)，仅调整包导入和说明；原解析 oracle 保留在 [verify_sensor_reference.py](../tests/verify_sensor_reference.py)。旧实验改为显式引用该基线，历史测量不会因正式 sensor 迁移而悄悄换成批量后端。
+早期串行、OpenGL 批量、区域覆盖、PyTorch3D 对照、后处理分析及对应来源、许可和测量源码统一保存在[渲染探索档案](rendering-exploration/README.md)。它们不是当前正式路径的运行依赖。

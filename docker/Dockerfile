@@ -1,4 +1,4 @@
-# Project development base, including the optional CUDA/GL sensor runtime.
+# Project development base, including the CUDA ray-query sensor runtime.
 FROM ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
 
 RUN apt-get update \
@@ -7,8 +7,6 @@ RUN apt-get update \
         ca-certificates \
         cmake \
         git \
-        libegl1 \
-        libgl1 \
         python3 \
         python3-setuptools \
         python3-venv \
@@ -23,15 +21,17 @@ ENV PATH="/opt/venv/bin:${PATH}" \
     PYTHONPYCACHEPREFIX=/tmp/python-cache \
     PIP_CACHE_DIR=/tmp/pip-cache
 
+# CUDA 12.8 wheels support the Blackwell GPU used by the sensor checks. Install
+# main's explicit CUDA build before copying sources, so edits reuse this layer.
+RUN python -m pip install --no-cache-dir torch==2.9.1+cu128 --index-url https://download.pytorch.org/whl/cu128
+RUN python -m pip install --no-cache-dir warp-lang==1.15.0
+
 WORKDIR /workspace
 COPY pyproject.toml README.md ./
 COPY src ./src
 COPY devtools ./devtools
 COPY training ./training
-# CUDA 12.8 wheels support the Blackwell GPU used by the sensor checks. Install
-# the explicit CUDA build first; it also satisfies the sensors extra pin.
-RUN python -m pip install --no-cache-dir torch==2.9.1+cu128 --index-url https://download.pytorch.org/whl/cu128 \
-    && python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer,sensors]'
+RUN python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer,sensors]'
 ENV PYTHONPYCACHEPREFIX=/tmp/runtime-python-cache
 
 CMD ["bash"]

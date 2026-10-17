@@ -1,103 +1,103 @@
-# GPU 批量 mesh 传感器
+# GPU 射线传感器
 
-调用关系是 `Scene.get_geometry()` → `BatchRenderer` → `sample_depth / sample_camera / sample_rig`。渲染核心只接收完整视角位姿，保留一份场景几何；sensor 层负责安装外参、量程与覆盖、ToF 组装、目标 mask 和框。世界位姿、表面身份与真值只供开发、监督和评价，不补入在线算法观测。
+调用关系是 `Scene.get_geometry()` → `RayRenderer.trace()` → 物理 sensor 批量后处理 → 可选的外层 `perception`。核心只处理世界射线与几何；ToF 和 camera 负责射线配置及各自归约，目标 mask 和框属于模拟识别。场景保留一份，输入、命中和后处理张量均留在 GPU，导出或网页显示时才显式下载。
 
-## 输入与输出
+## 最小调用
 
-在 [Docker 开发容器](../docker/README.md)中运行，要求 NVIDIA CUDA/OpenGL 互操作、OpenGL 4.5 和 `GL_ARB_shader_viewport_layer_array`。EGL 无窗口运行；缺少 GPU 或检测到软件渲染时报错。
+在 [Docker 开发容器](../docker/README.md)中运行，使用 CUDA、Warp 1.15.0 和 PyTorch 2.9.1+cu128：
 
 ```python
 from devtools.config import load_config
-from devtools.rendering import BatchRenderer
 from devtools.scene import Pose, Scene
-from devtools.sensors import poses_to_tensor, sample_depth, sample_rig
+from devtools.ray_rendering import RayRenderer
+from devtools.sensors import poses_to_tensor, sample_rig
+from devtools.perception import sample_measurements
 
 config = load_config("configs/devtools.json")
 body_pose = Pose((-1, 0, 1))
-scene = Scene.from_obj("outputs/mapgen/demo.obj", config, body_pose,
-                       target_position_m=(1, 0.6, 1.2), t_ref=0.0)
+scene = Scene.from_obj("outputs/mapgen/demo.obj", config,
+                       vehicle_pose=body_pose, target_position_m=(1, 0.6, 1.2))
+snapshot = scene.get_geometry(exclude_ids={"vehicle"})
 assert config.sensors is not None
-with BatchRenderer(scene.get_geometry(exclude_ids={"vehicle"})) as renderer:
-    # 显式 CPU Pose → CUDA；已有 CUDA 位姿的调用方可直接传张量。
-    views = poses_to_tensor([Pose((-1, 0, 1)), Pose((0, 0, 1))], renderer.device)
-    depth = sample_depth(renderer, config.sensors.tof, views)
-    body = poses_to_tensor([body_pose], renderer.device)
-    rig = sample_rig(renderer, config.sensors, body)
-    print(depth.range_m.shape)             # [2,8,8]，CUDA float32
-    print(rig.tof_m.shape)                 # [1,4,8,8]，右/前/左/后
-    print(rig.target_hint.shape)           # [1,5]，CUDA float32
-    print(rig.camera.target_mask.shape)    # [1,120,160]，CUDA bool
-    # 导出、画图或 CPU 诊断时才显式下载：
-    numpy_depth = depth.range_m.cpu().numpy()
+with RayRenderer(snapshot) as renderer:
+    body = poses_to_tensor([body_pose], renderer.device)  # 显式 CPU → CUDA
+    physical = sample_rig(renderer, config.sensors, body,
+                          runtime=config.sampling_runtime)
+    print(physical.tof_m.shape)          # [1,4,8,8]，右/前/左/后
+    print(physical.camera.range_m.shape) # [1,120,160]，物理深度
+    # 需要模拟识别时选择此入口；它内部完成物理采样与外层解释。
+    measured = sample_measurements(renderer, config.sensors, body, snapshot,
+                                    config.perception, runtime=config.sampling_runtime)
+    print(measured.target_hint.shape)   # [1,5]
+    print(measured.camera.target_mask.shape)  # [1,120,160]
 ```
 
-核心 [`BatchRenderer.render(poses, config, only_object=None)`](rendering.py) 输入 CUDA float32 `[B,4,4]` sensor FLU → world 刚体矩阵，B≥1；一个 batch 共用同一 `DepthConfig`，保留输入顺序。调用者保证矩阵有限、旋转合法及末行为 `[0,0,0,1]`，热路径不下载 GPU 数值进行校验。`poses_to_tensor()` 校验 CPU `Pose` 并显式上传；完整横滚、俯仰、Z 均保留。
+两次入口各自触发采样；已有同批原始数据的消费者可直接调用 `process_camera_perception()`，避免再查场景。
 
-返回 `RasterBatch` 的 `distance_m` 为 CUDA float32 `[B,H,W]` 原始径向米制距离，未命中为 0；`object_index` 为 CUDA int64 `[B,H,W]`，未命中为 -1，其他值索引 `object_ids`。它还携带 `scene_version / t_ref / map_bounds_m`。`only_object` 使用公开对象 ID，目标独立渲染复用同一 VBO 范围。
+## 核心与物理接口
 
-[`sensors.py`](sensors.py) 提供以下公开组装接口；单视角也使用 B=1：
+[`RayRenderer.trace(origins, directions, max_distance, *, origin_indices=None)`](ray_rendering.py) 接收同设备连续 CUDA float32 世界向量。`directions[N,3]` 在内核中归一化，`origins` 可以是逐射线 `[N,3]`、共享起点 `[1,3]`，或由 CUDA int32/int64 `origin_indices[N]` 索引的 `[M,3]`。最大径向距离可为正标量或 CUDA float32 `[N]`，允许同次查询混合不同量程。无效射线或越界起点索引安全返回未命中。
 
-| 接口 | 返回值 |
+返回 `RayHits`：`distance_m[N]`、`object_index[N]`、`hit_point_world_m[N,3]`、`triangle_index[N]`，以及 `object_ids / scene_version / t_ref / map_bounds_m`。距离与点为 float32，索引为 int64；未命中距离和点为零，索引为 -1。物体索引指向 `object_ids`；三角形索引指向合并静态 mesh，解析球命中的三角形仍为 -1。核心没有最小量程、FOV、传感器或扰动概念，不承诺最近命中选择的梯度。
+
+sensor 位姿为 CUDA float32 `[B,4,4]` 的 sensor FLU → world 刚体矩阵，B≥1。调用者保证数值有限、旋转合法及末行为 `[0,0,0,1]`；热路径不下载数值校验。`poses_to_tensor()` 提供 CPU `Pose` 校验与显式上传；`mounted_poses()` 将完整机体位姿与安装外参组装为 `[B,M,4,4]`，保留横滚、俯仰和 Z。
+
+| 接口 | 返回与职责 |
 |---|---|
-| `sample_depth(renderer, config, poses)` | `DepthBatch`：`range_m[B,H,W]`、`object_index[B,H,W]`、对象表、版本和时间 |
-| `sample_camera(renderer, config, poses, min_visible_fraction, target_id="target")` | `CameraBatch`：`depth`、`target_mask[B,H,W]`、`target_hint[B,5]`、`visible_fraction[B]`、`unoccluded_pixels[B]` |
-| `sample_rig(renderer, sensor_config, body_poses)` | `RigBatch`：`tof_m[N,4,H,W]`、`target_hint[N,5]`、`camera`、版本和时间 |
-| `mounted_poses(body_poses, mounts)` | CUDA `[N,M,4,4]`：批量复合 body → world 与 sensor → body |
+| `sample_depth(renderer, config, poses, ...)` | `DepthBatch.range_m[B,H,W]`；默认 `reduction="nearest"`，可指定 `"weighted_quantile"`、`quantile` 与 `signal_floor` |
+| `sample_camera(renderer, config, poses, ...)` | 物理 `DepthBatch`，每像素选择最近子射线；不生成识别结果 |
+| `sample_rig(renderer, sensor_config, body_poses, ...)` | `RigBatch.tof_m[B,4,Ht,Wt]` 与 `.camera: DepthBatch` |
+| `iter_rig_samples(renderer, sensor_config, body_poses, ...)` | 按机体块产生 `RigDiagnostics`，包含同次查询的原始 ToF/camera 数据和实际安装位姿 |
+| `generate_rays(poses, config)` → `process_samples(hits, origins, directions, poses, config, ...)` | 显式生成射线、调用核心、处理命中的扩展路径；后者不再次采样 |
 
-`sample_rig` 把四路 ToF 展平为 `4N` 个视角，一次 draw；相机全场与目标各一次，总共三个 draw。量程、覆盖、mask、比例和框均为 GPU batch 运算，不按图片循环。ToF 与相机的成像配置分别分组，不要求分辨率相同。当前无 RGB 材质/光照外观，camera 输出几何距离与目标提示。
+rig 每块把四路 ToF 与相机的射线、紧凑起点索引和各自最大量程拼在一起，**只调用一次全场景 `trace`**，再按组进行 GPU 批量后处理。扰动模型在核心之外改变输入射线或输出命中；核心始终只看到几何查询。
 
-## 场景更新与资源
+普通 `DepthBatch` 只保留距离和场景元数据；身份、命中点、原始子射线等字段为 `None`。需要完整数据时使用 `sample_depth / sample_camera(..., diagnostics=True)`、`sample_rig_diagnostics()` 或上面的迭代入口。完整 `SampleBatch` 的代表字段为 `[B,H,W]`，子射线字段为 `[B,H,W,S]`，三维向量末尾再加 3；`S=samples_per_axis²`。起点保留紧凑存储，`sample_ray_origins(raw)` 提供广播后的网格。身份和世界真值仅用于开发、监督与评价，不补入在线观测。
 
-```python
-# 在上面的 with 块内，下一批采样前：
-old_version = rig.scene_version
-next_scene = scene.with_target_position((1.5, 0.6, 1.2))
-version = renderer.sync(next_scene.get_geometry(exclude_ids={"vehicle"}))
-next_rig = sample_rig(renderer, config.sensors, body)
-assert version == old_version + 1
-assert next_rig.scene_version == version
-# scene 与 rig 仍描述旧状态，next_scene / next_rig 描述新状态。
-```
+## 归约与模拟识别
 
-`Scene` 是唯一的物理事实来源，`sync(snapshot)` 在批次之间显式同步；不会另设一份目标位置。`get_geometry()` 保持只读的世界坐标语义：mesh 顶点已经在世界系，球体中心仍为世界坐标。内部 GPU 把球离散在原点并通过对象矩阵平移；目标移动只写一个 64 字节矩阵，不重建或上传 VBO。球的姿态保留为场景事实，但不旋转球形近似。原点局部顶点加世界中心的 float32 舍入与旧世界顶点量化可能略有差异。
+坐标为 FLU：+X 前、+Y 左、+Z 上；图像行向下、列向右。每格按规则网格生成有限子射线，距离始终是沿射线的欧氏距离。ToF 的加权分位后处理按距离排序、计算信号权重和累计分布，再选择一条原始返回；camera 选择最近子射线。距离、身份与命中点始终来自同一条被选射线，不插值出两个表面之间的假深度。这不保证子射线之间的连续角域覆盖，小目标仍可能落在采样间隙。
 
-不变快照 `sync` 不增版本；位置、姿态或元数据变化增加 `scene_version`，只有实际变化的 GPU 矩阵被上传。版本与 `t_ref` 分开：`with_target_position` 保留时间，不推进时钟。需要新时间时由调用方构造相应场景。一次 camera/rig 的各 pass 必须属于同一版本，sensor 会核对元数据。
-
-当前支持已有球体移动，要求对象 ID/顺序/角色、mesh 对象引用和球体半径不变。增加/删除对象、换地图或改变半径需创建新 `BatchRenderer`；不支持的 `sync` 在写 GPU 前拒绝。初次场景上传及每次变换更新可从 `geometry_info` 核查。
-
-每次返回拥有独立的 CUDA 存储，后续 render、sync 或 close 不覆盖旧结果；张量本身仍可被调用方修改。实例只能在创建线程调用和关闭，使用 `with` 或 `close()` 释放。采用 PyTorch 当前 CUDA stream；跨 stream 输入依赖由调用方按正常 PyTorch 规则建立，常量缓存内部处理就绪与存活期。
-
-核心用 layered texture array + instanced draw 批量光栅化，再整数组写 PBO，经 CUDA 一次 D2D 复制到 PyTorch。没有 CPU 图片读回；这仍包含 GPU 复制及 GL/CUDA map/unmap 同步，不是零复制。Pose SSBO 容量只增长；输出按 `(B,H,W)` 缓存，ToF/相机交替不重新分配。动态使用很多尺寸会累积缓存，可用 `release_batch()` 显式释放，不影响场景或已返回的张量。`memory_info` 只统计显式 GL 存储，Torch/驱动开销须另计。
-
-单批 B 受设备 `GL_MAX_ARRAY_TEXTURE_LAYERS` 限制，超限明确报错；一万个视角应由调用方分块，仍共享同一份场景。rig 的 ToF 为 `4N`，须据此选择 N。输出本身的显存随像素数和 B 增长。
-
-## 距离、覆盖与目标提示
-
-光学坐标为 FLU：+X 前、+Y 左、+Z 上；图像行向下、列向右，每像素只取中心视线。`DepthConfig` 指定宽高、水平/垂直 FOV、最小和最大视线量程。所有距离是光心到表面的欧氏距离，不是光轴深度。
-
-| `DepthBatch.range_m` 值 | 含义 |
+| `DepthBatch.range_m` | 含义 |
 |---|---|
-| 有限米制数 | 最近可信表面，包含最小/最大量程边界 |
-| 正 `inf` | 从光心到最大量程的整段都在完整地图域内，且没有量程内返回 |
-| `NaN` | 未知覆盖、域外光心、过近表面或无可信返回 |
+| 有限值 | 被选表面可信且处于闭区间 `[min_range_m,max_range_m]` |
+| 正 `inf` | 被选射线无返回，所有子射线均具有已知覆盖 |
+| `NaN` | 存在未知覆盖、域外光心、无效射线，或被选表面过近/无可信测量 |
 
-域由公开快照的 `map_bounds_m` 提供，不从顶点极值猜测。无范围元数据时保留可信显式命中，未命中为 NaN。域外光心全部 N/A；有限命中必须在离开地图前。确认空闲的整段覆盖不扩张边界。表面回投使用 `32 * float32_epsilon * max(1m, 光心坐标绝对值, 最大量程)` 数值容差；刚超最大量程但在该预算内保守给 NaN，光栅化保留 guard shell。过近表面依然遮挡后面的物体；身份索引可能保留该命中，不能替代距离有效性。
+已知域来自公开快照的 `map_bounds_m`。无声明域时显式可信命中仍可测量，但未命中不能证明空闲；有声明域时，无返回线段须从光心到最大量程端点都在域内。任一未知子射线使格子不可用。过近的最近表面继续遮挡后方物体，不删除后再寻找远处表面。核心在最大量程附近保留 float32 数值 guard，sensor 仍按配置的精确量程界限过滤。
 
-相机对全场和目标独立渲染。最近有效表面为目标的像素进入 `target_mask`；无遮挡分母是在图像、有效量程和声明地图域内的目标独立像素数。`visible_fraction` 为可见像素/无遮挡像素，CUDA float64；分母 CUDA int64。零分母或零可见像素总是未检出；比例达到阈值时，对实际可见 mask 求最紧半开框：
+[`perception.py`](perception.py) 的 `process_camera_perception()` 使用物理全场景最近命中的身份判断可见子射线，并在 Torch 中对同一批相机射线计算无遮挡目标球分母，不再次调用 renderer。`sample_measurements()` 负责组合物理采样与这层解释，返回 `MeasurementBatch`：
 
-```text
-[1, u_min/W, v_min/H, u_max_exclusive/W, v_max_exclusive/H]
-```
+- `.tof_m` 与 `.camera.depth` 是物理距离。
+- `.camera.target_mask[B,H,W]` 为 bool，任一有效子射线看见目标即为真；`.camera.target_coverage[B,H,W]` 为该像素可见目标子射线比例。混合像素的代表深度可以来自其他物体。
+- `.camera.visible_fraction[B]` 为可见目标子射线数 / 无遮挡有效目标子射线数，float64；零分母不检出。
+- `.target_hint[B,5]` 为 float32 的 `[detected,left,top,right,bottom]`；达到可见比例阈值后，对实际可见 mask 求归一化半开框，未检出五零，诊断 mask 保留。
 
-未检出时 `target_hint` 五零，但诊断 mask 保留。置信度当前为 0/1，符合[算法观测约定](../src/tof_tracker/README.md#输入约定)。特殊距离值交给模型适配层编码；统计只聚合有限值，另列 inf 和 NaN。
+该模拟识别目前只支持球形目标；`target_id=None` 或快照中没有目标时返回零识别结果。float32 近切线处，两种求交计算可能有舍入差异，不能理解为精确面积可见率。`sample_measurement_diagnostics()` 额外保留同批物理原始值与解析目标原始值，供审查使用。当前不模拟 RGB、材质、光照、噪声或真实识别网络。
 
-## 当前显式开发假设
+## 配置
 
-[`configs/devtools.json`](../configs/devtools.json) 中是开发示例，不是设备标定：四路 ToF 为 8×8、60°×60°、0.05–12 m；相机 160×120、80°×60°、0.01–30 m；四路共心、yaw 为右 -90°/前 0°/左 90°/后 180°，相机前向；可见比例阈值 0.2。
+[`configs/devtools.json`](../configs/devtools.json) 是显式开发配置，不是完整设备标定：
 
-这是无噪声理想针孔中心采样，不模拟物理 ToF 分区响应、畸变、亚像素、抗锯齿或 RGB 外观。球体为内接 64×128 经纬三角网格，存在离散误差，小目标可能没有命中像素。普通局部米制场景使用 float32 光栅化，不提供极端坐标尺度的精度保证。正式接入前替换实际 FOV、量程和完整安装外参，再按需求实现噪声与分区响应。
+| 项目 | 当前配置 |
+|---|---|
+| ToF | 8×8，45°×45°，0.015–4 m，每格 4×4 子射线；加权分位 0.2，信号下限 0.08 |
+| camera | 160×120，80°×60°，0.01–30 m，每像素 2×2 子射线；最近返回 |
+| 安装 | 四路共心，右/前/左/后 yaw=-90°/0°/90°/180°；相机前向，完整平移与四元数可配置 |
+| `sampling_runtime` | `max_gpu_memory_fraction=0.5`，限制采样自身工作集 |
+| `perception` | `min_visible_fraction=0.2`，只影响外层模拟识别 |
 
-## 运行与核查
+## 更新、预算与生命周期
+
+`Scene` 是物理事实来源。批次之间调用 `renderer.sync(next_scene.get_geometry(exclude_ids={"vehicle"}))` 同步新快照；已有球体移动只上传变化的世界球心，不重建静态 mesh BVH。`get_geometry()` 始终返回世界坐标语义。当前只支持球体的这种动态更新，mesh 移动/变形、球半径或对象身份/顺序/结构变化都需重建 renderer。状态或元数据变化增加 `scene_version`，不变快照不增加；`t_ref` 由调用者提供，采样不推进时钟。同一分块请求期间保持快照不变，外层识别也必须使用相同快照。
+
+入口的软预算同时考虑常驻场景、Warp BVH 估算、预计划保留输出及拼接峰值、当前块工作区和安全余量，并受 CUDA 空闲显存加 Torch 可复用缓存限制。已有训练张量只通过剩余可用空间约束采样，不重复计入采样自身比例。连一个完整视角/机体及保留输出都放不下时，在查询前报 `MemoryError`。`execution_info` 提供块大小与规划口径，`geometry_info / memory_info` 提供场景上传计数和显式存储；原生 BVH 字节数未实测，不能把 Torch 峰值当作总显存。
+
+这只是入口规划，不是驱动硬隔离；碎片、并发使用或估算误差仍可能导致 OOM，目前不自动重试或清空训练缓存。完整诊断会保留所有子射线，必须显式选择，过大请求会被预算拒绝。迭代消费者应在推进下一块之前处理并释放当前 `chunk`，若累计紧凑输出，先通过 `retained_output_bytes` 预留；保留所有原始块会绕过流式内存约定。
+
+返回结果不被后续采样、更新或 `close()` 覆盖。renderer 限于创建线程，使用 `with` 或 `close()` 释放场景资源。执行采用 PyTorch 当前 CUDA stream；核心和缓存管理自身的场景就绪及存储存活期，**跨 stream 输入的就绪依赖仍由调用者用 event/wait 建立**。存活期保护不等于生产者已完成。
+
+## 运行入口
 
 ```bash
 just build
@@ -107,6 +107,4 @@ just run --gpu python examples/one_frame.py outputs/mapgen/demo.obj \
   --output outputs/sensors/demo
 ```
 
-例子在导出边界显式下载，输出原始 `observations.npz`、分列有限值/inf/NaN 的 `summary.json` 和内嵌 Plotly 的离线 `one_frame.html`。输入已有 OBJ，输出目录须不存在。
-
-[`verify_sensors.py`](../tests/verify_sensors.py) 用独立解析几何、冻结串行参考、GPU 批量顺序与资源行为验证采样；包含目标往返移动、冷启动对照、世界几何与变换上传检查。常规场景/地图回归用 `just check`。历史串行实现仅存于 [`experiments/sensor_reference.py`](../experiments/sensor_reference.py)，独立 oracle 源保留在 [`verify_sensor_reference.py`](../tests/verify_sensor_reference.py)，正式代码不依赖它们。
+例子在导出边界下载，输出 `observations.npz`、`summary.json` 和内嵌 Plotly 的离线 `one_frame.html`；输出目录须不存在。独立解析几何、批量、动态更新和资源行为检查见 [`verify_ray_sensors.py`](../tests/verify_ray_sensors.py)。常规项目检查使用 `just check`。旧实现、失败经验、历史测试与性能记录统一保留在[渲染探索档案](../docs/rendering-exploration/README.md)。

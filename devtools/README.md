@@ -1,14 +1,15 @@
 # 场景、观测与几何查询
 
-`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿、GPU mesh 传感器与可微轨迹解析；ESDF 仍为占位。
+`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿、GPU 射线传感器与可微轨迹解析；ESDF 仍为占位。
 
 | 文件 | 当前职责 |
 |---|---|
-| [`config.py`](config.py) | 已实现：读取、校验不可变物理配置 |
+| [`config.py`](config.py) | 已实现：读取、校验物理参数、采样预算与外层识别配置 |
 | [`mesh.py`](mesh.py) | 已实现：读取独立闭合障碍和地面平面的 OBJ 资产 |
 | [`scene.py`](scene.py) | 已实现：场景加载、按对象 ID 读取几何、球体状态替换 |
-| [`rendering.py`](rendering.py) | 已实现：单份场景、多视角批量 GL 渲染与 CUDA 输出；移动球体只更新对象变换 |
-| [`sensors.py`](sensors.py) | 已实现：GPU 批量视线距离、四路 ToF、可见目标 mask 与框；[接口与用法](sensors.md) |
+| [`ray_rendering.py`](ray_rendering.py) | 已实现：一份静态 mesh BVH 与解析球、一批射线、CUDA 命中结果；移动球体只更新中心 |
+| [`sensors.py`](sensors.py) | 已实现：物理深度、四路 ToF、混合射线分块与批量后处理；[接口与用法](sensors.md) |
+| [`perception.py`](perception.py) | 已实现：利用物理采样结果生成模拟目标 mask、可见比例与框提示 |
 | [`trajectory.py`](trajectory.py) | 已实现：三维五次 / 航向三次边界解析与 Torch 可微采样 |
 | [`esdf.py`](esdf.py) | 占位：距离场构建、加载及批量可微几何查询 |
 
@@ -18,7 +19,7 @@
 
 `MeshMap.from_obj()` 保留完整对象，每个 `MeshObject` 包含名称、米制顶点和局部三角面索引。障碍分别闭合，可以重叠；地面为 Z=0 的开放平面。`Scene.from_obj()` 加载背景并添加飞机、目标。加载时不采样、不构建占据或 ESDF。
 
-[统一配置](../configs/devtools.json) 包含 `vehicle.radius_m`、`target.radius_m` 与可选的 `sensors`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给消费者；半径须有限且为正，布尔值、缺项、未知字段和重复 JSON 键会被拒绝。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。传感器配置明确给出各路成像、量程、完整安装外参与可见比例阈值，见[传感器说明](sensors.md#当前显式开发假设)；旧的仅半径 JSON 仍有效，但没有传感器配置。
+[统一配置](../configs/devtools.json) 包含 `vehicle.radius_m`、`target.radius_m` 与可选的 `sensors`、`sampling_runtime`、`perception`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给消费者；半径须有限且为正，布尔值、缺项、未知字段和重复 JSON 键会被拒绝。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。`sensors` 描述成像、量程、子射线与完整安装外参；采样显存比例和模拟识别阈值分别属于后两项，见[传感器说明](sensors.md#配置)。旧的仅半径 JSON 仍有效，但没有传感器配置。
 
 `Pose` 使用米制三维位置和机体 FLU 到世界的单位 `quaternion_xyzw`：X 向前、Y 向左、Z 向上。四元数只允许 `1e-6` 内的范数舍入误差并归一化；完整横滚、俯仰和 Z 分量均保留，不作水平回正。`body_to_world()` 与 `world_to_body()` 变换点的位置，包含平移。
 
@@ -58,9 +59,9 @@ print(next_scene.get_geometry().get_object("vehicle").pose.body_to_world((1, 0, 
 
 ## 传感器与几何查询
 
-传感器以配置、完整 CUDA `[B,4,4]` 视角位姿和场景生成批量欧氏视线距离；一份 VBO 通过 instanced draw 渲染所有视角，输出直接留在 GPU。四路 ToF 展平到 `4N` 视角一次采样，相机全场和目标各一次；后处理按批生成实际可见 mask、可见比例与半开框提示。`renderer.sync(scene.get_geometry(...))` 在批次间同步目标移动，只更新对象变换；公开 `get_geometry()` 仍返回世界坐标事实。更换地图、半径或对象结构需重建 renderer。
+传感器把完整 CUDA `[B,4,4]` 位姿与配置组装成一批世界射线，核心用一份 Warp 静态 mesh BVH 和共享解析球返回最近命中。rig 每块合并四路 ToF 与相机射线，只查一次全场景；各自的 GPU 后处理再生成物理距离。目标 mask、可见比例与框提示由外层 `perception` 解释同批采样，无遮挡分母使用解析球计算，不增加场景查询。`renderer.sync(scene.get_geometry(...))` 在批次间同步球心；公开 `get_geometry()` 保持世界坐标语义。更换 mesh、球体半径或对象结构需重建 renderer。
 
-原始距离为有限米制值、完整覆盖下确认超量程的正 `inf`、或无可信测量的 `NaN`；未知地图范围不会当作已知空闲。开发参数、像素中心采样、噪声扩展边界、调用例子与验证入口统一见[传感器说明](sensors.md)。闭环评价由执行端提供当前位姿。命中与真值只用于解释和监督，算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
+处理后的距离为有限米制值、已知采样线段无返回的正 `inf`，或无可信测量的 `NaN`；未知地图范围不会当作已知空闲。ToF 与相机都使用有限子射线，分别采用加权分位与最近返回归约，不保证采样方向之间的连续区域覆盖。输出留在 GPU，入口按采样自身的软显存预算分块。参数、接口、诊断和资源边界见[传感器说明](sensors.md)，历史方案与测量保存在[渲染探索档案](../docs/rendering-exploration/README.md)。闭环评价由执行端提供当前位姿。命中与真值只用于解释和监督，算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
 
 ESDF 尚未构建或查询距离场。它负责回答批量轨迹采样点到物体表面的距离，并保留训练所需的计算图或提供明确导数；任务代价、惩罚权重、反传与参数更新属于训练。距离和边界语义须与场景物理事实一致，查询位置所需的梯度逐条验证，具体后端在实现时选择。
 

@@ -11,7 +11,7 @@ dependencies = ["numpy>=2.0", "torch==2.9.1"]
 
 [project.optional-dependencies]
 viewer = ["plotly==7.1.0"]
-sensors = ["moderngl==5.12.0", "glcontext==3.0.0"]
+sensors = ["warp-lang==1.15.0"]
 
 # One development installation. These modules are not separate products,
 # and this package list does not define the deployed algorithm artifacts.

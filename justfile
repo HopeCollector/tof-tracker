@@ -18,7 +18,7 @@ check: map-build
 
 # 在真实 GPU 上运行传感器解析几何与行为检查
 check-sensors:
-    ./docker/dev.sh run --gpu python tests/verify_sensors.py --results outputs/sensors/verification.json
+    ./docker/dev.sh run --gpu python tests/verify_ray_sensors.py --results outputs/sensors/ray-verification.json
 
 # 在容器内执行命令；无参数进入 Bash
 run *args:

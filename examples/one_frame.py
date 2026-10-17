@@ -17,8 +17,9 @@ import torch
 
 from devtools.config import load_config
 from devtools.scene import Pose, Scene
-from devtools.rendering import BatchRenderer
-from devtools.sensors import TOF_ORDER, mounted_pose, poses_to_tensor, sample_depth, sample_rig
+from devtools.ray_rendering import RayRenderer
+from devtools.sensors import TOF_ORDER, mounted_pose, poses_to_tensor, sample_depth
+from devtools.perception import sample_measurement_diagnostics
 from tof_tracker.geometry import quaternion_from_rpy_degrees
 
 
@@ -66,7 +67,7 @@ def _html(data, config, summary):
     figure = make_subplots(
         rows=3, cols=2, row_heights=[0.32, 0.32, 0.36],
         vertical_spacing=0.08, horizontal_spacing=0.12,
-        subplot_titles=(*labels, "前向相机 · 视线距离", "前向相机 · 最近表面可见目标 mask"))
+        subplot_titles=(*labels, "前向相机 · 视线距离", "前向相机 · 子射线可见目标 mask"))
     for index, values in enumerate(data["tof_m"]):
         _depth_plot(figure, values, index // 2 + 1, index % 2 + 1,
                     "coloraxis", labels[index])
@@ -75,7 +76,7 @@ def _html(data, config, summary):
     figure.add_trace(go.Heatmap(
         x=list(range(config.camera.width)), y=list(range(config.camera.height)), z=mask,
         zmin=0, zmax=1, colorscale=[[0, "#f1f5f9"], [1, "#f59e0b"]], showscale=False,
-        hovertemplate="row=%{y}, col=%{x}<br>最近表面为目标：%{z}<extra></extra>",
+        hovertemplate="row=%{y}, col=%{x}<br>存在子射线可见目标：%{z}<extra></extra>",
         name="可见目标"), row=3, col=2)
     hint = data["target_hint"]
     bounds = None
@@ -129,10 +130,10 @@ details{{margin:14px 0}}pre{{white-space:pre-wrap;overflow-wrap:anywhere;font-si
 <span class="key" style="background:#e8b7da">粉色 NaN</span>：未知覆盖、过近表面或无有效返回。
 两者在原始 NPZ 中保持不同值。最大填充值不代表已知空闲。</p>
 <p>目标可见比例 {summary['camera']['visible_fraction']:.3f}，无遮挡有效目标像素 {summary['camera']['unoccluded_target_pixels']}，
-检测阈值 {config.min_visible_fraction:g}。{detection}。
-橙色 mask 来自全场景最近表面测试；红色框仅在通过阈值时包住可见像素。</p>
+检测阈值 {summary['perception_config']['min_visible_fraction']:g}。{detection}。
+橙色 mask 表示至少一条子射线可见目标；代表深度可以属于另一物体。红色框仅在通过阈值时包住可见像素。</p>
 <p>这是无噪声的理想针孔开发观测。配置中的视场、量程、安装位姿及阈值均为开发假设，
-不代表硬件规格；不模拟真实 ToF 分区响应或 RGB 外观。球体使用内接三角网格近似。</p></div>
+不代表硬件规格；ToF 用有限子射线和信号加权分位模拟分区响应，不模拟 RGB 外观。球体使用解析求交。</p></div>
 {plot}<details><summary>输入、GPU 后端、统计与同场景多位姿计时</summary><pre>{escaped_summary}</pre></details>
 <p>本页已内嵌 Plotly 与图像数据，可单文件离线打开。原始数据见同目录 observations.npz；统计见 summary.json。</p>
 </main></body></html>"""
@@ -169,15 +170,21 @@ def main():
     front_mount = sensor_config.tof_mounts[TOF_ORDER.index("front")]
     sensor_poses = tuple(mounted_pose(pose, front_mount) for pose in body_samples)
     begin = time.perf_counter()
-    with BatchRenderer(scene.get_geometry(exclude_ids={"vehicle"})) as renderer:
+    with RayRenderer(scene.get_geometry(exclude_ids={"vehicle"})) as renderer:
         body_tensor = poses_to_tensor([body_pose], device=renderer.device)
         sensor_tensor = poses_to_tensor(sensor_poses, device=renderer.device)
         torch.cuda.synchronize(renderer.device)
         prepared = time.perf_counter()
-        rig = sample_rig(renderer, sensor_config, body_tensor)
+        diagnostic = sample_measurement_diagnostics(
+            renderer, sensor_config, body_tensor, scene.get_geometry(exclude_ids={"vehicle"}),
+            config.perception, runtime=config.sampling_runtime)
+        rig = diagnostic.rig
         torch.cuda.synchronize(renderer.device)
         sampled = time.perf_counter()
-        many = sample_depth(renderer, sensor_config.tof, sensor_tensor)
+        many = sample_depth(renderer, sensor_config.tof, sensor_tensor,
+                            reduction="weighted_quantile", quantile=sensor_config.tof_depth_quantile,
+                            signal_floor=sensor_config.tof_signal_floor,
+                            runtime=config.sampling_runtime)
         torch.cuda.synchronize(renderer.device)
         finished = time.perf_counter()
         backend = renderer.geometry_info
@@ -189,8 +196,8 @@ def main():
         "target_hint": rig.target_hint[0].cpu().numpy(),
         "camera_range_m": rig.camera.depth.range_m[0].cpu().numpy(),
         "target_mask": rig.camera.target_mask[0].cpu().numpy(),
-        "camera_object_index": rig.camera.depth.object_index[0].cpu().numpy(),
-        "object_ids": np.asarray(rig.camera.depth.object_ids),
+        "camera_object_index": diagnostic.camera_raw.object_index[0].cpu().numpy(),
+        "object_ids": np.asarray(diagnostic.camera_raw.object_ids),
         "t_ref": np.asarray(scene.t_ref),
         "scene_version": np.asarray(rig.scene_version),
         "sample_many_range_m": many.range_m.cpu().numpy(),
@@ -203,6 +210,9 @@ def main():
         "vehicle_pose": asdict(body_pose),
         "target_position_m": list(scene.get_geometry().get_object("target").pose.position_m),
         "sensor_config": asdict(sensor_config), "renderer": backend,
+        "perception_config": asdict(config.perception),
+        "sampling_runtime": asdict(config.sampling_runtime),
+        "execution_info": rig.execution_info,
         "triangles": triangle_count, "geometry_uploads": uploads,
         "map_bounds_m": scene.get_geometry().map_bounds_m,
         "tof_order": list(TOF_ORDER),
@@ -212,7 +222,7 @@ def main():
                    "unoccluded_target_pixels": int(rig.camera.unoccluded_pixels[0].cpu()),
                    "visible_fraction": float(rig.camera.visible_fraction[0].cpu()),
                    "target_hint": data["target_hint"].tolist()},
-        "sample_many": {"view": "front ToF", "mode": "one instanced draw; CUDA output and batched postprocessing",
+        "sample_many": {"view": "front ToF", "mode": "one batch of rays; CUDA output and batched postprocessing",
                         "body_pose_changes": ["reference", "body +X 0.25 m", "world yaw +15 degrees"],
                         "sensor_poses": [asdict(pose) for pose in sensor_poses],
                         "frames": [_statistics(frame) for frame in data["sample_many_range_m"]]},
