@@ -20,6 +20,14 @@ check: map-build
 check-sensors:
     ./docker/dev.sh run --gpu python tests/verify_ray_sensors.py --results outputs/sensors/ray-verification.json
 
+# 在线窗口化 sensor 审查，浏览器打开终端给出的地址
+review *args:
+    ./docker/dev.sh run --web --gpu python tools/sensor_review/server.py --host 0.0.0.0 --port 8080 "$@"
+
+# 实际 HTTP + 正式 GPU sensor 的在线审查接口检查
+check-review:
+    ./docker/dev.sh run --gpu python tests/verify_ray_review.py --results outputs/sensor_review/ray-verification.json
+
 # 在容器内执行命令；无参数进入 Bash
 run *args:
     ./docker/dev.sh run "$@"

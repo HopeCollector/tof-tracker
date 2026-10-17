@@ -16,6 +16,7 @@
 | `configs/` | 统一物理配置，包含球体半径与显式开发传感器参数；[配置用法](devtools/README.md#统一配置与场景) |
 | `tools/mapgen/` | 独立离线地图生成器；[参数与地图格式](tools/mapgen/README.md) |
 | `tools/map_viewer/` | 地图与场景查看器；[查看参数与显示约定](tools/map_viewer/README.md) |
+| `tools/sensor_review/` | 在线窗口化审查；[交互布置、正式 GPU 采样与投影检查](tools/sensor_review/README.md) |
 | `docker/` | 全项目容器环境与通用运行入口；[构建、依赖与挂载](docker/README.md) |
 | `tests/` | `just check` 运行环境和 CPU 工具检查；`just check-sensors` 运行 GPU 传感器检查 |
 | `examples/` | [单帧观测及多位姿调用](examples/one_frame.py)，输出原始数组和离线可视化 |
@@ -36,6 +37,8 @@ just view outputs/mapgen/demo.obj \
   --vehicle-position -1 0 1 --target-position 1 0.6 1.2  # 查看场景
 just check                                      # 运行现有检查
 just check-sensors                              # 真实 GPU 的独立几何与行为检查
+just review                                     # 在线审查：布置场景、采样、浮窗与透明叠图
+just check-review                               # HTTP 服务与正式 GPU 采样联调检查
 just run --gpu python examples/one_frame.py outputs/mapgen/demo.obj \
   --vehicle-position -1 0 1 --target-position 1 0.6 1.2
 just run                                        # 进入容器 Bash

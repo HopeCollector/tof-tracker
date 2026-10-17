@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sensor Lab · 在线视觉审查</title>
+  <link rel="stylesheet" href="/style.css">
+  <script type="importmap">{"imports":{"three":"/vendor/three.module.js","three/addons/controls/OrbitControls.js":"/vendor/OrbitControls.js"}}</script>
+</head>
+<body>
+  <header id="toolbar">
+    <a class="brand" href="/">◈ <span>Sensor Lab<small>在线视觉审查</small></span></a>
+    <span class="toolbar-divider"></span>
+    <label class="map-control">地图 <select id="map-select" aria-label="地图"><option>正在连接…</option></select></label>
+    <button id="load-map">加载</button>
+    <button id="upload-map" class="quiet">导入 OBJ</button>
+    <input id="map-file" type="file" accept=".obj" hidden>
+    <span class="toolbar-divider"></span>
+    <button id="place-vehicle">＋ 飞机</button>
+    <button id="place-target">＋ 目标</button>
+    <button id="sample" class="primary" disabled>采样</button>
+    <span class="toolbar-spacer"></span>
+    <button id="scene-window" class="quiet">场景窗口化</button>
+    <button id="open-inspector" class="quiet">场景设置</button>
+    <button id="open-results" class="quiet" disabled>采样窗口</button>
+    <button id="return-overview" class="quiet" disabled>返回总览</button>
+    <span id="connection" class="connection">连接中</span>
+  </header>
+  <main id="workspace">
+    <div id="scene-container" aria-label="三维地图"></div>
+    <div id="sensor-frame" hidden><div class="sensor-tag"></div></div>
+    <div id="aligned-overlay" hidden><canvas></canvas><div class="overlay-caption"></div></div>
+    <div id="empty-state"><div class="empty-icon">◈</div><h1>从场景中检查每一个像素</h1><p>加载地图，按下放置位置，拖动指定朝向。<br>采样调用正式 GPU sensor，结果可自由开窗、叠加。</p></div>
+    <div id="mode-banner" hidden></div>
+    <div id="windows"></div>
+    <div id="toast" role="status" hidden></div>
+  </main>
+  <footer id="statusbar"><span id="status">等待后端连接</span><span id="scene-stats">世界坐标 · 米 · Z 向上</span></footer>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

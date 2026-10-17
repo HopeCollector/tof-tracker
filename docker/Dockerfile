@@ -26,6 +26,11 @@ ENV PATH="/opt/venv/bin:${PATH}" \
 RUN python -m pip install --no-cache-dir torch==2.9.1+cu128 --index-url https://download.pytorch.org/whl/cu128
 RUN python -m pip install --no-cache-dir warp-lang==1.15.0
 
+# Local browser modules are pinned and integrity-checked, then served by the
+# online review tool. No CDN requests or host JavaScript installation at runtime.
+COPY docker/fetch_review_assets.py /tmp/fetch_review_assets.py
+RUN python /tmp/fetch_review_assets.py
+
 WORKDIR /workspace
 COPY pyproject.toml README.md ./
 COPY src ./src
