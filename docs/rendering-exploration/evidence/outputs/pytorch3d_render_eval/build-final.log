@@ -1,0 +1,49 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/tof-tracker-mesh-eval:warp1.15-cu128
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 197B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/library/tof-tracker-mesh-eval:warp1.15-cu128@sha256:bb1ad9156b8e6e6b9608deaab6575d8162311e66a8246a4f6a2db712e4b11f73
+#4 resolve docker.io/library/tof-tracker-mesh-eval:warp1.15-cu128@sha256:bb1ad9156b8e6e6b9608deaab6575d8162311e66a8246a4f6a2db712e4b11f73 done
+#4 DONE 0.0s
+
+#5 [3/6] RUN python -m pip install --no-cache-dir ninja==1.11.1.4 iopath==0.1.10         fvcore==0.1.5.post20221221 moderngl==5.12.0 glcontext==3.0.0
+#5 CACHED
+
+#6 [2/6] RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends         libegl1 libgl1 git ca-certificates     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [4/6] RUN git clone --filter=blob:none https://github.com/facebookresearch/pytorch3d.git /tmp/pytorch3d-source     && cd /tmp/pytorch3d-source && git checkout "88e182f989c80836f4bd744e0d9cb1852762ce01"     && python -m pip install -v --no-build-isolation --no-deps .     && printf '%s\n' "88e182f989c80836f4bd744e0d9cb1852762ce01" > /opt/pytorch3d-source-revision     && rm -rf /tmp/pytorch3d-source
+#7 CACHED
+
+#8 [5/6] RUN python -m pip install --no-cache-dir nvidia-ml-py==12.570.86
+#8 0.576 Collecting nvidia-ml-py==12.570.86
+#8 0.823   Downloading nvidia_ml_py-12.570.86-py3-none-any.whl.metadata (8.7 kB)
+#8 0.908 Downloading nvidia_ml_py-12.570.86-py3-none-any.whl (44 kB)
+#8 1.129 Installing collected packages: nvidia-ml-py
+#8 1.166 Successfully installed nvidia-ml-py-12.570.86
+#8 1.410 
+#8 1.410 [notice] A new release of pip is available: 25.1.1 -> 26.2.1
+#8 1.410 [notice] To update, run: pip install --upgrade pip
+#8 DONE 1.5s
+
+#9 [6/6] WORKDIR /workspace
+#9 DONE 0.0s
+
+#10 exporting to image
+#10 exporting layers 0.1s done
+#10 exporting manifest sha256:54d5cbaa5923c48dd3cf76448441becb65764ac376f16c6a0ad61ba957dd6fa2 done
+#10 exporting config sha256:04502655398f74eebf95d9f187f22f632f185f831b40fe047a05053fef1fd96f done
+#10 exporting attestation manifest sha256:74759259f7f94e59c406df927c55f29fb643219803284bda965416995180a9c1 done
+#10 exporting manifest list sha256:74b9eeed82c580ae83b10e2a490edaf0c7ce44a72b55c36af1d4f1e56c4be504 done
+#10 naming to docker.io/library/tof-tracker-pytorch3d-eval:torch2.7-cu128 done
+#10 unpacking to docker.io/library/tof-tracker-pytorch3d-eval:torch2.7-cu128 0.0s done
+#10 DONE 0.1s

@@ -1,0 +1,28 @@
+-- The CXX compiler identification is GNU 9.4.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - failed
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ - broken
+CMake Error at /usr/local/lib/python3.8/dist-packages/cmake/data/share/cmake-3.26/Modules/CMakeTestCXXCompiler.cmake:60 (message):
+  The C++ compiler
+
+    "/usr/bin/c++"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: /workspace/outputs/mapgen/build/CMakeFiles/CMakeScratch/TryCompile-3dKlpU
+    
+    Run Build Command(s):/usr/local/lib/python3.8/dist-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_aedbc/fast && No such file or directory
+    
+    
+
+  
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:2 (project)
+
+
+-- Configuring incomplete, errors occurred!

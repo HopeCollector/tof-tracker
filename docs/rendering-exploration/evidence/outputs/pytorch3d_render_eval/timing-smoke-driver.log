@@ -1,0 +1,24 @@
+running pillars20-tof-current-b1
+  ok: 0.3032320237252861 ms
+running pillars20-tof-current-b16
+  ok: 3.9074450032785535 ms
+running pillars20-tof-current_gpu-b1
+  ok: 0.46481299796141684 ms
+running pillars20-tof-current_gpu-b16
+  ok: 4.323608009144664 ms
+running pillars20-tof-p3d-b1
+  ok: 5.139554006746039 ms
+running pillars20-tof-p3d-b16
+  ok: 11.409564001951367 ms
+running pillars20-camera-current-b1
+  ok: 2.7115269913338125 ms
+running pillars20-camera-current-b16
+  ok: 44.65028899721801 ms
+running pillars20-camera-current_gpu-b1
+  ok: 3.1965109810698777 ms
+running pillars20-camera-current_gpu-b16
+  ok: 46.13850900204852 ms
+running pillars20-camera-p3d-b1
+  ok: 15.691292006522417 ms
+running pillars20-camera-p3d-b16
+  ok: 49.24208897864446 ms

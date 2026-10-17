@@ -1,0 +1,852 @@
+diff --git a/README.md b/README.md
+index b1c4cda..714d0d4 100644
+--- a/README.md
++++ b/README.md
+@@ -16,6 +16,7 @@
+ | `configs/` | 统一物理配置，包含球体半径与显式开发传感器参数；[配置用法](devtools/README.md#统一配置与场景) |
+ | `tools/mapgen/` | 独立离线地图生成器；[参数与地图格式](tools/mapgen/README.md) |
+ | `tools/map_viewer/` | 地图与场景查看器；[查看参数与显示约定](tools/map_viewer/README.md) |
++| `tools/sensor_review/` | 在线窗口化审查；[交互布置、正式 GPU 采样与投影检查](tools/sensor_review/README.md) |
+ | `docker/` | 全项目容器环境与通用运行入口；[构建、依赖与挂载](docker/README.md) |
+ | `tests/` | `just check` 运行环境和 CPU 工具检查；`just check-sensors` 运行 GPU 传感器检查 |
+ | `examples/` | [单帧观测及多位姿调用](examples/one_frame.py)，输出原始数组和离线可视化 |
+@@ -36,6 +37,8 @@ just view outputs/mapgen/demo.obj \
+   --vehicle-position -1 0 1 --target-position 1 0.6 1.2  # 查看场景
+ just check                                      # 运行现有检查
+ just check-sensors                              # 真实 GPU 的独立几何与行为检查
++just review                                     # 在线审查：布置场景、采样、浮窗与透明叠图
++just check-review                               # HTTP 服务与正式 GPU 采样联调检查
+ just run --gpu python examples/one_frame.py outputs/mapgen/demo.obj \
+   --vehicle-position -1 0 1 --target-position 1 0.6 1.2
+ just run                                        # 进入容器 Bash
+@@ -46,7 +49,7 @@ just run cmake --version                         # 在容器内执行命令
+ 
+ ## 接下来
+ 
+-- 按实际设备标定替换[开发传感器配置](devtools/sensors.md)，再按需求实现具体噪声与 ToF 分区响应；当前已能从同场景生成四路 ToF、可见目标 mask 和框提示。
++- 按实际设备标定替换[开发传感器配置](devtools/sensors.md)，再按需求实现回波强度与噪声模型；当前 ToF 按区域返回最近表面，并能从同场景生成可见目标 mask 和框提示。
+ - 实现[开发用轨迹解析](devtools/README.md#开发用轨迹解析)、公开几何查询和训练代价，检查所需梯度；分别归入 `devtools/` 和 `training/`。
+ - 完成少量样本的训练、保存和重载；入口为 [training/train.py](training/train.py)，职责见 [训练说明](training/README.md)。
+ 
+diff --git a/devtools/README.md b/devtools/README.md
+index 6e29957..ea4b6c1 100644
+--- a/devtools/README.md
++++ b/devtools/README.md
+@@ -60,7 +60,7 @@ print(next_scene.get_geometry().get_object("vehicle").pose.body_to_world((1, 0,
+ 
+ 传感器以配置、完整 CUDA `[B,4,4]` 视角位姿和场景生成批量欧氏视线距离；一份 VBO 通过 instanced draw 渲染所有视角，输出直接留在 GPU。四路 ToF 展平到 `4N` 视角一次采样，相机全场和目标各一次；后处理按批生成实际可见 mask、可见比例与半开框提示。`renderer.sync(scene.get_geometry(...))` 在批次间同步目标移动，只更新对象变换；公开 `get_geometry()` 仍返回世界坐标事实。更换地图、半径或对象结构需重建 renderer。
+ 
+-原始距离为有限米制值、完整覆盖下确认超量程的正 `inf`、或无可信测量的 `NaN`；未知地图范围不会当作已知空闲。开发参数、像素中心采样、噪声扩展边界、调用例子与验证入口统一见[传感器说明](sensors.md)。闭环评价由执行端提供当前位姿。命中与真值只用于解释和监督，算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
++原始距离为有限米制值、完整覆盖下确认超量程的正 `inf`、或无可信测量的 `NaN`；未知地图范围不会当作已知空闲。ToF 每格计算整个角锥内的最近表面，相机保留像素中心投影。开发参数、区域覆盖、噪声扩展边界、调用例子与验证入口统一见[传感器说明](sensors.md)。闭环评价由执行端提供当前位姿。命中与真值只用于解释和监督，算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
+ 
+ ESDF 尚未构建或查询距离场。它负责回答批量轨迹采样点到物体表面的距离，并保留训练所需的计算图或提供明确导数；任务代价、惩罚权重、反传与参数更新属于训练。距离和边界语义须与场景物理事实一致，查询位置所需的梯度逐条验证，具体后端在实现时选择。
+ 
+diff --git a/devtools/_sensor_processing.py b/devtools/_sensor_processing.py
+index 5aa9a04..582bace 100644
+--- a/devtools/_sensor_processing.py
++++ b/devtools/_sensor_processing.py
+@@ -137,8 +137,95 @@ def _coverage(distance: torch.Tensor, poses_cuda: torch.Tensor,
+     return known, full
+ 
+ 
++@lru_cache(maxsize=16)
++def _zone_constants(height: int, width: int, hfov_deg: float, vfov_deg: float,
++                    device: torch.device):
++    rows = torch.arange(height, device=device, dtype=torch.float64)
++    cols = torch.arange(width, device=device, dtype=torch.float64)
++    horizontal = math.tan(math.radians(hfov_deg) / 2)
++    vertical = math.tan(math.radians(vfov_deg) / 2)
++    z0, y0 = torch.meshgrid((1 - 2 * (rows + 1) / height) * vertical,
++                            (1 - 2 * (cols + 1) / width) * horizontal, indexing="ij")
++    z1, y1 = torch.meshgrid((1 - 2 * rows / height) * vertical,
++                            (1 - 2 * cols / width) * horizontal, indexing="ij")
++    ready = torch.cuda.Event()
++    ready.record(torch.cuda.current_stream(device))
++    return (y0, y1, z0, z1), ready
++
++
++def _zone_direction_extrema(poses: torch.Tensor, config: DepthConfig):
++    """Exact coordinate extrema over each rectangular cone's unit directions.
++
++    For each world coordinate maximize/minimize (a+b*y+c*z)/sqrt(1+y²+z²).
++    Its extrema occur at a corner, a stationary point on one of four edges,
++    or its sole interior stationary direction. No angular subsampling is used.
++    """
++    constants = _use_constants(_zone_constants(config.height, config.width,
++                              config.hfov_deg, config.vfov_deg, poses.device), poses.device)
++    y0, y1, z0, z1 = (item[None, ..., None] for item in constants)
++    rotation = poses[:, None, None, :3, :3]
++    a, b, c = (rotation[..., index] for index in range(3))
++
++    def value(y, z):
++        return (a + b * y + c * z) / torch.sqrt(1 + y * y + z * z)
++
++    low = high = value(y0, z0)
++
++    def include(candidate):
++        nonlocal low, high
++        low, high = torch.minimum(low, candidate), torch.maximum(high, candidate)
++
++    for y, z in ((y0, z1), (y1, z0), (y1, z1)):
++        include(value(y, z))
++    for y in (y0, y1):
++        denominator = a + b * y
++        safe = torch.where(denominator != 0, denominator, torch.ones_like(denominator))
++        z = (c * (1 + y * y) / safe).clamp(min=z0, max=z1)
++        include(value(y, z))
++    for z in (z0, z1):
++        denominator = a + c * z
++        safe = torch.where(denominator != 0, denominator, torch.ones_like(denominator))
++        y = (b * (1 + z * z) / safe).clamp(min=y0, max=y1)
++        include(value(y, z))
++    safe = torch.where(a != 0, a, torch.ones_like(a))
++    include(value((b / safe).clamp(min=y0, max=y1),
++                  (c / safe).clamp(min=z0, max=z1)))
++    return low, high
++
++
++def _zone_coverage(distance, hit_point_sensor_m, poses_cuda, config, bounds):
++    if bounds is None:
++        return torch.ones_like(distance, dtype=torch.bool), torch.zeros_like(distance, dtype=torch.bool)
++    limits = _limits(bounds, distance.device)
++    poses = poses_cuda.to(torch.float64)
++    origin = poses[:, :3, 3]
++    inside = ((origin >= limits[:, 0]) & (origin <= limits[:, 1])).all(dim=-1)[:, None, None]
++    points = torch.matmul(hit_point_sensor_m.to(torch.float64).reshape(len(poses), -1, 3),
++                          poses[:, :3, :3].transpose(-1, -2)).reshape(*distance.shape, 3)
++    points = points + origin[:, None, None, :]
++    tolerance = roundoff_m(poses, config)[..., None]
++    known_point = inside & ((points >= limits[:, 0] - tolerance)
++                            & (points <= limits[:, 1] + tolerance)).all(dim=-1)
++    low, high = _zone_direction_extrema(poses, config)
++    # A nearest-in-zone claim also needs all other directions known up to the
++    # winning distance: an unknown side of the same cell could contain a closer
++    # surface. An in-domain winning point alone does not establish this fact.
++    hit_low = origin[:, None, None, :] + distance.to(torch.float64)[..., None] * low
++    hit_high = origin[:, None, None, :] + distance.to(torch.float64)[..., None] * high
++    known = known_point & ((hit_low >= limits[:, 0] - tolerance)
++                            & (hit_high <= limits[:, 1] + tolerance)).all(dim=-1)
++    # Every direction through the zone, including extrema on edges or inside
++    # the angular rectangle, must stay inside the declared convex map domain.
++    # Checking just the centre or the four corner rays is insufficient.
++    end_low = origin[:, None, None, :] + config.max_range_m * low
++    end_high = origin[:, None, None, :] + config.max_range_m * high
++    full = inside & ((end_low >= limits[:, 0]) & (end_high <= limits[:, 1])).all(dim=-1)
++    return known, full
++
++
+ def postprocess_depth(distance: torch.Tensor, identity: torch.Tensor,
+-                      poses_cuda: torch.Tensor, config: DepthConfig, bounds=None) -> torch.Tensor:
++                      poses_cuda: torch.Tensor, config: DepthConfig, bounds=None, *,
++                      hit_point_sensor_m: torch.Tensor | None = None) -> torch.Tensor:
+     """Apply production range/coverage policy to raw batched CUDA hits.
+ 
+     A measured nearest hit below ``min_range_m`` or just beyond max within the
+@@ -149,7 +236,15 @@ def postprocess_depth(distance: torch.Tensor, identity: torch.Tensor,
+     _check_inputs(distance, identity, poses_cuda, config)
+     distance = distance.to(dtype=torch.float32)
+     hit = identity >= 0
+-    known, full = _coverage(distance, poses_cuda, config, bounds)
++    if hit_point_sensor_m is None:
++        known, full = _coverage(distance, poses_cuda, config, bounds)
++    else:
++        if (not isinstance(hit_point_sensor_m, torch.Tensor)
++                or hit_point_sensor_m.device != distance.device
++                or hit_point_sensor_m.shape != (*distance.shape, 3)
++                or hit_point_sensor_m.dtype not in (torch.float32, torch.float64)):
++            raise ValueError("hit_point_sensor_m must be floating CUDA [B,H,W,3] on distance.device")
++        known, full = _zone_coverage(distance, hit_point_sensor_m, poses_cuda, config, bounds)
+     valid = hit & known & (distance >= config.min_range_m) & (distance <= config.max_range_m)
+     unavailable = torch.full_like(distance, math.nan)
+     result = torch.where(valid, distance, unavailable)
+@@ -214,4 +309,5 @@ def postprocess_camera(full_ranges: torch.Tensor, full_identity: torch.Tensor,
+ def clear_caches() -> None:
+     """Release this module's references to cached CUDA constants."""
+     _pixel_constants.cache_clear()
++    _zone_constants.cache_clear()
+     _bounds_constant.cache_clear()
+diff --git a/devtools/config.py b/devtools/config.py
+index 3e16cea..1b45001 100644
+--- a/devtools/config.py
++++ b/devtools/config.py
+@@ -45,10 +45,11 @@ def _finite_vector(value, length, name):
+ 
+ @dataclass(frozen=True)
+ class DepthConfig:
+-    """Pinhole depth sampling and radial range, in degrees and metres.
++    """Pinhole angular grid and radial range, in degrees and metres.
+ 
+     Development rendering is limited to 4096 samples per axis and 1,048,576
+-    total pixels. Width and height are positive integers, excluding booleans.
++    total cells. Pixel-centre versus continuous-zone measurement is selected
++    by the sampling call. Width and height are positive integers, excluding booleans.
+     """
+ 
+     width: int
+diff --git a/devtools/rendering.py b/devtools/rendering.py
+index 07c7159..ea0aff0 100644
+--- a/devtools/rendering.py
++++ b/devtools/rendering.py
+@@ -53,6 +53,10 @@ class RasterBatch:
+     raster miss. ``object_index`` is int64 with -1 for a miss and otherwise
+     indexes ``object_ids``. These are raw measurements, before sensor validity
+     and coverage policy. Storage survives subsequent render/sync/close calls.
++
++    Zone sampling also returns the actual closest surface point in sensor FLU
++    coordinates, ``[B,H,W,3]``, and global scene ``triangle_index [B,H,W]``.
++    A miss has a zero point and triangle -1. Pixel sampling leaves both None.
+     """
+ 
+     distance_m: torch.Tensor
+@@ -61,6 +65,8 @@ class RasterBatch:
+     scene_version: int
+     t_ref: float | None
+     map_bounds_m: tuple[tuple[float, float], ...] | None
++    hit_point_sensor_m: torch.Tensor | None = None
++    triangle_index: torch.Tensor | None = None
+ 
+ 
+ def _sphere_mesh(radius_m):
+@@ -181,7 +187,7 @@ class BatchRenderer:
+         if self.device.index is None:
+             self.device = torch.device("cuda", torch.cuda.current_device())
+         self._closed = False
+-        self._ctx = self._program = self._geometry = None
++        self._ctx = self._program = self._zone_program = self._geometry = None
+         self._gl = self._cuda = None
+         self._vao = self._pose_buffer = self._object_buffer = 0
+         self._pose_resource = None
+@@ -287,6 +293,8 @@ class BatchRenderer:
+             "object_transform_updates": self._transform_updates,
+             "object_transform_upload_bytes": self._transform_upload_bytes,
+             "scene_version": self._scene_version,
++            "object_triangle_ranges": {key: [first // 3, count // 3]
++                                       for key, (first, count) in self._object_ranges.items()},
+             "batch_geometry_policy": "one VBO; world meshes and local spheres; independent of B",
+             "full_pass_instanced_draws": 1, "selected_object_pass_instanced_draws": 1,
+             "instanced_draw_count": self._draw_count, "render_calls": self._render_calls,
+@@ -300,6 +308,8 @@ class BatchRenderer:
+             "fragment_shader_sha256": hashlib.sha256(_FRAGMENT_SHADER.encode()).hexdigest(),
+             "near_clip_policy": "unchanged GL w=forward, clip z=0, no positive near plane",
+             "depth_component_bits": 24,
++            "zone_depth_component_bits": 32,
++            "zone_sampling": "exact triangle/cell cone clip and nearest point; no supersampling",
+         }
+ 
+     @property
+@@ -307,9 +317,9 @@ class BatchRenderer:
+         geometry = self._geometry.size if self._geometry else 0
+         transforms = len(self.object_ids) * 64 if self._object_buffer else 0
+         pose = self._pose_capacity * 17 * 4
+-        color = sum(item["pixels"] * 8 for item in self._targets.values())
++        color = sum(item["bytes"] for item in self._targets.values())
+         depth = sum(item["pixels"] * 4 for item in self._targets.values())
+-        pbo = sum(item["pixels"] * 8 for item in self._targets.values())
++        pbo = sum(item["bytes"] for item in self._targets.values())
+         return {
+             "scene_geometry_buffer_bytes": geometry, "pose_ssbo_bytes": pose,
+             "object_transform_ssbo_bytes": transforms,
+@@ -318,7 +328,8 @@ class BatchRenderer:
+             "output_pbo_bytes": pbo,
+             "tracked_total_bytes": geometry + transforms + pose + color + depth + pbo,
+             "tracked_total_scope": "explicit GL storage; depth24 estimated as 4 bytes/texel; "
+-                                   "excludes driver padding/objects and all Torch allocations",
++                                   "zone depth32 uses 4 bytes/texel; excludes driver "
++                                   "padding/objects and all Torch allocations",
+             "input_pose_transfer_bytes_per_render": (self._batch_size or 0) * 17 * 4,
+             "output_cuda_transfer_bytes_per_render": (
+                 self._last_output_bytes if hasattr(self, "_last_output_bytes") else None),
+@@ -400,14 +411,15 @@ class BatchRenderer:
+         return self._scene_version
+ 
+     @_on_cuda_device
+-    def prepare(self, batch_size, *, config=None):
++    def prepare(self, batch_size, *, config=None, sampling="pixel"):
+         """Warm the pose buffer and optional layered output for one batch.
+ 
+-        Pose capacity only grows. Outputs cache by B/H/W, so alternating a
++        Pose capacity only grows. Outputs cache by sampling/B/H/W, so alternating a
+         four-camera ToF group and a single-camera group reuses storage. Call
+         ``release_batch`` to release all such caches without touching geometry.
+         """
+         self._require_open()
++        self._validate_sampling(sampling)
+         if isinstance(batch_size, bool) or not isinstance(batch_size, int) or batch_size <= 0:
+             raise ValueError("batch_size must be a positive integer")
+         if batch_size > self._max_layers:
+@@ -435,7 +447,7 @@ class BatchRenderer:
+             self._pose_capacity = batch_size
+         self._batch_size = batch_size
+         if config is not None:
+-            self._target(config)
++            self._target(config, sampling)
+         self._prepare_info = {
+             "batch_size": batch_size,
+             "batch_raw_mesh_arrays_bytes": 0,
+@@ -447,24 +459,51 @@ class BatchRenderer:
+         }
+         return self.prepare_info
+ 
+-    def _target(self, config):
++    @staticmethod
++    def _validate_sampling(sampling):
++        if sampling not in ("pixel", "zone"):
++            raise ValueError("sampling must be 'pixel' or 'zone'")
++
++    def _pipeline(self, sampling):
++        if sampling == "pixel":
++            return self._program, self._uniforms
++        if self.triangle_count >= 2**24:
++            raise ValueError("zone diagnostics require fewer than 2**24 triangles")
++        if self._zone_program is None:
++            from ._zone_shaders import VERTEX_SHADER, GEOMETRY_SHADER, FRAGMENT_SHADER
++            self._gl.activate()
++            self._zone_program = self._ctx.program(vertex_shader=VERTEX_SHADER,
++                                                    geometry_shader=GEOMETRY_SHADER,
++                                                    fragment_shader=FRAGMENT_SHADER)
++            self._zone_uniforms = {
++                name: self._gl.glGetUniformLocation(self._zone_program.glo, name.encode())
++                for name in ("tangent_fov", "image_size")}
++        return self._zone_program, self._zone_uniforms
++
++    def _target(self, config, sampling="pixel"):
+         _validate_render_config(config)
+-        key = (self._batch_size, config.width, config.height)
++        self._validate_sampling(sampling)
++        key = (sampling, self._batch_size, config.width, config.height)
+         if key in self._targets:
+             return self._targets[key]
+         gl = self._gl
+         gl.activate()
+         width, height, batch = config.width, config.height, self._batch_size
+-        byte_count = batch * width * height * 8
++        pixels = batch * width * height
++        byte_count = pixels * (24 if sampling == "zone" else 8)
+         if byte_count > 2**31 - 1:
+             raise ValueError("single glGetTextureImage transfer exceeds GLsizei range")
+-        item = {"color": 0, "depth": 0, "fbo": 0, "pbo": 0, "resource": None,
+-                "pixels": batch * width * height, "bytes": byte_count}
++        item = {"color": 0, "hit": 0, "depth": 0, "fbo": 0, "pbo": 0, "resource": None,
++                "pixels": pixels, "bytes": byte_count, "color_bytes": pixels * 8,
++                "hit_bytes": pixels * 16 if sampling == "zone" else 0}
+         # Save before allocation, so an allocation failure can release every
+         # resource and close this renderer instead of caching a partial target.
+         self._targets[key] = item
+         try:
+-            for name, internal_format in (("color", 0x8230), ("depth", 0x81A6)):  # RG32F, DEPTH24
++            formats = [("color", 0x8230), ("depth", 0x8CAC if sampling == "zone" else 0x81A6)]
++            if sampling == "zone":
++                formats.append(("hit", 0x8814))  # RGBA32F
++            for name, internal_format in formats:
+                 item[name] = gl.create("Textures")
+                 gl.glBindTexture(_TEXTURE_ARRAY, item[name])
+                 gl.glTexStorage3D(_TEXTURE_ARRAY, 1, internal_format, width, height, batch)
+@@ -474,8 +513,10 @@ class BatchRenderer:
+             gl.glBindFramebuffer(_FRAMEBUFFER, item["fbo"])
+             gl.glFramebufferTexture(_FRAMEBUFFER, 0x8CE0, item["color"], 0)
+             gl.glFramebufferTexture(_FRAMEBUFFER, 0x8D00, item["depth"], 0)
+-            attachment = (C.c_uint * 1)(0x8CE0)
+-            gl.glDrawBuffers(1, attachment)
++            if sampling == "zone":
++                gl.glFramebufferTexture(_FRAMEBUFFER, 0x8CE1, item["hit"], 0)
++            attachments = (0x8CE0, 0x8CE1) if sampling == "zone" else (0x8CE0,)
++            gl.glDrawBuffers(len(attachments), (C.c_uint * len(attachments))(*attachments))
+             status = gl.glCheckFramebufferStatus(_FRAMEBUFFER)
+             if status != 0x8CD5:
+                 raise RuntimeError(f"Layered framebuffer incomplete: 0x{status:04x}")
+@@ -492,9 +533,18 @@ class BatchRenderer:
+ 
+     @torch.no_grad()
+     @_on_cuda_device
+-    def render(self, poses_cuda, config, only_object: str | None = None) -> RasterBatch:
++    def render(self, poses_cuda, config, only_object: str | None = None, *, sampling="pixel") -> RasterBatch:
++        """Render one pixel-center or angular-zone measurement per output cell.
++
++        ``pixel`` retains the original camera raster semantics. ``zone`` clips
++        each original triangle to each candidate angular cell and returns its
++        nearest surface point, including too-close occluders. It uses precisely
++        the requested output resolution and one instanced draw, with no hidden
++        high-resolution image. Triangle order breaks equal depth32 ties.
++        """
+         self._require_open()
+         _validate_render_config(config)
++        self._validate_sampling(sampling)
+         if (not isinstance(poses_cuda, torch.Tensor) or poses_cuda.device != self.device
+                 or poses_cuda.dtype != torch.float32 or poses_cuda.ndim != 3
+                 or tuple(poses_cuda.shape[1:]) != (4, 4)):
+@@ -505,7 +555,8 @@ class BatchRenderer:
+             raise ValueError(f"unknown object ID {only_object!r}")
+         if batch != self._batch_size:
+             self.prepare(batch)
+-        target = self._target(config)
++        program, uniforms = self._pipeline(sampling)
++        target = self._target(config, sampling)
+         gl, cuda = self._gl, self._cuda
+         gl.activate()
+         stream = torch.cuda.current_stream(self.device).cuda_stream
+@@ -528,16 +579,18 @@ class BatchRenderer:
+ 
+         gl.glBindFramebuffer(_FRAMEBUFFER, target["fbo"])
+         gl.glClearBufferfv(0x1800, 0, (C.c_float * 4)(0, 0, 0, 0))
++        if sampling == "zone":
++            gl.glClearBufferfv(0x1800, 1, (C.c_float * 4)(0, 0, 0, 0))
+         gl.glClearBufferfv(0x1801, 0, (C.c_float * 1)(1))
+         gl.glViewport(0, 0, config.width, config.height)
+-        gl.glUseProgram(self._program.glo)
++        gl.glUseProgram(program.glo)
+         gl.glBindVertexArray(self._vao)
+         gl.glBindBufferBase(_SSBO, 0, self._pose_buffer)
+         gl.glBindBufferBase(_SSBO, 1, self._object_buffer)
+-        gl.glUniform2f(self._uniforms["tangent_fov"],
++        gl.glUniform2f(uniforms["tangent_fov"],
+                       math.tan(math.radians(config.hfov_deg) / 2),
+                       math.tan(math.radians(config.vfov_deg) / 2))
+-        gl.glUniform2f(self._uniforms["image_size"], config.width, config.height)
++        gl.glUniform2f(uniforms["image_size"], config.width, config.height)
+         first, count = self._object_ranges[only_object] if only_object else (0, self.vertex_count)
+         gl.glDrawArraysInstanced(0x0004, first, count, batch)
+         self._draw_count += 1
+@@ -548,11 +601,13 @@ class BatchRenderer:
+         # CPU address.  Map waits for preceding GL writes on this resource.
+         gl.glBindBuffer(_PBO, target["pbo"])
+         gl.glGetTextureImage(target["color"], 0, 0x8227, 0x1406,
+-                             target["bytes"], C.c_void_p(0))
++                             target["color_bytes"], C.c_void_p(0))
++        if sampling == "zone":
++            gl.glGetTextureImage(target["hit"], 0, 0x1908, 0x1406,
++                                 target["hit_bytes"], C.c_void_p(target["color_bytes"]))
+         gl.glBindBuffer(_PBO, 0)
+         gl.glFlush()
+-        raw = torch.empty((batch, config.height, config.width, 2),
+-                          dtype=torch.float32, device=self.device)
++        raw = torch.empty((target["bytes"] // 4,), dtype=torch.float32, device=self.device)
+         pointer, size = cuda.map(target["resource"], stream)
+         try:
+             if size < target["bytes"]:
+@@ -562,10 +617,16 @@ class BatchRenderer:
+             cuda.unmap(target["resource"], stream)
+         gl.check("instanced draw and whole-array GPU transfer")
+         self._last_output_bytes = target["bytes"]
+-        distance = raw[..., 0].flip((1,)).contiguous()
+-        identity = raw[..., 1].flip((1,)).to(torch.int64) - 1
++        image = raw[:target["pixels"] * 2].view(batch, config.height, config.width, 2)
++        distance = image[..., 0].flip((1,)).contiguous()
++        identity = image[..., 1].flip((1,)).to(torch.int64) - 1
++        point = triangle = None
++        if sampling == "zone":
++            hit = raw[target["pixels"] * 2:].view(batch, config.height, config.width, 4)
++            point = hit[..., :3].flip((1,)).contiguous()
++            triangle = hit[..., 3].flip((1,)).to(torch.int64) - 1
+         return RasterBatch(distance, identity, self.object_ids, self._scene_version,
+-                           self._snapshot.t_ref, self._snapshot.map_bounds_m)
++                           self._snapshot.t_ref, self._snapshot.map_bounds_m, point, triangle)
+ 
+     @_on_cuda_device
+     def release_batch(self):
+@@ -581,6 +642,7 @@ class BatchRenderer:
+             self._gl.delete("Framebuffers", item["fbo"])
+             self._gl.delete("Textures", item["depth"])
+             self._gl.delete("Textures", item["color"])
++            self._gl.delete("Textures", item["hit"])
+         self._targets.clear()
+         self._cuda.unregister(self._pose_resource)
+         self._pose_resource = None
+@@ -616,6 +678,9 @@ class BatchRenderer:
+         if self._program:
+             self._program.release()
+             self._program = None
++        if self._zone_program:
++            self._zone_program.release()
++            self._zone_program = None
+         if self._ctx:
+             self._ctx.release()
+             self._ctx = None
+diff --git a/devtools/sensors.md b/devtools/sensors.md
+index c055aef..1994b9a 100644
+--- a/devtools/sensors.md
++++ b/devtools/sensors.md
+@@ -20,7 +20,7 @@ assert config.sensors is not None
+ with BatchRenderer(scene.get_geometry(exclude_ids={"vehicle"})) as renderer:
+     # 显式 CPU Pose → CUDA；已有 CUDA 位姿的调用方可直接传张量。
+     views = poses_to_tensor([Pose((-1, 0, 1)), Pose((0, 0, 1))], renderer.device)
+-    depth = sample_depth(renderer, config.sensors.tof, views)
++    depth = sample_depth(renderer, config.sensors.tof, views, sampling="zone")
+     body = poses_to_tensor([body_pose], renderer.device)
+     rig = sample_rig(renderer, config.sensors, body)
+     print(depth.range_m.shape)             # [2,8,8]，CUDA float32
+@@ -31,19 +31,23 @@ with BatchRenderer(scene.get_geometry(exclude_ids={"vehicle"})) as renderer:
+     numpy_depth = depth.range_m.cpu().numpy()
+ ```
+ 
+-核心 [`BatchRenderer.render(poses, config, only_object=None)`](rendering.py) 输入 CUDA float32 `[B,4,4]` sensor FLU → world 刚体矩阵，B≥1；一个 batch 共用同一 `DepthConfig`，保留输入顺序。调用者保证矩阵有限、旋转合法及末行为 `[0,0,0,1]`，热路径不下载 GPU 数值进行校验。`poses_to_tensor()` 校验 CPU `Pose` 并显式上传；完整横滚、俯仰、Z 均保留。
++核心 [`BatchRenderer.render(poses, config, only_object=None, sampling="pixel")`](rendering.py) 输入 CUDA float32 `[B,4,4]` sensor FLU → world 刚体矩阵，B≥1；一个 batch 共用同一 `DepthConfig`，保留输入顺序。`sampling="pixel"` 为中心采样，`sampling="zone"` 为连续区域最近表面。调用者保证矩阵有限、旋转合法及末行为 `[0,0,0,1]`，热路径不下载 GPU 数值进行校验。`poses_to_tensor()` 校验 CPU `Pose` 并显式上传；完整横滚、俯仰、Z 均保留。
+ 
+ 返回 `RasterBatch` 的 `distance_m` 为 CUDA float32 `[B,H,W]` 原始径向米制距离，未命中为 0；`object_index` 为 CUDA int64 `[B,H,W]`，未命中为 -1，其他值索引 `object_ids`。它还携带 `scene_version / t_ref / map_bounds_m`。`only_object` 使用公开对象 ID，目标独立渲染复用同一 VBO 范围。
+ 
++区域模式额外返回 `hit_point_sensor_m[B,H,W,3]`（CUDA float32，实际传感器 FLU 命中点）和 `triangle_index[B,H,W]`（CUDA int64，全场三角形索引）；未命中分别为零和 -1。距离、物体 ID、三角形 ID 和命中点均来自同一个获胜表面。像素模式这两个字段为 `None`。
++
+ [`sensors.py`](sensors.py) 提供以下公开组装接口；单视角也使用 B=1：
+ 
+ | 接口 | 返回值 |
+ |---|---|
+-| `sample_depth(renderer, config, poses)` | `DepthBatch`：`range_m[B,H,W]`、`object_index[B,H,W]`、对象表、版本和时间 |
++| `sample_depth(renderer, config, poses, sampling="pixel")` | `DepthBatch`：`range_m[B,H,W]`、`object_index[B,H,W]`、对象表、版本和时间；区域模式还携带实际命中点及三角形索引 |
+ | `sample_camera(renderer, config, poses, min_visible_fraction, target_id="target")` | `CameraBatch`：`depth`、`target_mask[B,H,W]`、`target_hint[B,5]`、`visible_fraction[B]`、`unoccluded_pixels[B]` |
+ | `sample_rig(renderer, sensor_config, body_poses)` | `RigBatch`：`tof_m[N,4,H,W]`、`target_hint[N,5]`、`camera`、版本和时间 |
+ | `mounted_poses(body_poses, mounts)` | CUDA `[N,M,4,4]`：批量复合 body → world 与 sensor → body |
+ 
++开发审查可调用 `sample_rig_diagnostics(renderer, config, body_poses)`，返回 `RigDiagnostics`：正式 `rig`、同次 `tof_raw / camera_raw / target_raw` 和实际 GPU 安装位姿。它与普通 rig 共用渲染和后处理，不为中间图另渲染一次。传 `target_id=None` 明确表示场景没有目标，跳过 target-only draw，目标诊断量为零；对应的几何快照也应排除目标。所有这些张量仍在 CUDA，网页服务只在显示边界显式下载。可直接操作的入口见[在线审查工具](../tools/sensor_review/README.md)。
++
+ `sample_rig` 把四路 ToF 展平为 `4N` 个视角，一次 draw；相机全场与目标各一次，总共三个 draw。量程、覆盖、mask、比例和框均为 GPU batch 运算，不按图片循环。ToF 与相机的成像配置分别分组，不要求分辨率相同。当前无 RGB 材质/光照外观，camera 输出几何距离与目标提示。
+ 
+ ## 场景更新与资源
+@@ -67,22 +71,28 @@ assert next_rig.scene_version == version
+ 
+ 每次返回拥有独立的 CUDA 存储，后续 render、sync 或 close 不覆盖旧结果；张量本身仍可被调用方修改。实例只能在创建线程调用和关闭，使用 `with` 或 `close()` 释放。采用 PyTorch 当前 CUDA stream；跨 stream 输入依赖由调用方按正常 PyTorch 规则建立，常量缓存内部处理就绪与存活期。
+ 
+-核心用 layered texture array + instanced draw 批量光栅化，再整数组写 PBO，经 CUDA 一次 D2D 复制到 PyTorch。没有 CPU 图片读回；这仍包含 GPU 复制及 GL/CUDA map/unmap 同步，不是零复制。Pose SSBO 容量只增长；输出按 `(B,H,W)` 缓存，ToF/相机交替不重新分配。动态使用很多尺寸会累积缓存，可用 `release_batch()` 显式释放，不影响场景或已返回的张量。`memory_info` 只统计显式 GL 存储，Torch/驱动开销须另计。
++核心用 layered texture array + instanced draw 批量光栅化，再整数组写 PBO，经 CUDA 一次 D2D 复制到 PyTorch。区域模式的距离/物体附件与命中点/三角形附件写入同一 PBO 后一起复制。没有 CPU 图片读回；这仍包含 GPU 复制及 GL/CUDA map/unmap 同步，不是零复制。Pose SSBO 容量只增长；输出按采样模式及 `(B,H,W)` 缓存，ToF/相机交替不重新分配。动态使用很多尺寸会累积缓存，可用 `release_batch()` 显式释放，不影响场景或已返回的张量。`memory_info` 只统计显式 GL 存储，Torch/驱动开销须另计。
+ 
+ 单批 B 受设备 `GL_MAX_ARRAY_TEXTURE_LAYERS` 限制，超限明确报错；一万个视角应由调用方分块，仍共享同一份场景。rig 的 ToF 为 `4N`，须据此选择 N。输出本身的显存随像素数和 B 增长。
+ 
+ ## 距离、覆盖与目标提示
+ 
+-光学坐标为 FLU：+X 前、+Y 左、+Z 上；图像行向下、列向右，每像素只取中心视线。`DepthConfig` 指定宽高、水平/垂直 FOV、最小和最大视线量程。所有距离是光心到表面的欧氏距离，不是光轴深度。
++光学坐标为 FLU：+X 前、+Y 左、+Z 上；图像行向下、列向右。`DepthConfig` 指定宽高、水平/垂直 FOV、最小和最大视线量程。所有距离是光心到表面的欧氏距离，不是光轴深度。
++
++正式 ToF 把每格视为一个角锥区域。GPU 先裁剪三角形到前向 FOV，再通过投影包围盒分发候选格；每格按四个角锥平面裁剪原三角形，只接受正投影面积的交集。对交集凸多边形，平面垂足在内部则取垂足，否则取各边线段的最近点；其径向距离参与深度比较，获胜片元同时输出距离与身份。没有子格、子射线或中间细像素图。
++
++每格最终只输出一个最近表面。若该点被更近的表面遮挡，遮挡点必在同一个角锥内并产生更小的距离，因此会先胜出；这一归约不等于求出格内所有可见物体及面积。不同方向上的多个可见物体也只保留最近者。相机仍使用像素中心采样来生成距离、可见 mask 与框；通用 `sample_depth` 默认同相机，ToF 行为需显式 `sampling="zone"`，rig 自动选择区域模式。
+ 
+ | `DepthBatch.range_m` 值 | 含义 |
+ |---|---|
+ | 有限米制数 | 最近可信表面，包含最小/最大量程边界 |
+-| 正 `inf` | 从光心到最大量程的整段都在完整地图域内，且没有量程内返回 |
++| 正 `inf` | 测量区域到最大量程全部在完整地图域内，且没有量程内返回；像素模式只要求该中心方向的整段 |
+ | `NaN` | 未知覆盖、域外光心、过近表面或无可信返回 |
+ 
+ 域由公开快照的 `map_bounds_m` 提供，不从顶点极值猜测。无范围元数据时保留可信显式命中，未命中为 NaN。域外光心全部 N/A；有限命中必须在离开地图前。确认空闲的整段覆盖不扩张边界。表面回投使用 `32 * float32_epsilon * max(1m, 光心坐标绝对值, 最大量程)` 数值容差；刚超最大量程但在该预算内保守给 NaN，光栅化保留 guard shell。过近表面依然遮挡后面的物体；身份索引可能保留该命中，不能替代距离有效性。
+ 
++区域模式用实际命中点判断世界域，不能把区域距离沿中心方向回投；格内所有方向到获胜距离也必须已知，否则另一方向的未知区可能存在更近表面，结果为 NaN。空闲判断求角锥中最大量程端点的各世界坐标极值，包含角点、边上驻点及内部驻点；整个区域都在声明域内才允许返回 `inf`。最近表面过近时返回 NaN，保留它的原始身份，不删除该表面后再选择远处背景。
++
+ 相机对全场和目标独立渲染。最近有效表面为目标的像素进入 `target_mask`；无遮挡分母是在图像、有效量程和声明地图域内的目标独立像素数。`visible_fraction` 为可见像素/无遮挡像素，CUDA float64；分母 CUDA int64。零分母或零可见像素总是未检出；比例达到阈值时，对实际可见 mask 求最紧半开框：
+ 
+ ```text
+@@ -95,7 +105,7 @@ assert next_rig.scene_version == version
+ 
+ [`configs/devtools.json`](../configs/devtools.json) 中是开发示例，不是设备标定：四路 ToF 为 8×8、60°×60°、0.05–12 m；相机 160×120、80°×60°、0.01–30 m；四路共心、yaw 为右 -90°/前 0°/左 90°/后 180°，相机前向；可见比例阈值 0.2。
+ 
+-这是无噪声理想针孔中心采样，不模拟物理 ToF 分区响应、畸变、亚像素、抗锯齿或 RGB 外观。球体为内接 64×128 经纬三角网格，存在离散误差，小目标可能没有命中像素。普通局部米制场景使用 float32 光栅化，不提供极端坐标尺度的精度保证。正式接入前替换实际 FOV、量程和完整安装外参，再按需求实现噪声与分区响应。
++ToF 是无噪声的区域最近几何返回，不模拟回波强度、直方图、多回波排序、畸变或 RGB 外观；相机是像素中心几何投影。球体仍为内接 64×128 经纬三角网格，存在形状离散误差。区域裁剪与最近点在 shader 中使用双精度，场景/位姿输入及输出为 float32，仍有坐标量化和浮点边界误差；没有任意尺度精确算术保证。正式接入前需替换实际 FOV、量程和完整安装外参。
+ 
+ ## 运行与核查
+ 
+@@ -109,4 +119,4 @@ just run --gpu python examples/one_frame.py outputs/mapgen/demo.obj \
+ 
+ 例子在导出边界显式下载，输出原始 `observations.npz`、分列有限值/inf/NaN 的 `summary.json` 和内嵌 Plotly 的离线 `one_frame.html`。输入已有 OBJ，输出目录须不存在。
+ 
+-[`verify_sensors.py`](../tests/verify_sensors.py) 用独立解析几何、冻结串行参考、GPU 批量顺序与资源行为验证采样；包含目标往返移动、冷启动对照、世界几何与变换上传检查。常规场景/地图回归用 `just check`。历史串行实现仅存于 [`experiments/sensor_reference.py`](../experiments/sensor_reference.py)，独立 oracle 源保留在 [`verify_sensor_reference.py`](../tests/verify_sensor_reference.py)，正式代码不依赖它们。
++[`verify_sensors.py`](../tests/verify_sensors.py) 用独立解析几何、冻结串行参考、GPU 批量顺序与资源行为验证像素采样及 rig 外参；区域语义的独立解析情况和本次布局回归见 [`verify_tof_zones.py`](../tests/verify_tof_zones.py)。包含目标往返移动、冷启动对照、世界几何与变换上传检查。常规场景/地图回归用 `just check`。历史串行实现仅存于 [`experiments/sensor_reference.py`](../experiments/sensor_reference.py)，独立 oracle 源保留在 [`verify_sensor_reference.py`](../tests/verify_sensor_reference.py)，正式代码不依赖它们。
+diff --git a/devtools/sensors.py b/devtools/sensors.py
+index 59b1b4e..1ae076e 100644
+--- a/devtools/sensors.py
++++ b/devtools/sensors.py
+@@ -31,11 +31,13 @@ class DepthBatch:
+     """Radial ranges and development identities for B simultaneous views.
+ 
+     range_m is CUDA float32 [B,H,W]: finite within inclusive [min,max], +inf
+-    only for a fully covered empty segment, and NaN for unknown coverage,
++    only for a fully covered empty measurement region, and NaN for unknown coverage,
+     too-close surfaces or unavailable returns. object_index is CUDA int64 with
+     -1 for no rasterized hit and otherwise indexes object_ids, including
+     too-close hits. Identities and scene metadata are development diagnostics,
+     never online model inputs. Frozen fields do not make tensors immutable.
++    Zone sampling additionally carries the actual sensor-FLU hit point and
++    global triangle index; these are None for pixel-centre sampling.
+     """
+ 
+     range_m: torch.Tensor
+@@ -43,6 +45,8 @@ class DepthBatch:
+     object_ids: tuple[str, ...]
+     scene_version: int
+     t_ref: float | None
++    hit_point_sensor_m: torch.Tensor | None = None
++    triangle_index: torch.Tensor | None = None
+ 
+ 
+ @dataclass(frozen=True)
+@@ -78,6 +82,24 @@ class RigBatch:
+     t_ref: float | None
+ 
+ 
++@dataclass(frozen=True)
++class RigDiagnostics:
++    """Same-pass development images alongside the formal rig observation.
++
++    Raw images retain the renderer's zero-for-miss radial distances and -1
++    identities, before range and known-map policy. Pose tensors are the exact
++    CUDA float32 mounted poses used by those draws. No image is rendered again
++    for inspection and no tensor is downloaded by this interface.
++    """
++
++    rig: RigBatch
++    tof_raw: RasterBatch
++    camera_raw: RasterBatch
++    target_raw: RasterBatch | None
++    tof_poses: torch.Tensor
++    camera_poses: torch.Tensor
++
++
+ def pixel_directions(config: DepthConfig):
+     """CPU diagnostic FLU unit rays at pixel centers, shape [H,W,3]."""
+     if not isinstance(config, DepthConfig):
+@@ -157,9 +179,9 @@ def mounted_poses(body_poses: torch.Tensor, mounts: Sequence[MountConfig]) -> to
+ 
+ def _depth(raw: RasterBatch, poses: torch.Tensor, config: DepthConfig) -> DepthBatch:
+     ranges = postprocess_depth(raw.distance_m, raw.object_index, poses, config,
+-                               raw.map_bounds_m)
++                               raw.map_bounds_m, hit_point_sensor_m=raw.hit_point_sensor_m)
+     return DepthBatch(ranges, raw.object_index, raw.object_ids,
+-                      raw.scene_version, raw.t_ref)
++                      raw.scene_version, raw.t_ref, raw.hit_point_sensor_m, raw.triangle_index)
+ 
+ 
+ def _same_snapshot(left: RasterBatch, right: RasterBatch) -> None:
+@@ -169,38 +191,62 @@ def _same_snapshot(left: RasterBatch, right: RasterBatch) -> None:
+ 
+ 
+ def sample_depth(renderer: BatchRenderer, config: DepthConfig,
+-                 poses: torch.Tensor) -> DepthBatch:
+-    """Render B complete view poses once and apply range/coverage on CUDA."""
++                 poses: torch.Tensor, *, sampling: str = "pixel") -> DepthBatch:
++    """Render B views with pixel centres or continuous zone-nearest coverage.
++
++    ``sampling='zone'`` returns the nearest surface over each angular cell,
++    with its actual hit point and triangle identity. The formal ToF rig uses
++    this mode; the generic default and camera remain pixel-centre sampling.
++    """
+     _check_poses(poses)
+-    return _depth(renderer.render(poses, config), poses, config)
++    return _depth(renderer.render(poses, config, sampling=sampling), poses, config)
+ 
+ 
+ def sample_camera(renderer: BatchRenderer, config: DepthConfig,
+                   poses: torch.Tensor, min_visible_fraction: float,
+-                  target_id: str = "target") -> CameraBatch:
++                  target_id: str | None = "target") -> CameraBatch:
+     """Two batched draws followed by CUDA target mask and box reductions.
+ 
+     The denominator is target-only coverage at exactly the same poses, image,
+     valid radial range and snapshot. Zero unoccluded or visible pixels means
+     no detection; threshold equality is accepted. Updates belong between calls.
++    Explicit ``target_id=None`` omits the target-only draw and returns zero
++    recognition diagnostics. Physical geometry is still the caller's snapshot.
+     """
++    camera, _, _ = _sample_camera(renderer, config, poses, min_visible_fraction, target_id)
++    return camera
++
++
++def _sample_camera(renderer: BatchRenderer, config: DepthConfig,
++                   poses: torch.Tensor, min_visible_fraction: float,
++                   target_id: str | None):
+     _check_poses(poses)
+     threshold = _finite_number(min_visible_fraction, "min_visible_fraction")
+     if not 0 <= threshold <= 1:
+         raise ValueError("min_visible_fraction must be in [0,1]")
+-    if not isinstance(target_id, str) or not target_id:
+-        raise ValueError("target_id must be a nonempty object ID")
++    if target_id is not None and (not isinstance(target_id, str) or not target_id):
++        raise ValueError("target_id must be a nonempty object ID or None")
+     full = renderer.render(poses, config)
++    depth = _depth(full, poses, config)
++    if target_id is None:
++        count, height, width = depth.range_m.shape
++        camera = CameraBatch(
++            depth,
++            torch.zeros((count, height, width), dtype=torch.bool, device=poses.device),
++            torch.zeros((count, 5), dtype=torch.float32, device=poses.device),
++            torch.zeros(count, dtype=torch.float64, device=poses.device),
++            torch.zeros(count, dtype=torch.int64, device=poses.device),
++        )
++        return camera, full, None
+     if target_id not in full.object_ids:
+         raise ValueError(f"target object {target_id!r} is absent from the scene")
+     target = renderer.render(poses, config, only_object=target_id)
+     _same_snapshot(full, target)
+-    depth = _depth(full, poses, config)
+     measurements = postprocess_camera(depth.range_m, depth.object_index,
+                                       target.distance_m, target.object_index,
+                                       poses, config, full.map_bounds_m,
+                                       full.object_ids.index(target_id), threshold)
+-    return CameraBatch(depth, **measurements)
++    return CameraBatch(depth, **measurements), full, target
+ 
+ 
+ def sample_rig(renderer: BatchRenderer, config: SensorConfig,
+@@ -212,16 +258,33 @@ def sample_rig(renderer: BatchRenderer, config: SensorConfig,
+     all three draws; explicit synchronization of changed scene facts is the
+     caller's responsibility before the next sample call.
+     """
++    return sample_rig_diagnostics(renderer, config, body_poses).rig
++
++
++def sample_rig_diagnostics(renderer: BatchRenderer, config: SensorConfig,
++                           body_poses: torch.Tensor, *,
++                           target_id: str | None = "target") -> RigDiagnostics:
++    """Sample the formal rig and retain its same-pass raw CUDA images.
++
++    ``target_id=None`` disables target recognition: mask, hint, fraction and
++    count are zero and no target-only draw is made. To represent a physically
++    absent target, the caller also excludes it from the geometry snapshot.
++    A named target must exist. This optional inspection path uses the
++    same range and recognition implementation as ``sample_rig``.
++    """
+     if not isinstance(config, SensorConfig):
+         raise TypeError("config must be a SensorConfig")
+     _check_poses(body_poses)
+     count = body_poses.shape[0]
+     tof_poses = mounted_poses(body_poses, config.tof_mounts).reshape(-1, 4, 4)
+     camera_poses = mounted_poses(body_poses, (config.camera_mount,))[:, 0]
+-    tof = sample_depth(renderer, config.tof, tof_poses)
+-    camera = sample_camera(renderer, config.camera, camera_poses, config.min_visible_fraction)
++    tof_raw = renderer.render(tof_poses, config.tof, sampling="zone")
++    tof = _depth(tof_raw, tof_poses, config.tof)
++    camera, camera_raw, target_raw = _sample_camera(
++        renderer, config.camera, camera_poses, config.min_visible_fraction, target_id)
+     if (tof.scene_version != camera.depth.scene_version or tof.object_ids != camera.depth.object_ids
+             or tof.t_ref != camera.depth.t_ref):
+         raise RuntimeError("scene changed during rig sampling; update only between batches")
+     tof_m = tof.range_m.reshape(count, 4, config.tof.height, config.tof.width)
+-    return RigBatch(tof_m, camera.target_hint, camera, tof.scene_version, tof.t_ref)
++    rig = RigBatch(tof_m, camera.target_hint, camera, tof.scene_version, tof.t_ref)
++    return RigDiagnostics(rig, tof_raw, camera_raw, target_raw, tof_poses, camera_poses)
+diff --git a/docker/Dockerfile b/docker/Dockerfile
+index a78b1f6..6d41825 100644
+--- a/docker/Dockerfile
++++ b/docker/Dockerfile
+@@ -23,15 +23,21 @@ ENV PATH="/opt/venv/bin:${PATH}" \
+     PYTHONPYCACHEPREFIX=/tmp/python-cache \
+     PIP_CACHE_DIR=/tmp/pip-cache
+ 
++# CUDA 12.8 wheels support the Blackwell GPU used by the sensor checks. Install
++# main's explicit CUDA build before copying sources, so edits reuse this layer.
++RUN python -m pip install --no-cache-dir torch==2.9.1+cu128 --index-url https://download.pytorch.org/whl/cu128
++
++# Local browser modules are pinned and integrity-checked, then served by the
++# online review tool. No CDN requests or host JavaScript installation at runtime.
++COPY docker/fetch_review_assets.py /tmp/fetch_review_assets.py
++RUN python /tmp/fetch_review_assets.py
++
+ WORKDIR /workspace
+ COPY pyproject.toml README.md ./
+ COPY src ./src
+ COPY devtools ./devtools
+ COPY training ./training
+-# CUDA 12.8 wheels support the Blackwell GPU used by the sensor checks. Install
+-# the explicit CUDA build first; it also satisfies the sensors extra pin.
+-RUN python -m pip install --no-cache-dir torch==2.7.1+cu128 --index-url https://download.pytorch.org/whl/cu128 \
+-    && python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer,sensors]'
++RUN python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer,sensors]'
+ ENV PYTHONPYCACHEPREFIX=/tmp/runtime-python-cache
+ 
+ CMD ["bash"]
+diff --git a/docker/README.md b/docker/README.md
+index 60e658f..80fb9b6 100644
+--- a/docker/README.md
++++ b/docker/README.md
+@@ -34,7 +34,9 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时
+ 
+ 源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。不要在宿主创建项目 Python 环境，也不要在 `run` 中用 root 临时补装依赖。
+ 
+-`sensors` extra 固定 ModernGL / glcontext / PyTorch；镜像从官方 CUDA 12.8 wheel 源安装 `torch==2.7.1+cu128`，同时安装 GLVND 的 EGL/GL 运行库。传感器用无窗口 EGL，不需要 X server；要求 OpenGL 4.5、layered instancing 扩展和 NVIDIA CUDA/GL 互操作。`--gpu` 通过已有 NVIDIA Container Toolkit 暴露 GPU 和 `compute,graphics,utility` 驱动能力，不改变宿主服务、安装或用户组。未暴露 GPU、EGL/CUDA 初始化失败或检测到软件渲染时明确报错。核心的输入、输出及传感器后处理使用 CUDA 张量，不需要自行编译 C++/CUDA 绑定。
++项目基础依赖与 main 统一为 PyTorch 2.9.1；镜像从官方 CUDA 12.8 wheel 源安装 `torch==2.9.1+cu128`。`sensors` extra 固定 ModernGL / glcontext，镜像同时安装 GLVND 的 EGL/GL 运行库。传感器用无窗口 EGL，不需要 X server；要求 OpenGL 4.5、layered instancing 扩展和 NVIDIA CUDA/GL 互操作。`--gpu` 通过已有 NVIDIA Container Toolkit 暴露 GPU 和 `compute,graphics,utility` 驱动能力，不改变宿主服务、安装或用户组。未暴露 GPU、EGL/CUDA 初始化失败或检测到软件渲染时明确报错。核心的输入、输出及传感器后处理使用 CUDA 张量，不需要自行编译 C++/CUDA 绑定。
++
++在线审查工具的 Three.js 0.180.0 由 [fetch_review_assets.py](fetch_review_assets.py) 在镜像构建时下载，使用固定 SHA-512 校验 npm 包，仅提取实际使用的模块及 MIT 许可。页面从同一服务加载这些本地资源，运行时无需 CDN。使用入口见 [在线审查工具](../tools/sensor_review/README.md)。
+ 
+ 独立 worktree 可使用单独镜像标签，避免重建覆盖其他任务的镜像；build/run 使用同一变量即可：
+ 
+diff --git a/docs/origins.md b/docs/origins.md
+index 1f0385a..82094cb 100644
+--- a/docs/origins.md
++++ b/docs/origins.md
+@@ -21,10 +21,18 @@ OBJ 实体、地面平面、CLI、校验和文件保存为本仓实现，未采
+ 
+ 投影、光栅候选面的像素中心平面求交、径向深度排序、覆盖判断、可见 mask 与框为本仓新实现，没有提取旧射线内核或矩形 mask。后端通过 [ModernGL 5.12.0](https://pypi.org/project/moderngl/5.12.0/)（MIT）与 [glcontext 3.0.0](https://pypi.org/project/glcontext/3.0.0/)（MIT）调用 EGL/OpenGL；依赖由容器安装，不复制其源代码。接口依据见 [ModernGL EGL context](https://moderngl.readthedocs.io/en/5.12.0/topics/context.html) 与 [NVIDIA 容器 graphics 能力](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html)。
+ 
++ToF 区域测距的前向裁剪、投影包围盒候选、三角形与格锥半空间裁剪、凸多边形最近点及距离/ID 联合选择为本仓实现，未复制外部 shader。按区域交叠分发候选的概念对照 [NVIDIA GPU Gems 2, Chapter 42](https://developer.nvidia.com/gpugems/gpugems2/part-v-image-oriented-computing/chapter-42-conservative-rasterization)；实际用候选包围矩形后做精确裁剪，不依赖厂商保守光栅扩展。算法、接口和独立几何验证见[传感器说明](../devtools/sensors.md)。
++
++区域回归的 [`sensor-review-pillars-20.obj`](../tests/fixtures/sensor-review-pillars-20.obj) 固定本仓地图生成器产生的 seed-3、20 柱地图，用于重现实际审查布局；不是外部地图数据。几何与最初 `outputs/sensor_perf/maps/pillars-20.obj` 相同，测试记录 SHA-256，避免依赖未跟踪的运行产物。
++
+ 只读对照过 `C5-lidar-yopo` 的 `ab9cbfaef8216b8a47a952b40d199fd7e5cef134`：`simulation/Simulator/src/include/tof_renderer.hpp` 的 `renderToFSenseMImage` 用于理解采样、测距处理与输出的阶段职责；`target_geometry.hpp` 的 `projectVisibleTarget` / `renderMono8Mask` 用于核对可见性与矩形填充的差别。其根许可及 `simulation/LICENSE.upstream` 为 MIT，TJU-Aerial-Robotics 2024。没有复制函数，没有采用其子射线分位、噪声参数、2 m / 4 m 阈值或整框 mask。
+ 
+ 开发 FOV、量程、分辨率、安装外参与识别阈值在[传感器配置说明](../devtools/sensors.md#当前显式开发假设)中明确为示例。器件名义 FOV 的对照来源为 [Nooploop TOFSense-M 官方 FAQ Q5](https://support.nooploop.com/cn/tofsense/FAQ-for-tOfsense/)，不作为当前示例的标定数据。独立解析几何和行为验证入口为 [verify_sensors.py](../tests/verify_sensors.py)。
+ 
+-正式批量核心由本仓 [OpenGL 批量实验](../experiments/opengl_batch_eval/README.md)的 layered texture array、instanced draw、Pose SSBO 与 CUDA/PBO 互操作机制整理，传感器 GPU 后处理由本仓 [PyTorch3D 对比实验](../experiments/pytorch3d_render_eval/README.md)中的张量实现提取。正式路径不依赖实验模块或 PyTorch3D；本次增加球体局部网格与对象变换表，公开世界几何接口不变。PyTorch 2.7.1+cu128 由 Docker 安装，用于 CUDA 张量和后处理，未复制其源码；GL/CUDA 函数通过 ctypes 调用运行库，无自编译原生绑定。版本、显存和运行边界见[传感器接口](../devtools/sensors.md)。
++正式批量核心由本仓 [OpenGL 批量实验](../experiments/opengl_batch_eval/README.md)的 layered texture array、instanced draw、Pose SSBO 与 CUDA/PBO 互操作机制整理，传感器 GPU 后处理由本仓 [PyTorch3D 对比实验](../experiments/pytorch3d_render_eval/README.md)中的张量实现提取。正式路径不依赖实验模块或 PyTorch3D；本次增加球体局部网格与对象变换表，公开世界几何接口不变。PyTorch 2.9.1+cu128 与 main 的依赖版本统一，由 Docker 安装，用于 CUDA 张量和后处理，未复制其源码；GL/CUDA 函数通过 ctypes 调用运行库，无自编译原生绑定。版本、显存和运行边界见[传感器接口](../devtools/sensors.md)。
+ 
+ 原串行 sensor 固定在提交 `104c3ee1f167a2c4f3578672d2a6f86180c53012`，保留为 [sensor_reference.py](../experiments/sensor_reference.py)，仅调整包导入和说明；原解析 oracle 保留在 [verify_sensor_reference.py](../tests/verify_sensor_reference.py)。旧实验改为显式引用该基线，历史测量不会因正式 sensor 迁移而悄悄换成批量后端。
++
++## 在线可视化审查
++
++[审查网页](../tools/sensor_review/README.md)通过 Three.js 0.180.0（MIT）展示同一份后端解析的 mesh 和采样结果，使用其 OrbitControls 操作浏览视角；模块与许可由 Docker 按固定包完整性值安装，不复制旧工程查看器。Three.js 负责展示，正式 sensor 负责采样。RViz 式“按下定位置、拖动定朝向、松开确认”仅参考交互方式，没有引入 ROS 或复制 RViz 源码。相机平移调用本仓 `devtools.trajectory.fit_trajectory`，完整姿态使用前端四元数插值。
+diff --git a/justfile b/justfile
+index 9276f66..5bf5655 100644
+--- a/justfile
++++ b/justfile
+@@ -19,6 +19,15 @@ check: map-build
+ # 在真实 GPU 上运行传感器解析几何与行为检查
+ check-sensors:
+     ./docker/dev.sh run --gpu python tests/verify_sensors.py --results outputs/sensors/verification.json
++    ./docker/dev.sh run --gpu python tests/verify_tof_zones.py --results outputs/sensors/tof-zones-verification.json
++
++# 在线窗口化 sensor 审查，浏览器打开终端给出的地址
++review *args:
++    ./docker/dev.sh run --web --gpu python tools/sensor_review/server.py --host 0.0.0.0 --port 8080 "$@"
++
++# 实际 HTTP + 正式 GPU sensor 的在线审查接口检查
++check-review:
++    ./docker/dev.sh run --gpu python tests/verify_sensor_review.py --results outputs/sensor_review/verification.json
+ 
+ # 在容器内执行命令；无参数进入 Bash
+ run *args:
+diff --git a/tests/verify_sensors.py b/tests/verify_sensors.py
+index 93ea504..57be6aa 100644
+--- a/tests/verify_sensors.py
++++ b/tests/verify_sensors.py
+@@ -432,6 +432,8 @@ def verify_batch_and_runtime():
+ 
+ 
+ def verify_rig():
++    from verify_tof_zones import analytic_box_zones
++
+     walls = (("right", ((-20, 20), (-2.5, -2), (1, 39))),
+              ("front", ((4, 4.5), (-20, 20), (1, 39))),
+              ("left", ((-20, 20), (6, 6.5), (1, 39))),
+@@ -465,21 +467,16 @@ def verify_rig():
+         assert rig.target_hint.shape == (2, 5) and rig.target_hint.device == renderer.device
+         assert rig.scene_version == rig.camera.depth.scene_version and rig.t_ref == rig.camera.depth.t_ref == 12.5
+         assert renderer.geometry_info["instanced_draw_count"] - before == 3
+-        same_ranges(host(rig.tof_m), np.stack([item.tof_m for item in expected]), 3e-5)
+         close(host(rig.target_hint), np.stack([item.target_hint for item in expected]), 1e-7)
+         for body_index, pose in enumerate(poses):
+-            rays = ref.reference_rays(config.tof)
+-            independent = np.empty((8, 8))
+-            origin = np.asarray(pose.position_m) + ref.rotate_euler(custom.position_m, *body_angles)
+-            for row in range(8):
+-                for col in range(8):
+-                    direction = ref.rotate_euler(ref.rotate_euler(rays[row, col], *mount_angles), *body_angles)
+-                    independent[row, col] = min(ref.ray_box(origin, direction, bounds) for _, bounds in walls)
+-            independent[independent > config.tof.max_range_m] = math.inf
+-            same_ranges(host(rig.tof_m)[body_index, 0], independent, 3e-5)
++            for mount_index in range(4):
++                independent, _ = analytic_box_zones(config.tof, mounts[body_index, mount_index], walls)
++                same_ranges(host(rig.tof_m)[body_index, mount_index], independent, 3e-5)
+         tensor_contract(rig.camera, len(poses), config.camera, renderer.device)
+     return {"body_poses": 2, "tof_views": 8, "full_and_target_camera_views": 4,
+-            "instanced_draws": 3, "mount_geometry": "independent Euler composition and slab intersections"}
++            "instanced_draws": 3,
++            "mount_geometry": "independent Euler composition and continuous box-face/zone active-set quadratic programs",
++            "camera_reference": "unchanged center-pixel GL visibility and hints"}
+ 
+ 
+ def verify_metadata_and_allocation_failure():

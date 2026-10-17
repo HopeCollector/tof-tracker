@@ -1,0 +1,72 @@
+[
+  {
+    "name": "verification-single_cell_tight_gs",
+    "command": [
+      "/opt/venv/bin/python",
+      "experiments/tof_pipeline_profile/verify_candidates.py",
+      "--variant",
+      "single_cell_tight_gs",
+      "--output",
+      "outputs/tof_pipeline_profile/verification-single_cell_tight_gs.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "verification-range_aabb_gs",
+    "command": [
+      "/opt/venv/bin/python",
+      "experiments/tof_pipeline_profile/verify_candidates.py",
+      "--variant",
+      "range_aabb_gs",
+      "--output",
+      "outputs/tof_pipeline_profile/verification-range_aabb_gs.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "fragment-parts20-b1",
+    "command": [
+      "/opt/venv/bin/python",
+      "experiments/tof_pipeline_profile/worker.py",
+      "--map",
+      "outputs/sensor_perf/maps/pillars-20.obj",
+      "--batch",
+      "1",
+      "--groups",
+      "variants",
+      "--variants",
+      "baseline",
+      "cheap_fragment",
+      "clip_only_fragment",
+      "clip_area_only_fragment",
+      "--repeats",
+      "15",
+      "--output",
+      "outputs/tof_pipeline_profile/fragment-parts20-b1.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "fragment-parts5000-b1",
+    "command": [
+      "/opt/venv/bin/python",
+      "experiments/tof_pipeline_profile/worker.py",
+      "--map",
+      "outputs/sensor_perf/maps/pillars-5000.obj",
+      "--batch",
+      "1",
+      "--groups",
+      "variants",
+      "--variants",
+      "baseline",
+      "cheap_fragment",
+      "clip_only_fragment",
+      "clip_area_only_fragment",
+      "--repeats",
+      "15",
+      "--output",
+      "outputs/tof_pipeline_profile/fragment-parts5000-b1.json"
+    ],
+    "returncode": 0
+  }
+]

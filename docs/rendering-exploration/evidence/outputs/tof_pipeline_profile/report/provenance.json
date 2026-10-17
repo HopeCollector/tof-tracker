@@ -1,0 +1,23 @@
+{
+  "recorded_utc": "2026-10-16T13:05:38.573717+00:00",
+  "workspace": "/workspace",
+  "head_verified_on_host": "4bd11eb006bd4d633541de0e80e4a0fbc19511f6",
+  "docker_image": "tof-tracker-sensor-review:dev",
+  "docker_image_id": "sha256:ab236da17b260e327c81e61c5fab8f8d716c4ab1758cf727ab5893f242dc1e7d",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "torch": "2.9.1+cu128",
+  "production_files_unchanged": true,
+  "source_hashes": {
+    "devtools/rendering.py": [
+      "fe0a8fa1a8239c4ea0bde686603d9ae886b9a2fe706f9b116e29c90dbb7663c5"
+    ],
+    "devtools/_zone_shaders.py": [
+      "a18c77d5ff042c5d76836b944fea8745b0c9c89d667d9a5c1928b85c88f6b101"
+    ],
+    "devtools/_gl_cuda.py": [
+      "701dc60c8f316651bedf8281e8b58ff4c35f6b22a786fffcf5a66f3a55e169bb"
+    ]
+  },
+  "no_commit_push_or_pr_update": true,
+  "review_service_unchanged": true
+}

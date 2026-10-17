@@ -1,0 +1,74 @@
+{
+  "timing_cells": 72,
+  "validation_cases": 30,
+  "all_batch_cases": 36,
+  "exact_all_outputs": true,
+  "pixel_comparisons": 27104448,
+  "measured_sources_unchanged": true,
+  "added_files": [
+    "experiments/opengl_batch_eval/verify_batches.py"
+  ],
+  "result_bytes": 383696,
+  "matched_b256": [
+    {
+      "pillars": 20,
+      "mode": "tof",
+      "batch_views": 256,
+      "reference_ms": 59.4628980034031,
+      "batch_ms": 0.8979759877547622,
+      "reference_views_per_second": 4305.20557516973,
+      "batch_views_per_second": 285085.5741032507,
+      "speed_ratio": 66.21880630915317
+    },
+    {
+      "pillars": 20,
+      "mode": "camera",
+      "batch_views": 256,
+      "reference_ms": 717.487654008437,
+      "batch_ms": 26.265450986102223,
+      "reference_views_per_second": 356.8005645390376,
+      "batch_views_per_second": 9746.643990063474,
+      "speed_ratio": 27.316784105023725
+    },
+    {
+      "pillars": 500,
+      "mode": "tof",
+      "batch_views": 256,
+      "reference_ms": 62.88635000237264,
+      "batch_ms": 1.1916779913008213,
+      "reference_views_per_second": 4070.835721747905,
+      "batch_views_per_second": 214823.13332022983,
+      "speed_ratio": 52.77126074446223
+    },
+    {
+      "pillars": 500,
+      "mode": "camera",
+      "batch_views": 256,
+      "reference_ms": 710.7528100023046,
+      "batch_ms": 27.05964699271135,
+      "reference_views_per_second": 360.1814813777098,
+      "batch_views_per_second": 9460.581657586104,
+      "speed_ratio": 26.26615233353744
+    },
+    {
+      "pillars": 5000,
+      "mode": "tof",
+      "batch_views": 256,
+      "reference_ms": 66.60629500402138,
+      "batch_ms": 2.4668460246175528,
+      "reference_views_per_second": 3843.4805596759875,
+      "batch_views_per_second": 103776.2379351135,
+      "speed_ratio": 27.000588743412827
+    },
+    {
+      "pillars": 5000,
+      "mode": "camera",
+      "batch_views": 256,
+      "reference_ms": 705.1677039999049,
+      "batch_ms": 30.82117100711912,
+      "reference_views_per_second": 363.0342095190941,
+      "batch_views_per_second": 8305.979027885369,
+      "speed_ratio": 22.879328752208156
+    }
+  ]
+}

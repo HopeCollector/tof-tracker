@@ -1,0 +1,44 @@
+{
+  "gl_version": "4.5.0 NVIDIA 595.91.07",
+  "renderer": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+  "extensions": [
+    "GL_ARB_buffer_storage",
+    "GL_ARB_direct_state_access",
+    "GL_ARB_shader_storage_buffer_object",
+    "GL_ARB_shader_viewport_layer_array",
+    "GL_ARB_viewport_array",
+    "GL_EXT_direct_state_access",
+    "GL_NV_shader_storage_buffer_object",
+    "GL_NV_viewport_array2"
+  ],
+  "ctx_dict": {
+    "mglo": "Context",
+    "version_code": "int",
+    "_info": "dict",
+    "_extensions": "set",
+    "extra": "NoneType",
+    "_gc_mode": "NoneType",
+    "_objects": "deque",
+    "_screen": "NoneType",
+    "fbo": "NoneType"
+  },
+  "limits": {
+    "GL_MAX_ARRAY_TEXTURE_LAYERS": 2048,
+    "GL_MAX_VIEWPORTS": 16,
+    "GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS": 96,
+    "GL_MAX_FRAMEBUFFER_LAYERS": 2048,
+    "GL_MAX_SHADER_STORAGE_BLOCK_SIZE": 2147483647
+  },
+  "torch": "2.7.1+cu128",
+  "cuda": "12.8",
+  "eglGetCurrentContext": 95025230953137,
+  "eglGetCurrentDisplay": 95025230688080,
+  "eglGetCurrentSurface": null,
+  "cuda_gl_buffer_roundtrip": {
+    "passed": true,
+    "mapped_bytes": 4096,
+    "cuda_library": "/opt/yopo/lib/python3.10/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12"
+  },
+  "vertex_layer_program": true,
+  "errors": 0
+}

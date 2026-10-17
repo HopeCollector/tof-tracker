@@ -1,0 +1,362 @@
+{
+  "status": "failed",
+  "backend": "formal OpenGL layered CUDA sensor",
+  "device": "NVIDIA GeForce RTX 5070 Ti",
+  "checks": [
+    {
+      "name": "strict_sensor_config",
+      "status": "passed",
+      "detail": [
+        "immutable explicit sensor facts; strict finite/nonboolean values, ranges/FOV/resolution/8x8/mounts; one JSON read, legacy compatibility and complete exact-key sensor schema"
+      ]
+    },
+    {
+      "name": "independent_planes_boxes_wide_fov",
+      "status": "passed",
+      "detail": {
+        "boxes_vs_frozen_reference": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 189,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "boxes_independent": {
+          "oracle_identity_disagreement_pixels": 4,
+          "frozen_reference_identity_disagreement_pixels": 4,
+          "oracle_distance_disagreement_pixels": 4,
+          "independent_oracle_status": "known_reference_failure",
+          "known_reference_failures": [
+            {
+              "batch_row_col": [
+                1,
+                2,
+                0
+              ],
+              "analytic_range_m": 6.639998799916135,
+              "frozen_reference_range_m": 3.814467430114746,
+              "formal_sensor_range_m": 3.814467430114746,
+              "analytic_object_id": "map/far_wall",
+              "frozen_reference_object_id": "map/upper_left",
+              "formal_sensor_object_id": "map/upper_left"
+            },
+            {
+              "batch_row_col": [
+                1,
+                2,
+                1
+              ],
+              "analytic_range_m": 6.333441008597916,
+              "frozen_reference_range_m": 3.638359546661377,
+              "formal_sensor_range_m": 3.638359546661377,
+              "analytic_object_id": "map/far_wall",
+              "frozen_reference_object_id": "map/upper_left",
+              "formal_sensor_object_id": "map/upper_left"
+            },
+            {
+              "batch_row_col": [
+                1,
+                2,
+                2
+              ],
+              "analytic_range_m": 6.105053875955545,
+              "frozen_reference_range_m": 3.5071582794189453,
+              "formal_sensor_range_m": 3.5071582794189453,
+              "analytic_object_id": "map/far_wall",
+              "frozen_reference_object_id": "map/upper_left",
+              "formal_sensor_object_id": "map/upper_left"
+            },
+            {
+              "batch_row_col": [
+                1,
+                2,
+                3
+              ],
+              "analytic_range_m": 5.96382490685951,
+              "frozen_reference_range_m": 3.4260268211364746,
+              "formal_sensor_range_m": 3.4260268211364746,
+              "analytic_object_id": "map/far_wall",
+              "frozen_reference_object_id": "map/upper_left",
+              "formal_sensor_object_id": "map/upper_left"
+            }
+          ],
+          "policy": "same per-pixel errors as frozen reference; all other pixels retain 2e-5 m acceptance; all new disagreements fail"
+        },
+        "ground_declared_True": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 15,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "ground_declared_False": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 15,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "wide_fov_witness": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1920,
+          "empty_pixels": 1129,
+          "unavailable_pixels": 23
+        },
+        "witness_independent_abs_m": 3.067238864673527e-06
+      }
+    },
+    {
+      "name": "range_and_coverage",
+      "status": "passed",
+      "detail": {
+        "inclusive_min": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "inclusive_max": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "too_close": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "beyond_range": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 1,
+          "unavailable_pixels": 0
+        },
+        "camera_plane_crossing_occluder": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 9
+        },
+        "uncertain_near_max": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "empty_declared_True": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 1,
+          "unavailable_pixels": 0
+        },
+        "hit_declared_True": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "empty_declared_False": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "hit_declared_False": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "uncovered_empty": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "in_domain_hit_outside_origin": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        }
+      }
+    },
+    {
+      "name": "batched_camera_visibility",
+      "status": "passed",
+      "detail": {
+        "clear": {
+          "finite_max_abs_m": 1.9073486328125e-06,
+          "finite_pixels": 1972,
+          "empty_pixels": 12428,
+          "unavailable_pixels": 0
+        },
+        "sphere_independent": {
+          "silhouette_disagreement_pixels": 0,
+          "interior_max_abs_m": 0.00184315934578283
+        },
+        "zero_denominator": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 14400,
+          "unavailable_pixels": 0
+        },
+        "half_occlusion": {
+          "finite_max_abs_m": 9.5367431640625e-07,
+          "finite_pixels": 8186,
+          "empty_pixels": 6214,
+          "unavailable_pixels": 0
+        },
+        "inclusive_threshold": {
+          "finite_max_abs_m": 9.5367431640625e-07,
+          "finite_pixels": 2732,
+          "empty_pixels": 2068,
+          "unavailable_pixels": 0
+        },
+        "threshold_reject": {
+          "finite_max_abs_m": 9.5367431640625e-07,
+          "finite_pixels": 2732,
+          "empty_pixels": 2068,
+          "unavailable_pixels": 0
+        },
+        "full_occlusion": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 14400,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "target_outside_declared_domain": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "target_exact_domain_boundary": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        }
+      }
+    },
+    {
+      "name": "batch_order_storage_stream_thread",
+      "status": "passed",
+      "detail": {
+        "renderer": {
+          "GL_VENDOR": "NVIDIA Corporation",
+          "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+          "GL_VERSION": "4.5.0 NVIDIA 595.91.07"
+        },
+        "48_views_frozen_reference": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1680,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "48_views_independent": {
+          "oracle_identity_disagreement_pixels": 0,
+          "frozen_reference_identity_disagreement_pixels": 0,
+          "oracle_distance_disagreement_pixels": 0,
+          "independent_oracle_status": "passed",
+          "known_reference_failures": [],
+          "policy": "same per-pixel errors as frozen reference; all other pixels retain 2e-5 m acceptance; all new disagreements fail"
+        },
+        "mutated_cuda_pose_storage": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1680,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "256_views_frozen_reference": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 16384,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "shared_geometry": {
+          "scene_geometry_buffer_name": 1,
+          "scene_geometry_buffer_bytes": 1355928,
+          "geometry_uploads": 1,
+          "cpu_image_readbacks": 0,
+          "per_view_draw_calls": 0
+        }
+      }
+    },
+    {
+      "name": "external_rig_mounts",
+      "status": "passed",
+      "detail": {
+        "body_poses": 2,
+        "tof_views": 8,
+        "full_and_target_camera_views": 4,
+        "instanced_draws": 3,
+        "mount_geometry": "independent Euler composition and slab intersections"
+      }
+    },
+    {
+      "name": "metadata_and_allocation_failure",
+      "status": "passed",
+      "detail": {
+        "invalid_metadata_cases": 3,
+        "allocation_failure": "propagated and closed",
+        "previous_output": "retained after failed allocation and close"
+      }
+    },
+    {
+      "name": "postprocess_pending_cache_streams",
+      "status": "failed",
+      "error_type": "AssertionError",
+      "error": "probe failed to create a genuinely pending cache",
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/tests/verify_sensors.py\", line 671, in run\n    detail = action()\n  File \"/workspace/tests/verify_sensors.py\", line 554, in verify_postprocess_cache_streams\n    assert inserted and not cache_ready.query(), \"probe failed to create a genuinely pending cache\"\nAssertionError: probe failed to create a genuinely pending cache\n"
+    },
+    {
+      "name": "target_A_B_A_transform_sync",
+      "status": "passed",
+      "detail": {
+        "sync_1_cold_renderer": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 9094,
+          "empty_pixels": 5306,
+          "unavailable_pixels": 0
+        },
+        "sync_1_frozen_reference": {
+          "finite_max_abs_m": 4.76837158203125e-06,
+          "finite_pixels": 9094,
+          "empty_pixels": 5306,
+          "unavailable_pixels": 0
+        },
+        "sync_2_cold_renderer": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 8206,
+          "empty_pixels": 6194,
+          "unavailable_pixels": 0
+        },
+        "sync_2_frozen_reference": {
+          "finite_max_abs_m": 1.430511474609375e-06,
+          "finite_pixels": 8206,
+          "empty_pixels": 6194,
+          "unavailable_pixels": 0
+        },
+        "versions": [
+          0,
+          1,
+          2
+        ],
+        "visible_fraction_A_B_A": [
+          0.5,
+          1.0,
+          0.5
+        ],
+        "moving_objects_uploaded_bytes": 128
+      }
+    }
+  ],
+  "acceptance": {
+    "finite_atol_m": 2e-05,
+    "new_category_or_identity_errors": 0,
+    "camera_mask_hint_count_errors": 0,
+    "moving_vs_cold_atol_m": 0
+  },
+  "scope": "noiseless mesh pinhole observations; explicit assertion downloads only",
+  "check_groups": 9
+}

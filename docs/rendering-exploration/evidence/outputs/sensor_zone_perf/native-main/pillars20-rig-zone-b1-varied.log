@@ -1,0 +1,16 @@
+{"stage": "provenance", "elapsed_s": 0.0007792059986968525, "mode": "rig", "batch": 1}
+{"stage": "cuda_init", "elapsed_s": 0.02014369299831742, "mode": "rig", "batch": 1}
+{"stage": "scene_load", "elapsed_s": 0.09127576899845735, "mode": "rig", "batch": 1}
+{"stage": "pose_upload", "elapsed_s": 0.09688625899980252, "mode": "rig", "batch": 1}
+{"stage": "renderer_setup", "elapsed_s": 0.09781710499919427, "mode": "rig", "batch": 1}
+{"stage": "renderer_ready", "elapsed_s": 0.20353638599954138, "mode": "rig", "batch": 1}
+{"stage": "first_forward", "elapsed_s": 0.20358379599929322, "mode": "rig", "batch": 1}
+{"stage": "first_forward_done", "elapsed_s": 0.4609030639985576, "mode": "rig", "batch": 1}
+{"stage": "pipeline_measure", "elapsed_s": 0.4610618949991476, "mode": "rig", "batch": 1}
+{"stage": "production_parity", "elapsed_s": 0.7044310530000075, "mode": "rig", "batch": 1}
+{"stage": "postprocess_measure", "elapsed_s": 0.7194894399999612, "mode": "rig", "batch": 1}
+{"stage": "mount_measure", "elapsed_s": 0.8187623159992654, "mode": "rig", "batch": 1}
+{"stage": "end_to_end_measure", "elapsed_s": 0.8366095219989802, "mode": "rig", "batch": 1}
+{"stage": "gl_draw_probe", "elapsed_s": 1.0949402669994015, "mode": "rig", "batch": 1}
+{"stage": "complete", "elapsed_s": 1.111896666998291, "mode": "rig", "batch": 1}
+{"status": "ok", "mode": "rig", "sampling": "zone", "batch": 1, "output": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b1-varied.json", "end_to_end_median_ms": 6.210929499502527, "error": null}

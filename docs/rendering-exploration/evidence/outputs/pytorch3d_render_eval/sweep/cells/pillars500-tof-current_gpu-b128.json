@@ -1,0 +1,105 @@
+{
+  "status": "ok",
+  "backend": "current_gpu",
+  "mode": "tof",
+  "batch_views": 128,
+  "pillars": 500,
+  "torch_memory_fraction_cap": 0.8,
+  "output_location": "cuda:0",
+  "timing_scope": "prepared input poses; warm scene; render + required postprocessing; synchronized wall",
+  "grad_enabled": false,
+  "scene": {
+    "map": "outputs/pytorch3d_render_eval/sweep/maps/pillars-500.obj",
+    "sha256": "07223be6eb755914209b8a7636b451bd9a43d0a83115ccea751db389c6e57dac",
+    "pillars": 500,
+    "target_position_m": [
+      4,
+      0,
+      1.5
+    ]
+  },
+  "config": {
+    "width": 8,
+    "height": 8,
+    "hfov_deg": 60.0,
+    "vfov_deg": 60.0,
+    "min_range_m": 0.05,
+    "max_range_m": 12.0
+  },
+  "base_prepare_ms": 123.35645899293013,
+  "batch_prepare_ms": 0,
+  "geometry": {
+    "triangle_count": 22130,
+    "geometry_uploads": 1,
+    "renderer": {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "3.3.0 NVIDIA 595.91.07"
+    }
+  },
+  "first_forward_ms": 34.24838199862279,
+  "first_forward_memory": {
+    "allocated_bytes": 65536,
+    "reserved_bytes": 2097152,
+    "peak_allocated_bytes": 65536,
+    "peak_reserved_bytes": 2097152
+  },
+  "output_tensors": {
+    "range_m": {
+      "shape": [
+        128,
+        8,
+        8
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0"
+    },
+    "object_index": {
+      "shape": [
+        128,
+        8,
+        8
+      ],
+      "dtype": "torch.int32",
+      "device": "cuda:0"
+    }
+  },
+  "first_output_summary": {
+    "finite": 7381,
+    "inf": 811,
+    "nan": 0
+  },
+  "end_to_end": {
+    "wall_ms": [
+      30.30382699216716,
+      31.258002010872588,
+      30.625229002907872,
+      29.816333000781015,
+      31.491394009208307
+    ],
+    "wall_median_ms": 30.625229002907872,
+    "wall_p95_ms": 31.444715609541163,
+    "repeats": 5,
+    "cuda_event_span_ms": [
+      31.331296920776367,
+      30.234943389892578,
+      30.077280044555664
+    ],
+    "cuda_event_span_median_ms": 30.234943389892578,
+    "views_per_second": 4179.560583460335
+  },
+  "warm_memory": {
+    "allocated_bytes": 0,
+    "reserved_bytes": 2097152,
+    "peak_allocated_bytes": 65536,
+    "peak_reserved_bytes": 2097152
+  },
+  "nvml": {
+    "scope": "whole device; sampled 5ms; includes other processes and CUDA/GL drivers",
+    "before_bytes": 1894645760,
+    "peak_bytes": 2203254784,
+    "peak_increment_bytes": 308609024,
+    "end_bytes": 2199388160,
+    "samples": 32
+  }
+}

@@ -1,0 +1,2 @@
+{"orchestration_cells": 3, "separate_validation_labels": true, "single_workload_plots": true, "compileall": true, "pytorch3d_license_metadata": null}
+{"cells": 108, "validation": {"p3d": "failed", "p3d_conditioned": "failed"}, "changed_analysis_sources": ["experiments/pytorch3d_render_eval/run_eval.py"], "result_bytes": 713849}

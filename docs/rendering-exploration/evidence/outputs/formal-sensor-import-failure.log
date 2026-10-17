@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/tests/verify_sensors.py", line 36, in <module>
+    _SPEC.loader.exec_module(ref)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/workspace/tests/verify_sensor_reference.py", line 23, in <module>
+    from experiments.sensor_reference import MeshSensor, mounted_pose, pixel_directions, sample_rig
+ModuleNotFoundError: No module named 'experiments'

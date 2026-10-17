@@ -1,0 +1,3 @@
+# Frozen source and evidence retain their original bytes and checksums.
+evidence/** -whitespace
+snapshots/** -whitespace

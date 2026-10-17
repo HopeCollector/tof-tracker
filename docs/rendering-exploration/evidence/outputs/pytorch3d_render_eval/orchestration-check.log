@@ -1,0 +1,40 @@
+p3d validation exit=0; detailed status in validation-p3d.json
+p3d_conditioned validation exit=0; detailed status in validation-p3d_conditioned.json
+running pillars20-tof-current_gpu-b1
+  ok: 0.5549739871639758 ms
+running pillars20-tof-p3d-b1
+  ok: 5.5753960041329265 ms
+running pillars20-tof-p3d_conditioned-b1
+  ok: 5.854057002579793 ms
+Traceback (most recent call last):
+  File "/workspace/experiments/pytorch3d_render_eval/run_eval.py", line 237, in <module>
+    main()
+  File "/workspace/experiments/pytorch3d_render_eval/run_eval.py", line 233, in main
+    summarize(output, plots=True)
+  File "/workspace/experiments/pytorch3d_render_eval/run_eval.py", line 109, in summarize
+    fig.tight_layout()
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/figure.py", line 3647, in tight_layout
+    engine.execute(self)
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/layout_engine.py", line 188, in execute
+    kwargs = get_tight_layout_figure(
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/_tight_layout.py", line 266, in get_tight_layout_figure
+    kwargs = _auto_adjust_subplotpars(fig, renderer,
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/_tight_layout.py", line 82, in _auto_adjust_subplotpars
+    bb += [martist._get_tightbbox_for_layout_only(ax, renderer)]
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/artist.py", line 1404, in _get_tightbbox_for_layout_only
+    return obj.get_tightbbox(*args, **{**kwargs, "for_layout_only": True})
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/axes/_base.py", line 4564, in get_tightbbox
+    ba = martist._get_tightbbox_for_layout_only(axis, renderer)
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/artist.py", line 1404, in _get_tightbbox_for_layout_only
+    return obj.get_tightbbox(*args, **{**kwargs, "for_layout_only": True})
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/axis.py", line 1351, in get_tightbbox
+    ticks_to_draw = self._update_ticks()
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/axis.py", line 1281, in _update_ticks
+    major_locs = self.get_majorticklocs()
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/axis.py", line 1525, in get_majorticklocs
+    return self.major.locator()
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/ticker.py", line 2401, in __call__
+    return self.tick_values(vmin, vmax)
+  File "/opt/yopo/lib/python3.10/site-packages/matplotlib/ticker.py", line 2418, in tick_values
+    raise ValueError(
+ValueError: Data has no positive values, and therefore cannot be log-scaled.

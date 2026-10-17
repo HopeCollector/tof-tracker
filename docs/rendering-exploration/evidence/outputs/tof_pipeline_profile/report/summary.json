@@ -1,0 +1,1640 @@
+{
+  "timing_cells": 8,
+  "production_source_hashes": {
+    "devtools/rendering.py": [
+      "fe0a8fa1a8239c4ea0bde686603d9ae886b9a2fe706f9b116e29c90dbb7663c5"
+    ],
+    "devtools/_zone_shaders.py": [
+      "a18c77d5ff042c5d76836b944fea8745b0c9c89d667d9a5c1928b85c88f6b101"
+    ],
+    "devtools/_gl_cuda.py": [
+      "701dc60c8f316651bedf8281e8b58ff4c35f6b22a786fffcf5a66f3a55e169bb"
+    ]
+  },
+  "verifications": [
+    {
+      "file": "verification-combined.json",
+      "variant": "range_aabb_single_cell_gs",
+      "existing_groups": 5,
+      "extra_boundary_cases": 15
+    },
+    {
+      "file": "verification-range_aabb_gs.json",
+      "variant": "range_aabb_gs",
+      "existing_groups": 5,
+      "extra_boundary_cases": 15
+    },
+    {
+      "file": "verification-single_cell_tight_gs.json",
+      "variant": "single_cell_tight_gs",
+      "existing_groups": 5,
+      "extra_boundary_cases": 15
+    }
+  ],
+  "variant_rows": [
+    {
+      "cell": "candidates20-b1",
+      "batch": 1,
+      "variant": "baseline",
+      "semantic_status": "production-identical",
+      "exact": true,
+      "wall_median_ms": 4.976066000381252,
+      "gl_gpu_median_ms": 4.521728,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "candidates20-b1",
+      "batch": 1,
+      "variant": "single_cell_tight_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 1.9946140018873848,
+      "gl_gpu_median_ms": 1.531648,
+      "fs_invocations": 25874
+    },
+    {
+      "cell": "candidates20-b1",
+      "batch": 1,
+      "variant": "range_aabb_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 4.956205000780756,
+      "gl_gpu_median_ms": 4.489632,
+      "fs_invocations": 147380
+    },
+    {
+      "cell": "candidates20-b1",
+      "batch": 1,
+      "variant": "range_aabb_single_cell_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 2.017114999034675,
+      "gl_gpu_median_ms": 1.507968,
+      "fs_invocations": 25028
+    },
+    {
+      "cell": "candidates5000-b1",
+      "batch": 1,
+      "variant": "baseline",
+      "semantic_status": "production-identical",
+      "exact": true,
+      "wall_median_ms": 14.55835299930186,
+      "gl_gpu_median_ms": 14.037088,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "candidates5000-b1",
+      "batch": 1,
+      "variant": "single_cell_tight_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 10.582014001556672,
+      "gl_gpu_median_ms": 10.117888,
+      "fs_invocations": 257885
+    },
+    {
+      "cell": "candidates5000-b1",
+      "batch": 1,
+      "variant": "range_aabb_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 5.920491999859223,
+      "gl_gpu_median_ms": 5.476544,
+      "fs_invocations": 168898
+    },
+    {
+      "cell": "candidates5000-b1",
+      "batch": 1,
+      "variant": "range_aabb_single_cell_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 2.966651001770515,
+      "gl_gpu_median_ms": 2.503264,
+      "fs_invocations": 45772
+    },
+    {
+      "cell": "fragment-parts20-b1",
+      "batch": 1,
+      "variant": "baseline",
+      "semantic_status": "production-identical",
+      "exact": true,
+      "wall_median_ms": 4.9826350004877895,
+      "gl_gpu_median_ms": 4.539776,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "fragment-parts20-b1",
+      "batch": 1,
+      "variant": "cheap_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 0.536904000909999,
+      "gl_gpu_median_ms": 0.134336,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "fragment-parts20-b1",
+      "batch": 1,
+      "variant": "clip_only_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 2.6820790008059703,
+      "gl_gpu_median_ms": 2.214208,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "fragment-parts20-b1",
+      "batch": 1,
+      "variant": "clip_area_only_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 3.874597001413349,
+      "gl_gpu_median_ms": 3.40656,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "fragment-parts5000-b1",
+      "batch": 1,
+      "variant": "baseline",
+      "semantic_status": "production-identical",
+      "exact": true,
+      "wall_median_ms": 14.57974300137721,
+      "gl_gpu_median_ms": 14.09792,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "fragment-parts5000-b1",
+      "batch": 1,
+      "variant": "cheap_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 0.8394860014959704,
+      "gl_gpu_median_ms": 0.445184,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "fragment-parts5000-b1",
+      "batch": 1,
+      "variant": "clip_only_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 7.754444999591215,
+      "gl_gpu_median_ms": 7.32016,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "fragment-parts5000-b1",
+      "batch": 1,
+      "variant": "clip_area_only_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 11.521771000843728,
+      "gl_gpu_median_ms": 11.063104,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "baseline",
+      "semantic_status": "production-identical",
+      "exact": true,
+      "wall_median_ms": 4.9723049996828195,
+      "gl_gpu_median_ms": 4.508736,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "cheap_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 0.540263998118462,
+      "gl_gpu_median_ms": 0.13984,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "rasterizer_discard",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 0.4560429988487158,
+      "gl_gpu_median_ms": 0.087424,
+      "fs_invocations": 0
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "fp32_gs",
+      "semantic_status": "diagnostic-precision-changed",
+      "exact": true,
+      "wall_median_ms": 4.995045001123799,
+      "gl_gpu_median_ms": 4.454688,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "fp32_fs",
+      "semantic_status": "diagnostic-precision-changed",
+      "exact": false,
+      "wall_median_ms": 0.8229459999711253,
+      "gl_gpu_median_ms": 0.409536,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "fp32_both",
+      "semantic_status": "diagnostic-precision-changed",
+      "exact": false,
+      "wall_median_ms": 0.7339459989452735,
+      "gl_gpu_median_ms": 0.346368,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "clip_fast_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 5.745360998844262,
+      "gl_gpu_median_ms": 5.275072,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "clip_fast_fs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": false,
+      "wall_median_ms": 5.221537001489196,
+      "gl_gpu_median_ms": 4.647904,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "variant": "clip_fast_both",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": false,
+      "wall_median_ms": 5.138385997270234,
+      "gl_gpu_median_ms": 4.647392,
+      "fs_invocations": 148412
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "variant": "baseline",
+      "semantic_status": "production-identical",
+      "exact": true,
+      "wall_median_ms": 296.03793100250186,
+      "gl_gpu_median_ms": 295.287616,
+      "fs_invocations": 9482335
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "variant": "cheap_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 7.6511539991770405,
+      "gl_gpu_median_ms": 7.17488,
+      "fs_invocations": 9482335
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "variant": "fp32_fs",
+      "semantic_status": "diagnostic-precision-changed",
+      "exact": false,
+      "wall_median_ms": 28.442270999221364,
+      "gl_gpu_median_ms": 27.845664,
+      "fs_invocations": 9482335
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "variant": "single_cell_tight_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 93.57251099936548,
+      "gl_gpu_median_ms": 92.856096,
+      "fs_invocations": 1488029
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "variant": "range_aabb_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 294.13538800145034,
+      "gl_gpu_median_ms": 293.413472,
+      "fs_invocations": 9421207
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "variant": "range_aabb_single_cell_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 92.1457200020086,
+      "gl_gpu_median_ms": 91.371712,
+      "fs_invocations": 1439975
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "baseline",
+      "semantic_status": "production-identical",
+      "exact": true,
+      "wall_median_ms": 14.625833002355648,
+      "gl_gpu_median_ms": 14.085824,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "cheap_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 0.8375359975616448,
+      "gl_gpu_median_ms": 0.429792,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "rasterizer_discard",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 0.7260750026034657,
+      "gl_gpu_median_ms": 0.323872,
+      "fs_invocations": 0
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "fp32_gs",
+      "semantic_status": "diagnostic-precision-changed",
+      "exact": true,
+      "wall_median_ms": 14.62385299964808,
+      "gl_gpu_median_ms": 13.783616,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "fp32_fs",
+      "semantic_status": "diagnostic-precision-changed",
+      "exact": false,
+      "wall_median_ms": 1.7122120007115882,
+      "gl_gpu_median_ms": 1.242848,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "fp32_both",
+      "semantic_status": "diagnostic-precision-changed",
+      "exact": false,
+      "wall_median_ms": 1.4864600016153418,
+      "gl_gpu_median_ms": 1.030784,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "clip_fast_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 17.28352200007066,
+      "gl_gpu_median_ms": 16.897408,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "clip_fast_fs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": false,
+      "wall_median_ms": 18.696022001677193,
+      "gl_gpu_median_ms": 18.254016,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "variant": "clip_fast_both",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": false,
+      "wall_median_ms": 18.51462999911746,
+      "gl_gpu_median_ms": 18.036544,
+      "fs_invocations": 422024
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "variant": "baseline",
+      "semantic_status": "production-identical",
+      "exact": true,
+      "wall_median_ms": 925.726739998936,
+      "gl_gpu_median_ms": 924.800512,
+      "fs_invocations": 26941395
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "variant": "cheap_fragment",
+      "semantic_status": "diagnostic-non-equivalent",
+      "exact": false,
+      "wall_median_ms": 27.896196999790845,
+      "gl_gpu_median_ms": 27.232768,
+      "fs_invocations": 26941395
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "variant": "fp32_fs",
+      "semantic_status": "diagnostic-precision-changed",
+      "exact": false,
+      "wall_median_ms": 83.12266799839563,
+      "gl_gpu_median_ms": 82.524768,
+      "fs_invocations": 26941395
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "variant": "single_cell_tight_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 648.833923998609,
+      "gl_gpu_median_ms": 648.03808,
+      "fs_invocations": 15796383
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "variant": "range_aabb_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 359.1755080014991,
+      "gl_gpu_median_ms": 358.007296,
+      "fs_invocations": 10905716
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "variant": "range_aabb_single_cell_gs",
+      "semantic_status": "geometry-equivalent-candidate",
+      "exact": true,
+      "wall_median_ms": 158.07380600017495,
+      "gl_gpu_median_ms": 157.607392,
+      "fs_invocations": 2870729
+    }
+  ],
+  "stage_rows": [
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_pack_cuda",
+      "metric": "cpu_submit_ms",
+      "median": 0.07511000148952007,
+      "p95": 0.15010900242486966
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_pack_cuda",
+      "metric": "wall_complete_ms",
+      "median": 0.1199509970319923,
+      "p95": 0.16504900158906818
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_pack_cuda",
+      "metric": "cuda_event_ms",
+      "median": 0.07817599922418594,
+      "p95": 0.1485023953020572
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "cpu_submit_ms",
+      "median": 0.027031001081923023,
+      "p95": 0.0354269996023504
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "wall_complete_ms",
+      "median": 0.13919000048190355,
+      "p95": 0.14324499825306702
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "map_host_ms",
+      "median": 0.009620001947041601,
+      "p95": 0.015930000517982986
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "copy_submit_host_ms",
+      "median": 0.004599998646881431,
+      "p95": 0.005870999666512943
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "unmap_host_ms",
+      "median": 0.004419998731464148,
+      "p95": 0.005407999560702592
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "copy_cuda_event_ms",
+      "median": 0.002015999983996153,
+      "p95": 0.00317440005019307
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "bytes",
+      "median": 68,
+      "p95": null
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_clear",
+      "metric": "cpu_submit_ms",
+      "median": 0.006070000381441787,
+      "p95": 0.009510001473245207
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_clear",
+      "metric": "wall_complete_ms",
+      "median": 0.05193000106373802,
+      "p95": 0.05328599872882478
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_clear",
+      "metric": "gl_gpu_ms",
+      "median": 0.00016,
+      "p95": 0.0001824
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_draw_state",
+      "metric": "cpu_submit_ms",
+      "median": 0.005900998075958341,
+      "p95": 0.010336000923416574
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_draw_state",
+      "metric": "wall_complete_ms",
+      "median": 0.06252099774428643,
+      "p95": 0.06629069939663168
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_draw_state",
+      "metric": "gl_gpu_ms",
+      "median": 0.000544,
+      "p95": 0.000576
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_draw",
+      "metric": "cpu_submit_ms",
+      "median": 0.005410001904238015,
+      "p95": 0.010272999861626884
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_draw",
+      "metric": "wall_complete_ms",
+      "median": 4.637033001927193,
+      "p95": 5.052746700312127
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "gl_draw",
+      "metric": "gl_gpu_ms",
+      "median": 4.515776,
+      "p95": 4.526448
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "texture_to_pbo",
+      "metric": "cpu_submit_ms",
+      "median": 0.011670999811030924,
+      "p95": 0.015301001985790206
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "texture_to_pbo",
+      "metric": "wall_complete_ms",
+      "median": 0.07487100083380938,
+      "p95": 0.29079439991619416
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "texture_to_pbo",
+      "metric": "gl_gpu_ms",
+      "median": 0.007744,
+      "p95": 0.05855679999999995
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "output_allocate",
+      "metric": "cpu_submit_ms",
+      "median": 0.004729998181574047,
+      "p95": 0.014635000479756848
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "cpu_submit_ms",
+      "median": 0.025159999495372176,
+      "p95": 0.04012129866168833
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "wall_complete_ms",
+      "median": 0.1412109995726496,
+      "p95": 0.3777874015213454
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "map_host_ms",
+      "median": 0.005609999789157882,
+      "p95": 0.009393001164426092
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "copy_submit_host_ms",
+      "median": 0.004449997504707426,
+      "p95": 0.007751000521238891
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "unmap_host_ms",
+      "median": 0.0044099979277234524,
+      "p95": 0.004612998236552812
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "copy_cuda_event_ms",
+      "median": 0.002240000059828162,
+      "p95": 0.0038335999706760045
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "bytes",
+      "median": 1536,
+      "p95": null
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "torch_output_format",
+      "metric": "cpu_submit_ms",
+      "median": 0.056990000302903354,
+      "p95": 0.10113299940712747
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "torch_output_format",
+      "metric": "wall_complete_ms",
+      "median": 0.1202709972858429,
+      "p95": 0.15687370068917514
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "stage": "torch_output_format",
+      "metric": "cuda_event_ms",
+      "median": 0.009279999881982803,
+      "p95": 0.01017920020967722
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_pack_cuda",
+      "metric": "cpu_submit_ms",
+      "median": 0.1988910007639788,
+      "p95": 0.20728890158352442
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_pack_cuda",
+      "metric": "wall_complete_ms",
+      "median": 0.23844200040912256,
+      "p95": 0.4306298003939446
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_pack_cuda",
+      "metric": "cuda_event_ms",
+      "median": 0.19977599382400513,
+      "p95": 0.21737280040979384
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "cpu_submit_ms",
+      "median": 0.052160998166073114,
+      "p95": 0.08013209990167525
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "wall_complete_ms",
+      "median": 0.13633099661092274,
+      "p95": 0.5441417004476534
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "map_host_ms",
+      "median": 0.02402099926257506,
+      "p95": 0.043676100540324114
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "copy_submit_host_ms",
+      "median": 0.013199998647905886,
+      "p95": 0.018455998724675737
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "unmap_host_ms",
+      "median": 0.005589998181676492,
+      "p95": 0.008118998448480852
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "copy_cuda_event_ms",
+      "median": 0.0021120000164955854,
+      "p95": 0.008937600231729447
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "bytes",
+      "median": 4352,
+      "p95": null
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_clear",
+      "metric": "cpu_submit_ms",
+      "median": 0.017071000911528245,
+      "p95": 0.018996098151546903
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_clear",
+      "metric": "wall_complete_ms",
+      "median": 0.05504100045072846,
+      "p95": 0.09019500030262861
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_clear",
+      "metric": "gl_gpu_ms",
+      "median": 0.0024,
+      "p95": 0.0026592
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_draw_state",
+      "metric": "cpu_submit_ms",
+      "median": 0.01790999885997735,
+      "p95": 0.0186119996214984
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_draw_state",
+      "metric": "wall_complete_ms",
+      "median": 0.06414999734261073,
+      "p95": 0.10623400085023604
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_draw_state",
+      "metric": "gl_gpu_ms",
+      "median": 0.000608,
+      "p95": 0.0006368000000000001
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_draw",
+      "metric": "cpu_submit_ms",
+      "median": 0.019719998817890882,
+      "p95": 0.023815000531612895
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_draw",
+      "metric": "wall_complete_ms",
+      "median": 295.8480800007237,
+      "p95": 296.16404569933366
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "gl_draw",
+      "metric": "gl_gpu_ms",
+      "median": 295.300672,
+      "p95": 295.3187584
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "texture_to_pbo",
+      "metric": "cpu_submit_ms",
+      "median": 0.06383000072673894,
+      "p95": 0.3280627992353402
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "texture_to_pbo",
+      "metric": "wall_complete_ms",
+      "median": 0.20579099873430096,
+      "p95": 0.4294697988370899
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "texture_to_pbo",
+      "metric": "gl_gpu_ms",
+      "median": 0.129056,
+      "p95": 0.2823872
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "output_allocate",
+      "metric": "cpu_submit_ms",
+      "median": 0.05108099867356941,
+      "p95": 0.059226001758361235
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "cpu_submit_ms",
+      "median": 0.12596099986694753,
+      "p95": 0.1522770031442633
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "wall_complete_ms",
+      "median": 0.1466510002501309,
+      "p95": 0.18392000310996082
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "map_host_ms",
+      "median": 0.041229999624192715,
+      "p95": 0.045540999053628184
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "copy_submit_host_ms",
+      "median": 0.027050002245232463,
+      "p95": 0.038489898724947125
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "unmap_host_ms",
+      "median": 0.006350001058308408,
+      "p95": 0.01003099896479398
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "copy_cuda_event_ms",
+      "median": 0.001888000057078898,
+      "p95": 0.0020320000010542573
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "bytes",
+      "median": 98304,
+      "p95": null
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "torch_output_format",
+      "metric": "cpu_submit_ms",
+      "median": 0.18672100122785196,
+      "p95": 0.26447290038049687
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "torch_output_format",
+      "metric": "wall_complete_ms",
+      "median": 0.24268200286314823,
+      "p95": 0.4010648997791577
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "stage": "torch_output_format",
+      "metric": "cuda_event_ms",
+      "median": 0.14140799641609192,
+      "p95": 0.32558399736881255
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_pack_cuda",
+      "metric": "cpu_submit_ms",
+      "median": 0.084451003203867,
+      "p95": 0.14174100178934165
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_pack_cuda",
+      "metric": "wall_complete_ms",
+      "median": 0.1154000019596424,
+      "p95": 0.19024000066565347
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_pack_cuda",
+      "metric": "cuda_event_ms",
+      "median": 0.07545600086450577,
+      "p95": 0.16330560296773902
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "cpu_submit_ms",
+      "median": 0.028749996999977157,
+      "p95": 0.042920998748741106
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "wall_complete_ms",
+      "median": 0.13534100071410649,
+      "p95": 0.13947399966127705
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "map_host_ms",
+      "median": 0.00915999771677889,
+      "p95": 0.01507100059825461
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "copy_submit_host_ms",
+      "median": 0.005339999916031957,
+      "p95": 0.017235998893738717
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "unmap_host_ms",
+      "median": 0.0051200004236306995,
+      "p95": 0.007955999899422746
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "copy_cuda_event_ms",
+      "median": 0.001888000057078898,
+      "p95": 0.003264000080525874
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pose_cuda_to_gl",
+      "metric": "bytes",
+      "median": 68,
+      "p95": null
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_clear",
+      "metric": "cpu_submit_ms",
+      "median": 0.007189999450929463,
+      "p95": 0.009688999125501141
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_clear",
+      "metric": "wall_complete_ms",
+      "median": 0.05306100138113834,
+      "p95": 0.05702969865524209
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_clear",
+      "metric": "gl_gpu_ms",
+      "median": 0.00016,
+      "p95": 0.000192
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_draw_state",
+      "metric": "cpu_submit_ms",
+      "median": 0.006810001650592312,
+      "p95": 0.009771299301064573
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_draw_state",
+      "metric": "wall_complete_ms",
+      "median": 0.06219999704626389,
+      "p95": 0.06267729877436068
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_draw_state",
+      "metric": "gl_gpu_ms",
+      "median": 0.000576,
+      "p95": 0.0006944
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_draw",
+      "metric": "cpu_submit_ms",
+      "median": 0.007480000931536779,
+      "p95": 0.011266001820331438
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_draw",
+      "metric": "wall_complete_ms",
+      "median": 14.133729997411137,
+      "p95": 14.221927999460604
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "gl_draw",
+      "metric": "gl_gpu_ms",
+      "median": 14.012256,
+      "p95": 14.0586144
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "texture_to_pbo",
+      "metric": "cpu_submit_ms",
+      "median": 0.010579999070614576,
+      "p95": 0.01627100064069964
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "texture_to_pbo",
+      "metric": "wall_complete_ms",
+      "median": 0.07004999861237593,
+      "p95": 0.0731447016733
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "texture_to_pbo",
+      "metric": "gl_gpu_ms",
+      "median": 0.00736,
+      "p95": 0.012316799999999996
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "output_allocate",
+      "metric": "cpu_submit_ms",
+      "median": 0.005900001269765198,
+      "p95": 0.010244000077364033
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "cpu_submit_ms",
+      "median": 0.03093000123044476,
+      "p95": 0.04450800042832269
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "wall_complete_ms",
+      "median": 0.13319100253283978,
+      "p95": 0.2372187009314074
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "map_host_ms",
+      "median": 0.007530001312261447,
+      "p95": 0.010990002192556855
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "copy_submit_host_ms",
+      "median": 0.005509999027708545,
+      "p95": 0.007988000652403569
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "unmap_host_ms",
+      "median": 0.004289999196771532,
+      "p95": 0.007825001011951827
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "copy_cuda_event_ms",
+      "median": 0.002208000048995018,
+      "p95": 0.0031520000426098695
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "pbo_to_cuda",
+      "metric": "bytes",
+      "median": 1536,
+      "p95": null
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "torch_output_format",
+      "metric": "cpu_submit_ms",
+      "median": 0.06633999873884022,
+      "p95": 0.0930896982026752
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "torch_output_format",
+      "metric": "wall_complete_ms",
+      "median": 0.11743099821615033,
+      "p95": 0.45737209802609835
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "stage": "torch_output_format",
+      "metric": "cuda_event_ms",
+      "median": 0.009503999724984169,
+      "p95": 0.00983999976888299
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_pack_cuda",
+      "metric": "cpu_submit_ms",
+      "median": 0.19578100182116032,
+      "p95": 0.24248290028481279
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_pack_cuda",
+      "metric": "wall_complete_ms",
+      "median": 0.2231010003015399,
+      "p95": 0.262071899487637
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_pack_cuda",
+      "metric": "cuda_event_ms",
+      "median": 0.11356800049543381,
+      "p95": 0.21013439819216728
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "cpu_submit_ms",
+      "median": 0.048121000872924924,
+      "p95": 0.07538200152339414
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "wall_complete_ms",
+      "median": 0.14987100075813942,
+      "p95": 0.3135728995403042
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "map_host_ms",
+      "median": 0.02427999788778834,
+      "p95": 0.035881000439985655
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "copy_submit_host_ms",
+      "median": 0.009750001481734216,
+      "p95": 0.017652901806286536
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "unmap_host_ms",
+      "median": 0.005850997695233673,
+      "p95": 0.007173098856583238
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "copy_cuda_event_ms",
+      "median": 0.002368000103160739,
+      "p95": 0.0038079999620094893
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pose_cuda_to_gl",
+      "metric": "bytes",
+      "median": 4352,
+      "p95": null
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_clear",
+      "metric": "cpu_submit_ms",
+      "median": 0.01712999801384285,
+      "p95": 0.022475998775917105
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_clear",
+      "metric": "wall_complete_ms",
+      "median": 0.05209099981584586,
+      "p95": 0.053287997798179276
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_clear",
+      "metric": "gl_gpu_ms",
+      "median": 0.002368,
+      "p95": 0.0023967999999999997
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_draw_state",
+      "metric": "cpu_submit_ms",
+      "median": 0.018489998183213174,
+      "p95": 0.02403399848844856
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_draw_state",
+      "metric": "wall_complete_ms",
+      "median": 0.03581000055419281,
+      "p95": 0.06122600025264546
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_draw_state",
+      "metric": "gl_gpu_ms",
+      "median": 0.00016,
+      "p95": 0.00047679999999999993
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_draw",
+      "metric": "cpu_submit_ms",
+      "median": 0.021260002540657297,
+      "p95": 0.029684001856367104
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_draw",
+      "metric": "wall_complete_ms",
+      "median": 925.3708770011144,
+      "p95": 925.9470885019255
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "gl_draw",
+      "metric": "gl_gpu_ms",
+      "median": 924.962048,
+      "p95": 924.9802496
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "texture_to_pbo",
+      "metric": "cpu_submit_ms",
+      "median": 0.06330999894998968,
+      "p95": 0.3246276992285857
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "texture_to_pbo",
+      "metric": "wall_complete_ms",
+      "median": 0.2310819982085377,
+      "p95": 0.5846137006301433
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "texture_to_pbo",
+      "metric": "gl_gpu_ms",
+      "median": 0.142176,
+      "p95": 0.3403776
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "output_allocate",
+      "metric": "cpu_submit_ms",
+      "median": 0.049531001423019916,
+      "p95": 0.05018710144213401
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "cpu_submit_ms",
+      "median": 0.11696100045810454,
+      "p95": 0.13829100244038273
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "wall_complete_ms",
+      "median": 0.2296010025020223,
+      "p95": 0.2571599012298975
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "map_host_ms",
+      "median": 0.03891099913744256,
+      "p95": 0.04143910227867309
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "copy_submit_host_ms",
+      "median": 0.02401999881840311,
+      "p95": 0.034415899790474214
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "unmap_host_ms",
+      "median": 0.00740999894333072,
+      "p95": 0.010047001342172734
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "copy_cuda_event_ms",
+      "median": 0.0037440001033246517,
+      "p95": 0.003945599962025881
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "pbo_to_cuda",
+      "metric": "bytes",
+      "median": 98304,
+      "p95": null
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "torch_output_format",
+      "metric": "cpu_submit_ms",
+      "median": 0.17748200116329826,
+      "p95": 0.2723419998801546
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "torch_output_format",
+      "metric": "wall_complete_ms",
+      "median": 0.23771099949954078,
+      "p95": 0.3029718001926085
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "stage": "torch_output_format",
+      "metric": "cuda_event_ms",
+      "median": 0.09971199929714203,
+      "p95": 0.13407039940357207
+    }
+  ],
+  "object_rows": [
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "object": "full",
+      "wall_median_ms": 4.980574998626253,
+      "gl_gpu_median_ms": 4.514368
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "object": "map",
+      "wall_median_ms": 0.5096339991723653,
+      "gl_gpu_median_ms": 0.096032
+    },
+    {
+      "cell": "pillars20-b1",
+      "batch": 1,
+      "object": "target",
+      "wall_median_ms": 4.934575001243502,
+      "gl_gpu_median_ms": 4.462816
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "object": "full",
+      "wall_median_ms": 296.003561001271,
+      "gl_gpu_median_ms": 295.30512
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "object": "map",
+      "wall_median_ms": 3.919137001503259,
+      "gl_gpu_median_ms": 3.371104
+    },
+    {
+      "cell": "pillars20-b64",
+      "batch": 64,
+      "object": "target",
+      "wall_median_ms": 292.6104079997458,
+      "gl_gpu_median_ms": 291.895616
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "object": "full",
+      "wall_median_ms": 14.504152997687925,
+      "gl_gpu_median_ms": 14.049024
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "object": "map",
+      "wall_median_ms": 10.120832001121016,
+      "gl_gpu_median_ms": 9.61104
+    },
+    {
+      "cell": "pillars5000-b1",
+      "batch": 1,
+      "object": "target",
+      "wall_median_ms": 4.965025000274181,
+      "gl_gpu_median_ms": 4.461344
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "object": "full",
+      "wall_median_ms": 926.3051130001259,
+      "gl_gpu_median_ms": 924.866464
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "object": "map",
+      "wall_median_ms": 633.5488459990302,
+      "gl_gpu_median_ms": 632.822912
+    },
+    {
+      "cell": "pillars5000-b64",
+      "batch": 64,
+      "object": "target",
+      "wall_median_ms": 292.5129770010244,
+      "gl_gpu_median_ms": 291.85392
+    }
+  ]
+}

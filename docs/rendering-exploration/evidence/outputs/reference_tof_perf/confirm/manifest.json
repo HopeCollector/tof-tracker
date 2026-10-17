@@ -1,0 +1,52 @@
+[
+  {
+    "command": [
+      "outputs/reference_tof_perf/main/benchmark",
+      "--cloud",
+      "outputs/reference_tof_perf/fixtures/pillars-20-occupancy-f32-xyz.bin",
+      "--poses",
+      "outputs/reference_tof_perf/fixtures/poses-f32-xyz-xyzw.bin",
+      "--output",
+      "outputs/reference_tof_perf/confirm/pillars20-matched-fov-range-b1.json",
+      "--batch",
+      "1",
+      "--fov",
+      "60",
+      "--max-range",
+      "12",
+      "--resolution",
+      "0.1",
+      "--warmup",
+      "20",
+      "--repeats",
+      "2000"
+    ],
+    "result": "outputs/reference_tof_perf/confirm/pillars20-matched-fov-range-b1.json",
+    "binary_sha256": "a52a0a1d8baad654716168ebbbe66fc47bb3d7f0f56645d112ba60987998c002"
+  },
+  {
+    "command": [
+      "outputs/reference_tof_perf/main/benchmark",
+      "--cloud",
+      "outputs/reference_tof_perf/fixtures/pillars-20-occupancy-f32-xyz.bin",
+      "--poses",
+      "outputs/reference_tof_perf/fixtures/poses-f32-xyz-xyzw.bin",
+      "--output",
+      "outputs/reference_tof_perf/confirm/pillars20-matched-fov-range-b64.json",
+      "--batch",
+      "64",
+      "--fov",
+      "60",
+      "--max-range",
+      "12",
+      "--resolution",
+      "0.1",
+      "--warmup",
+      "20",
+      "--repeats",
+      "100"
+    ],
+    "result": "outputs/reference_tof_perf/confirm/pillars20-matched-fov-range-b64.json",
+    "binary_sha256": "a52a0a1d8baad654716168ebbbe66fc47bb3d7f0f56645d112ba60987998c002"
+  }
+]

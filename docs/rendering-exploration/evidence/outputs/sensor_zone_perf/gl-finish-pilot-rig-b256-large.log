@@ -1,0 +1,95 @@
+{"stage": "provenance", "elapsed_s": 0.0007651659998373361, "mode": "rig", "batch": 256}
+{"stage": "cuda_init", "elapsed_s": 0.049001897999914945, "mode": "rig", "batch": 256}
+{"stage": "scene_load", "elapsed_s": 0.13728271599939035, "mode": "rig", "batch": 256}
+{"stage": "pose_upload", "elapsed_s": 0.6035333370000444, "mode": "rig", "batch": 256}
+{"stage": "renderer_setup", "elapsed_s": 0.6285049639991485, "mode": "rig", "batch": 256}
+{"stage": "renderer_ready", "elapsed_s": 0.8463976219991309, "mode": "rig", "batch": 256}
+{"stage": "first_forward", "elapsed_s": 0.847265497999615, "mode": "rig", "batch": 256}
+DRAW BEGIN (4, 0, 228390, 1024)
+DRAW SUBMITTED 0.030885200001648627
+GL FINISHED 4.34490747000018
+DRAW BEGIN (4, 0, 228390, 256)
+DRAW SUBMITTED 0.006251533999602543
+GL FINISHED 0.012025205000099959
+DRAW BEGIN (4, 180006, 48384, 256)
+DRAW SUBMITTED 2.9429998903651722e-05
+GL FINISHED 0.010756705998574034
+{"stage": "first_forward_done", "elapsed_s": 5.5629313709996495, "mode": "rig", "batch": 256}
+{"stage": "pipeline_measure", "elapsed_s": 5.563238933000321, "mode": "rig", "batch": 256}
+DRAW BEGIN (4, 0, 228390, 1024)
+DRAW SUBMITTED 2.040999970631674e-05
+GL FINISHED 4.31716489199971
+DRAW BEGIN (4, 0, 228390, 256)
+DRAW SUBMITTED 0.005771840998932021
+GL FINISHED 0.011105079000117257
+DRAW BEGIN (4, 180006, 48384, 256)
+DRAW SUBMITTED 2.0319999748608097e-05
+GL FINISHED 0.0007135149990062928
+DRAW BEGIN (4, 0, 228390, 1024)
+DRAW SUBMITTED 1.3479999324772507e-05
+GL FINISHED 4.321409432999644
+DRAW BEGIN (4, 0, 228390, 256)
+DRAW SUBMITTED 0.00541880799937644
+GL FINISHED 0.010759216998849297
+DRAW BEGIN (4, 180006, 48384, 256)
+DRAW SUBMITTED 2.0510000467766076e-05
+GL FINISHED 0.0005436629999167053
+{"stage": "production_parity", "elapsed_s": 14.460292982999817, "mode": "rig", "batch": 256}
+DRAW BEGIN (4, 0, 228390, 1024)
+DRAW SUBMITTED 1.5450999853783287e-05
+GL FINISHED 4.339622450999741
+DRAW BEGIN (4, 0, 228390, 256)
+DRAW SUBMITTED 0.005341838001186261
+GL FINISHED 0.01087347700013197
+DRAW BEGIN (4, 180006, 48384, 256)
+DRAW SUBMITTED 2.0450001102290116e-05
+GL FINISHED 0.0005376330009312369
+DRAW BEGIN (4, 0, 228390, 1024)
+DRAW SUBMITTED 1.4990000636316836e-05
+Timeout (0:00:20)!
+Thread 0x00007b63d5fef080 (most recent call first):
+  File "/opt/venv/lib/python3.12/site-packages/moderngl/__init__.py", line 1772 in finish
+  File "/workspace/outputs/sensor_zone_perf/gl_finish_diagnostic.py", line 22 in draw
+  File "/workspace/devtools/rendering.py", line 595 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 328 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 397 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 456 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 468 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/gl_finish_diagnostic.py", line 28 in <module>
+GL FINISHED 4.350923350999437
+DRAW BEGIN (4, 0, 228390, 256)
+DRAW SUBMITTED 0.0053174179993220605
+GL FINISHED 0.010848036999959731
+DRAW BEGIN (4, 180006, 48384, 256)
+DRAW SUBMITTED 1.9150000298395753e-05
+GL FINISHED 0.01085021699873323
+{"stage": "postprocess_measure", "elapsed_s": 23.51551472599931, "mode": "rig", "batch": 256}
+{"stage": "mount_measure", "elapsed_s": 23.61743677999948, "mode": "rig", "batch": 256}
+{"stage": "end_to_end_measure", "elapsed_s": 23.64134666999962, "mode": "rig", "batch": 256}
+DRAW BEGIN (4, 0, 228390, 1024)
+DRAW SUBMITTED 2.069999936793465e-05
+GL FINISHED 4.337392994999391
+DRAW BEGIN (4, 0, 228390, 256)
+DRAW SUBMITTED 0.005339348001143662
+GL FINISHED 0.010869757001273683
+DRAW BEGIN (4, 180006, 48384, 256)
+DRAW SUBMITTED 1.9410999811952934e-05
+GL FINISHED 0.010980527998981415
+DRAW BEGIN (4, 0, 228390, 1024)
+DRAW SUBMITTED 1.522999991721008e-05
+GL FINISHED 4.330836229000852
+DRAW BEGIN (4, 0, 228390, 256)
+DRAW SUBMITTED 0.005367187999581802
+GL FINISHED 0.010894778000874794
+DRAW BEGIN (4, 180006, 48384, 256)
+DRAW SUBMITTED 1.9801000235020183e-05
+GL FINISHED 0.010979478000081144
+{"stage": "complete", "elapsed_s": 32.604106316999605, "mode": "rig", "batch": 256}
+{"status": "ok", "mode": "rig", "sampling": "zone", "batch": 256, "output": "outputs/sensor_zone_perf/gl-finish-pilot-rig-b256-large.json", "end_to_end_median_ms": 4466.046289999213, "error": null}

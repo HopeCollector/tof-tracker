@@ -1,0 +1,134 @@
+{
+  "status": "ok",
+  "backend": "current_gpu",
+  "mode": "camera",
+  "batch_views": 1,
+  "pillars": 20,
+  "torch_memory_fraction_cap": 0.8,
+  "output_location": "cuda:0",
+  "timing_scope": "prepared input poses; warm scene; render + required postprocessing; synchronized wall",
+  "grad_enabled": false,
+  "scene": {
+    "map": "outputs/pytorch3d_render_eval/timing-smoke/maps/pillars-20.obj",
+    "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4",
+    "pillars": 20,
+    "target_position_m": [
+      4,
+      0,
+      1.5
+    ]
+  },
+  "config": {
+    "width": 160,
+    "height": 120,
+    "hfov_deg": 80.0,
+    "vfov_deg": 60.0,
+    "min_range_m": 0.01,
+    "max_range_m": 30.0
+  },
+  "base_prepare_ms": 125.77124597737566,
+  "batch_prepare_ms": 0,
+  "geometry": {
+    "triangle_count": 16370,
+    "geometry_uploads": 1,
+    "renderer": {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "3.3.0 NVIDIA 595.91.07"
+    }
+  },
+  "first_forward_ms": 6.493931985460222,
+  "first_forward_memory": {
+    "allocated_bytes": 174592,
+    "reserved_bytes": 2097152,
+    "peak_allocated_bytes": 174592,
+    "peak_reserved_bytes": 2097152
+  },
+  "output_tensors": {
+    "range_m": {
+      "shape": [
+        1,
+        120,
+        160
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0"
+    },
+    "object_index": {
+      "shape": [
+        1,
+        120,
+        160
+      ],
+      "dtype": "torch.int32",
+      "device": "cuda:0"
+    },
+    "target_mask": {
+      "shape": [
+        1,
+        120,
+        160
+      ],
+      "dtype": "torch.bool",
+      "device": "cuda:0"
+    },
+    "target_hint": {
+      "shape": [
+        1,
+        5
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0"
+    },
+    "visible_fraction": {
+      "shape": [
+        1
+      ],
+      "dtype": "torch.float64",
+      "device": "cuda:0"
+    },
+    "unoccluded_pixels": {
+      "shape": [
+        1
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0"
+    }
+  },
+  "first_output_summary": {
+    "finite": 11411,
+    "inf": 7789,
+    "nan": 0
+  },
+  "end_to_end": {
+    "wall_ms": [
+      3.0826599977444857,
+      3.3830920001491904,
+      3.1965109810698777
+    ],
+    "wall_median_ms": 3.1965109810698777,
+    "wall_p95_ms": 3.364433898241259,
+    "repeats": 3,
+    "cuda_event_span_ms": [
+      3.238879919052124,
+      3.5222721099853516,
+      3.02726411819458
+    ],
+    "cuda_event_span_median_ms": 3.238879919052124,
+    "views_per_second": 312.84109640859054
+  },
+  "warm_memory": {
+    "allocated_bytes": 0,
+    "reserved_bytes": 2097152,
+    "peak_allocated_bytes": 174592,
+    "peak_reserved_bytes": 2097152
+  },
+  "nvml": {
+    "scope": "whole device; sampled 5ms; includes other processes and CUDA/GL drivers",
+    "before_bytes": 1887109120,
+    "peak_bytes": 2193031168,
+    "peak_increment_bytes": 305922048,
+    "end_bytes": 2193031168,
+    "samples": 17
+  }
+}

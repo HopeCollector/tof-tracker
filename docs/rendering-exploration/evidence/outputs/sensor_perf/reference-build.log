@@ -1,0 +1,1564 @@
+In file included from /usr/include/eigen3/Eigen/Core:257,
+                 from /usr/include/pcl-1.10/pcl/pcl_macros.h:75,
+                 from /usr/include/pcl-1.10/pcl/pcl_base.h:46,
+                 from /usr/include/pcl-1.10/pcl/common/common.h:40,
+                 from /reference/include/sensor_simulator.cuh:10,
+                 from /reference/src/sensor_simulator.cu:1:
+/usr/local/cuda/bin/../targets/x86_64-linux/include/host_defines.h:54:2: warning: #warning "host_defines.h is an internal header file and must not be used directly.  This file will be removed in a future CUDA release.  Please use cuda_runtime_api.h or cuda_runtime.h instead." [-Wcpp]
+   54 | #warning "host_defines.h is an internal header file and must not be used directly.  This file will be removed in a future CUDA release.  Please use cuda_runtime_api.h or cuda_runtime.h instead."
+      |  ^~~~~~~
+/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp(213): warning #611-D: overloaded virtual function "cv::detail::PlaneWarper::buildMaps" is only partially overridden in class "cv::detail::AffineWarper"
+  class AffineWarper : public PlaneWarper
+        ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp(213): warning #611-D: overloaded virtual function "cv::detail::PlaneWarper::warp" is only partially overridden in class "cv::detail::AffineWarper"
+  class AffineWarper : public PlaneWarper
+        ^
+
+/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp(100): warning #611-D: overloaded virtual function "cv::detail::Blender::prepare" is only partially overridden in class "cv::detail::FeatherBlender"
+  class FeatherBlender : public Blender
+        ^
+
+/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp(127): warning #611-D: overloaded virtual function "cv::detail::Blender::prepare" is only partially overridden in class "cv::detail::MultiBandBlender"
+  class MultiBandBlender : public Blender
+        ^
+
+/usr/include/opencv4/opencv2/videostab/motion_stabilizing.hpp(106): warning #997-D: function "cv::videostab::IMotionStabilizer::stabilize(int, const std::vector<cv::Mat, std::allocator<cv::Mat>> &, std::pair<int, int>, cv::Mat *)" is hidden by "cv::videostab::GaussianMotionFilter::stabilize" -- virtual function override intended?
+      virtual Mat stabilize(
+                  ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(94): warning #20012-D: __host__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(94): warning #20012-D: __device__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __host__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __device__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __host__ annotation is ignored on a function("~no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __device__ annotation is ignored on a function("~no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/DenseBase.h(590): warning #20012-D: __host__ annotation is ignored on a function("DenseBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/DenseBase.h(590): warning #20012-D: __device__ annotation is ignored on a function("DenseBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(467): warning #20012-D: __host__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(467): warning #20012-D: __device__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __host__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __device__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __host__ annotation is ignored on a function("~MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __device__ annotation is ignored on a function("~MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(156): warning #20012-D: __host__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(156): warning #20012-D: __device__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __host__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __device__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __host__ annotation is ignored on a function("~ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __device__ annotation is ignored on a function("~ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(70): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(70): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(110): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(110): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __host__ annotation is ignored on a function("~CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __device__ annotation is ignored on a function("~CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(185): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(185): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __host__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __device__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(300): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(300): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __host__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __device__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Map.h(162): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Map.h(162): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(89): warning #20012-D: __host__ annotation is ignored on a function("RefBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(89): warning #20012-D: __device__ annotation is ignored on a function("RefBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(229): warning #20012-D: __host__ annotation is ignored on a function("Ref") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(229): warning #20012-D: __device__ annotation is ignored on a function("Ref") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(111): warning #20012-D: __host__ annotation is ignored on a function("Block") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(111): warning #20012-D: __device__ annotation is ignored on a function("Block") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(161): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(161): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(181): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(181): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(341): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(341): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(66): warning #20012-D: __host__ annotation is ignored on a function("Transpose") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(66): warning #20012-D: __device__ annotation is ignored on a function("Transpose") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(123): warning #20012-D: __host__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(123): warning #20012-D: __device__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __host__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __device__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __host__ annotation is ignored on a function("~TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __device__ annotation is ignored on a function("~TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Diagonal.h(78): warning #20012-D: __host__ annotation is ignored on a function("Diagonal") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Diagonal.h(78): warning #20012-D: __device__ annotation is ignored on a function("Diagonal") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(220): warning #20012-D: __host__ annotation is ignored on a function("TriangularView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(220): warning #20012-D: __device__ annotation is ignored on a function("TriangularView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(546): warning #20012-D: __host__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(546): warning #20012-D: __device__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __host__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __device__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __host__ annotation is ignored on a function("~TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __device__ annotation is ignored on a function("~TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Reverse.h(90): warning #20012-D: __host__ annotation is ignored on a function("Reverse") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Reverse.h(90): warning #20012-D: __device__ annotation is ignored on a function("Reverse") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(47): warning #20012-D: __host__ annotation is ignored on a function("ArrayWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(47): warning #20012-D: __device__ annotation is ignored on a function("ArrayWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(145): warning #20012-D: __host__ annotation is ignored on a function("MatrixWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(145): warning #20012-D: __device__ annotation is ignored on a function("MatrixWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(187): warning #20012-D: __host__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(187): warning #20012-D: __device__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __host__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __device__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __host__ annotation is ignored on a function("~QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __device__ annotation is ignored on a function("~QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(243): warning #20012-D: __host__ annotation is ignored on a function("Quaternion") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(243): warning #20012-D: __device__ annotation is ignored on a function("Quaternion") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(359): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(359): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(396): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(396): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+In file included from /usr/include/eigen3/Eigen/Core:257,
+                 from /usr/include/pcl-1.10/pcl/pcl_macros.h:75,
+                 from /usr/include/pcl-1.10/pcl/pcl_base.h:46,
+                 from /usr/include/pcl-1.10/pcl/common/common.h:40,
+                 from /reference/include/sensor_simulator.cuh:10,
+                 from /reference/src/sensor_simulator.cu:1:
+/usr/local/cuda/bin/../targets/x86_64-linux/include/host_defines.h:54:2: warning: #warning "host_defines.h is an internal header file and must not be used directly.  This file will be removed in a future CUDA release.  Please use cuda_runtime_api.h or cuda_runtime.h instead." [-Wcpp]
+   54 | #warning "host_defines.h is an internal header file and must not be used directly.  This file will be removed in a future CUDA release.  Please use cuda_runtime_api.h or cuda_runtime.h instead."
+      |  ^~~~~~~
+/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp(213): warning #611-D: overloaded virtual function "cv::detail::PlaneWarper::buildMaps" is only partially overridden in class "cv::detail::AffineWarper"
+  class AffineWarper : public PlaneWarper
+        ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp(213): warning #611-D: overloaded virtual function "cv::detail::PlaneWarper::warp" is only partially overridden in class "cv::detail::AffineWarper"
+  class AffineWarper : public PlaneWarper
+        ^
+
+/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp(100): warning #611-D: overloaded virtual function "cv::detail::Blender::prepare" is only partially overridden in class "cv::detail::FeatherBlender"
+  class FeatherBlender : public Blender
+        ^
+
+/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp(127): warning #611-D: overloaded virtual function "cv::detail::Blender::prepare" is only partially overridden in class "cv::detail::MultiBandBlender"
+  class MultiBandBlender : public Blender
+        ^
+
+/usr/include/opencv4/opencv2/videostab/motion_stabilizing.hpp(106): warning #997-D: function "cv::videostab::IMotionStabilizer::stabilize(int, const std::vector<cv::Mat, std::allocator<cv::Mat>> &, std::pair<int, int>, cv::Mat *)" is hidden by "cv::videostab::GaussianMotionFilter::stabilize" -- virtual function override intended?
+      virtual Mat stabilize(
+                  ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(94): warning #20012-D: __host__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(94): warning #20012-D: __device__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __host__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __device__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __host__ annotation is ignored on a function("~no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __device__ annotation is ignored on a function("~no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/DenseBase.h(590): warning #20012-D: __host__ annotation is ignored on a function("DenseBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/DenseBase.h(590): warning #20012-D: __device__ annotation is ignored on a function("DenseBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(467): warning #20012-D: __host__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(467): warning #20012-D: __device__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __host__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __device__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __host__ annotation is ignored on a function("~MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __device__ annotation is ignored on a function("~MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(156): warning #20012-D: __host__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(156): warning #20012-D: __device__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __host__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __device__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __host__ annotation is ignored on a function("~ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __device__ annotation is ignored on a function("~ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(70): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(70): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(110): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(110): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __host__ annotation is ignored on a function("~CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __device__ annotation is ignored on a function("~CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(185): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(185): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __host__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __device__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(300): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(300): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __host__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __device__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Map.h(162): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Map.h(162): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(89): warning #20012-D: __host__ annotation is ignored on a function("RefBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(89): warning #20012-D: __device__ annotation is ignored on a function("RefBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(229): warning #20012-D: __host__ annotation is ignored on a function("Ref") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(229): warning #20012-D: __device__ annotation is ignored on a function("Ref") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(111): warning #20012-D: __host__ annotation is ignored on a function("Block") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(111): warning #20012-D: __device__ annotation is ignored on a function("Block") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(161): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(161): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(181): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(181): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(341): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(341): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(66): warning #20012-D: __host__ annotation is ignored on a function("Transpose") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(66): warning #20012-D: __device__ annotation is ignored on a function("Transpose") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(123): warning #20012-D: __host__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(123): warning #20012-D: __device__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __host__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __device__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __host__ annotation is ignored on a function("~TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __device__ annotation is ignored on a function("~TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Diagonal.h(78): warning #20012-D: __host__ annotation is ignored on a function("Diagonal") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Diagonal.h(78): warning #20012-D: __device__ annotation is ignored on a function("Diagonal") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(220): warning #20012-D: __host__ annotation is ignored on a function("TriangularView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(220): warning #20012-D: __device__ annotation is ignored on a function("TriangularView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(546): warning #20012-D: __host__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(546): warning #20012-D: __device__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __host__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __device__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __host__ annotation is ignored on a function("~TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __device__ annotation is ignored on a function("~TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Reverse.h(90): warning #20012-D: __host__ annotation is ignored on a function("Reverse") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Reverse.h(90): warning #20012-D: __device__ annotation is ignored on a function("Reverse") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(47): warning #20012-D: __host__ annotation is ignored on a function("ArrayWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(47): warning #20012-D: __device__ annotation is ignored on a function("ArrayWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(145): warning #20012-D: __host__ annotation is ignored on a function("MatrixWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(145): warning #20012-D: __device__ annotation is ignored on a function("MatrixWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(187): warning #20012-D: __host__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(187): warning #20012-D: __device__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __host__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __device__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __host__ annotation is ignored on a function("~QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __device__ annotation is ignored on a function("~QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(243): warning #20012-D: __host__ annotation is ignored on a function("Quaternion") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(243): warning #20012-D: __device__ annotation is ignored on a function("Quaternion") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(359): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(359): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(396): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(396): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+In file included from /usr/include/eigen3/Eigen/Core:257,
+                 from /usr/include/pcl-1.10/pcl/pcl_macros.h:75,
+                 from /usr/include/pcl-1.10/pcl/pcl_base.h:46,
+                 from /usr/include/pcl-1.10/pcl/common/common.h:40,
+                 from /reference/include/sensor_simulator.cuh:10,
+                 from /out/reference_benchmark.cu:3:
+/usr/local/cuda/bin/../targets/x86_64-linux/include/host_defines.h:54:2: warning: #warning "host_defines.h is an internal header file and must not be used directly.  This file will be removed in a future CUDA release.  Please use cuda_runtime_api.h or cuda_runtime.h instead." [-Wcpp]
+   54 | #warning "host_defines.h is an internal header file and must not be used directly.  This file will be removed in a future CUDA release.  Please use cuda_runtime_api.h or cuda_runtime.h instead."
+      |  ^~~~~~~
+/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp(213): warning #611-D: overloaded virtual function "cv::detail::PlaneWarper::buildMaps" is only partially overridden in class "cv::detail::AffineWarper"
+  class AffineWarper : public PlaneWarper
+        ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp(213): warning #611-D: overloaded virtual function "cv::detail::PlaneWarper::warp" is only partially overridden in class "cv::detail::AffineWarper"
+  class AffineWarper : public PlaneWarper
+        ^
+
+/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp(100): warning #611-D: overloaded virtual function "cv::detail::Blender::prepare" is only partially overridden in class "cv::detail::FeatherBlender"
+  class FeatherBlender : public Blender
+        ^
+
+/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp(127): warning #611-D: overloaded virtual function "cv::detail::Blender::prepare" is only partially overridden in class "cv::detail::MultiBandBlender"
+  class MultiBandBlender : public Blender
+        ^
+
+/usr/include/opencv4/opencv2/videostab/motion_stabilizing.hpp(106): warning #997-D: function "cv::videostab::IMotionStabilizer::stabilize(int, const std::vector<cv::Mat, std::allocator<cv::Mat>> &, std::pair<int, int>, cv::Mat *)" is hidden by "cv::videostab::GaussianMotionFilter::stabilize" -- virtual function override intended?
+      virtual Mat stabilize(
+                  ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(94): warning #20012-D: __host__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(94): warning #20012-D: __device__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __host__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __device__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __host__ annotation is ignored on a function("~no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __device__ annotation is ignored on a function("~no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/DenseBase.h(590): warning #20012-D: __host__ annotation is ignored on a function("DenseBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/DenseBase.h(590): warning #20012-D: __device__ annotation is ignored on a function("DenseBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(467): warning #20012-D: __host__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(467): warning #20012-D: __device__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __host__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __device__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __host__ annotation is ignored on a function("~MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __device__ annotation is ignored on a function("~MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(156): warning #20012-D: __host__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(156): warning #20012-D: __device__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __host__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __device__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __host__ annotation is ignored on a function("~ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __device__ annotation is ignored on a function("~ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(70): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(70): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(110): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(110): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __host__ annotation is ignored on a function("~CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __device__ annotation is ignored on a function("~CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(185): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(185): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __host__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __device__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(300): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(300): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __host__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __device__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Map.h(162): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Map.h(162): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(89): warning #20012-D: __host__ annotation is ignored on a function("RefBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(89): warning #20012-D: __device__ annotation is ignored on a function("RefBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(229): warning #20012-D: __host__ annotation is ignored on a function("Ref") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(229): warning #20012-D: __device__ annotation is ignored on a function("Ref") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(111): warning #20012-D: __host__ annotation is ignored on a function("Block") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(111): warning #20012-D: __device__ annotation is ignored on a function("Block") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(161): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(161): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(181): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(181): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(341): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(341): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(66): warning #20012-D: __host__ annotation is ignored on a function("Transpose") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(66): warning #20012-D: __device__ annotation is ignored on a function("Transpose") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(123): warning #20012-D: __host__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(123): warning #20012-D: __device__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __host__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __device__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __host__ annotation is ignored on a function("~TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __device__ annotation is ignored on a function("~TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Diagonal.h(78): warning #20012-D: __host__ annotation is ignored on a function("Diagonal") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Diagonal.h(78): warning #20012-D: __device__ annotation is ignored on a function("Diagonal") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(220): warning #20012-D: __host__ annotation is ignored on a function("TriangularView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(220): warning #20012-D: __device__ annotation is ignored on a function("TriangularView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(546): warning #20012-D: __host__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(546): warning #20012-D: __device__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __host__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __device__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __host__ annotation is ignored on a function("~TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __device__ annotation is ignored on a function("~TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Reverse.h(90): warning #20012-D: __host__ annotation is ignored on a function("Reverse") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Reverse.h(90): warning #20012-D: __device__ annotation is ignored on a function("Reverse") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(47): warning #20012-D: __host__ annotation is ignored on a function("ArrayWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(47): warning #20012-D: __device__ annotation is ignored on a function("ArrayWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(145): warning #20012-D: __host__ annotation is ignored on a function("MatrixWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(145): warning #20012-D: __device__ annotation is ignored on a function("MatrixWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(187): warning #20012-D: __host__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(187): warning #20012-D: __device__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __host__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __device__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __host__ annotation is ignored on a function("~QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __device__ annotation is ignored on a function("~QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(243): warning #20012-D: __host__ annotation is ignored on a function("Quaternion") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(243): warning #20012-D: __device__ annotation is ignored on a function("Quaternion") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(359): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(359): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(396): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(396): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+In file included from /usr/include/eigen3/Eigen/Core:257,
+                 from /usr/include/pcl-1.10/pcl/pcl_macros.h:75,
+                 from /usr/include/pcl-1.10/pcl/pcl_base.h:46,
+                 from /usr/include/pcl-1.10/pcl/common/common.h:40,
+                 from /reference/include/sensor_simulator.cuh:10,
+                 from /out/reference_benchmark.cu:3:
+/usr/local/cuda/bin/../targets/x86_64-linux/include/host_defines.h:54:2: warning: #warning "host_defines.h is an internal header file and must not be used directly.  This file will be removed in a future CUDA release.  Please use cuda_runtime_api.h or cuda_runtime.h instead." [-Wcpp]
+   54 | #warning "host_defines.h is an internal header file and must not be used directly.  This file will be removed in a future CUDA release.  Please use cuda_runtime_api.h or cuda_runtime.h instead."
+      |  ^~~~~~~
+/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp(213): warning #611-D: overloaded virtual function "cv::detail::PlaneWarper::buildMaps" is only partially overridden in class "cv::detail::AffineWarper"
+  class AffineWarper : public PlaneWarper
+        ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp(213): warning #611-D: overloaded virtual function "cv::detail::PlaneWarper::warp" is only partially overridden in class "cv::detail::AffineWarper"
+  class AffineWarper : public PlaneWarper
+        ^
+
+/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp(100): warning #611-D: overloaded virtual function "cv::detail::Blender::prepare" is only partially overridden in class "cv::detail::FeatherBlender"
+  class FeatherBlender : public Blender
+        ^
+
+/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp(127): warning #611-D: overloaded virtual function "cv::detail::Blender::prepare" is only partially overridden in class "cv::detail::MultiBandBlender"
+  class MultiBandBlender : public Blender
+        ^
+
+/usr/include/opencv4/opencv2/videostab/motion_stabilizing.hpp(106): warning #997-D: function "cv::videostab::IMotionStabilizer::stabilize(int, const std::vector<cv::Mat, std::allocator<cv::Mat>> &, std::pair<int, int>, cv::Mat *)" is hidden by "cv::videostab::GaussianMotionFilter::stabilize" -- virtual function override intended?
+      virtual Mat stabilize(
+                  ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(94): warning #20012-D: __host__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(94): warning #20012-D: __device__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __host__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __device__ annotation is ignored on a function("no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __host__ annotation is ignored on a function("~no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/util/XprHelper.h(95): warning #20012-D: __device__ annotation is ignored on a function("~no_assignment_operator") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/DenseBase.h(590): warning #20012-D: __host__ annotation is ignored on a function("DenseBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/DenseBase.h(590): warning #20012-D: __device__ annotation is ignored on a function("DenseBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(467): warning #20012-D: __host__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(467): warning #20012-D: __device__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __host__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __device__ annotation is ignored on a function("MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __host__ annotation is ignored on a function("~MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MatrixBase.h(468): warning #20012-D: __device__ annotation is ignored on a function("~MatrixBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(156): warning #20012-D: __host__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(156): warning #20012-D: __device__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __host__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __device__ annotation is ignored on a function("ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __host__ annotation is ignored on a function("~ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayBase.h(157): warning #20012-D: __device__ annotation is ignored on a function("~ArrayBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(70): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(70): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(110): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(110): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __host__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __device__ annotation is ignored on a function("CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __host__ annotation is ignored on a function("~CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h(125): warning #20012-D: __device__ annotation is ignored on a function("~CwiseUnaryViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(185): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(185): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __host__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(186): warning #20012-D: __device__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(300): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(300): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __host__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __device__ annotation is ignored on a function("MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __host__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/MapBase.h(301): warning #20012-D: __device__ annotation is ignored on a function("~MapBase") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Map.h(162): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Map.h(162): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(89): warning #20012-D: __host__ annotation is ignored on a function("RefBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(89): warning #20012-D: __device__ annotation is ignored on a function("RefBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(229): warning #20012-D: __host__ annotation is ignored on a function("Ref") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h(229): warning #20012-D: __device__ annotation is ignored on a function("Ref") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(111): warning #20012-D: __host__ annotation is ignored on a function("Block") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(111): warning #20012-D: __device__ annotation is ignored on a function("Block") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(161): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(161): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(181): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(181): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(341): warning #20012-D: __host__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Block.h(341): warning #20012-D: __device__ annotation is ignored on a function("BlockImpl_dense") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(66): warning #20012-D: __host__ annotation is ignored on a function("Transpose") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(66): warning #20012-D: __device__ annotation is ignored on a function("Transpose") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(123): warning #20012-D: __host__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(123): warning #20012-D: __device__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __host__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __device__ annotation is ignored on a function("TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __host__ annotation is ignored on a function("~TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Transpose.h(150): warning #20012-D: __device__ annotation is ignored on a function("~TransposeImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Diagonal.h(78): warning #20012-D: __host__ annotation is ignored on a function("Diagonal") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Diagonal.h(78): warning #20012-D: __device__ annotation is ignored on a function("Diagonal") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(220): warning #20012-D: __host__ annotation is ignored on a function("TriangularView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(220): warning #20012-D: __device__ annotation is ignored on a function("TriangularView") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(546): warning #20012-D: __host__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(546): warning #20012-D: __device__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __host__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __device__ annotation is ignored on a function("TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __host__ annotation is ignored on a function("~TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h(547): warning #20012-D: __device__ annotation is ignored on a function("~TriangularViewImpl") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/Reverse.h(90): warning #20012-D: __host__ annotation is ignored on a function("Reverse") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/Reverse.h(90): warning #20012-D: __device__ annotation is ignored on a function("Reverse") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(47): warning #20012-D: __host__ annotation is ignored on a function("ArrayWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(47): warning #20012-D: __device__ annotation is ignored on a function("ArrayWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(145): warning #20012-D: __host__ annotation is ignored on a function("MatrixWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h(145): warning #20012-D: __device__ annotation is ignored on a function("MatrixWrapper") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(187): warning #20012-D: __host__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(187): warning #20012-D: __device__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __host__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __device__ annotation is ignored on a function("QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __host__ annotation is ignored on a function("~QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(188): warning #20012-D: __device__ annotation is ignored on a function("~QuaternionBase") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(243): warning #20012-D: __host__ annotation is ignored on a function("Quaternion") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                  ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(243): warning #20012-D: __device__ annotation is ignored on a function("Quaternion") that is explicitly defaulted on its first declaration
+   __attribute__((host)) __attribute__((device)) 
+                                        ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(359): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(359): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(396): warning #20012-D: __host__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                    ^
+
+/usr/include/eigen3/Eigen/src/Geometry/Quaternion.h(396): warning #20012-D: __device__ annotation is ignored on a function("Map") that is explicitly defaulted on its first declaration
+     __attribute__((host)) __attribute__((device)) 
+                                          ^
+

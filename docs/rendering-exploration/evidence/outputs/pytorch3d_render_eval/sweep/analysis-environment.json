@@ -1,0 +1,24 @@
+{
+  "time_utc": "2026-10-16T02:29:04Z",
+  "measurement_fingerprint": "11089513284af2acb8c145e25596cf93892d835fa151c7865b9719bcbb3812e4",
+  "analysis_source_sha256": {
+    "experiments/pytorch3d_render_eval/postprocess.py": "3355b798df66f99856024eab3a8d2ab35e92d9125d48e58f55c6231d7b35360a",
+    "experiments/pytorch3d_render_eval/backend.py": "2cba06ed5106db9126f698c489fae8a5c87a84a48b4187fdecffb788feef9090",
+    "experiments/pytorch3d_render_eval/run_eval.py": "21cf8db8bf828a7f7a523a1aff84743bcb69fc72cff3d988a6823a0adb273100",
+    "experiments/pytorch3d_render_eval/conditioned_backend.py": "3bdf1b29567248056789e1ec348518a673d578763a7d58f6ad633cab2566e284",
+    "experiments/pytorch3d_render_eval/worker.py": "660c12a34fcb7c500f43937b2153f7d61f813e42ccd05c3404646e880328e863",
+    "experiments/pytorch3d_render_eval/validate.py": "59b8e0d9b088f7d29f4ebbe57d316c79d46e7545acecc8a8c9a0259182341a1d",
+    "experiments/pytorch3d_render_eval/fixtures.py": "91e083a9c137819f3180cf03004248f08fac79858ee8146f666a1eac163fb70b",
+    "devtools/__init__.py": "be8f39361407ae1f6648213def16960c66f397763102e30c332b9d8e1361c79d",
+    "devtools/scene.py": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e",
+    "devtools/config.py": "5da368a665b2f93f92e7e7f8ae6684070f99f462374e17c33679b1062a1a85ad",
+    "devtools/sensors.py": "88e00d3c2a627fb7b4449cc730d16b159bb2c557087fe9347a7e9f19764c5d79",
+    "devtools/esdf.py": "dc57bc0b8a549e66250a54263aaf9ad5eba00845b1f1e0072846f69d30698308",
+    "devtools/mesh.py": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56",
+    "src/tof_tracker/geometry.py": "461a7c557d57202e9fb2ce16a4241c782da4638ec25a677034217c318a2e2331"
+  },
+  "changed_since_measurement": [
+    "experiments/pytorch3d_render_eval/run_eval.py"
+  ],
+  "reason": "Only summary validation association, per-backend/empty-workload plotting, and validation orchestration were corrected after measurement. No renderer, worker, fixtures, postprocess, or validation code changed. Original measured Python sources retained in measured-source/. Timing cells were not rerun or altered."
+}

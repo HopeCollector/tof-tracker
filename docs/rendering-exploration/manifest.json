@@ -1,0 +1,4358 @@
+{
+  "schema": 1,
+  "captured_date": "2026-10-17",
+  "branch": "codex/gpu-mesh-sensors",
+  "head_before_main_merge": "4bd11eb006bd4d633541de0e80e4a0fbc19511f6",
+  "pending_main_parent": "99b9ead36651f85ffe9d9073726fef014cd80461",
+  "snapshot_is": "the current uncommitted continuous-zone implementation, before ray-backend changes",
+  "historical_commits": {
+    "single_frame_gl": "7d3d2e34c9f01150178c96a3e8a154246bccfbfc",
+    "pytorch3d": "3630c0c14e036a7c3923cb313685a5f32ec74deb",
+    "opengl_batch": "104c3ee1f167a2c4f3578672d2a6f86180c53012",
+    "formal_gpu_batch": "4bd11eb006bd4d633541de0e80e4a0fbc19511f6"
+  },
+  "historical_tof_config": {
+    "width": 8,
+    "height": 8,
+    "hfov_deg": 60,
+    "vfov_deg": 60,
+    "min_range_m": 0.05,
+    "max_range_m": 12
+  },
+  "torch_in_snapshot": "2.9.1+cu128",
+  "source_snapshot_root": "snapshots/zone-20261017",
+  "evidence_root": "evidence",
+  "excluded_current_tool": "tools/sensor_review is intentionally not frozen or committed; UI adaptation is deferred",
+  "sources": [
+    {
+      "path": "README.md",
+      "bytes": 4286,
+      "sha256": "bc8f58028b96c159ec894cace167979c45caf7cb84c1952dfebce274458fcb3b"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 3535,
+      "sha256": "b987c5b4f18f24ef86853441096364eed98ac379a21777168f7515c00940562d"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 775,
+      "sha256": "7527b15530f28dad547f7d82ff1b9f2951f90fb3974565306bdf3836044312fe"
+    },
+    {
+      "path": "devtools/README.md",
+      "bytes": 9440,
+      "sha256": "7af70b46465f1dbfd53a1f23263917676a5a9c0e7016ea323a7029bfebb4f6d1"
+    },
+    {
+      "path": "devtools/__init__.py",
+      "bytes": 81,
+      "sha256": "be8f39361407ae1f6648213def16960c66f397763102e30c332b9d8e1361c79d"
+    },
+    {
+      "path": "devtools/_gl_cuda.py",
+      "bytes": 7324,
+      "sha256": "701dc60c8f316651bedf8281e8b58ff4c35f6b22a786fffcf5a66f3a55e169bb"
+    },
+    {
+      "path": "devtools/_sensor_processing.py",
+      "bytes": 16616,
+      "sha256": "a07faa16fd23b7d6420a986858e7a727633e71226fc7a6f9c888fe0b524c1f2e"
+    },
+    {
+      "path": "devtools/_zone_shaders.py",
+      "bytes": 8768,
+      "sha256": "a18c77d5ff042c5d76836b944fea8745b0c9c89d667d9a5c1928b85c88f6b101"
+    },
+    {
+      "path": "devtools/config.py",
+      "bytes": 8599,
+      "sha256": "365f616a3d64d474ee6860384453255d0e1d38c7197a2c05457b87ad8dbc8968"
+    },
+    {
+      "path": "devtools/esdf.py",
+      "bytes": 161,
+      "sha256": "dc57bc0b8a549e66250a54263aaf9ad5eba00845b1f1e0072846f69d30698308"
+    },
+    {
+      "path": "devtools/mesh.py",
+      "bytes": 12309,
+      "sha256": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56"
+    },
+    {
+      "path": "devtools/rendering.py",
+      "bytes": 33770,
+      "sha256": "fe0a8fa1a8239c4ea0bde686603d9ae886b9a2fe706f9b116e29c90dbb7663c5"
+    },
+    {
+      "path": "devtools/scene.py",
+      "bytes": 12221,
+      "sha256": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e"
+    },
+    {
+      "path": "devtools/sensors.md",
+      "bytes": 12805,
+      "sha256": "8579e871a6568f6e1c81a691f237ae4b9c5b20982bc769c9daf89a23dd5035b4"
+    },
+    {
+      "path": "devtools/sensors.py",
+      "bytes": 13547,
+      "sha256": "3e9f2f10695e6934c374e06710846817def8d992b5e1e96655667fc68f3bcf59"
+    },
+    {
+      "path": "devtools/trajectory.py",
+      "bytes": 9582,
+      "sha256": "4b996a770f8919ef19a47e4e8eb11bdd56ff95846167ab2f7b96c040de6dae65"
+    },
+    {
+      "path": "configs/devtools.json",
+      "bytes": 866,
+      "sha256": "b31f0099e2adc1d4ad4ab1d480b70b268f74bd058dc318e0ca588e09d8f0bcc1"
+    },
+    {
+      "path": "src/tof_tracker/README.md",
+      "bytes": 5815,
+      "sha256": "a0d576d38b502270ade27f041080eeccfd31a4e67b0519981efdcf6d91009774"
+    },
+    {
+      "path": "src/tof_tracker/__init__.py",
+      "bytes": 87,
+      "sha256": "8f98543c32d6ef53de7d35ff02a0fe0caf73f13adea37a3abfc562dc95dffdbf"
+    },
+    {
+      "path": "src/tof_tracker/geometry.py",
+      "bytes": 12291,
+      "sha256": "461a7c557d57202e9fb2ce16a4241c782da4638ec25a677034217c318a2e2331"
+    },
+    {
+      "path": "src/tof_tracker/observation.py",
+      "bytes": 87,
+      "sha256": "4eb38b0e8710c3b035bbd0dbb39edfe9a2c8f48db03720442b2dcd736bc91169"
+    },
+    {
+      "path": "training/README.md",
+      "bytes": 3022,
+      "sha256": "30c19a612734ff39ef3574a4fa32d19ebcdebe450d7ca4a3b31658b32314bbbe"
+    },
+    {
+      "path": "training/__init__.py",
+      "bytes": 76,
+      "sha256": "847fbfef80eed2b122e6b7297d5e096bee9dd3674a7180e363289bfb709029da"
+    },
+    {
+      "path": "training/dataset.py",
+      "bytes": 78,
+      "sha256": "1fadad2d4921529fbdbebfc5f1f27df810feb357271a6513487f5f8a1a4448a2"
+    },
+    {
+      "path": "training/train.py",
+      "bytes": 84,
+      "sha256": "21931e3b420e1b27746739b949eb960b848c7e7624dbf29421fb5adbae123573"
+    },
+    {
+      "path": "docker/Dockerfile",
+      "bytes": 1657,
+      "sha256": "dd93201a4c2971bdfab07e083e9dfec139f2bbaea52d429f61e0339dfe9e69cd"
+    },
+    {
+      "path": "docker/README.md",
+      "bytes": 5217,
+      "sha256": "1416d16d8dd83a925ed8f1ce15155f2520044b17069dfd68e589472015688e13"
+    },
+    {
+      "path": "docker/check-env.sh",
+      "bytes": 2144,
+      "sha256": "198a71e15ec2d9ebec85c4737f43789d3095be2684c4014b199f418cbb59eb05"
+    },
+    {
+      "path": "docker/dev.sh",
+      "bytes": 1445,
+      "sha256": "808df499c2ce247494902f6ab929fae370f3e752443243e54fe1a522b61000a7"
+    },
+    {
+      "path": "docker/export-vscode.sh",
+      "bytes": 2089,
+      "sha256": "ef8c543fdca0799600b16d95f6c217605c462ce3af6749dc856ace762c0fa4b7"
+    },
+    {
+      "path": "docker/fetch_review_assets.py",
+      "bytes": 1525,
+      "sha256": "bd57f20fec53702284283f98215d6e85a3f27380c4d7beff42092701d63027b8"
+    },
+    {
+      "path": "tests/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/fixtures/sensor-review-pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "tests/run_checks.py",
+      "bytes": 1307,
+      "sha256": "a21aaddd8159fe8dc30b0d9a3f0bf6436eaa6580ec8a8c1a65903971b4b590ca"
+    },
+    {
+      "path": "tests/verify_geometry.py",
+      "bytes": 21455,
+      "sha256": "30b1592180db0004b5a50bfa92ff8aa22e961cc84ae9f6a9a9fa9addf8f4eb2e"
+    },
+    {
+      "path": "tests/verify_map_viewer.py",
+      "bytes": 20989,
+      "sha256": "5e23ab8b7c210688108a18c23c96824d9e96aa43780139b46b4c277709e220c6"
+    },
+    {
+      "path": "tests/verify_mapgen.py",
+      "bytes": 11828,
+      "sha256": "ef70dab091ef7372ec1cbd5e05855bc40707ed5e152a8b6bdef9ec98ca4f435d"
+    },
+    {
+      "path": "tests/verify_scene.py",
+      "bytes": 27649,
+      "sha256": "3ce141f64a8deb7d2b4dca0672d30b31f134001cd755504e81044d44775ce531"
+    },
+    {
+      "path": "tests/verify_sensor_reference.py",
+      "bytes": 32879,
+      "sha256": "b65b1df0fc5fa7361f167c9f68a610281fca88dda0bd5a1075c766cd4afb047d"
+    },
+    {
+      "path": "tests/verify_sensor_review.py",
+      "bytes": 29608,
+      "sha256": "766b116bccdba86999024e9bb2385351eff87b9965a78eae208f1421dce0bafe"
+    },
+    {
+      "path": "tests/verify_sensors.py",
+      "bytes": 41898,
+      "sha256": "e6bde17aff0d2629d7ee358c194f9a8e3132dacd0fd368d1c8eb8301bb6aa785"
+    },
+    {
+      "path": "tests/verify_tof_zones.py",
+      "bytes": 26017,
+      "sha256": "6033ff9615cec8ae5aed2efc0cb93acca10930b8798c5565c27a706b78dc8fd4"
+    },
+    {
+      "path": "tests/verify_trajectory.py",
+      "bytes": 30594,
+      "sha256": "1d611d11b2961254a8e7963127c84e3cefffb7269bdab170566ecfcc2b42eb9b"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/Dockerfile",
+      "bytes": 385,
+      "sha256": "ef0e59dbadc8e1c53e089edcd30cebf0fe63d80cdbefc9b7b434d2d12e87f1f7"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/README.md",
+      "bytes": 8836,
+      "sha256": "26da1bc9ba694282049f2e15dcce006f92d774024a29d5f2de01bff7de6b533b"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/REPORT.md",
+      "bytes": 9886,
+      "sha256": "ed0a837a1387cacdad930e1581a014cf2342289d2cf2a4c33515747e959bb1a2"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/backend.py",
+      "bytes": 20227,
+      "sha256": "3c87873e332c3ef3be26b863d685f06c70747036a33f69fcf4e09f49a496cee6"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/gl_api.py",
+      "bytes": 7283,
+      "sha256": "511d373135e1ae703b922abd4dc821c6591e3470ac7e6f7b4662035630eaa483"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/memory.png",
+      "bytes": 317745,
+      "sha256": "63029d98bf24f45bdd72fb625da30786977538022b74cd270b9b2723c2170f43"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/results-summary.json",
+      "bytes": 383696,
+      "sha256": "ec43d0da2ea3a485d5bb5dbbba0c034ee94ac6fe95158e558e894330fadbf2ab"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/results.csv",
+      "bytes": 14343,
+      "sha256": "785e183054a92e15030f7df019ddea2d6aeecbc745349547ec386df247d4562c"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/run.sh",
+      "bytes": 1318,
+      "sha256": "87f2c0470f705b9a4ac689a6eb620f2856bdd5c2fffc2b20a75ac9c5b8dd2fe8"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/run_eval.py",
+      "bytes": 16329,
+      "sha256": "a8e35146eff88b339bf92e9ee621482bb8a6867772e0c57b5d625d41463fc95f"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/throughput.png",
+      "bytes": 185479,
+      "sha256": "fac171f8abd429ef8a485b4c75179d0079309f1e9cbaa12286b13619ea9c4bd3"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/validate.py",
+      "bytes": 14714,
+      "sha256": "b94dcab8af56a84757c4105712d6a2c72a73257230b6bd22a60851ec03bac838"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/verify_batches.py",
+      "bytes": 11086,
+      "sha256": "c03cbb9a083c9372d575c68e2f2d8f168aea3b54ded1b06f8e2083219c8c7e0d"
+    },
+    {
+      "path": "experiments/opengl_batch_eval/worker.py",
+      "bytes": 9454,
+      "sha256": "8c5a2902bcae408ac82a40e4888ac51f20f379ecdf3ecfd73165b66a0619589d"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/Dockerfile",
+      "bytes": 1371,
+      "sha256": "4384c9553541d48fcd1307f69fef11ff43b98aa7d7a82d6ad67d10e542b33d9b"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/README.md",
+      "bytes": 7140,
+      "sha256": "c9601d1030c285471f9c0492afe9439618bb11f21ebd30375727ef80108056c8"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/REPORT.md",
+      "bytes": 9982,
+      "sha256": "4a807ab6b5e64a8ec06c45410c75e5b20be767d43c254119101c727067502d8b"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/backend.py",
+      "bytes": 15092,
+      "sha256": "dc0e4e4a3d716ef6ce797479b0a5d5bb8bb5aaf74751f55fc2322aab7e198987"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/conditioned_backend.py",
+      "bytes": 10198,
+      "sha256": "27de0073af80131cd06009084f2bd7b5856a220cbdadb2389246c548af7c121a"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/fixtures.py",
+      "bytes": 4120,
+      "sha256": "91e083a9c137819f3180cf03004248f08fac79858ee8146f666a1eac163fb70b"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/memory.png",
+      "bytes": 112453,
+      "sha256": "e3c0222f9aad4746e59dec8e358f16d70ce3f598443e81169cb5e38c0ff0d4b6"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/postprocess.py",
+      "bytes": 12179,
+      "sha256": "3355b798df66f99856024eab3a8d2ab35e92d9125d48e58f55c6231d7b35360a"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/results-summary.json",
+      "bytes": 713849,
+      "sha256": "d5ecc20e543594edeefaafbbc8928dcca75b7d8cde245b4fd3ba1c798918f408"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/results.csv",
+      "bytes": 19005,
+      "sha256": "7d617ac66634586b109eed68599ddc12ccca1b451685f609ad51f6c9c9f8fa17"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/run.sh",
+      "bytes": 1069,
+      "sha256": "f1e5596256b1bc1553b94d5b3ae3bb432f97f9dca39443e38945d16c0c271e3d"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/run_eval.py",
+      "bytes": 16785,
+      "sha256": "e3b9f892091e47019f7c9dd906a5b92bedbffd1ca8fe6bf922ea84c3b6dc1d0a"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/throughput.png",
+      "bytes": 218600,
+      "sha256": "178df72c89d89757646a7d0fd8bc4e64b73874ecb767eeb7e6486e4ea6c3d956"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/validate.py",
+      "bytes": 29501,
+      "sha256": "7b60bbb1df4764c4fd09c2f9f592a89bc58ea3879fa948b929574ba4af07c5b8"
+    },
+    {
+      "path": "experiments/pytorch3d_render_eval/worker.py",
+      "bytes": 11642,
+      "sha256": "181dd4cdb7c5be293f3ff4f34db050759aef7b1ea437c433308fcc5a7fe6cdf6"
+    },
+    {
+      "path": "experiments/reference_tof_perf/README.md",
+      "bytes": 5244,
+      "sha256": "9d0bc7c0623940ed5f38461add978b791301e818fa6c588e54845d8643c38fa0"
+    },
+    {
+      "path": "experiments/reference_tof_perf/benchmark.cu",
+      "bytes": 20690,
+      "sha256": "50369ab4853c2f718cd075e837c27f300422ffe8fe11b7d514e11c64701d7181"
+    },
+    {
+      "path": "experiments/reference_tof_perf/prepare_fixture.py",
+      "bytes": 5250,
+      "sha256": "cfce51ebd7fa12e9d93e730aa6d1c633e50c30b1f3c101a560e8b22ccce3b5db"
+    },
+    {
+      "path": "experiments/reference_tof_perf/run.py",
+      "bytes": 5376,
+      "sha256": "971694983f59bd8dfcfad289db6b2f7c28f1947a25db5d1f930927b0f36c4654"
+    },
+    {
+      "path": "experiments/reference_tof_perf/third_party_notices/Omni_ToF-YOPO-LICENSE",
+      "bytes": 1104,
+      "sha256": "190628e01bd182aa8fc644706d6ff81824438cb6f35b788788d7403ce1aabadd"
+    },
+    {
+      "path": "experiments/sensor_reference.py",
+      "bytes": 17789,
+      "sha256": "9cef401211167a44529c0b77a083ca64d08a2ec65841782acb10b297defe3f81"
+    },
+    {
+      "path": "experiments/sensor_zone_perf/README.md",
+      "bytes": 6385,
+      "sha256": "35165be33100b7e666dc1fe42c281e8c58d04a6c1cf01040ca8b8175560a1b90"
+    },
+    {
+      "path": "experiments/sensor_zone_perf/benchmark.py",
+      "bytes": 25758,
+      "sha256": "b068764321f1d8032dea7769acacfa30519dcf1274e2b6eba10aae62cc6b1c19"
+    },
+    {
+      "path": "experiments/sensor_zone_perf/run_sweep.py",
+      "bytes": 6170,
+      "sha256": "0297d0996e44a924989029ae5713a23b2f55d2b72f18e80af4121adbcac97cc2"
+    },
+    {
+      "path": "experiments/sensor_zone_perf/summarize.py",
+      "bytes": 5671,
+      "sha256": "075779e4ccd46dc3be539b7a5805ba04eb2663fc03c2a04948cfe13ede40fcaf"
+    },
+    {
+      "path": "experiments/tof_pipeline_profile/README.md",
+      "bytes": 4731,
+      "sha256": "c28aaed7aad4f9d240d9640ffc0cc45ab3aa3c585d2ea012b762099e6b194d9d"
+    },
+    {
+      "path": "experiments/tof_pipeline_profile/counters.py",
+      "bytes": 3225,
+      "sha256": "bbec2e156461d6aef76d2e6ba03b7dd87ef159651632182e23ed69a2e450db4b"
+    },
+    {
+      "path": "experiments/tof_pipeline_profile/stages.py",
+      "bytes": 20664,
+      "sha256": "ac9b3daedc1068bc969f8af538535d75e8bea3f5cf218a5e3ad1d5b1afcdda00"
+    },
+    {
+      "path": "experiments/tof_pipeline_profile/variants.py",
+      "bytes": 18518,
+      "sha256": "8b18f4e2adaa9154d63afa7eab6f3a155d52e2d8b88c9a05cd189ba0e8d6332e"
+    },
+    {
+      "path": "experiments/tof_pipeline_profile/verify_candidates.py",
+      "bytes": 10675,
+      "sha256": "2172d051a7e77f1b238258c6c6c3c9a2f26921003c44e4599968cb4be7432177"
+    },
+    {
+      "path": "experiments/tof_pipeline_profile/worker.py",
+      "bytes": 9087,
+      "sha256": "3a41dd8575049825fe24d26dc53980765d5c7b8c4b52d392ea970f39d5036ecd"
+    },
+    {
+      "path": "tools/mapgen/CMakeLists.txt",
+      "bytes": 379,
+      "sha256": "7f7c814eb3a71cdb431df63fc444ebc386c9099d505b86ce88faa1b25cab2314"
+    },
+    {
+      "path": "tools/mapgen/README.md",
+      "bytes": 2156,
+      "sha256": "b96c3d49f22bb0b43435c181c36d9f01b405f3976999049f4dec944df5a426e1"
+    },
+    {
+      "path": "tools/mapgen/include/maps.hpp",
+      "bytes": 1134,
+      "sha256": "db81c8cf83e13a0912e9aac234f4c6cd44320216b372116cf5f1190bb85c788c"
+    },
+    {
+      "path": "tools/mapgen/src/main.cpp",
+      "bytes": 6290,
+      "sha256": "834d34c312eda164d8461c8209db1323b2a275d21a619a7ab3cb9d4e0fc98895"
+    },
+    {
+      "path": "tools/mapgen/src/maps.cpp",
+      "bytes": 3639,
+      "sha256": "41e2c8893c9613afd81df4ad20bd58fa6297be280bd3fe83d4fef6f05dc04045"
+    },
+    {
+      "path": "tools/mapgen/third_party_notices/YOPO-tracker-LICENSE",
+      "bytes": 1104,
+      "sha256": "190628e01bd182aa8fc644706d6ff81824438cb6f35b788788d7403ce1aabadd"
+    },
+    {
+      "path": "tools/map_viewer/README.md",
+      "bytes": 1951,
+      "sha256": "0063852839d51c28825dc5c86fc8cccfb5dc734d9921acf5a9d3b7f552ea8afc"
+    },
+    {
+      "path": "tools/map_viewer/view_map.py",
+      "bytes": 17328,
+      "sha256": "5ff4067502f5822b055471da82256367b5b967ab52dc727a10def76c718f6a8f"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/maps/pillars-500.obj",
+      "bytes": 308051,
+      "sha256": "07223be6eb755914209b8a7636b451bd9a43d0a83115ccea751db389c6e57dac"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/maps/pillars-5000.obj",
+      "bytes": 3263962,
+      "sha256": "d162e1c33bf0e5eab6ec270bbc5cb907948e123f86cbc56f516917275fa1e0f9"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/backend.py",
+      "bytes": 20215,
+      "sha256": "bbd02310bf718642b4b87c9ebe8b625b63a8b834906a16d1554b923c5afe66c7"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/gl_api.py",
+      "bytes": 7283,
+      "sha256": "511d373135e1ae703b922abd4dc821c6591e3470ac7e6f7b4662035630eaa483"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/run.sh",
+      "bytes": 1318,
+      "sha256": "87f2c0470f705b9a4ac689a6eb620f2856bdd5c2fffc2b20a75ac9c5b8dd2fe8"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/run_eval.py",
+      "bytes": 16278,
+      "sha256": "9194259fbd39cab6bbfaf59807ba643134d6b1952a8ecb359a017fb9641424e8"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/validate.py",
+      "bytes": 14702,
+      "sha256": "5f4146bd729820a9153c340dbdcb61dce007a27b4ce755f1c6507551c4613fe3"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/worker.py",
+      "bytes": 9454,
+      "sha256": "8c5a2902bcae408ac82a40e4888ac51f20f379ecdf3ecfd73165b66a0619589d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/numerical_probe.py",
+      "bytes": 2450,
+      "sha256": "1c71269a922bac98ec3c69b28efa534f08b85d2add8e06a2e33a2b873e92c55f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/maps/pillars-500.obj",
+      "bytes": 308051,
+      "sha256": "07223be6eb755914209b8a7636b451bd9a43d0a83115ccea751db389c6e57dac"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/maps/pillars-5000.obj",
+      "bytes": 3263962,
+      "sha256": "d162e1c33bf0e5eab6ec270bbc5cb907948e123f86cbc56f516917275fa1e0f9"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/backend.py",
+      "bytes": 15080,
+      "sha256": "2cba06ed5106db9126f698c489fae8a5c87a84a48b4187fdecffb788feef9090"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/conditioned_backend.py",
+      "bytes": 10186,
+      "sha256": "3bdf1b29567248056789e1ec348518a673d578763a7d58f6ad633cab2566e284"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/fixtures.py",
+      "bytes": 4120,
+      "sha256": "91e083a9c137819f3180cf03004248f08fac79858ee8146f666a1eac163fb70b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/postprocess.py",
+      "bytes": 12179,
+      "sha256": "3355b798df66f99856024eab3a8d2ab35e92d9125d48e58f55c6231d7b35360a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/run_eval.py",
+      "bytes": 15144,
+      "sha256": "0af0a61f9537be6219ac8ac60cdccd93ac7cff7b104a75aa23a2bfb2cebb1318"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/validate.py",
+      "bytes": 29480,
+      "sha256": "59b8e0d9b088f7d29f4ebbe57d316c79d46e7545acecc8a8c9a0259182341a1d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/worker.py",
+      "bytes": 11630,
+      "sha256": "660c12a34fcb7c500f43937b2153f7d61f813e42ccd05c3404646e880328e863"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/view_clip_probe.py",
+      "bytes": 3947,
+      "sha256": "77d8eace6b91306a6e77b771ad4b82d1260fb1920439948b20c5493ee10c7c03"
+    },
+    {
+      "path": "outputs/reference_tof_perf/write_report.py",
+      "bytes": 6259,
+      "sha256": "0c0ec026c5a9615beaa757ce320b82e9e1f8d0c548a5145bb69225d2aa1ff8e5"
+    },
+    {
+      "path": "outputs/sensor_perf/compile_reference.sh",
+      "bytes": 1051,
+      "sha256": "fc215e46693102688c4b781027fe7bd9f4344cc55108731ff54244bac866b69d"
+    },
+    {
+      "path": "outputs/sensor_perf/current_benchmark.py",
+      "bytes": 25405,
+      "sha256": "59a2e35181903d064b66b59647d7d3a6094ba14e8171f5224197418a13338e9f"
+    },
+    {
+      "path": "outputs/sensor_perf/maps/pillars-0.obj",
+      "bytes": 220,
+      "sha256": "3d8deb0aba87740cf6b10b34ae4cdeea51f8c98577fdf9354be56dae5b03119c"
+    },
+    {
+      "path": "outputs/sensor_perf/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/sensor_perf/maps/pillars-500.obj",
+      "bytes": 308051,
+      "sha256": "07223be6eb755914209b8a7636b451bd9a43d0a83115ccea751db389c6e57dac"
+    },
+    {
+      "path": "outputs/sensor_perf/maps/pillars-5000.obj",
+      "bytes": 3263962,
+      "sha256": "d162e1c33bf0e5eab6ec270bbc5cb907948e123f86cbc56f516917275fa1e0f9"
+    },
+    {
+      "path": "outputs/sensor_perf/reference_benchmark.cu",
+      "bytes": 16340,
+      "sha256": "132ffa95f7aeee47fb8e2044acd9fe6e29a0952786f0d4eb13240ce746b2a5a7"
+    },
+    {
+      "path": "outputs/sensor_review/tof-projection-diagnosis.py",
+      "bytes": 6608,
+      "sha256": "409d5247dada21dd17c9b16c66801fb99bba5c181645d358725929f5d70653ab"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/diagnostic_worker.py",
+      "bytes": 378,
+      "sha256": "fad05457b43a3a9d05f4d1d5771eed963515f030ed664232e744e654fdaa4a46"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/gl_finish_diagnostic.py",
+      "bytes": 1035,
+      "sha256": "a86b87fc02cc198c0b577999975d0accc84dd5c5f8ef748505d21c5d39561e72"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/preload_diagnostic.py",
+      "bytes": 1075,
+      "sha256": "ac8745aaa8f851624cfb0f14d870395b013ca61f30daa33664d374afcf7004f5"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/stream_diagnostic.py",
+      "bytes": 505,
+      "sha256": "96a93045475bf92eacc3476166423218b662ec2177bd2b0610a46ac1d620f8a8"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/write_report.py",
+      "bytes": 6475,
+      "sha256": "386088ffd969f79d5e1818cbf6df7a9f0047c48071cffd093cfb49e69a200ea2"
+    },
+    {
+      "path": "outputs/sensors/occlusion.obj",
+      "bytes": 352,
+      "sha256": "b3ed6b8b69d4c9fca92faa8b911c8bb984bf572e523297b7b3c713ebe3c28a62"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/write_report.py",
+      "bytes": 13408,
+      "sha256": "b769c7f7591dc8155ae681a9b14e0c33d301e83fb900590421b3ef1b9f6e3bc8"
+    },
+    {
+      "path": "outputs/tof_zones/core_smoke.py",
+      "bytes": 2105,
+      "sha256": "374a161774dd2aa09541ba286289cf28f25dfb23d0d2af960b4447567d2d62f9"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "outputs/archive-history-before.txt",
+      "bytes": 481,
+      "sha256": "a09afa53757c64f902e07b04c32765097eea31556262f25fed24f5b9b8e80c51"
+    },
+    {
+      "path": "outputs/archive-index-before.patch",
+      "bytes": 46561,
+      "sha256": "4a08f09404b856cf2b957f8d36e65f4ae161283ba238b0c554f9531fe4a1c016"
+    },
+    {
+      "path": "outputs/archive-working-before.patch",
+      "bytes": 60317,
+      "sha256": "850c17613834f65b93032c9aa46e7287d19b06928a41936c6bf7452dd8440f40"
+    },
+    {
+      "path": "outputs/formal-sensor-cpu-final.log",
+      "bytes": 1418,
+      "sha256": "1b8ca8a282ab3d1e0378708507422d424fcdb25f1229f526c36c6bc5263725dc"
+    },
+    {
+      "path": "outputs/formal-sensor-cpu-regression.log",
+      "bytes": 948,
+      "sha256": "c1cf08180460855daa250cab3ca989bcc52630f0765799835373799c8f63eed3"
+    },
+    {
+      "path": "outputs/formal-sensor-development-check.log",
+      "bytes": 585,
+      "sha256": "2c6f319d1f65be1425caba68506dfdeaea235fbdc9937e891ff9ec0f011b2783"
+    },
+    {
+      "path": "outputs/formal-sensor-example.log",
+      "bytes": 2017,
+      "sha256": "cb1e4c864971508ecb12187957ff107ff028051208a2ed8958afa9014a22ba59"
+    },
+    {
+      "path": "outputs/formal-sensor-final-check.log",
+      "bytes": 386,
+      "sha256": "006eafddd72f2149cd30bc349b1aec365eecb70f2eb5eb4f20ce27df9cc4a85c"
+    },
+    {
+      "path": "outputs/formal-sensor-image-build.log",
+      "bytes": 21020,
+      "sha256": "c5651db5cffad452806bad9c09f4b15082a818ad236fa44827b64e6f95381820"
+    },
+    {
+      "path": "outputs/formal-sensor-import-failure.log",
+      "bytes": 514,
+      "sha256": "ceed90cd5832a26e58e94b5175dc9b190a739688c2f212a0ae3e67d53db58a59"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/depth-format-probe.json",
+      "bytes": 97,
+      "sha256": "6fffe6aa64baebb7d8292fe490a3a97a2e6cfea23a733b7801316c31f602e4f0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/depth-format-probe.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/environment-probe.json",
+      "bytes": 1266,
+      "sha256": "5dbed340ce82228fe38d1144f3bcff94893cc1b36e022d1efe6ae4a89b813c52"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/environment-probe.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/final-check.json",
+      "bytes": 2149,
+      "sha256": "256dcd399bafe74c4a3fd63eb0187ee029414bc2237c648e1b486143e8703d71"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/final-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/preflight-validation.json",
+      "bytes": 1035604,
+      "sha256": "007fba7cadeee1cd086a315ec2ee19cae8642e6d86fb111d4eb3231aad72cc0b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/preflight-validation.log",
+      "bytes": 2381,
+      "sha256": "034b9bb567cd80682400ef012b227d692efc1988f2599601cd6aec8f7d1a497a"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/cells/pillars20-camera-gl_batch-b1.json",
+      "bytes": 10522,
+      "sha256": "8035e2386fb19341aa27ef4935195d9f868cc9811d39bdda4f40543476d07472"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/cells/pillars20-camera-gl_batch-b4.json",
+      "bytes": 10540,
+      "sha256": "7bae7c6483ac3b351ad92812005ed8f78562e850b407387fb93146d23918a005"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/cells/pillars20-tof-gl_batch-b1.json",
+      "bytes": 9953,
+      "sha256": "665b9f65c3304a65bf6e0150cfeaa5dfe14f028ff9d8e681e2696acc5c9cfac0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/cells/pillars20-tof-gl_batch-b4.json",
+      "bytes": 9970,
+      "sha256": "f01a5f43891a377fe2fd0c66b766c734c2d1b83a982085b0572ca6080593ab11"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/environment.json",
+      "bytes": 16530,
+      "sha256": "6ff7c12d6e9343af86e96122fb67885eb711c7a3421acaaca63ac1aac8b09680"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/logs/pillars20-camera-gl_batch-b1.log",
+      "bytes": 91,
+      "sha256": "cf0c0b9312e47824cf1d3e0367bc97b0692045804046674d77a4ea0ab9436f08"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/logs/pillars20-camera-gl_batch-b4.log",
+      "bytes": 91,
+      "sha256": "d1e84f74edb58587c15395706ea285869b09e96a1e6b447183aae95f5cbbdc90"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/logs/pillars20-tof-gl_batch-b1.log",
+      "bytes": 88,
+      "sha256": "6fd2733a9a995874f3f1132ec576a82d3ea47a8e6121210342a040136f7e472a"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/logs/pillars20-tof-gl_batch-b4.log",
+      "bytes": 88,
+      "sha256": "d341cea5659798ce63a0f5e6b239a6ac465beba8512e47bc330d2813fbab1902"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/memory.png",
+      "bytes": 232130,
+      "sha256": "106cf4c55603c90d63632446b5ae008dcff479a1eb810e79e997ab0252300c6b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/report.md",
+      "bytes": 2011,
+      "sha256": "3789c9419d110cb5487d61357eca5b307088344c924ccf4f1b1b0c8e0ba0cdcb"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/summary.csv",
+      "bytes": 1183,
+      "sha256": "7038e01f81f3b89ef91c681fe46ab4f7356243ee6ee3dce3f0313db407f7c560"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/summary.json",
+      "bytes": 2772,
+      "sha256": "36a3072094664dd53adee98cd4bab32c93f1ea13ea285143448745345b3b228d"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke/throughput.png",
+      "bytes": 89789,
+      "sha256": "acd7e085b3574a135dbc24bb31379ad595b15425682e4f262331c1f799946198"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/smoke-driver.log",
+      "bytes": 254,
+      "sha256": "e4342346869ac670e29ccee5de3ccfd7861f080b19cda6bd7836ff2bd2f47b3f"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-current_gpu-b1.json",
+      "bytes": 3056,
+      "sha256": "cf8ba5a6b7330a6860d8d7745577b7dbe4c746423aa41826d9a8b39642ffd636"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-current_gpu-b128.json",
+      "bytes": 3079,
+      "sha256": "35394d938a3cb051cd0948603bcb11d3090930ee444204f2d092ab121391a772"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-current_gpu-b16.json",
+      "bytes": 3074,
+      "sha256": "18f99378d281f6f77d1ab90c02800cd586599c425ff599cb67d6dabb20882a82"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-current_gpu-b256.json",
+      "bytes": 3035,
+      "sha256": "23900321184e56d34fd5864e3fbc32c388a303c413f6e9fd86da945117365f1a"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-current_gpu-b4.json",
+      "bytes": 3059,
+      "sha256": "34efad9cfa0196327e4c62e6735b601878ce22744166644a3c69a63a1471e42f"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-current_gpu-b64.json",
+      "bytes": 3083,
+      "sha256": "413b755dcdd0dc8c3f9daf5a5ceb20a50a1e4d22acf245103c6de59d334c41ee"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-gl_batch-b1.json",
+      "bytes": 13045,
+      "sha256": "7aa0e9e49e761db0b77f2fff75c0ea06389567c14107203dbde2442105e5c7f6"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-gl_batch-b128.json",
+      "bytes": 13122,
+      "sha256": "6f8f92579b1f9eecebae86787797f26d423cf01e9589813d1d3b537ce4367a5b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-gl_batch-b16.json",
+      "bytes": 13086,
+      "sha256": "2b63a194bedfa41b97775580816bae9b76f3fa62ff45a507b172b474e97170b8"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-gl_batch-b256.json",
+      "bytes": 13130,
+      "sha256": "6362210ff27ec3d245dbe16b60a2233b066f86e1911b1de61ee40021338bea72"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-gl_batch-b4.json",
+      "bytes": 13060,
+      "sha256": "db31ebe3d3d42fcfee4713317f0dc88a644e991db9fa3e4e93bc6c629e861c49"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-camera-gl_batch-b64.json",
+      "bytes": 13084,
+      "sha256": "581fcb668efccdc06876bb716e69247bafc932100385782ed8250701b030cc32"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-current_gpu-b1.json",
+      "bytes": 2508,
+      "sha256": "fcf737b0457c84204d529b89bceed38aa918da880731e6ca0d4ee7eb78836aad"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-current_gpu-b128.json",
+      "bytes": 2519,
+      "sha256": "0cac0cd3b21d6f0153e4737b9d210c53c775a368734919e554ab18bef3e05899"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-current_gpu-b16.json",
+      "bytes": 2510,
+      "sha256": "e662f2d1d89f6c48144c04205081096cbcd68830db59f1e010951cea03f72783"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-current_gpu-b256.json",
+      "bytes": 2514,
+      "sha256": "a41f60aff227a11e4f6df2008036cf9529dbf524dd8dec7dad90bb8d17bcca5a"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-current_gpu-b4.json",
+      "bytes": 2508,
+      "sha256": "31abfb71a58161a7c11661096828e198bc8e29d83d411a3688a9374f7e9a1d00"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-current_gpu-b64.json",
+      "bytes": 2515,
+      "sha256": "c6e2690e4e9f26f32d1a72e8f4440994302600cd70041ba4fb6cd38ee21863aa"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-gl_batch-b1.json",
+      "bytes": 12489,
+      "sha256": "614560ecaf112080faac69eaed7cdba6a98ed4051464af7d8d80dff215d0d98e"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-gl_batch-b128.json",
+      "bytes": 12533,
+      "sha256": "612615627fe0bcc315e6b4a7c8304d57cca29b49261f62015847bbf9148b9c4e"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-gl_batch-b16.json",
+      "bytes": 12520,
+      "sha256": "956eec92b3506c86b95d1d55a5d938f0b53c9d190267cec679679a9d97a127b3"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-gl_batch-b256.json",
+      "bytes": 12545,
+      "sha256": "90e9805873ec95108d12fc3b5f8f4db9efb1dccfdda671fa800972bae08367d0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-gl_batch-b4.json",
+      "bytes": 12497,
+      "sha256": "b7a5c1d358cbaa5f383948de2693ee50d54e6c11c628598a656da6d0cc24ff1b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars20-tof-gl_batch-b64.json",
+      "bytes": 12522,
+      "sha256": "875b06b14bb5f2d5f9778a24bef121b03a01f67f2e340605f5eeabff758d74b6"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-current_gpu-b1.json",
+      "bytes": 3059,
+      "sha256": "b470d92d97e347a8764c9894083368bb6595fc5f07c2757080dba1b0a90f8f30"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-current_gpu-b128.json",
+      "bytes": 3081,
+      "sha256": "2e1fa47bbe5565bb18a3a94690a5a51feae0965b81f468186d14e4fc912fbec0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-current_gpu-b16.json",
+      "bytes": 3075,
+      "sha256": "0f67bd354eb87b2aac89e05d8a04c6e28d1a316dbff2455d899f0f4d8d6534f0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-current_gpu-b256.json",
+      "bytes": 3036,
+      "sha256": "8a2c4e3f0be65b2f496ab87cde627adae212ffebd62e0829ac8b61c4f99cfd57"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-current_gpu-b4.json",
+      "bytes": 3062,
+      "sha256": "f0f200853480a01c7335663e0c8c85658503d5b5b5084e34eae482cf04fa4457"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-current_gpu-b64.json",
+      "bytes": 3085,
+      "sha256": "0798602e327bcb25990aef5b667686d36d5aa7071eea2694fb5bd0e16d3d9365"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-gl_batch-b1.json",
+      "bytes": 47358,
+      "sha256": "cbfc0652f165f70bbc0c1e6b2619b89272f40fb8df76e164bc8225678aafb20e"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-gl_batch-b128.json",
+      "bytes": 47441,
+      "sha256": "0ac57eb6034c4dc21b94b09b059fb761f611e23ad03dc7ff6fa522abc078a59c"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-gl_batch-b16.json",
+      "bytes": 47411,
+      "sha256": "52e19d11298181486e591e64da6ed8854036c9e6e6e8cc71d67674701ec18dda"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-gl_batch-b256.json",
+      "bytes": 47454,
+      "sha256": "98886b3075ded781dbf76af202228113184de6e8ef8e3a79542571b37850531c"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-gl_batch-b4.json",
+      "bytes": 47381,
+      "sha256": "14fab8fe2f4bcd849305b375d21b005ad87f3530420ed3767fef89b204944c21"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-camera-gl_batch-b64.json",
+      "bytes": 47408,
+      "sha256": "5746c4be4c6f27decf435a3d6a6dc3e27e30b588013ef2e42fcb000bcb0d97d4"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-current_gpu-b1.json",
+      "bytes": 2516,
+      "sha256": "92bc0023a711eff9ce819feeaedc1e8d9eb6845c97661abb45715fee24944253"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-current_gpu-b128.json",
+      "bytes": 2512,
+      "sha256": "3cd965b87bde414b2cad15c4017bfc8c19d92890624783af21548b2868736aa0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-current_gpu-b16.json",
+      "bytes": 2504,
+      "sha256": "0fe36685c4081331fe15307c23c7fea926cea6d31977d9eb9d72e85707f843c1"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-current_gpu-b256.json",
+      "bytes": 2517,
+      "sha256": "f944bb4a5f7c7bd97750721d7e0a1cdb20d68108ab3a4c2d7cdc1a7461b696a0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-current_gpu-b4.json",
+      "bytes": 2510,
+      "sha256": "38f45b067f3c37f514ce312b44f657003028e7e3a9bcb2fe6bc0abeb75089fbb"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-current_gpu-b64.json",
+      "bytes": 2514,
+      "sha256": "4e51f3b391038878095c1616dc15bee8bdfef77948ae907bdf71f7eef5c1846e"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-gl_batch-b1.json",
+      "bytes": 46791,
+      "sha256": "77eeee67616c112b1b9a750822553ac37c0b82884cbea5520bad2d9731e48c33"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-gl_batch-b128.json",
+      "bytes": 46849,
+      "sha256": "dd0dfd459d004350b504e8625e2950e1015a199742808bd5bfa280f8fb354653"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-gl_batch-b16.json",
+      "bytes": 46848,
+      "sha256": "a29a49101bfb782d17a6ecdfdbaaa35ac658ded370840ebc4f3dff1251d67b19"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-gl_batch-b256.json",
+      "bytes": 46875,
+      "sha256": "7b7cc45ef7cdad6ffe99017d40f6400974835c0c25bfb1c9a2b529bd9b5178d1"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-gl_batch-b4.json",
+      "bytes": 46833,
+      "sha256": "90015e025c334c413ba6e3b154ddb00db3b766ce796b119dc06de6d7f922f3b1"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars500-tof-gl_batch-b64.json",
+      "bytes": 46852,
+      "sha256": "61310208a287e89a91d345763e506260abdd9e3b306e8ae08f35050bd6cc2eb0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-current_gpu-b1.json",
+      "bytes": 3056,
+      "sha256": "e62aaf25387dd7ee00ccdd522d5ea1620ac13ea93c458a452782b5fa0692bee0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-current_gpu-b128.json",
+      "bytes": 3083,
+      "sha256": "0821a322e8209202588f84c5e4871e6d7767b9c3e323aa2d324be51b2aec22fe"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-current_gpu-b16.json",
+      "bytes": 3071,
+      "sha256": "9e47693df1f609b11f58c2c801e9a26abd4114483acc697f457c25ed1cf20c58"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-current_gpu-b256.json",
+      "bytes": 3023,
+      "sha256": "a9c0512f7a663914773ae95fc0cda08500852587351a5675a35cfb5573e28c74"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-current_gpu-b4.json",
+      "bytes": 3060,
+      "sha256": "260433cc15c92cc55818c1cc989f394d4dac306276a3b5443651bb9e8ce6c1a2"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-current_gpu-b64.json",
+      "bytes": 3077,
+      "sha256": "56d7a4780cc098dc1766a41feb6979527a1ef4fd11ae75ae325bf971f598b6cd"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-gl_batch-b1.json",
+      "bytes": 383366,
+      "sha256": "a0580024b5b80266d0161c43082c76fcb449f58ba8119e28c362ef3fb8c8e1a5"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-gl_batch-b128.json",
+      "bytes": 383434,
+      "sha256": "1a2dab4b331f5e3f3cb0e32ca0e488bdc289f4ab5181493152c4865e7e983929"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-gl_batch-b16.json",
+      "bytes": 383414,
+      "sha256": "7df482ad7e9b484a8d8c1960f27ea043cf13c3405672a4a45957515029845429"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-gl_batch-b256.json",
+      "bytes": 383444,
+      "sha256": "b6ae0be90ebd146b83726b682332c43adef9bbbac47ef26bd92bd6272417bfd7"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-gl_batch-b4.json",
+      "bytes": 383377,
+      "sha256": "f3f678ba1db0c7c81b2476c6de6307cf136041e4aa085b4ce147c41875e21f19"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-camera-gl_batch-b64.json",
+      "bytes": 383404,
+      "sha256": "50e038e961e645fbd3f840a48e698e0e734cddb0a0fe7f90f18421339920c135"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-current_gpu-b1.json",
+      "bytes": 2512,
+      "sha256": "a3edcdb2d681e8d2ab0c6d802588e149236f5a6c2639afca5e2105a9b1d2b56f"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-current_gpu-b128.json",
+      "bytes": 2519,
+      "sha256": "98c4ec7e426c493ce51385db3a32350c6b97b3a1876c01f3212f0d991ebea0c5"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-current_gpu-b16.json",
+      "bytes": 2506,
+      "sha256": "a1ab411036db7d7f9908bd4f55b437056f65ae911bef42c6c7d96f89256feb6e"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-current_gpu-b256.json",
+      "bytes": 2515,
+      "sha256": "8d2bb98da043f23d03855e59ddcd037c1fae83e28f459cf8dc54d164307faaa6"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-current_gpu-b4.json",
+      "bytes": 2513,
+      "sha256": "965d85cd56c30aad98cb5a9b7fb7a2b6a38016ee304b379d04a82c4c5abdbd1b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-current_gpu-b64.json",
+      "bytes": 2517,
+      "sha256": "f5560cd78d17ad5ce37b58d0a1c74d8035583c8c94a5356fb6dc2c69692e6992"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-gl_batch-b1.json",
+      "bytes": 382812,
+      "sha256": "cf01eae52782f4bde15fba6bb24bedbae86aca99196453abc09866ec7af07142"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-gl_batch-b128.json",
+      "bytes": 382851,
+      "sha256": "145c7122f07c0a80c8047ccdb5aeba48fd4ed789027253239ce526892121a544"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-gl_batch-b16.json",
+      "bytes": 382840,
+      "sha256": "63935a470c9d3cc2be844f2b03e1e40c5250192194f94cf6039bc8fb5a4fc41c"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-gl_batch-b256.json",
+      "bytes": 382863,
+      "sha256": "a99960a368bbbd2101594452b1a050e9b7c5b8f42ea7099649147145683013d0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-gl_batch-b4.json",
+      "bytes": 382828,
+      "sha256": "be8a8c7c087774011b0cf42eefe6ef1fa50f8bb82860febac502ef31b3c8d7cd"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/cells/pillars5000-tof-gl_batch-b64.json",
+      "bytes": 382850,
+      "sha256": "ee0917ef173f4138cd7a5eb7589d8f2dd3357608a1962a44554d4a54d71c3dcd"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/delivery/memory.png",
+      "bytes": 317745,
+      "sha256": "63029d98bf24f45bdd72fb625da30786977538022b74cd270b9b2723c2170f43"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/delivery/results-summary.json",
+      "bytes": 383696,
+      "sha256": "ec43d0da2ea3a485d5bb5dbbba0c034ee94ac6fe95158e558e894330fadbf2ab"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/delivery/results.csv",
+      "bytes": 14343,
+      "sha256": "785e183054a92e15030f7df019ddea2d6aeecbc745349547ec386df247d4562c"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/delivery/throughput.png",
+      "bytes": 185479,
+      "sha256": "fac171f8abd429ef8a485b4c75179d0079309f1e9cbaa12286b13619ea9c4bd3"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/environment.json",
+      "bytes": 16905,
+      "sha256": "5f3ce501ebd8035e4a8249ce0fc738ca957c9ebfe82dad9b53a89f84c6c4a578"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-current_gpu-b1.log",
+      "bytes": 94,
+      "sha256": "7ac061f552040691086e43de17f286c526edd161bb6c12fd46f5ad0cfb3d498b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-current_gpu-b128.log",
+      "bytes": 96,
+      "sha256": "7e2171c2a58b709e2801d24f2779059af8ada5db71e3329504389e18b3e821b3"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-current_gpu-b16.log",
+      "bytes": 95,
+      "sha256": "04ebd4641603b3947e8533cd3626c7062241165fc1b0bb04980f53a1d454d522"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-current_gpu-b256.log",
+      "bytes": 96,
+      "sha256": "e3a34cf32bf1194a694e2234bebacebb892174bb273bdaa68e3a9389f260a597"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-current_gpu-b4.log",
+      "bytes": 94,
+      "sha256": "76b9376550e7c68f13aa30a37cb4be821ad5ece161034df9fe4ce8d2ec74bf2a"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-current_gpu-b64.log",
+      "bytes": 95,
+      "sha256": "571c277198375f02713eb7ce0e99af3bf8098ba3f4c89c5690bb526b269fac80"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-gl_batch-b1.log",
+      "bytes": 91,
+      "sha256": "cf0c0b9312e47824cf1d3e0367bc97b0692045804046674d77a4ea0ab9436f08"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-gl_batch-b128.log",
+      "bytes": 93,
+      "sha256": "aba299e8ef50cb8cd0bb542d9ce01282b96de7076fda9b1e6e4915faae16cf52"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-gl_batch-b16.log",
+      "bytes": 92,
+      "sha256": "23d20e6cc0844ad44d160b0217e715ee852248e7504e008607dbd445a81735a4"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-gl_batch-b256.log",
+      "bytes": 93,
+      "sha256": "e89652b7b980a0186cf65c6f4d2871c5bdde0be4c73aa0a937f95fab7adfbcd7"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-gl_batch-b4.log",
+      "bytes": 91,
+      "sha256": "d1e84f74edb58587c15395706ea285869b09e96a1e6b447183aae95f5cbbdc90"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-camera-gl_batch-b64.log",
+      "bytes": 92,
+      "sha256": "7bc3260d2d26147b9ed487909032e9fa608647d78d455880aad18472592cd879"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-current_gpu-b1.log",
+      "bytes": 91,
+      "sha256": "e76e91f72260c18155526203da39f2b434c185df645f02733d7fc3df52e145f0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-current_gpu-b128.log",
+      "bytes": 93,
+      "sha256": "436baaa4cc41fd227be093f8a149326916f391d3758d10bd2f1d15dcb5d81514"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-current_gpu-b16.log",
+      "bytes": 92,
+      "sha256": "5c2e24cc201775023358b3d556e9ff426b26a3c9d8bd0415f0ba27e4499fc9b5"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-current_gpu-b256.log",
+      "bytes": 93,
+      "sha256": "34ad076c32bc7cda9b612167a807bcbe164d3ce883c42672b39c61b4105575ae"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-current_gpu-b4.log",
+      "bytes": 91,
+      "sha256": "0bfac9bc14caf7bf03f81ed2d03ebc958b3f76474b0c5d5c53e45b132ec26ac9"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-current_gpu-b64.log",
+      "bytes": 92,
+      "sha256": "671683d47b3f2720d71b673d7207dd34b4f6016d784e85421b55c818757afac2"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-gl_batch-b1.log",
+      "bytes": 88,
+      "sha256": "6fd2733a9a995874f3f1132ec576a82d3ea47a8e6121210342a040136f7e472a"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-gl_batch-b128.log",
+      "bytes": 90,
+      "sha256": "991089a02e89ca61495ffdb3a204a028257f628498b1007bcdafd5ef1129d807"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-gl_batch-b16.log",
+      "bytes": 89,
+      "sha256": "d45776a69f9432e98827821dad65f99caf4ca19b5a25bc31b79addd5fa7f555e"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-gl_batch-b256.log",
+      "bytes": 90,
+      "sha256": "e06620886a3875e7a6c809b91f3383667d731a478065f00b95e06ef075bb6bce"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-gl_batch-b4.log",
+      "bytes": 88,
+      "sha256": "d341cea5659798ce63a0f5e6b239a6ac465beba8512e47bc330d2813fbab1902"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars20-tof-gl_batch-b64.log",
+      "bytes": 89,
+      "sha256": "6130cc9e82691a3b096773173a2b075d91a2c69c77e1cfef710c4eae90d7bbc8"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-current_gpu-b1.log",
+      "bytes": 95,
+      "sha256": "9f1084a87091c09fb565e3b18dd1facea54fc41d33e74743e6ab973b59f98f2b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-current_gpu-b128.log",
+      "bytes": 97,
+      "sha256": "6f0f2174589399ac7efbfe666d209eea5dfbba72d9bc3c5fb6063475723fb7d7"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-current_gpu-b16.log",
+      "bytes": 96,
+      "sha256": "cd5a41bea77519a0b2250d1f25597ec93e3893f1730de887261854fadc5ac4db"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-current_gpu-b256.log",
+      "bytes": 97,
+      "sha256": "989991122245e9e28a580f6b5fa3dae53f73cb74ca76ed232d169de31c5422e7"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-current_gpu-b4.log",
+      "bytes": 95,
+      "sha256": "a8e057cbe0c0e414f7b7e10386b66a617aea23b291ac660c265298752c77dcfc"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-current_gpu-b64.log",
+      "bytes": 96,
+      "sha256": "8c75ac48148a88af84ceaa8efafb0b61b5ed2379f1669f79069562ae921338ff"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-gl_batch-b1.log",
+      "bytes": 92,
+      "sha256": "589ae6997846fc45af1612755e069a8bb32a110779ef3ac17fea8b47cfc5ba0d"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-gl_batch-b128.log",
+      "bytes": 94,
+      "sha256": "61eef4c651271772c60419fb4b49521075aa8e448dc2c4d52a3d020f8253c1f9"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-gl_batch-b16.log",
+      "bytes": 93,
+      "sha256": "a76ead5cb2c17c6962c3fbf84c4ed2729df48b478bc84091431bc3986f8bf159"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-gl_batch-b256.log",
+      "bytes": 94,
+      "sha256": "ec9b6d5b417b7f02047c75c8478fc0dc7839e8e8b826f9cbf2a9af30315d08f2"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-gl_batch-b4.log",
+      "bytes": 92,
+      "sha256": "c392adb9af89a31a7f8b24ed90b9c3e2be907559c2a58e0e816e04cad4dbecfc"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-camera-gl_batch-b64.log",
+      "bytes": 93,
+      "sha256": "e32d7eaec9531c2cf1e6fabcef641adf6a7c9279fbf2d003362a92b421ef9f6f"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-current_gpu-b1.log",
+      "bytes": 92,
+      "sha256": "435b8d5fe02ce27340ff6119dbbe68b27b381dbf82c89b140cbaffb904f32743"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-current_gpu-b128.log",
+      "bytes": 94,
+      "sha256": "d02878cb2502992a088e5f82378b4e7da3b0845dbab1dd2ee368ef21c0193b53"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-current_gpu-b16.log",
+      "bytes": 93,
+      "sha256": "1a486df83c3a36a2262b69d82fb2fe63dfdbb5b42e2fcba01417ffe48cea4059"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-current_gpu-b256.log",
+      "bytes": 94,
+      "sha256": "40a92a6de3b362929ea55cd5dd5789d552545da7ecd12b862928f19ef1c0f66b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-current_gpu-b4.log",
+      "bytes": 92,
+      "sha256": "d08fc2fe0eecbf99e770dffa31fafed80890c7bef6e2aa0dbdf4c1d8d6fb8e1f"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-current_gpu-b64.log",
+      "bytes": 93,
+      "sha256": "7dcde4c8c364588b19f4c931be3cd5ad62ecfe10210c7394eac3da1e7a750a1f"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-gl_batch-b1.log",
+      "bytes": 89,
+      "sha256": "5850b92f90cbdfafad9e1af9050a9d64108c424611aa61c8e858b7f29dde35af"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-gl_batch-b128.log",
+      "bytes": 91,
+      "sha256": "197e0b47332e4a81a652d023d5cdd8008bc3623d8bf21cf2af76671d1e1c73c6"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-gl_batch-b16.log",
+      "bytes": 90,
+      "sha256": "5efcb573f7db6d2daf12b2e77012e5a9edb2bbad600c174023aae01f23ad9bfb"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-gl_batch-b256.log",
+      "bytes": 91,
+      "sha256": "377a34b027b2d76a30011026c6cf9609ca2f2b7d6183fc182872d3ff57492f66"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-gl_batch-b4.log",
+      "bytes": 89,
+      "sha256": "35f046515e73d18ac8e6b2059022a2dc8b0b31abc2443cf31f572e0baa5cde73"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars500-tof-gl_batch-b64.log",
+      "bytes": 90,
+      "sha256": "6667d6c02f7ff5356dfb20ecf4e150cc1b3bb06243784892c2616dcd758c8e85"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-current_gpu-b1.log",
+      "bytes": 96,
+      "sha256": "60a2ad32f081c12f712279a13f6f21eb6720547fd1f3a0ccf43f66dc0bde4175"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-current_gpu-b128.log",
+      "bytes": 98,
+      "sha256": "8d30623798618108349d9433aeaf616c7d127eede8f029f19e671e44423e3039"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-current_gpu-b16.log",
+      "bytes": 97,
+      "sha256": "0d48e1e655cf3272e15ca95bc84ba9ad71661a6bf63fd8aa2df59a2a80b9e935"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-current_gpu-b256.log",
+      "bytes": 98,
+      "sha256": "70d89710a652f553d1a7e0668532641d5c0bb15f4fc38b2247bd9da92e466c78"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-current_gpu-b4.log",
+      "bytes": 96,
+      "sha256": "7493974e925c470e76421e05a7c8a5b55e4e56a7044f8a10764c0a2231a9c168"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-current_gpu-b64.log",
+      "bytes": 97,
+      "sha256": "70633bd01ffc0e289a65044e1d4a2d355167ccaad3d2b47ccd22b4fd21582794"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-gl_batch-b1.log",
+      "bytes": 93,
+      "sha256": "9cc7175b710df26bef1e06ab848f1308db9a1aca38b58c9e435b3172380d7f34"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-gl_batch-b128.log",
+      "bytes": 95,
+      "sha256": "fe92653f867f357facdd67b2b9fd6ab8bf5ceb4649f2971ee1f028cb80f5cae2"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-gl_batch-b16.log",
+      "bytes": 94,
+      "sha256": "52761b4b5328565925a9e94a7b3f5eb0c7087cbd592447cb3d12fda5bf62893c"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-gl_batch-b256.log",
+      "bytes": 95,
+      "sha256": "74aae552105181cb78fa2f3b66b19134f70e41b8b5d899e663f93b8602088fb1"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-gl_batch-b4.log",
+      "bytes": 93,
+      "sha256": "fa7721632d684f7a31b96c9f49ba79405f934badcfde5cb3de07f2d3f40cb7ee"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-camera-gl_batch-b64.log",
+      "bytes": 94,
+      "sha256": "f0980fa6a9e2451fd8e0357d3eaa1382d036614a1a88105defca8feb2172e220"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-current_gpu-b1.log",
+      "bytes": 93,
+      "sha256": "8d56a73526388b3dc7393d80851122eb591037a387c1e550704a991c2f141f57"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-current_gpu-b128.log",
+      "bytes": 95,
+      "sha256": "00b7a83ee5b3b7d4ba8aeef0a244405438cb91471abb90349c7e5e547d9dca70"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-current_gpu-b16.log",
+      "bytes": 94,
+      "sha256": "9b4a595edbfc30d279bb6509ea84a47493760b55b8ffccc798c28bd16d14dbd8"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-current_gpu-b256.log",
+      "bytes": 95,
+      "sha256": "132e94f8f9246df72d2327310a741c8135c0a5dc98e2f9b5e2cd7a4835a40d48"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-current_gpu-b4.log",
+      "bytes": 93,
+      "sha256": "4459e5bd0330aba2cf736b3b6a5b91f46109ed57635b46168a334c062d5fd2f0"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-current_gpu-b64.log",
+      "bytes": 94,
+      "sha256": "d17340daad31daced50e56845235110c95a21f1511be6d6282e704711049fe4b"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-gl_batch-b1.log",
+      "bytes": 90,
+      "sha256": "5d84eec337d04b11fb6e09f85ae26367e11270fe30657bcfffa051b0f412d4ab"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-gl_batch-b128.log",
+      "bytes": 92,
+      "sha256": "046df2fa148d6f9f1865b6debb678a13917a59318e5bdeba6d68a583fd856ccd"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-gl_batch-b16.log",
+      "bytes": 91,
+      "sha256": "52282e24f40b2802e48a3c62fb19ebfaac293c22fcf0827d7484951282c8eecb"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-gl_batch-b256.log",
+      "bytes": 92,
+      "sha256": "cd1e9a58763365b371a970cf56deb348ee0e77e61654297c2e9f686fc668a7e1"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-gl_batch-b4.log",
+      "bytes": 90,
+      "sha256": "50413262c1c02461ef385bd0d4699c90c96642b7e019bbc7715ee2487f3a280c"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/logs/pillars5000-tof-gl_batch-b64.log",
+      "bytes": 91,
+      "sha256": "d7fe6319ec35c3393f5a323022fdcda3ef546595d167f1886c8e6d3dc9cd740c"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/maps/pillars-500.obj",
+      "bytes": 308051,
+      "sha256": "07223be6eb755914209b8a7636b451bd9a43d0a83115ccea751db389c6e57dac"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/maps/pillars-5000.obj",
+      "bytes": 3263962,
+      "sha256": "d162e1c33bf0e5eab6ec270bbc5cb907948e123f86cbc56f516917275fa1e0f9"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/backend.py",
+      "bytes": 20215,
+      "sha256": "bbd02310bf718642b4b87c9ebe8b625b63a8b834906a16d1554b923c5afe66c7"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/gl_api.py",
+      "bytes": 7283,
+      "sha256": "511d373135e1ae703b922abd4dc821c6591e3470ac7e6f7b4662035630eaa483"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/run.sh",
+      "bytes": 1318,
+      "sha256": "87f2c0470f705b9a4ac689a6eb620f2856bdd5c2fffc2b20a75ac9c5b8dd2fe8"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/run_eval.py",
+      "bytes": 16278,
+      "sha256": "9194259fbd39cab6bbfaf59807ba643134d6b1952a8ecb359a017fb9641424e8"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/validate.py",
+      "bytes": 14702,
+      "sha256": "5f4146bd729820a9153c340dbdcb61dce007a27b4ce755f1c6507551c4613fe3"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/worker.py",
+      "bytes": 9454,
+      "sha256": "8c5a2902bcae408ac82a40e4888ac51f20f379ecdf3ecfd73165b66a0619589d"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/memory.png",
+      "bytes": 317745,
+      "sha256": "63029d98bf24f45bdd72fb625da30786977538022b74cd270b9b2723c2170f43"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/report.md",
+      "bytes": 7452,
+      "sha256": "192ea907c07d175d34d93082284adb71e2e394d8f84f3f2c95c95f001027b6ae"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/summary.csv",
+      "bytes": 14343,
+      "sha256": "785e183054a92e15030f7df019ddea2d6aeecbc745349547ec386df247d4562c"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/summary.json",
+      "bytes": 48116,
+      "sha256": "7ebe508bb91b13dd64f7ca09774f55fef3b7ea1c422fdcc86d668e2e7f103ca4"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/throughput.png",
+      "bytes": 185479,
+      "sha256": "fac171f8abd429ef8a485b4c75179d0079309f1e9cbaa12286b13619ea9c4bd3"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/validation-all-batches.json",
+      "bytes": 699846,
+      "sha256": "02c1e273e01f27988ef506b1761f03ee72aeaf1401afa1d91baf70b0598d0171"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/validation-all-batches.log",
+      "bytes": 3732,
+      "sha256": "338ba1d64f7a8a6ad4f512f50b8ae654661f471f40aa061404c3b17b9153b544"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/validation.json",
+      "bytes": 1035702,
+      "sha256": "8fea5a1760c750d7ae7c2b785460584720bae68dfb9953fe31b99fa88cb8cbc6"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep/validation.log",
+      "bytes": 2388,
+      "sha256": "42893b01f7f54d559a95dede6cca2dfe3bf7bd9c63086864e3edaff99ec023bb"
+    },
+    {
+      "path": "outputs/opengl_batch_eval/sweep-driver.log",
+      "bytes": 4849,
+      "sha256": "2293e963d63776e3fc1660040a94de3dec6bb6cf7736160ad2c36cc34ed35f11"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/baseline_verification.json",
+      "bytes": 2764,
+      "sha256": "c13d385a0b779bee65fe8b1de2d8c8f63480ba2e5e1ec230fc027949ec965929"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/build-final.log",
+      "bytes": 2634,
+      "sha256": "da4aeda457c9055fabfd4882bdb405257290210b8b33354ad5e0da03edbff8d1"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/build-runtime.log",
+      "bytes": 2176,
+      "sha256": "d4409ee181290e88307484849d4e5a5f99fbcb3679755638aecad5f82e6eb332"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/build.log",
+      "bytes": 2275376,
+      "sha256": "3d558b4a4e168835595e3ad42cc2c99a0fa4c25f8c3ebdeba9a8c0282e8c8bc5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/conditioned-validation.json",
+      "bytes": 1133224,
+      "sha256": "c03204ee1ce85948ecfa3687bcf3c599b5859c17a335e960349140a6c6bf6b70"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/conditioned-validation.log",
+      "bytes": 2297,
+      "sha256": "0f7c072596ee64e5ef3965eb792bb6ce40b0faab6ff42c0809c48768b598752c"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/environment-smoke.log",
+      "bytes": 181,
+      "sha256": "96f8eba5fbb7034d60fdfe7825b392b64ad83cfb93712c908fecfb0479ebba66"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/final-check.log",
+      "bytes": 330,
+      "sha256": "8b42d23dd80f2e7b247e5d5c90c789fd2036e749fbc88e2083b0b35b59ab417b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/numerical_probe.json",
+      "bytes": 6920,
+      "sha256": "e48d0f540c0ec804b710b3a4eb71a75d0d282257d257dcc6404948efb56751e4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/numerical_probe.log",
+      "bytes": 4807,
+      "sha256": "48eb91abe34c4179262fab4dbc12108f41279f6d2c49cfe3ba8441b7e2aabf8f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/numerical_probe.py",
+      "bytes": 2450,
+      "sha256": "1c71269a922bac98ec3c69b28efa534f08b85d2add8e06a2e33a2b873e92c55f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/cells/pillars20-tof-current_gpu-b1.json",
+      "bytes": 2451,
+      "sha256": "d2c2aa5dedd0c0086d58202afe1466e7b42ad3dfd1b81b363eb4915fa81b6996"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/cells/pillars20-tof-p3d-b1.json",
+      "bytes": 5606,
+      "sha256": "c14ced03f4d5542c51da22a7350137dcfe0ca4d25bbaae08d2979498f72b04d2"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/cells/pillars20-tof-p3d_conditioned-b1.json",
+      "bytes": 6322,
+      "sha256": "b2cb4ef7ae4e5dfe5b25da4e05ccda0b3b78db8e07a27c35e6a7182fbc916d23"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/environment.json",
+      "bytes": 9115,
+      "sha256": "74e4efdde78590032258882df23c7f9348298c17662e94c44929592ff48f32e5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/logs/pillars20-tof-current_gpu-b1.log",
+      "bytes": 91,
+      "sha256": "e76e91f72260c18155526203da39f2b434c185df645f02733d7fc3df52e145f0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/logs/pillars20-tof-p3d-b1.log",
+      "bytes": 83,
+      "sha256": "e6f75721812d13450c1493fa65c21bf02ad2825b7e25c79334826ba54e2d6022"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/logs/pillars20-tof-p3d_conditioned-b1.log",
+      "bytes": 95,
+      "sha256": "131358c9f9dfd367d509134ec1ed3d9683afaeccfe27b14175123d262953552f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/memory.png",
+      "bytes": 39582,
+      "sha256": "6304ef506c90a09257b6bc4cc37097b185b6909001f31aa7f446d94ccd2a77d1"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/report.md",
+      "bytes": 1687,
+      "sha256": "afb97538dea9dd589d90b594201aa3011092b6f8033dd21267d3252c3a98f979"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/summary.csv",
+      "bytes": 760,
+      "sha256": "e96a215b4da179a2a4d7df60a1f1f38f26d3c1e60d8078354eca15a9f16ae309"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/summary.json",
+      "bytes": 1715,
+      "sha256": "06e1f8f0314e3639939ae627aa0d15ee5a521864e04272bd459a98eced4a94b0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/throughput.png",
+      "bytes": 40713,
+      "sha256": "631eb3c1b7db819738ad219e6ef791b055a291ecb9227b834d1a19550f8dc8a1"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/validation-p3d.json",
+      "bytes": 415602,
+      "sha256": "6d3f4cb0d98b1d4a63da5d61c01adb57d1d2835adb32b692867f50732cf3d8bf"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/validation-p3d.log",
+      "bytes": 2052,
+      "sha256": "72b9842c3ef9f9c61ad33cb6f1e40ba30cb38e6c22859b803a175c1190f72863"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/validation-p3d_conditioned.json",
+      "bytes": 437159,
+      "sha256": "212cd20559518f1590631256f301bc103428afdc16954b340db11e65e06ee420"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check/validation-p3d_conditioned.log",
+      "bytes": 2064,
+      "sha256": "334616d7feb1e555a43022944c8a9f75a9e7ad8b9e9fee477dcb7e28569b6b4e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/orchestration-check.log",
+      "bytes": 2590,
+      "sha256": "93489a0cfe8db81cb74607b1b0b56fb6884c2bc5a3c2fbd417a0d1c145b1d104"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/smoke-validation.json",
+      "bytes": 391071,
+      "sha256": "9f8efd454722d8fa5bf494a20ddbda622974a57c019fd161bbfe8eed5e25636a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/smoke-validation.log",
+      "bytes": 2023,
+      "sha256": "c764980f5a0301e6bfa052ea97f2c1261e417c8cc45ebf552a98218cba2fc664"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/analysis-environment.json",
+      "bytes": 2112,
+      "sha256": "3cfcad659d666dea1a187458d23048f58dd34a1cee34d72b76af7378d212eab5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-current_gpu-b1.json",
+      "bytes": 3035,
+      "sha256": "ac073f9bb42dd5fdf5c15e45980711719ec050b3951e8701ebcb7d36c2a773ca"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-current_gpu-b128.json",
+      "bytes": 3059,
+      "sha256": "d68878177c69283601cb28d665b10d9fed15749e68172cadd867a0a8ee11c4f5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-current_gpu-b16.json",
+      "bytes": 3051,
+      "sha256": "10f3cf2e7f6a5919ad0f62d6a4f61d48484b516b952d049f61aa194853b96059"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-current_gpu-b256.json",
+      "bytes": 3010,
+      "sha256": "9dcd15e55265d863ffaf608fd768d922f43a1308b1f53c308096c02232ef49fd"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-current_gpu-b4.json",
+      "bytes": 3040,
+      "sha256": "9ad5d6097c294e185bf7a096051352c913e637e7daaaa04d813e8453a844ad28"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-current_gpu-b64.json",
+      "bytes": 3057,
+      "sha256": "9dc414d050154f0ad51217df4362614d393aba04dbd542ba7a4c614a1a64d397"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d-b1.json",
+      "bytes": 6303,
+      "sha256": "0ab28787105c6bba4e933808e342adc63a1a13886846a0b615c80e471e35a9ec"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d-b128.json",
+      "bytes": 6202,
+      "sha256": "c7a011669c3ace043158b05af9ab9faaa4c590d6cf5792b4b58aa88c9436f0a9"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d-b16.json",
+      "bytes": 6321,
+      "sha256": "923417098a9b67078ae0b83bfe57af126e52b724e24ee4a148293120b5d6dd7b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d-b256.json",
+      "bytes": 6215,
+      "sha256": "4e50bd11a88f484659cd4c42eefcba7bba0f73013c74252b9dd22fbc6386ae0d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d-b4.json",
+      "bytes": 6304,
+      "sha256": "2ef2f279f9d632cb7e66bb9b51b4b2a3d46074ef1b683a5345f3cf63be38fad8"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d-b64.json",
+      "bytes": 6335,
+      "sha256": "bebaa06907043f4c4f91b0a183dc186458496f922dd2dd98de70363f534f8d65"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d_conditioned-b1.json",
+      "bytes": 7027,
+      "sha256": "6b33315444d284f109c8c83594ae0fe7fd662dfe3b51ca4ad8a2efb9461c2aba"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d_conditioned-b128.json",
+      "bytes": 6922,
+      "sha256": "ecc049cbc3a9c4790cec90319e8a5d242fdf84b799afce4478ff239504a596e6"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d_conditioned-b16.json",
+      "bytes": 7035,
+      "sha256": "4d7eaa1ed1c7565748a14d5e189809175d3b90ccad17e33e1f2bab7fe8144008"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d_conditioned-b256.json",
+      "bytes": 6932,
+      "sha256": "091a7f4a1f170638de906e807a9c2aa7ba99d9a27e5e0b036ae5fd60aba13667"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d_conditioned-b4.json",
+      "bytes": 7027,
+      "sha256": "627044fade68e8773173e16b35918839912f0ef59d811799e02a37a2ee2a71bf"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-camera-p3d_conditioned-b64.json",
+      "bytes": 7053,
+      "sha256": "7b565941a35cdf8d85f9771cc6c3159341a9e5bfe5eb3d7be504bec67b11481a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-current_gpu-b1.json",
+      "bytes": 2489,
+      "sha256": "178ba1bda2d0f6696a54a2e9b77833e0d64bb5b9259b034716b3cd4ca99b4795"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-current_gpu-b128.json",
+      "bytes": 2494,
+      "sha256": "2e3b0e39098b336661768d47cd0f70a619e029c8c2adf257fb17ed56eea00b4b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-current_gpu-b16.json",
+      "bytes": 2479,
+      "sha256": "b2277ee40f7066be7544dffef708391ea3c461e7ed64149b41acddc1c66d91b5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-current_gpu-b256.json",
+      "bytes": 2495,
+      "sha256": "d2c07331b9729a978ce633486ab5cc9e14951dcd4604fc23072560034eb9f9a6"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-current_gpu-b4.json",
+      "bytes": 2485,
+      "sha256": "7e7b67dc687472a6a66da454fa5fab71147878a70dd6b6c617921565ff11b9fe"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-current_gpu-b64.json",
+      "bytes": 2494,
+      "sha256": "2d7cea1ccdbc23239df9ab4d1b4b18b4360d309361ab40b251929da14b641782"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d-b1.json",
+      "bytes": 5742,
+      "sha256": "c92ee244bd172c682025f238978d2892171a9df72f2e6d8db74d00670b8f6cd0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d-b128.json",
+      "bytes": 5778,
+      "sha256": "981f49fb91b1d5fb380c55706dd0047f4fe906854669c616250f534945e0b108"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d-b16.json",
+      "bytes": 5772,
+      "sha256": "f520b57864c5a82ca06ab00b93eb7f7cf4c7b696d82c2209005923602129ee38"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d-b256.json",
+      "bytes": 5798,
+      "sha256": "336545ee1f94e4e5f42255c47bcb9ce1d0a4c946a0d2d0fd02dad8c423b12f61"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d-b4.json",
+      "bytes": 5760,
+      "sha256": "af2b60362cc3b581ece749d8f848530ac90dbfb1a2f6df27a3553b990044801a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d-b64.json",
+      "bytes": 5780,
+      "sha256": "e7108b27e67cf581edb00bc9c56b29dc3d9a0e56a39743178ec868798c382b6d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d_conditioned-b1.json",
+      "bytes": 6469,
+      "sha256": "c571783111942e58c49b94bf5e82e565ba50f92f30db01df94f24f3bd0d75eec"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d_conditioned-b128.json",
+      "bytes": 6506,
+      "sha256": "92e619286ce7fcd8339d9c0edd6f9fbc862ee5eb0aa4559f17823e202dd31fa0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d_conditioned-b16.json",
+      "bytes": 6494,
+      "sha256": "8fcc49d1d62c2c92740cd87c2bb66ca836857b8614fe721f4ae56b4f3e7bfb0e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d_conditioned-b256.json",
+      "bytes": 6520,
+      "sha256": "7aef5980dda829be1753f0e3ca8299efd361349d07fe8f8685d5ef138a26a3f0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d_conditioned-b4.json",
+      "bytes": 6476,
+      "sha256": "82dbeabeb73fbf0b501e6aa429cc6f2b1bb7a40f3b49058f2c5ed19f2f16f6e5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars20-tof-p3d_conditioned-b64.json",
+      "bytes": 6494,
+      "sha256": "274e2c0080b0c10c3948230040754046de7854d61e58364634cdbe909d99837f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-current_gpu-b1.json",
+      "bytes": 3035,
+      "sha256": "28506e1f78c0d0c9d5380e42fe9c18672e9627d7e9b807d492d21ef1356832fe"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-current_gpu-b128.json",
+      "bytes": 3064,
+      "sha256": "bb1b5c1b9f776b64b179cec15772ef7ead78389fbe94559bde75c0f1c80dacfb"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-current_gpu-b16.json",
+      "bytes": 3051,
+      "sha256": "51922bdd06ca969a664e493fef54e554c816ae97862697abb1ce61f401c69ab5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-current_gpu-b256.json",
+      "bytes": 3014,
+      "sha256": "0bdf58dc07957583e4d1cadae93f45f503b1e40d84ffbb48cd2d43670d146b3d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-current_gpu-b4.json",
+      "bytes": 3034,
+      "sha256": "9b953cf3052a2672c311a5d6ea08d634fca4d11863111b5dff6939353691cbf7"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-current_gpu-b64.json",
+      "bytes": 3064,
+      "sha256": "37e4473238cbea83e0e50525f57ebd43ac991e9eb9364a6c6806154f14e3eb51"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d-b1.json",
+      "bytes": 17753,
+      "sha256": "6cf1fb3ec698ecef07ecbbd09c43be5df339d828cfded9ef95bb99125b9f1159"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d-b128.json",
+      "bytes": 17645,
+      "sha256": "f9270692233c8135eab51b66144f26742dd78e0f825ff832f29631aae954148f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d-b16.json",
+      "bytes": 17766,
+      "sha256": "fac63491977faa948d96a353d266c374a3fb7dc1ee6ea8b741f509d0612f0107"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d-b256.json",
+      "bytes": 17646,
+      "sha256": "8d8191f14f3cea23e0d4975bfd877600a6ba7b66b6ad01cab7d286f994482255"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d-b4.json",
+      "bytes": 17760,
+      "sha256": "4b9b2b58e03f973e09921d54200a9b006206cc53e96fc290f7ffa442aa5d00ea"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d-b64.json",
+      "bytes": 17777,
+      "sha256": "b3a97523c2ef91c006c7b68aa5f7a9fed44cedde78585ccf257fbfd826f4f020"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d_conditioned-b1.json",
+      "bytes": 18470,
+      "sha256": "4889c5d7b129c6fa0d1e5853696e2f3b08e3139f7b0be6fe91d3c985e3fcf761"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d_conditioned-b128.json",
+      "bytes": 18361,
+      "sha256": "fd4a5ca5599f114f7d6ae4eee396c06db4fedc2aa3fbd10260551b4d8c475952"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d_conditioned-b16.json",
+      "bytes": 18489,
+      "sha256": "0eb8edab42c23bd18662937753a7d0b17fa62f8279de8cfd64970c3081c420c9"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d_conditioned-b256.json",
+      "bytes": 18362,
+      "sha256": "85def72c9bdfe375545d95da0db9a313c7c340c5fa59205a930d427e2bf1ffbe"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d_conditioned-b4.json",
+      "bytes": 18476,
+      "sha256": "6c525b9a5d0014fde51a40b2bd910bfd1a1765fc718ad0c84a2f677530b1fced"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-camera-p3d_conditioned-b64.json",
+      "bytes": 18504,
+      "sha256": "5b0d4cf7aa9f3831850002f8b7e5fb9191db993906934c31982ac3df6b749a99"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-current_gpu-b1.json",
+      "bytes": 2491,
+      "sha256": "b5d4725c54fbc9172c5a4c03ba71ffdc10c7d152545fe412f0d0a44038724576"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-current_gpu-b128.json",
+      "bytes": 2499,
+      "sha256": "6f3dc5fe809041899126aeac9df0e84a8b52b280a10ec729038be53d8ec208cf"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-current_gpu-b16.json",
+      "bytes": 2480,
+      "sha256": "d5c8a0a5efa06825a926f31d6a359ac01fbc27f784dc2e10ca3f8de0e40867cb"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-current_gpu-b256.json",
+      "bytes": 2494,
+      "sha256": "0b31de49759895cd1eb4a5a3fd0dcdf027a77f7c0caced50e3dd88cc55fef7ef"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-current_gpu-b4.json",
+      "bytes": 2489,
+      "sha256": "72679baa23983fc5b09508b38021183c295c6e21bfe00d7442a3429c3b5716a6"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-current_gpu-b64.json",
+      "bytes": 2493,
+      "sha256": "085f8b93125a813f6375e08d916c037801ab2b4c8db673b2f7274f80fe163f19"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d-b1.json",
+      "bytes": 17193,
+      "sha256": "7453dc0521f316fbf7a14be2a4c489b9333a4a25e97d4e1f3eb51b7e78fe7ff1"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d-b128.json",
+      "bytes": 17212,
+      "sha256": "51c1ffd61f45630d4dfef7152c2ba66debc57f16f17f8e27049ab2d6bdc0cfeb"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d-b16.json",
+      "bytes": 17228,
+      "sha256": "8e4975378a927407d8dba6c90708ec05eee90b31f188cf4050706915ad311ea3"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d-b256.json",
+      "bytes": 17246,
+      "sha256": "be35a26dac00ab35ee2dfa5e8cadd531718ecd7b552b704aef7d46cd59f8c9a1"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d-b4.json",
+      "bytes": 17208,
+      "sha256": "e16e7e4f3e7e2d9f96ea8d37ac2db2058b7b29a42b3f138101e0eb87e460b455"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d-b64.json",
+      "bytes": 17220,
+      "sha256": "62deb739bd91a2c4ade5ec29596493adc6afe2f745388de97210f28aed63132b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d_conditioned-b1.json",
+      "bytes": 17909,
+      "sha256": "a01becd49feea1fc154b326b3e363a79047fceb653c9b5fbdf4f2f4726118dc8"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d_conditioned-b128.json",
+      "bytes": 17941,
+      "sha256": "fb022256d83eb80b59a399b9590bcfffe97440d4f968ae9f1921398c82c48466"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d_conditioned-b16.json",
+      "bytes": 17948,
+      "sha256": "20ad4838bbbb7fe8998c33665590ae9b6ff42c1c6f07468fbfb3e0d1d3af05c5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d_conditioned-b256.json",
+      "bytes": 17963,
+      "sha256": "b475e30d0d75140febf8f804197731cd607c89f8612b321bd217eeba9de29d17"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d_conditioned-b4.json",
+      "bytes": 17930,
+      "sha256": "ef2cce1b269752e9ed8dccb3a203b31f1a74f659fc9c046ade9f36e4b65e06cc"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars500-tof-p3d_conditioned-b64.json",
+      "bytes": 17947,
+      "sha256": "ac8c869756a03f4003c9de0e739172e9bd0f7a8f8d7c9f09ab1812e5f9c7ba6d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-current_gpu-b1.json",
+      "bytes": 3034,
+      "sha256": "f9bef26786384e12573d65ed3dcc06ad0a4f07e995c643e26ccd8d93c86d8825"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-current_gpu-b128.json",
+      "bytes": 3058,
+      "sha256": "380d32b046875dec1c3b35fc35978a35bf995d75a683e40161f4a8d3868a9afd"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-current_gpu-b16.json",
+      "bytes": 3049,
+      "sha256": "b66df61a5e88ae0493fe8eb5acaf6159207bb7649d80c1101736260e5c2bc6ce"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-current_gpu-b256.json",
+      "bytes": 3008,
+      "sha256": "c986c78c63a5237a0cb7724262ba2e9a8a79680ab4b9662580c7a7a9ec1d6b16"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-current_gpu-b4.json",
+      "bytes": 3042,
+      "sha256": "4763dfd53c2a266ef16c8708c090371d749c74fb169765daf2cbc063068d9492"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-current_gpu-b64.json",
+      "bytes": 3056,
+      "sha256": "a997c1f93e9f188500f00df51d98ec1643b047adc489ba8ba17ffde67ac04cd2"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d-b1.json",
+      "bytes": 129759,
+      "sha256": "921a474282d4738373134ed57a7efedadab65f1a88f0e9ef8a0085d49e83df93"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d-b128.json",
+      "bytes": 129636,
+      "sha256": "89d42fbd13d7ecfc210af12c4d303ddf18ee4614e95599fced43aa6726a307b8"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d-b16.json",
+      "bytes": 129767,
+      "sha256": "2b2d13417816a1de3d8881105212cb4cac9d69c4235ce5a740d20bfe9c0a73df"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d-b256.json",
+      "bytes": 129655,
+      "sha256": "a0552c125efdf668737ee8452acd2dd2f77e8662a88a12b2f1a232d7cba7b590"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d-b4.json",
+      "bytes": 129768,
+      "sha256": "7b37cb5a4c4bd2a19c8aa61617dd16c575b9a6dc6cbca4ccadaf92c4808060c3"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d-b64.json",
+      "bytes": 129703,
+      "sha256": "dab043daba36b6b6f2334955229b7a624cbf5c25111093ec4f47e62103dc382a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d_conditioned-b1.json",
+      "bytes": 130473,
+      "sha256": "adb90651d9ba5f016a97a09ba209f9b9ef8f48d609cb3af0687cfe18e940192e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d_conditioned-b128.json",
+      "bytes": 130353,
+      "sha256": "7a606481070eb70aa274864b1235a415ce0f05945a512207b9d013aa4c90053c"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d_conditioned-b16.json",
+      "bytes": 130489,
+      "sha256": "cab5ad14dc3033f3c09f0f5af7dd1ab53f4c787d68bf0f54914f54701872fd92"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d_conditioned-b256.json",
+      "bytes": 130371,
+      "sha256": "e227653b4de70290f417fb9bf9afa39b51e4a62a0fdc0f8e364fc4c3625be3e7"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d_conditioned-b4.json",
+      "bytes": 130484,
+      "sha256": "f59fbc71dbdc60f4c154fef248a27d758d9c97bc6146d44a1320ecf1ace1476c"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-camera-p3d_conditioned-b64.json",
+      "bytes": 130429,
+      "sha256": "64a5760ff3c6f69b3fd98086471763c7bc37f31fa580932d5a36bd5fecc2a6ab"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-current_gpu-b1.json",
+      "bytes": 2499,
+      "sha256": "3417b509eb00887a9e080e0a6537cc31b6fac85fe1e0f16726ca3207ae3862db"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-current_gpu-b128.json",
+      "bytes": 2499,
+      "sha256": "566ccda3f8222fd728ce1e729c43f11985a524511056e736f074545189262ddf"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-current_gpu-b16.json",
+      "bytes": 2488,
+      "sha256": "25aa27a21a0b42705549a544d5ec37b0a2d9ce6821788c31ff7690ce40a53535"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-current_gpu-b256.json",
+      "bytes": 2500,
+      "sha256": "a55b895c28a4ff1ad1c9a4572a588c6fcb06eb03c265a5e87d109b51a8f66444"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-current_gpu-b4.json",
+      "bytes": 2485,
+      "sha256": "a9d8ae0deee2f852b717c3f2bc9a55bcc9ca55413bc9fb098a459550b70e3641"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-current_gpu-b64.json",
+      "bytes": 2500,
+      "sha256": "0afd686dee34cf7a687cbbe3df533835e4f0ae7ef8f1b1ca9ce7093bf3e938f5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d-b1.json",
+      "bytes": 129199,
+      "sha256": "5afa555dc3561726215b24e7640b0f6b9c65a9851a5ad13e6b73ced199f673e4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d-b128.json",
+      "bytes": 129247,
+      "sha256": "966bb8ce0c29a71f5da82f6b5ef476301d59769e1d853b2247f5123dac453752"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d-b16.json",
+      "bytes": 129223,
+      "sha256": "91214da0a9cff0d4b317feb7bc06eade5f9357fe54d7b5c7056dd28b9836c0ef"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d-b256.json",
+      "bytes": 129080,
+      "sha256": "3fd60355020ec46b51e5c77d046b2daf67a99d06fbadfec43557a63d1b37fb09"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d-b4.json",
+      "bytes": 129218,
+      "sha256": "a6e368dd57807fbe635823a75db8f28ac6184af2e34ca449b68152dd37466579"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d-b64.json",
+      "bytes": 129225,
+      "sha256": "1bf0917bf14d3e17041830ddcbe27eb28dcc9565f13045512bdf59afba47359e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d_conditioned-b1.json",
+      "bytes": 129918,
+      "sha256": "610a7afad4a70ce3fd34d2045a1f00267b80451fe7935e28d04fa1be286531de"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d_conditioned-b128.json",
+      "bytes": 129970,
+      "sha256": "d045c80953fff302258ea96cde20fcbd57813987116da45776fa1148ba6fbc84"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d_conditioned-b16.json",
+      "bytes": 129951,
+      "sha256": "ddc42ff9f0e3c805b2d0413705f92e21b8235d3acf8cf9d6d0d75b5072163b67"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d_conditioned-b256.json",
+      "bytes": 129802,
+      "sha256": "d4514c1e421e0f1576698005a35f00647b35c48b24ca4cfb00a4c5600fccf561"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d_conditioned-b4.json",
+      "bytes": 129944,
+      "sha256": "b3200102d55dd85f97784c724e5fc8ca964346e8a4d578cb8de6a98b5af7903b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/cells/pillars5000-tof-p3d_conditioned-b64.json",
+      "bytes": 129940,
+      "sha256": "8ab6f241299bc6fb732d32914f638220a0af192ae76b7d9ce9cb2a0469009f78"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/delivery/memory.png",
+      "bytes": 112453,
+      "sha256": "e3c0222f9aad4746e59dec8e358f16d70ce3f598443e81169cb5e38c0ff0d4b6"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/delivery/results-summary.json",
+      "bytes": 713849,
+      "sha256": "d5ecc20e543594edeefaafbbc8928dcca75b7d8cde245b4fd3ba1c798918f408"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/delivery/results.csv",
+      "bytes": 19005,
+      "sha256": "7d617ac66634586b109eed68599ddc12ccca1b451685f609ad51f6c9c9f8fa17"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/delivery/throughput.png",
+      "bytes": 218600,
+      "sha256": "178df72c89d89757646a7d0fd8bc4e64b73874ecb767eeb7e6486e4ea6c3d956"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/environment.json",
+      "bytes": 9203,
+      "sha256": "619f9d18f7b694741fd6ffe48835eeacd7a9ef9b18ba23a1bb1c747c5d40c8de"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-current_gpu-b1.log",
+      "bytes": 94,
+      "sha256": "7ac061f552040691086e43de17f286c526edd161bb6c12fd46f5ad0cfb3d498b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-current_gpu-b128.log",
+      "bytes": 96,
+      "sha256": "7e2171c2a58b709e2801d24f2779059af8ada5db71e3329504389e18b3e821b3"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-current_gpu-b16.log",
+      "bytes": 95,
+      "sha256": "04ebd4641603b3947e8533cd3626c7062241165fc1b0bb04980f53a1d454d522"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-current_gpu-b256.log",
+      "bytes": 96,
+      "sha256": "e3a34cf32bf1194a694e2234bebacebb892174bb273bdaa68e3a9389f260a597"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-current_gpu-b4.log",
+      "bytes": 94,
+      "sha256": "76b9376550e7c68f13aa30a37cb4be821ad5ece161034df9fe4ce8d2ec74bf2a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-current_gpu-b64.log",
+      "bytes": 95,
+      "sha256": "571c277198375f02713eb7ce0e99af3bf8098ba3f4c89c5690bb526b269fac80"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d-b1.log",
+      "bytes": 86,
+      "sha256": "134ba16528fc3add7a91057031067688a60d634e981101e305a49ad0a36700ee"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d-b128.log",
+      "bytes": 88,
+      "sha256": "355683d69a9189fb6a9099de2c1d06c6864a0e6a09370404b4c40855121022ce"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d-b16.log",
+      "bytes": 87,
+      "sha256": "7bbf23193573ed7a7d52d75fe2bdd44100b9bd2e0e068de2666e0d93b9a827af"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d-b256.log",
+      "bytes": 88,
+      "sha256": "4007157b2f761725efdcfb95c29243ac359ad9f76572a46e6b5e8a780b871242"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d-b4.log",
+      "bytes": 86,
+      "sha256": "bbe7341db04b494b62193ba57a4b1926cf9705c046a67de0c4d7681e22ac0e0b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d-b64.log",
+      "bytes": 87,
+      "sha256": "5e6b37c6e9ca21b0df8876a6a208e3fbd3872e8d188d27b515b3b44978bebc04"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d_conditioned-b1.log",
+      "bytes": 98,
+      "sha256": "b80a381f0325475eaa6bc3a27ed6326ae5bc1f23765e83d473ef83146f55f765"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d_conditioned-b128.log",
+      "bytes": 100,
+      "sha256": "32ded83d2352fe71f4772db34fb76f87f3f6ceeb104d15036d66f9c778890ff7"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d_conditioned-b16.log",
+      "bytes": 99,
+      "sha256": "a68323a078f471765f49c7fae96f6e87d2293b3a3c16da0fb26a7755bc963201"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d_conditioned-b256.log",
+      "bytes": 100,
+      "sha256": "520c765f1346de6788f6e3d7bad35bc6bd2efe0df85de389e3dfd1bdec93f825"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d_conditioned-b4.log",
+      "bytes": 98,
+      "sha256": "f056e679f60ab588e3f7d2e1bb76126a73189ff2347ae6d40e96fa9efd930e4e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-camera-p3d_conditioned-b64.log",
+      "bytes": 99,
+      "sha256": "384ffd3ade739b05a79c60429194bfea6929c34fa9b0b90a5dd79464a20e46dc"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-current_gpu-b1.log",
+      "bytes": 91,
+      "sha256": "e76e91f72260c18155526203da39f2b434c185df645f02733d7fc3df52e145f0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-current_gpu-b128.log",
+      "bytes": 93,
+      "sha256": "436baaa4cc41fd227be093f8a149326916f391d3758d10bd2f1d15dcb5d81514"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-current_gpu-b16.log",
+      "bytes": 92,
+      "sha256": "5c2e24cc201775023358b3d556e9ff426b26a3c9d8bd0415f0ba27e4499fc9b5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-current_gpu-b256.log",
+      "bytes": 93,
+      "sha256": "34ad076c32bc7cda9b612167a807bcbe164d3ce883c42672b39c61b4105575ae"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-current_gpu-b4.log",
+      "bytes": 91,
+      "sha256": "0bfac9bc14caf7bf03f81ed2d03ebc958b3f76474b0c5d5c53e45b132ec26ac9"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-current_gpu-b64.log",
+      "bytes": 92,
+      "sha256": "671683d47b3f2720d71b673d7207dd34b4f6016d784e85421b55c818757afac2"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d-b1.log",
+      "bytes": 83,
+      "sha256": "e6f75721812d13450c1493fa65c21bf02ad2825b7e25c79334826ba54e2d6022"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d-b128.log",
+      "bytes": 85,
+      "sha256": "31e703fa4e660fcfe40f386d673fbd90e9b0b31287fe15b7b9367a55a44db563"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d-b16.log",
+      "bytes": 84,
+      "sha256": "fec422930b9a09ce56157c2ed5ca34c604cb982eb1642d33712bba97b6568520"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d-b256.log",
+      "bytes": 85,
+      "sha256": "0bda5a2bc34592b668b8edbb04f05bd9a86c27b1932310fadb8af5509298af73"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d-b4.log",
+      "bytes": 83,
+      "sha256": "d294c650e01fc108d0db25e4208d8ae969abc229740009e30cf26e55d4779ed1"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d-b64.log",
+      "bytes": 84,
+      "sha256": "ee4fada8d089d805249a1afe49cc6fe9f5f98603f23ed54bd012b37d8fdb11ee"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d_conditioned-b1.log",
+      "bytes": 95,
+      "sha256": "131358c9f9dfd367d509134ec1ed3d9683afaeccfe27b14175123d262953552f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d_conditioned-b128.log",
+      "bytes": 97,
+      "sha256": "8d3420e3b0e5051eaa84ee886fd167133255b42786b38964f66c911f7d9533de"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d_conditioned-b16.log",
+      "bytes": 96,
+      "sha256": "6103ccd2a09f4a2a3bac415659d739b272b765362b903e794fcf64b7eb4466ec"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d_conditioned-b256.log",
+      "bytes": 97,
+      "sha256": "1a4a302d8f852dd0280b8da8917666b95b31ccb1226cdce9c521d1e55bed4cda"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d_conditioned-b4.log",
+      "bytes": 95,
+      "sha256": "ffb02b1c1ab9cac1acd6614705c12daaa011931eb558fd70b4b55add8399a031"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars20-tof-p3d_conditioned-b64.log",
+      "bytes": 96,
+      "sha256": "d4bc7568c7c40754e3094f347d68f3e09d46d9f1e83bd56772d0681771a62b13"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-current_gpu-b1.log",
+      "bytes": 95,
+      "sha256": "9f1084a87091c09fb565e3b18dd1facea54fc41d33e74743e6ab973b59f98f2b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-current_gpu-b128.log",
+      "bytes": 97,
+      "sha256": "6f0f2174589399ac7efbfe666d209eea5dfbba72d9bc3c5fb6063475723fb7d7"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-current_gpu-b16.log",
+      "bytes": 96,
+      "sha256": "cd5a41bea77519a0b2250d1f25597ec93e3893f1730de887261854fadc5ac4db"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-current_gpu-b256.log",
+      "bytes": 97,
+      "sha256": "989991122245e9e28a580f6b5fa3dae53f73cb74ca76ed232d169de31c5422e7"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-current_gpu-b4.log",
+      "bytes": 95,
+      "sha256": "a8e057cbe0c0e414f7b7e10386b66a617aea23b291ac660c265298752c77dcfc"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-current_gpu-b64.log",
+      "bytes": 96,
+      "sha256": "8c75ac48148a88af84ceaa8efafb0b61b5ed2379f1669f79069562ae921338ff"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d-b1.log",
+      "bytes": 87,
+      "sha256": "965e2e5f08fbbc2250f346d284210e35e763cff6ec13184f85df464ab24d420c"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d-b128.log",
+      "bytes": 89,
+      "sha256": "7053f96e9cfe3f8a8f6a8af1c83e0c98733f0a40c06a72bf584080f5a085179c"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d-b16.log",
+      "bytes": 88,
+      "sha256": "fb38bb1c2e444876b9252f81d5b072b60aab865041d528e239fe9a26addbb587"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d-b256.log",
+      "bytes": 89,
+      "sha256": "8c1f080ee234e2298e89a07518b886ea1bc85bf581f6ceb5f2a0147f11c6edcf"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d-b4.log",
+      "bytes": 87,
+      "sha256": "adb3df80ebe0f3e72d3edddc3b131cfbf2a13d7877addc889106e1784660ef30"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d-b64.log",
+      "bytes": 88,
+      "sha256": "57e12966bd5144f65ec6c7c4aa9962ff46e2c2143660e8b8a2173d9d09a261ee"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d_conditioned-b1.log",
+      "bytes": 99,
+      "sha256": "16d1b4e44c8bee2c75d9fb83a777d4a86875c4fcbeec80b7d555c286f85ee4cb"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d_conditioned-b128.log",
+      "bytes": 101,
+      "sha256": "c6fbc372387179847b47a79a3383db0c50d7482b5f5fb1de39a4d9fac4bb20bf"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d_conditioned-b16.log",
+      "bytes": 100,
+      "sha256": "a2518d087a0f85a98a0686584cd94b4f6bcc07a00aac7a31297deffc4e9f7def"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d_conditioned-b256.log",
+      "bytes": 101,
+      "sha256": "1465dfb9e8d6258732e3fdc53d8bc7494c303048ae66c7a8a78216bc5fd8558c"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d_conditioned-b4.log",
+      "bytes": 99,
+      "sha256": "05ca21ad500c4b7faab0d49585ef974f88fa1db78648fe5aeb12b3fc201721bd"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-camera-p3d_conditioned-b64.log",
+      "bytes": 100,
+      "sha256": "2beb425348bd44190207cf0da603244091247a0704132536cd7c380787a6393a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-current_gpu-b1.log",
+      "bytes": 92,
+      "sha256": "435b8d5fe02ce27340ff6119dbbe68b27b381dbf82c89b140cbaffb904f32743"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-current_gpu-b128.log",
+      "bytes": 94,
+      "sha256": "d02878cb2502992a088e5f82378b4e7da3b0845dbab1dd2ee368ef21c0193b53"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-current_gpu-b16.log",
+      "bytes": 93,
+      "sha256": "1a486df83c3a36a2262b69d82fb2fe63dfdbb5b42e2fcba01417ffe48cea4059"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-current_gpu-b256.log",
+      "bytes": 94,
+      "sha256": "40a92a6de3b362929ea55cd5dd5789d552545da7ecd12b862928f19ef1c0f66b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-current_gpu-b4.log",
+      "bytes": 92,
+      "sha256": "d08fc2fe0eecbf99e770dffa31fafed80890c7bef6e2aa0dbdf4c1d8d6fb8e1f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-current_gpu-b64.log",
+      "bytes": 93,
+      "sha256": "7dcde4c8c364588b19f4c931be3cd5ad62ecfe10210c7394eac3da1e7a750a1f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d-b1.log",
+      "bytes": 84,
+      "sha256": "51a1e60c90a3a922c4812123de9fb48fcefce38b50dd5409e443a0e1e5b94b44"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d-b128.log",
+      "bytes": 86,
+      "sha256": "985d5f1ebab8644a25aa312cf04f0af01cdcc85bbcd5e028f6b0cf96fb85574c"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d-b16.log",
+      "bytes": 85,
+      "sha256": "0e75ba0236e82a4deac9910c3c1d8c0c280cf899f5e37bf607ac4cd80170598d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d-b256.log",
+      "bytes": 86,
+      "sha256": "a4bd62699f0df06c52f0f13363f8727872905cf41f1fa42c83c21a25d9553ebe"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d-b4.log",
+      "bytes": 84,
+      "sha256": "804439948094348ed0ec2b715f4768234017c77ac897fd6ec5243c71a2b8acdd"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d-b64.log",
+      "bytes": 85,
+      "sha256": "e77f7f40e754e39a3a422c1fe40a4ba79df63050e0eef64d925d1853dd99d61e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d_conditioned-b1.log",
+      "bytes": 96,
+      "sha256": "e41f7032912f71ff6cfb8f4283a68c1bea574d87c38525cd53d84004958d7045"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d_conditioned-b128.log",
+      "bytes": 98,
+      "sha256": "5d53f5bec71852f218916dc2d3693519997b523d634a8c0ab18226f313b41e25"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d_conditioned-b16.log",
+      "bytes": 97,
+      "sha256": "8647a48045db3790dbf3c8f68ee311926545c7dbfc0f35fbf7b0480ae5b3beab"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d_conditioned-b256.log",
+      "bytes": 98,
+      "sha256": "ec8a82b1607fa449edaf71045d59e9bed58af55dfca0e5958fd77cfc0ba84118"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d_conditioned-b4.log",
+      "bytes": 96,
+      "sha256": "a2c7631de985fd11efd17ff5fbccc771e5926170a482ffc67c80c1e857619bf4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars500-tof-p3d_conditioned-b64.log",
+      "bytes": 97,
+      "sha256": "26d7d79384bebb4b7849e77a370b6a97e9530139f291e12e7b447d9d97fe0300"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-current_gpu-b1.log",
+      "bytes": 96,
+      "sha256": "60a2ad32f081c12f712279a13f6f21eb6720547fd1f3a0ccf43f66dc0bde4175"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-current_gpu-b128.log",
+      "bytes": 98,
+      "sha256": "8d30623798618108349d9433aeaf616c7d127eede8f029f19e671e44423e3039"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-current_gpu-b16.log",
+      "bytes": 97,
+      "sha256": "0d48e1e655cf3272e15ca95bc84ba9ad71661a6bf63fd8aa2df59a2a80b9e935"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-current_gpu-b256.log",
+      "bytes": 98,
+      "sha256": "70d89710a652f553d1a7e0668532641d5c0bb15f4fc38b2247bd9da92e466c78"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-current_gpu-b4.log",
+      "bytes": 96,
+      "sha256": "7493974e925c470e76421e05a7c8a5b55e4e56a7044f8a10764c0a2231a9c168"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-current_gpu-b64.log",
+      "bytes": 97,
+      "sha256": "70633bd01ffc0e289a65044e1d4a2d355167ccaad3d2b47ccd22b4fd21582794"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d-b1.log",
+      "bytes": 88,
+      "sha256": "4d58da9f00e8fc41db9d6ff42d1c5ebf928c83585054ee9af6127b1c8851b48e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d-b128.log",
+      "bytes": 90,
+      "sha256": "fe672483b01444ee7f28a659b82248df35c2306a4de77e2590a842357d04c3f5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d-b16.log",
+      "bytes": 89,
+      "sha256": "58d1b04cc0086e0a1e072a5fd6a7b4e6e077a10aece4a2040739c844375689f6"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d-b256.log",
+      "bytes": 90,
+      "sha256": "02bfc760abaf6ef246fa72ec9f4a4a86f9f86e3177709866330fa94a65fd28ad"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d-b4.log",
+      "bytes": 88,
+      "sha256": "0da9a3de5ce8b9d763f19840d922f913aff981b1dc70a5daa06b48ad31c5bf41"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d-b64.log",
+      "bytes": 89,
+      "sha256": "e6c362edb23917fb66b2809bba4a4c22d8791e2e23dd78aa56e2e7553be9a5a4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d_conditioned-b1.log",
+      "bytes": 100,
+      "sha256": "e210733dff4cd4a8366d8ba17c6edc49bad10c652b4ce49f845291db4cff4a2b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d_conditioned-b128.log",
+      "bytes": 102,
+      "sha256": "85b04766ed118dd37c7b849016ca82b2fc03d4fadd25331347bee1a465fed2f3"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d_conditioned-b16.log",
+      "bytes": 101,
+      "sha256": "67640993555aca9cf86b63284261f8f2e170d0000c86855a06284804e3a7736b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d_conditioned-b256.log",
+      "bytes": 102,
+      "sha256": "1743672c690ebdfd19c5524f2c4b3aeb4e35f07da09854b19713058af0e79281"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d_conditioned-b4.log",
+      "bytes": 100,
+      "sha256": "ec106f08603c7cecf8b5c4704e4f4b8c80cfb0a272ece124cb3b9f8bd2a1b94b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-camera-p3d_conditioned-b64.log",
+      "bytes": 101,
+      "sha256": "aef03fbb1b12a28c3c3e1957654bc72a56a6b73da945647bab24c3e33ef1ac79"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-current_gpu-b1.log",
+      "bytes": 93,
+      "sha256": "8d56a73526388b3dc7393d80851122eb591037a387c1e550704a991c2f141f57"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-current_gpu-b128.log",
+      "bytes": 95,
+      "sha256": "00b7a83ee5b3b7d4ba8aeef0a244405438cb91471abb90349c7e5e547d9dca70"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-current_gpu-b16.log",
+      "bytes": 94,
+      "sha256": "9b4a595edbfc30d279bb6509ea84a47493760b55b8ffccc798c28bd16d14dbd8"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-current_gpu-b256.log",
+      "bytes": 95,
+      "sha256": "132e94f8f9246df72d2327310a741c8135c0a5dc98e2f9b5e2cd7a4835a40d48"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-current_gpu-b4.log",
+      "bytes": 93,
+      "sha256": "4459e5bd0330aba2cf736b3b6a5b91f46109ed57635b46168a334c062d5fd2f0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-current_gpu-b64.log",
+      "bytes": 94,
+      "sha256": "d17340daad31daced50e56845235110c95a21f1511be6d6282e704711049fe4b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d-b1.log",
+      "bytes": 85,
+      "sha256": "74569f1010c2b9c06734a16374c62be46ce99ed9fc039edb1308fd197d21999a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d-b128.log",
+      "bytes": 87,
+      "sha256": "165be101b8a8127cbba6096a0572784b276c2cece1053277a3d2711667f156ba"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d-b16.log",
+      "bytes": 86,
+      "sha256": "e91cc862814005094bd7350182b9f1c10b064d06fa4dcfaa8b835c7e26d1795d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d-b256.log",
+      "bytes": 87,
+      "sha256": "2afa9e841c6168e70540db1d9fd946bf6ae62d65c56afc37aa55a53e24936582"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d-b4.log",
+      "bytes": 85,
+      "sha256": "5e0e93a29c11c8d2812dd13d282f7384a10383b693a4cd0c44ce9de17fe641a6"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d-b64.log",
+      "bytes": 86,
+      "sha256": "4466f60ef1830b08ded2ad85f02dd26d900b516bf719540e5a1ac1bf980cda6d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d_conditioned-b1.log",
+      "bytes": 97,
+      "sha256": "dcf5c6a1d824ab522263237d14fcdad70e7d3afdec19ae3b1afa5c2c4cf3fe90"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d_conditioned-b128.log",
+      "bytes": 99,
+      "sha256": "1bd7d56bc701a4bc80175d802927e770f643be4284c62bcc09b858fdfafca1bb"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d_conditioned-b16.log",
+      "bytes": 98,
+      "sha256": "9d2ac1136774624baaa543e02b5281c8251eb0886e72b6b5b5f8438cd6879356"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d_conditioned-b256.log",
+      "bytes": 99,
+      "sha256": "23ea5274f5078dc85fc3927759e0f300288ec38ff21aad3a4e6bee402f6aac18"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d_conditioned-b4.log",
+      "bytes": 97,
+      "sha256": "c7cc9a9c74e1ddaa96aad097c958efc9f8ba65c60692e9284e9f34d1f2dd2a1e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/logs/pillars5000-tof-p3d_conditioned-b64.log",
+      "bytes": 98,
+      "sha256": "84adf224af1e1d91db58cd6cf0876f334029aa56a61c792f57460c67de3cbb63"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/maps/pillars-500.obj",
+      "bytes": 308051,
+      "sha256": "07223be6eb755914209b8a7636b451bd9a43d0a83115ccea751db389c6e57dac"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/maps/pillars-5000.obj",
+      "bytes": 3263962,
+      "sha256": "d162e1c33bf0e5eab6ec270bbc5cb907948e123f86cbc56f516917275fa1e0f9"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/backend.py",
+      "bytes": 15080,
+      "sha256": "2cba06ed5106db9126f698c489fae8a5c87a84a48b4187fdecffb788feef9090"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/conditioned_backend.py",
+      "bytes": 10186,
+      "sha256": "3bdf1b29567248056789e1ec348518a673d578763a7d58f6ad633cab2566e284"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/fixtures.py",
+      "bytes": 4120,
+      "sha256": "91e083a9c137819f3180cf03004248f08fac79858ee8146f666a1eac163fb70b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/postprocess.py",
+      "bytes": 12179,
+      "sha256": "3355b798df66f99856024eab3a8d2ab35e92d9125d48e58f55c6231d7b35360a"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/run_eval.py",
+      "bytes": 15144,
+      "sha256": "0af0a61f9537be6219ac8ac60cdccd93ac7cff7b104a75aa23a2bfb2cebb1318"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/validate.py",
+      "bytes": 29480,
+      "sha256": "59b8e0d9b088f7d29f4ebbe57d316c79d46e7545acecc8a8c9a0259182341a1d"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/measured-source/worker.py",
+      "bytes": 11630,
+      "sha256": "660c12a34fcb7c500f43937b2153f7d61f813e42ccd05c3404646e880328e863"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/memory.png",
+      "bytes": 112453,
+      "sha256": "e3c0222f9aad4746e59dec8e358f16d70ce3f598443e81169cb5e38c0ff0d4b6"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/report.md",
+      "bytes": 9477,
+      "sha256": "49df6c741616535ab3fcce18fe6d0f3ec7f84d59aa67c8471320db59a0b221ff"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/summary.csv",
+      "bytes": 19005,
+      "sha256": "7d617ac66634586b109eed68599ddc12ccca1b451685f609ad51f6c9c9f8fa17"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/summary.json",
+      "bytes": 61645,
+      "sha256": "5bfbf3edeb667be097befd0907549449f2e94fffbce34978416b89dc34f00eb3"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/throughput.png",
+      "bytes": 218600,
+      "sha256": "178df72c89d89757646a7d0fd8bc4e64b73874ecb767eeb7e6486e4ea6c3d956"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/validation-stock.json",
+      "bytes": 1122519,
+      "sha256": "ffbbe1e302c3a0185c26266a4608c53ab721f6ee140c45f95ae6df00227f874b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/validation-stock.log",
+      "bytes": 2297,
+      "sha256": "ecd54f631015193d796d759528889ae538c561d600b92964df9879d34b50e554"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/validation.json",
+      "bytes": 1133320,
+      "sha256": "540bdc02b1cb9988609988dc2769daefb2d4a27f6973333c2395cc2803325303"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep/validation.log",
+      "bytes": 2302,
+      "sha256": "7a766c4846bd049c57b4d39517699deebbab312d8e51ac51d3ac72ae6d78e6e0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/sweep-driver.log",
+      "bytes": 7256,
+      "sha256": "473bec00d140a7d61a1294de98d58fb5f054b523da9e9977e3828fa67ed73a74"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-camera-current-b1.json",
+      "bytes": 1923,
+      "sha256": "a025e0a5426926c685d1a97c1a99a272774a750ffa9e40f3c862067f3275d5c6"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-camera-current-b16.json",
+      "bytes": 1923,
+      "sha256": "e335cbe86449bd970cf5069d28a3d76f94513ca3c5fa84175e720843ada10623"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-camera-current_gpu-b1.json",
+      "bytes": 2989,
+      "sha256": "310276b728406e8d897c8f41454d665bd4bc09f543f7252e18f4c163aa10e997"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-camera-current_gpu-b16.json",
+      "bytes": 3008,
+      "sha256": "fe8705d2bf2b468f78a36ceed46b48e26aeedb6cc564e32f015c6c919bbb5229"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-camera-p3d-b1.json",
+      "bytes": 6156,
+      "sha256": "4f765576b3130644ea1b68dba43afd5fc4c887e2b25f4109710c70fab1e8a543"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-camera-p3d-b16.json",
+      "bytes": 6174,
+      "sha256": "b29c235864f0d45ed2b827a13b40dd8378de8b38ae37914158ee13568469e4dd"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-tof-current-b1.json",
+      "bytes": 1920,
+      "sha256": "ae9e33d99605109d93b0a977d7a638604f6a3ee6d06a188c256097475a2fcd62"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-tof-current-b16.json",
+      "bytes": 1917,
+      "sha256": "29a851d269aa175eea019a730c7aadd98b549bf80e0ca011179f96b916f2ee7e"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-tof-current_gpu-b1.json",
+      "bytes": 2445,
+      "sha256": "e3a4651fcdfe76a335e68e5dd2bc79bf3afb387d0e2b70acc56ec249a4ca0fbc"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-tof-current_gpu-b16.json",
+      "bytes": 2438,
+      "sha256": "b7295eece13ff54b778f4eab0b8ce58aef84d9f2c06e36ffb100dd7ad4a1e182"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-tof-p3d-b1.json",
+      "bytes": 5594,
+      "sha256": "93da4c226df5387a2e1a3390a9193f2549e2d9f08132a01d732243beb10c8d39"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/cells/pillars20-tof-p3d-b16.json",
+      "bytes": 5633,
+      "sha256": "c5637e2b66811079d73d13360607ce8d417a0b6ab8d846275dc008c55c0d77cb"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/environment.json",
+      "bytes": 8864,
+      "sha256": "4a49d8f1c27b74b36db1a00120d97374921b5b287a6ddfef52d66578cbdc6c59"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-camera-current-b1.log",
+      "bytes": 90,
+      "sha256": "910a4cad49eab3883acc6202d26b520c5a59eb76a5d09a631a6c812d1963a4c7"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-camera-current-b16.log",
+      "bytes": 91,
+      "sha256": "339c9eccdc9dbd15e92d73ed7b3303317f0e4824d595971640d751fde5953951"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-camera-current_gpu-b1.log",
+      "bytes": 94,
+      "sha256": "7ac061f552040691086e43de17f286c526edd161bb6c12fd46f5ad0cfb3d498b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-camera-current_gpu-b16.log",
+      "bytes": 95,
+      "sha256": "04ebd4641603b3947e8533cd3626c7062241165fc1b0bb04980f53a1d454d522"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-camera-p3d-b1.log",
+      "bytes": 86,
+      "sha256": "134ba16528fc3add7a91057031067688a60d634e981101e305a49ad0a36700ee"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-camera-p3d-b16.log",
+      "bytes": 87,
+      "sha256": "7bbf23193573ed7a7d52d75fe2bdd44100b9bd2e0e068de2666e0d93b9a827af"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-tof-current-b1.log",
+      "bytes": 87,
+      "sha256": "562acf152851055ea6cdebe8211a0fdd7964ec5112780a7dbb7a81fd011724f5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-tof-current-b16.log",
+      "bytes": 88,
+      "sha256": "f57d0f59f89b58f9a676221607b7298759cccca178e9c272b364a62fcc86815f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-tof-current_gpu-b1.log",
+      "bytes": 91,
+      "sha256": "e76e91f72260c18155526203da39f2b434c185df645f02733d7fc3df52e145f0"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-tof-current_gpu-b16.log",
+      "bytes": 92,
+      "sha256": "5c2e24cc201775023358b3d556e9ff426b26a3c9d8bd0415f0ba27e4499fc9b5"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-tof-p3d-b1.log",
+      "bytes": 83,
+      "sha256": "e6f75721812d13450c1493fa65c21bf02ad2825b7e25c79334826ba54e2d6022"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/logs/pillars20-tof-p3d-b16.log",
+      "bytes": 84,
+      "sha256": "fec422930b9a09ce56157c2ed5ca34c604cb982eb1642d33712bba97b6568520"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/memory.png",
+      "bytes": 63205,
+      "sha256": "aee81551f3b92b745a50d8c4f2d7e1f96384ddb53eb791e442cf8f5a25a1ccca"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/report.md",
+      "bytes": 2155,
+      "sha256": "8106437fc94012fe032a9551a9bb31fd514c46cfe1d829aa4ce9f9b45c08502b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/summary.csv",
+      "bytes": 1846,
+      "sha256": "7b68bddffa7d324bbb67493aa432dda9533d2365c70f2bf61885ed42fa1744a9"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/summary.json",
+      "bytes": 5755,
+      "sha256": "b2417b0a9ee636bb289a3b20afcc1986657b572133d5d17185bd14e62959257b"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke/throughput.png",
+      "bytes": 89412,
+      "sha256": "e6458271bcf1128b5666867def14532df8c4df14ce02ceee8050066e8e9b88e8"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/timing-smoke-driver.log",
+      "bytes": 752,
+      "sha256": "417aa0f730675d6035a5bfc61bdb5f83c05784b343efa0ba022c424d3c5935fa"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/view_clip_probe.json",
+      "bytes": 5447,
+      "sha256": "72b2e91f4a01813948a2df20374df7a901fb1cfcf6a85bf687130e991615c13f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/view_clip_probe.log",
+      "bytes": 3788,
+      "sha256": "7f9c40702962a78b0851bbf7a2a09a91a7fb16e9f3961b18ec266dbe6eeee91f"
+    },
+    {
+      "path": "outputs/pytorch3d_render_eval/view_clip_probe.py",
+      "bytes": 3947,
+      "sha256": "77d8eace6b91306a6e77b771ad4b82d1260fb1920439948b20c5493ee10c7c03"
+    },
+    {
+      "path": "outputs/reference_tof_perf/confirm/manifest.json",
+      "bytes": 1450,
+      "sha256": "e171d69c6f4ad5b5ccf2a8a014b9c76bf5b157c69225987159eb4e06be87e8b5"
+    },
+    {
+      "path": "outputs/reference_tof_perf/confirm/pillars20-matched-fov-range-b1.json",
+      "bytes": 98634,
+      "sha256": "0561029d7863a39d4624074f3664c3109f172d71d4416a416506968342633119"
+    },
+    {
+      "path": "outputs/reference_tof_perf/confirm/pillars20-matched-fov-range-b64.json",
+      "bytes": 6644,
+      "sha256": "c39b7ccaa9c912afc69192c977ab99ce4cf04edd77b790e3dcd1e97fb22fefd3"
+    },
+    {
+      "path": "outputs/reference_tof_perf/fixtures/fixtures.json",
+      "bytes": 1942,
+      "sha256": "5b8c07287bcb83c8b0fa20db7c497e30a98a7365f3322e48ed6ac60386a7f670"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/build.log",
+      "bytes": 108000,
+      "sha256": "cfa6cd4f52c5d615e8a68f62b0883fb6eff0a0c2cab4832e6bcc061282147348"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/manifest.json",
+      "bytes": 6047,
+      "sha256": "8e89426ffd5316617739f148c378402f42f2a2a6dfcf325b36f12376cd25f9b2"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars20-matched-fov-range-b1.json",
+      "bytes": 11456,
+      "sha256": "8f09228ef8ee52b06a0dfd9aaeeeb94fe67e6fd08d00c3c499d362a99b7d6ad4"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars20-matched-fov-range-b1.log",
+      "bytes": 141,
+      "sha256": "c42772cff5cde7db25c51827ac3206c6bb4a7d72ca340cfcb0df699cf97389ca"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars20-matched-fov-range-b64.json",
+      "bytes": 3244,
+      "sha256": "85c9ab9cea5e8db60613622816dff83ef6fec36ab5c1a356d439df29325f6d7a"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars20-matched-fov-range-b64.log",
+      "bytes": 142,
+      "sha256": "95021a25e971dee89ca2a089b1177fe799c445d52ea5a3b951ee76d70746a36c"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars20-reference-default-b1.json",
+      "bytes": 11183,
+      "sha256": "db733eff943c2518651bb976bdcb470c76f5f23c89a7fde54123f5e1914eacf4"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars20-reference-default-b1.log",
+      "bytes": 141,
+      "sha256": "40ed5abcc66e9356e560175160e5cbb3e63549926e70e2326fb182b073e94ad0"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars20-reference-default-b64.json",
+      "bytes": 3209,
+      "sha256": "cfd25095b48b1402b289229c7911b3b96e7083fe3a718c52268f4e82e832c8b4"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars20-reference-default-b64.log",
+      "bytes": 142,
+      "sha256": "59b0f92dc122cdee19085a884925a48b059ddf955bfad8c2b0c9fa501fe5fcf0"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars5000-matched-fov-range-b1.json",
+      "bytes": 11117,
+      "sha256": "f2832173f5be595b29cde92452ddad73b1e5eb935379a5cd93d2340a8008f3f7"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars5000-matched-fov-range-b1.log",
+      "bytes": 143,
+      "sha256": "1eaf7b5f481fd6c38bad5a8c2055ac2d0f663f6290f6deb07e0b25d59bddeb95"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars5000-matched-fov-range-b64.json",
+      "bytes": 3246,
+      "sha256": "d4b12849211c02db87eec5057503c640955e36b00b583cb5fbe0f9ea85ac93bd"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars5000-matched-fov-range-b64.log",
+      "bytes": 144,
+      "sha256": "ea79bee29f571b8dc8a23e34c13e1b83ae7bb5ec0ee7fc4fbc1b920a1c724c01"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars5000-reference-default-b1.json",
+      "bytes": 11109,
+      "sha256": "13e8affc106f518a3f9a2a385e2de002eb42eb5888ace0ab92fb5c05febc5a67"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars5000-reference-default-b1.log",
+      "bytes": 143,
+      "sha256": "7ef7f525e3b8ed34f4a947950f667110abb5fdd18944d249da252872295ac7e5"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars5000-reference-default-b64.json",
+      "bytes": 3250,
+      "sha256": "55c88bf4fee6301d71d444ce384a602a5ceee6c97f7776e164c36360427a091c"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/pillars5000-reference-default-b64.log",
+      "bytes": 144,
+      "sha256": "2cbd7b2a296a7502b4bc4e19cbf3be6d72130efebc4266165aca26758d76fc8a"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/provenance.json",
+      "bytes": 6067,
+      "sha256": "42a22519562cc6c93bb62f6fab090d862310db483f607892a1d919b40db2b851"
+    },
+    {
+      "path": "outputs/reference_tof_perf/report/performance.md",
+      "bytes": 4750,
+      "sha256": "1f2963d0ecff48d5970516301a3d968c76e1f25a7989cfc14c89b04c8692c01e"
+    },
+    {
+      "path": "outputs/reference_tof_perf/report/results.csv",
+      "bytes": 2502,
+      "sha256": "8e7c459a45743f1d46129bfb13c1ee832c5c22709197ec9cf9b5977722ad5638"
+    },
+    {
+      "path": "outputs/reference_tof_perf/report/summary.json",
+      "bytes": 7740,
+      "sha256": "d821c5738c5d4c4683e941054085f545533486301fe517042245caf0a67a5dbf"
+    },
+    {
+      "path": "outputs/reference_tof_perf/write_report.py",
+      "bytes": 6259,
+      "sha256": "0c0ec026c5a9615beaa757ce320b82e9e1f8d0c548a5145bb69225d2aa1ff8e5"
+    },
+    {
+      "path": "outputs/sensor-review-cpu-regression.log",
+      "bytes": 1084,
+      "sha256": "e0f771392b6c1649d18e5eebd404ff1eb40412095c833578a81034b081ce31dd"
+    },
+    {
+      "path": "outputs/sensor-review-formal-regression.log",
+      "bytes": 396,
+      "sha256": "80a24161d418aab762efe0308d6f402fe85dceb42f3605532224429d0b160249"
+    },
+    {
+      "path": "outputs/sensor-review-formal-zone.log",
+      "bytes": 392,
+      "sha256": "62fd0e5557eeb80b94a1c2c7a4131a15126bebc0c3e43540f8a3a196e2962a87"
+    },
+    {
+      "path": "outputs/sensor-review-http-final.log",
+      "bytes": 368,
+      "sha256": "ee865e88e68682e96f27169036dd9488b726815b101fbfc594605cdfa408325f"
+    },
+    {
+      "path": "outputs/sensor-review-http-zone.log",
+      "bytes": 373,
+      "sha256": "9773c1f1b606c55a537055ffcbd92eea98627ef568ecbe0fac15fa4a2e79cb6e"
+    },
+    {
+      "path": "outputs/sensor-review-image-build.log",
+      "bytes": 21868,
+      "sha256": "627887dd8ae8e7aaf07a7effcacee9ac92e84b6575ba9c068915660f9e76f9d3"
+    },
+    {
+      "path": "outputs/sensor-review-plan.json",
+      "bytes": 1633,
+      "sha256": "667d816754a5831703eba48cef5db671fb1c32fab48dd959971aca1c4d58d03b"
+    },
+    {
+      "path": "outputs/sensor_perf/compile_reference.sh",
+      "bytes": 1051,
+      "sha256": "fc215e46693102688c4b781027fe7bd9f4344cc55108731ff54244bac866b69d"
+    },
+    {
+      "path": "outputs/sensor_perf/current_benchmark.py",
+      "bytes": 25405,
+      "sha256": "59a2e35181903d064b66b59647d7d3a6094ba14e8171f5224197418a13338e9f"
+    },
+    {
+      "path": "outputs/sensor_perf/maps/pillars-0.obj",
+      "bytes": 220,
+      "sha256": "3d8deb0aba87740cf6b10b34ae4cdeea51f8c98577fdf9354be56dae5b03119c"
+    },
+    {
+      "path": "outputs/sensor_perf/maps/pillars-20.obj",
+      "bytes": 11536,
+      "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+    },
+    {
+      "path": "outputs/sensor_perf/maps/pillars-500.obj",
+      "bytes": 308051,
+      "sha256": "07223be6eb755914209b8a7636b451bd9a43d0a83115ccea751db389c6e57dac"
+    },
+    {
+      "path": "outputs/sensor_perf/maps/pillars-5000.obj",
+      "bytes": 3263962,
+      "sha256": "d162e1c33bf0e5eab6ec270bbc5cb907948e123f86cbc56f516917275fa1e0f9"
+    },
+    {
+      "path": "outputs/sensor_perf/poses.txt",
+      "bytes": 28954,
+      "sha256": "3d05ecdbb5e06761983852429de5a5c51b3893df22730975c0a7f4fe8b4c4b5d"
+    },
+    {
+      "path": "outputs/sensor_perf/reference-build.log",
+      "bytes": 107862,
+      "sha256": "42692ca5281d7ebeece458ccf69d30df41115fd926928ac3e0d103a75e9bd66c"
+    },
+    {
+      "path": "outputs/sensor_perf/reference_benchmark.cu",
+      "bytes": 16340,
+      "sha256": "132ffa95f7aeee47fb8e2044acd9fe6e29a0952786f0d4eb13240ce746b2a5a7"
+    },
+    {
+      "path": "outputs/sensor_perf/reference_compiler.txt",
+      "bytes": 208,
+      "sha256": "68f8b0a1301428031e307cf5260142a517bff25cc232a09eae2734be475d721f"
+    },
+    {
+      "path": "outputs/sensor_perf/reference_sources.sha256",
+      "bytes": 845,
+      "sha256": "1c841c532fe808ef8b437d3271fc6e976114101ca0189c771c4317438a79a068"
+    },
+    {
+      "path": "outputs/sensor_review/browser-proof.jpg",
+      "bytes": 82827,
+      "sha256": "a50f0c626917e9eeebf7f63e297eaee1fe95239357fc1d5035c3dea367332752"
+    },
+    {
+      "path": "outputs/sensor_review/browser-verification.json",
+      "bytes": 1594,
+      "sha256": "91a0b6ac6bda650a4a36d7c25d592865e33573c81997fdf361c787afb66b4949"
+    },
+    {
+      "path": "outputs/sensor_review/browser-zone-proof.png",
+      "bytes": 140670,
+      "sha256": "55c607c6ed62ce1a531b0fd3ce454517165b74880b3eba2723107266a0c1f758"
+    },
+    {
+      "path": "outputs/sensor_review/browser-zone-verification.json",
+      "bytes": 1325,
+      "sha256": "d22ddca0724c2d47822b0b9101351017ce36a2bab8555bf309dbc2da95474814"
+    },
+    {
+      "path": "outputs/sensor_review/formal-sensors-torch291.json",
+      "bytes": 11363,
+      "sha256": "fe1dd5a104b3e638156038b55b2eb736e2b1301a741ecd0be7eb456d8f99bc8f"
+    },
+    {
+      "path": "outputs/sensor_review/formal-sensors-zone.json",
+      "bytes": 11477,
+      "sha256": "a549de2eb0d79b268f0c2cbf46c605bbbdffdc95a8a72a1d2d44a374c6a4d0ee"
+    },
+    {
+      "path": "outputs/sensor_review/tof-projection-diagnosis.json",
+      "bytes": 3589,
+      "sha256": "c1d080fa304d37e06d12503ffadf005887e75c26c53047451343b3abbaaa0dc3"
+    },
+    {
+      "path": "outputs/sensor_review/tof-projection-diagnosis.py",
+      "bytes": 6608,
+      "sha256": "409d5247dada21dd17c9b16c66801fb99bba5c181645d358725929f5d70653ab"
+    },
+    {
+      "path": "outputs/sensor_review/tof-projection-grid.svg",
+      "bytes": 6273,
+      "sha256": "8d77cc1e03c79577c52c6dc2cbd83c828d51c77788e61925391317329b0dcf2f"
+    },
+    {
+      "path": "outputs/sensor_review/tof-zones-verification.json",
+      "bytes": 3770,
+      "sha256": "a32a8035c3d0112ac43e64c2ccd64215228e80129ebcf160f32d9446733c775a"
+    },
+    {
+      "path": "outputs/sensor_review/verification-first.json",
+      "bytes": 5833,
+      "sha256": "16d8bcb19e8a3e27113a2a81ab07320dc4a6332f853c05be6d4c1253c3fe09c0"
+    },
+    {
+      "path": "outputs/sensor_review/verification-zone.json",
+      "bytes": 4903,
+      "sha256": "e22b4083426c335a7961d94798b94013e424c062d51b9f9911629949503fb53a"
+    },
+    {
+      "path": "outputs/sensor_review/verification.json",
+      "bytes": 4903,
+      "sha256": "f34c0aadf0ff8ccd401ba74a4fefbe724553b2e99fed9fa8a1e129f56e3bca18"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/diagnostic-rig-b256-large.log",
+      "bytes": 9990,
+      "sha256": "b5116b38f5b1652a8a12bfa7ad0c61598bc90d66c23030b5bf42ef4f54254217"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/diagnostic_worker.py",
+      "bytes": 378,
+      "sha256": "fad05457b43a3a9d05f4d1d5771eed963515f030ed664232e744e654fdaa4a46"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/eager-pilot-rig-b256-large.log",
+      "bytes": 8617,
+      "sha256": "824c71396680bc51d9f22d6f757146fa1244d7baf17ca0a73482092d4ee7e8fb"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/gl-finish-pilot-rig-b256-large.json",
+      "bytes": 885807,
+      "sha256": "acf1337f82a3e98c58adf3f94f158bb0feadfb36812756274c8696fcf2d21275"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/gl-finish-pilot-rig-b256-large.log",
+      "bytes": 4767,
+      "sha256": "87e5c736cfa6d8cccea9f0078733730460ab9a181088ee93173b2ef9157aaba9"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/gl_finish_diagnostic.py",
+      "bytes": 1035,
+      "sha256": "a86b87fc02cc198c0b577999975d0accc84dd5c5f8ef748505d21c5d39561e72"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/host-provenance.json",
+      "bytes": 3430,
+      "sha256": "8268efbccf8f1b799b4f0ad002d756ae29af6d3ff3c899409f196b04099aff04"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/manifest.json",
+      "bytes": 31517,
+      "sha256": "57380b3fb2789182917b945760550ef6fd98e001ace3f6f4cd63ccccf12dd2b4"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-camera-zone-b1-varied.json",
+      "bytes": 24953,
+      "sha256": "6d395c2b7c0084710a5d72d993c3aa374c37fbbbfbd0668d6b890a91d61a2d56"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-camera-zone-b1-varied.log",
+      "bytes": 1490,
+      "sha256": "2d15451654d6ae01f5c05381b07cb5de7995388283df25b0f71c4b51b7bf5eeb"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-camera-zone-b16-varied.json",
+      "bytes": 25016,
+      "sha256": "aa7f2dee1c08c68313167f1bba2e918d916d28a514c296e99ce72f782bb673f6"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-camera-zone-b16-varied.log",
+      "bytes": 1506,
+      "sha256": "96bcca3f00c307f1441c39508bbe4bd7fe8f999f250f8639e736fee5633fda94"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-camera-zone-b4-varied.json",
+      "bytes": 24931,
+      "sha256": "0bca12fd344b20dafc6b309637377033411e403fb10cb7ce2d0c967e4d30a883"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-camera-zone-b4-varied.log",
+      "bytes": 1491,
+      "sha256": "968fe0e6bee69e1ef41b01010a1449371229f7b3f3dbdf7760e1b6c00b904d95"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-camera-zone-b64-varied.json",
+      "bytes": 25002,
+      "sha256": "4b597c5a4258012a1c3b5c13788f3277634aea96fae0270b6b1eaff2ae1b81ed"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-camera-zone-b64-varied.log",
+      "bytes": 1505,
+      "sha256": "cd1f867a8ce980a3a7c8cfc6d7a9183c3424227594b0f26e71ed5c1ce905fdef"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b1-varied.json",
+      "bytes": 29101,
+      "sha256": "8c24eeb0690562d0052a3fc12a90b914782a0aef8e9739f42312a1e712326167"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b1-varied.log",
+      "bytes": 1527,
+      "sha256": "0cb9e44f93be54ab5dbec5e6af3f3db961479ed2d7d79ab944c1a4510ef96e45"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b16-varied.json",
+      "bytes": 28013,
+      "sha256": "5f90b594c1e9e73e89c06c3a64b37194ca7633d98da87fbf53cbc02568ffb295"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b16-varied.log",
+      "bytes": 1545,
+      "sha256": "c9aec8a996424ca54054846f3c8ce601984a0f1a0e3413bfaa3239411e638022"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b4-varied.json",
+      "bytes": 28394,
+      "sha256": "696a4740f1646fa3e6728d419b61993cc1982004ff459281e2a8c41d6c7af0bb"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b4-varied.log",
+      "bytes": 1531,
+      "sha256": "6904e084c63f0eaeba7f1b3690e8c07560c725113a8b8cb9e30232648532d0a4"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b64-varied.json",
+      "bytes": 28043,
+      "sha256": "58f2766def4fc1f2dcc4de4ddf649f416e0cadd118462b28fd523d670967328d"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-rig-zone-b64-varied.log",
+      "bytes": 1543,
+      "sha256": "2e732360cc622a8d5c5869aa64b0b79b76ccfe3a4dea2cef393f54b240c60d2f"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-tof-zone-b1-varied.json",
+      "bytes": 24255,
+      "sha256": "4ec103234e36b4782fc2f1f4761621c9d9415aeb91b7af0850b5815ac90f8294"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-tof-zone-b1-varied.log",
+      "bytes": 1437,
+      "sha256": "56bbbf80f4d90327afa5ac51b26189bb18c303499235ac2396127ce42cc5895c"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-tof-zone-b16-varied.json",
+      "bytes": 23153,
+      "sha256": "756275c29a0807533595719409f8c4f40c0476292bde3057c1c02d5bc127bada"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-tof-zone-b16-varied.log",
+      "bytes": 1455,
+      "sha256": "b873ceddd70600a9314b451a7b52ac815232fe889e2a340934f588282163239f"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-tof-zone-b4-varied.json",
+      "bytes": 23608,
+      "sha256": "384464a933605a845d26c37a871effe6bb08a7a3e7184b7586c58963630accf7"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-tof-zone-b4-varied.log",
+      "bytes": 1442,
+      "sha256": "8988e250cf364e100c787f9c8f56802f2312aacb30c35af8b3df2d1832886fde"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-tof-zone-b64-varied.json",
+      "bytes": 23176,
+      "sha256": "7371a500028d27b714950be91d8a96f2f61f31490c5b51594266c6bcfd8c9413"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars20-tof-zone-b64-varied.log",
+      "bytes": 1449,
+      "sha256": "3b099eb2c6e1bc838b0a3f3a179a8972f4dd249596e002280310c23169e4121f"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b1-varied.json",
+      "bytes": 105130,
+      "sha256": "80eeddf3f57025f9b9ab740b567ec5e6a27e7445f45192994f95444d286653bb"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b1-varied.log",
+      "bytes": 1492,
+      "sha256": "0a3a0d4bbecce359aac76a57e170d19b77b89457c2c12c348e74d0dcaa74ec0e"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b16-varied.json",
+      "bytes": 105173,
+      "sha256": "150156ebf9eb9c4924ef8523e31b5869a30b486eceac3f7ac798a7cefbff440b"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b16-varied.log",
+      "bytes": 1508,
+      "sha256": "56267b9dc91f1ada4890dce95fcd0706a2b8c071999c88c99fe14beed6180a86"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b4-varied.json",
+      "bytes": 105176,
+      "sha256": "0c551e57316ada8f8fc5e352abcee9f354b24d123b12863c3ef903612420005b"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b4-varied.log",
+      "bytes": 1493,
+      "sha256": "20c6e97969b7437e5721605dab242542dc39969ab5a594cda28f0da784a5591b"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b64-varied.json",
+      "bytes": 105150,
+      "sha256": "34d24452ed575f22c1a1b1c25a9af8160669af03da30f390b4dcf15cee076a81"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b64-varied.log",
+      "bytes": 1507,
+      "sha256": "3ca99dd43e6728bbb2ca4e5037e62e8c43d373f17c23b14efdf531efbd2902c0"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-rig-zone-b1-varied.json",
+      "bytes": 109297,
+      "sha256": "199b230b601ea8189a9fb297e449702d339e9f7d3e245ec5df2516dd30b173f9"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-rig-zone-b1-varied.log",
+      "bytes": 1525,
+      "sha256": "7cb072b223e7ba77c77eca20861c6bfc4ef55516fe0b7cb066d5aa34dc9356fc"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-rig-zone-b16-varied.json",
+      "bytes": 108250,
+      "sha256": "ca45fd03c505b06aa2146c80b6362781b355f6d976fffbfe11307031a6363968"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-rig-zone-b16-varied.log",
+      "bytes": 1540,
+      "sha256": "88d22ab95e95cf04d77e2875342c28f4808679bed3cf4c387f45ce42b57d11dd"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-rig-zone-b4-varied.json",
+      "bytes": 108372,
+      "sha256": "803b5247cd5ca5265ce0e185b6ffbabfb5f3add60bbd7ce320fe95b3708ef0f8"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-rig-zone-b4-varied.log",
+      "bytes": 1525,
+      "sha256": "73ef0fe4b7d447cea99fe685fb77b958a682c932b98046f1e35e32a8278086c5"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-rig-zone-b64-varied.json",
+      "bytes": 108257,
+      "sha256": "8d6177ca1feef8a6581a074552c6f5a891bcfbff15976cbe45b681d06ae41bbc"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-rig-zone-b64-varied.log",
+      "bytes": 1538,
+      "sha256": "59f07d84562465bd2dffd5cb9dd9fc7995b3b2efe4d3f24ec9bfb8a0281b2443"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b1-varied.json",
+      "bytes": 104451,
+      "sha256": "595ffb5b48d56a78c87e64dbdf55fc1b9a3abf6989adb351e61801b3ed1ba8df"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b1-varied.log",
+      "bytes": 1439,
+      "sha256": "e530e6220e6ef5119d3134fd4a2cc62f32c04d6efa6580f35e4e8befbfdc359c"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b16-varied.json",
+      "bytes": 103349,
+      "sha256": "5acca4f7ca389f9467abc8f5783a83f231a781f453c58703ab28ae97c92b9689"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b16-varied.log",
+      "bytes": 1454,
+      "sha256": "150ba67585e04ac55bdc7905383182d90d74f20f8351f00482a69968fac91ea6"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b4-varied.json",
+      "bytes": 103644,
+      "sha256": "7e5934e7c0ba642f4c3fd56e7b7016956ab21479d53f32967d7bd1f05b080ffb"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b4-varied.log",
+      "bytes": 1445,
+      "sha256": "17557d47ecaa2f5cc8567e2b6dbd9f4b319b28a80ab965cc976d0a06a449a36b"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b64-varied.json",
+      "bytes": 103386,
+      "sha256": "53e3470531bb2d92fc2ccca01f8d9344645c4aad59be5b0d7b33b919899bb124"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b64-varied.log",
+      "bytes": 1457,
+      "sha256": "da95c77a07d199a8731fae45426885a9c5b74d8bd55d093d954706c44d0804c1"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-camera-zone-b1-varied.json",
+      "bytes": 885447,
+      "sha256": "8bdd6554f995232c17daf5ad342e8a4c980c016beb96b311827b1872a2ac2244"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-camera-zone-b1-varied.log",
+      "bytes": 1481,
+      "sha256": "f8cfa501b2b92db95ac4f176ca46ff5c8eb493a0dc9782e1d5c8783f82d8c55d"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-camera-zone-b16-varied.json",
+      "bytes": 885522,
+      "sha256": "5417308c57d422fd851b36d711568da1927d31d423ffebe836395b4c67465d58"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-camera-zone-b16-varied.log",
+      "bytes": 1500,
+      "sha256": "90064d9d67db07a4a9e9e8e4971e66ef3ebedb54c53e9f55982509e5b6857316"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-camera-zone-b4-varied.json",
+      "bytes": 885490,
+      "sha256": "48ebd9fde2789b35fe9c366d91415264c6ad0330996a7687d8ebce73d72a9f5f"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-camera-zone-b4-varied.log",
+      "bytes": 1484,
+      "sha256": "53ed82d79e07b339f4b31c7e843982f1144bd994d63317b3754a42e2c5d58f10"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-camera-zone-b64-varied.json",
+      "bytes": 885504,
+      "sha256": "38dd5064de8bd95c57d0191001e415fa778e6b3ac7058540cdcc3910c9c2171a"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-camera-zone-b64-varied.log",
+      "bytes": 1499,
+      "sha256": "8102b73e31785084b26941058d7562b5a44af6e14a7693f6796e46b0b3b77a84"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-rig-zone-b1-varied.json",
+      "bytes": 888811,
+      "sha256": "7bf4fdc470598fcd5115b62d1a9fe197ffa01ed514812f5454f39c3b44a96ed6"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-rig-zone-b1-varied.log",
+      "bytes": 1525,
+      "sha256": "4f87c5504b6ce38f89e7e005fdeb4d0885d44da38c7c7eba724e98d0b2c18e8e"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-rig-zone-b16-varied.json",
+      "bytes": 888577,
+      "sha256": "dc7eea5b74801e672891493677b5bd04df76d782460eabec52dfd30f6770199c"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-rig-zone-b16-varied.log",
+      "bytes": 1540,
+      "sha256": "bdc6c00cd32c43e948972c66ce9d9be64fb300b547b1034ead9e74b5f412c5ef"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-rig-zone-b4-varied.json",
+      "bytes": 888523,
+      "sha256": "ba4a3453ed9854bfc67bee4f8d46f3a530544e8d7ad20d0e04aebf0c99c93550"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-rig-zone-b4-varied.log",
+      "bytes": 1525,
+      "sha256": "e371e93b504c59e733421d68e1e4a605b9968d07da664dfbc98d6f3062bcc937"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-rig-zone-b64-varied.json",
+      "bytes": 888620,
+      "sha256": "c669e2c319b40459dc2c23bc7ba429881ae447c5c1583bbe4118185e012313b4"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-rig-zone-b64-varied.log",
+      "bytes": 1540,
+      "sha256": "35915a0978dc421a391c49909c95775a988afc6dfa59a8b5d6f5d5b38155c284"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-tof-zone-b1-varied.json",
+      "bytes": 884350,
+      "sha256": "200d77ea98c23cb5b44cb382b66574f58c42ddeefe0de6a8f697bd944289ee7e"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-tof-zone-b1-varied.log",
+      "bytes": 1440,
+      "sha256": "c0821b7a78e5605517f5cd467a7b1de7bc175bfced4ee72687c4484091be5620"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-tof-zone-b16-varied.json",
+      "bytes": 883729,
+      "sha256": "d7cf2224826c7f1a6c204b3a1cb1178620ccd832c9a8a7fde29c67a08808a7a4"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-tof-zone-b16-varied.log",
+      "bytes": 1448,
+      "sha256": "81a151e2755df0dbf372e178c3d7260152aba8c15000c2351dc59d590d313ff2"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-tof-zone-b4-varied.json",
+      "bytes": 883669,
+      "sha256": "f381dab50dd707503687419c4d4091ae52ebc0a52800e058c2b1efb7ba6b7ec6"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-tof-zone-b4-varied.log",
+      "bytes": 1436,
+      "sha256": "93e42d387c0233e7d1dd16b0f3d4a7111daa25ddb2388b37eb62e25b597838d0"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-tof-zone-b64-varied.json",
+      "bytes": 883715,
+      "sha256": "6ec170fefe5f0817d6d185d1137803b482bd3890cb7e72ba7f1854e283b8ebe3"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-main/pillars5000-tof-zone-b64-varied.log",
+      "bytes": 1453,
+      "sha256": "103923882e6a9357fc1540c6f5b7f993f73968d99447836b7794f0497d363bdb"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-rig-b1-large.json",
+      "bytes": 888367,
+      "sha256": "7efa53ee3e4c2fab5f8d03f5fe0ea8f4455866e47db430bb6d4b197c689630f6"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/native-rig-b64-small.json",
+      "bytes": 27714,
+      "sha256": "15ce1bec320b9257c833b7ab2fa3af30e64c64f51f6eaeb33089de861bfd34c6"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/pilot-rig-b1.json",
+      "bytes": 25642,
+      "sha256": "1d8341776fa971f8ad957d7ceb7c641f5fa7f850d233dd1b616d4c7575987801"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/pool-pilot-rig-b256-large.log",
+      "bytes": 3439,
+      "sha256": "3e668319105749a46e53be0ed0bdb0b22585bafcab493feba84031f2c97bdd83"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/preload_diagnostic.py",
+      "bytes": 1075,
+      "sha256": "ac8745aaa8f851624cfb0f14d870395b013ca61f30daa33664d374afcf7004f5"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/preloaded-pilot-rig-b256-large.log",
+      "bytes": 3392,
+      "sha256": "2b5dbcd31ae34b690934389a119bfeeea1f92ea1b7c9ae1d7945cc30a74391e9"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/report/performance.md",
+      "bytes": 7536,
+      "sha256": "cc5f6c4e72403c13ae4b0a5d77c95e6ed56d52abbd0fc809b27b71060f268f1a"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/report/results.csv",
+      "bytes": 18429,
+      "sha256": "586467041bb2e76341e107da6d03b079c16ef9810f2c5e1174bd2b8d8962fb05"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/report/summary.json",
+      "bytes": 58289,
+      "sha256": "5efd3ea3d54043e524489b01ebbbd047ec99810c75951dda2e4d84f440e2efc5"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/stream-pilot-rig-b256-large.log",
+      "bytes": 7639,
+      "sha256": "87b43df788c9dfd347f1b6a61398ed925a6f725425095fb186474332c6553089"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/stream_diagnostic.py",
+      "bytes": 505,
+      "sha256": "96a93045475bf92eacc3476166423218b662ec2177bd2b0610a46ac1d620f8a8"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/warm-pilot-rig-b256-large.log",
+      "bytes": 803,
+      "sha256": "eacbd438a5a4c8e627b4214339c567822b8faf566de8ce4172eecc75e41a0269"
+    },
+    {
+      "path": "outputs/sensor_zone_perf/write_report.py",
+      "bytes": 6475,
+      "sha256": "386088ffd969f79d5e1818cbf6df7a9f0047c48071cffd093cfb49e69a200ea2"
+    },
+    {
+      "path": "outputs/sensors/1/summary.json",
+      "bytes": 6948,
+      "sha256": "dc5d1749fd8c6b9ce098bf2f1b09aa92ca57c0f42f1b992054c3bf33cbefe93a"
+    },
+    {
+      "path": "outputs/sensors/demo/summary.json",
+      "bytes": 5409,
+      "sha256": "e8bee09ed1468858ec193208bbc4197d8f085f6dd34bd2bf4a1a248f3bd84a31"
+    },
+    {
+      "path": "outputs/sensors/formal-development-check-2.json",
+      "bytes": 11598,
+      "sha256": "aeb5cd5626eb0abf12850694b89c585703406e9bbb1ab266b6791da258686cd7"
+    },
+    {
+      "path": "outputs/sensors/formal-development-check.json",
+      "bytes": 8007,
+      "sha256": "8144d58567d1d6c8c99ffa85d74f0f5aeaa452362ce9272f56aef02353ed99c5"
+    },
+    {
+      "path": "outputs/sensors/formal-environment.json",
+      "bytes": 151,
+      "sha256": "eef9810cf0b9f2a1959c9a67717753dd65c8e91eca5ead54a11a76733e745566"
+    },
+    {
+      "path": "outputs/sensors/formal-example/summary.json",
+      "bytes": 7287,
+      "sha256": "9061dbf03455e01d2fa119a3ea02119b454724d506d2e61a92a2090ac58c18fd"
+    },
+    {
+      "path": "outputs/sensors/formal-verification.json",
+      "bytes": 11363,
+      "sha256": "fe1dd5a104b3e638156038b55b2eb736e2b1301a741ecd0be7eb456d8f99bc8f"
+    },
+    {
+      "path": "outputs/sensors/occlusion/summary.json",
+      "bytes": 5379,
+      "sha256": "952aaff9fa564b04b495b8d7d36bb299faf4a0f562b608af0e2ccda8f662fa86"
+    },
+    {
+      "path": "outputs/sensors/occlusion.obj",
+      "bytes": 352,
+      "sha256": "b3ed6b8b69d4c9fca92faa8b911c8bb984bf572e523297b7b3c713ebe3c28a62"
+    },
+    {
+      "path": "outputs/sensors/one-frame/summary.json",
+      "bytes": 5410,
+      "sha256": "a5eaa1d6167e40d441adc9c870fc6ea9f4b1a7bcb3324b2d5d472eb6655400e7"
+    },
+    {
+      "path": "outputs/sensors/verification.json",
+      "bytes": 2765,
+      "sha256": "856d7e999a85d64395e737f05845f3728c026107777f801d1ba101ac92325693"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/candidates20-b1.json",
+      "bytes": 27133,
+      "sha256": "90be9d4841e5065d883c77f8040fcee789c8673240021444b08347bd6bdfd83e"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/candidates5000-b1.json",
+      "bytes": 727298,
+      "sha256": "ce2b3385bf39cbae9d3e636653c5ee8ebf4f3eacab957810e0a1afd32ea720a8"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/followup-manifest.json",
+      "bytes": 1727,
+      "sha256": "c390bc8870308a9e75eb24b008195ca1a0891258eba9e3d3ad51e90b2e367cdd"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/fragment-parts20-b1.json",
+      "bytes": 26377,
+      "sha256": "3f08240432e3bbddb89c376b52b316b762004e3f1ef6f166de1a4604fe9ad095"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/fragment-parts20-b1.log",
+      "bytes": 234,
+      "sha256": "72116351f6c2bcd81dbce357bf59d2241d9eaf0644092b89c9865ad053e8a10c"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/fragment-parts5000-b1.json",
+      "bytes": 726519,
+      "sha256": "7dc09565ca53c0d0ded56561660e25f095106185cfbedce79277639f49993e8b"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/fragment-parts5000-b1.log",
+      "bytes": 234,
+      "sha256": "72116351f6c2bcd81dbce357bf59d2241d9eaf0644092b89c9865ad053e8a10c"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/pillars20-b1.json",
+      "bytes": 76911,
+      "sha256": "e7f4b467b1779b9088b900041e86883fe42d5691bd7d91818e77b2de3398750f"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/pillars20-b64.json",
+      "bytes": 57789,
+      "sha256": "54f053d4373d9e1b20403c190c489f1a6fc17a2994a005580b968ae748d4be3b"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/pillars5000-b1.json",
+      "bytes": 777226,
+      "sha256": "7b7c8ec3f5d8c0765ff5340bd79141492c65f8d6259a583b41a2ee8d5b579a99"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/pillars5000-b64.json",
+      "bytes": 757953,
+      "sha256": "1e189dfc421cedb6894a1e9e0707fb114058b6dcc6f9e0fd667656d402f51259"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/report/analysis.md",
+      "bytes": 7225,
+      "sha256": "db3469bd37b1335988d5612d4202d5e363d0ad7eabdd8ef831253d7de6dd970b"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/report/objects.csv",
+      "bytes": 665,
+      "sha256": "0de5774bc599d2488c3c8866cdef06f2b61026ffa141bed205e83ffcd013919d"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/report/provenance.json",
+      "bytes": 843,
+      "sha256": "97f5bf6533331d7ec613b67cdfe1f3044777a87a22617fdf1839d215fd33e50f"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/report/stages.csv",
+      "bytes": 10902,
+      "sha256": "e392e246a9098826c3dc6c5fd7c33f12a4cc390b11d2de8622e8953385045bb4"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/report/summary.json",
+      "bytes": 41845,
+      "sha256": "d1776ec35ae110603833e9eb45e29abbfb7273c2b106315e7a44a3b77d8b7963"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/report/variants.csv",
+      "bytes": 4766,
+      "sha256": "1dbaa742111d9737045af5fc87755709a19a7cca4b286be46b31d6ee75db8c1a"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/verification-combined.json",
+      "bytes": 14364,
+      "sha256": "0d0a941f902ccefe859efd5ec72eb2aff16611030f1a74da887433e3c7c48bee"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/verification-range_aabb_gs.json",
+      "bytes": 14251,
+      "sha256": "d6ea351a8abffe85ba245866f410b975e70053f5b3c28af0e6d5173104aec5b6"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/verification-range_aabb_gs.log",
+      "bytes": 440,
+      "sha256": "631af25bc26d66378dd98bf0641c4b46f6a913a2ce975e39dd2c99afa877196d"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/verification-single_cell_tight_gs.json",
+      "bytes": 14386,
+      "sha256": "66c7d110ee74a3d2f39a061793439fbc9d62bf1a3dba267cfe1614c4b92c691e"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/verification-single_cell_tight_gs.log",
+      "bytes": 440,
+      "sha256": "631af25bc26d66378dd98bf0641c4b46f6a913a2ce975e39dd2c99afa877196d"
+    },
+    {
+      "path": "outputs/tof_pipeline_profile/write_report.py",
+      "bytes": 13408,
+      "sha256": "b769c7f7591dc8155ae681a9b14e0c33d301e83fb900590421b3ef1b9f6e3bc8"
+    },
+    {
+      "path": "outputs/tof_zones/core_smoke.py",
+      "bytes": 2105,
+      "sha256": "374a161774dd2aa09541ba286289cf28f25dfb23d0d2af960b4447567d2d62f9"
+    }
+  ],
+  "local_artifacts_preserved_without_copy": [
+    {
+      "path": "outputs/opengl_batch_eval/sweep/measured-source/Dockerfile",
+      "bytes": 385,
+      "sha256": "ef0e59dbadc8e1c53e089edcd30cebf0fe63d80cdbefc9b7b434d2d12e87f1f7",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/reference_tof_perf/benchmark",
+      "bytes": 1182304,
+      "sha256": "bbee2bf7da3ac9e199cf271f17c29094ea90436ea48952dd870c3d0b60f68177",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/reference_tof_perf/fixtures/pillars-20-occupancy-f32-xyz.bin",
+      "bytes": 4984020,
+      "sha256": "e79b316ed321835986694bdb4a6c1c381f903762fe9e2bd3ea0cf79a588ac30b",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/reference_tof_perf/fixtures/pillars-5000-occupancy-f32-xyz.bin",
+      "bytes": 183793524,
+      "sha256": "bb75c341f292a2bafd6d86afde7909b7896092e9edf74d99cd4c478871a17ee0",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/reference_tof_perf/fixtures/poses-f32-xyz-xyzw.bin",
+      "bytes": 1792,
+      "sha256": "61c0f3b6552ee65bfd4d1761cf52c00ad885c3e7294dde2827a6545d12e8628b",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/reference_tof_perf/main/benchmark",
+      "bytes": 1182304,
+      "sha256": "a52a0a1d8baad654716168ebbbe66fc47bb3d7f0f56645d112ba60987998c002",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensor_perf/reference_benchmark",
+      "bytes": 1235560,
+      "sha256": "007fafeb6105614a27e42eca2ea3423df555d99d12449f94a3d243f339b3aa5b",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/1/observations.npz",
+      "bytes": 43202,
+      "sha256": "4d482210ca6291e30f38b23fe687f598aa02c13a3f8b98facc4e9b00162e0b09",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/1/one_frame.html",
+      "bytes": 8783519,
+      "sha256": "94bbf72f9398a272544274cbf1a4257cbbefdabc77745399e64229bf6b3f029b",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/demo/observations.npz",
+      "bytes": 29679,
+      "sha256": "c463ef7d36f91345aecd5515be6611ff22c315abe521833f6237e2af3e44adcc",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/demo/one_frame.html",
+      "bytes": 10026297,
+      "sha256": "2b950de1fccd91f0e4dfe15185f01d0be37396c98666d3aba50a7ba153d0f67e",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/formal-example/observations.npz",
+      "bytes": 29886,
+      "sha256": "a606e566ee221e07e3378cf9bd8c922552ca187f94c0e9c173d63ce747ee9435",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/formal-example/one_frame.html",
+      "bytes": 10181497,
+      "sha256": "ad34e732b3b87b50ec7a79cb273451cbef872398666ea284752e881fa27b7547",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/occlusion/observations.npz",
+      "bytes": 41195,
+      "sha256": "fbaf146e1a9bb616a3f1bfd3e6ec3c02c0d16c27914c71aea6aa609332c04732",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/occlusion/one_frame.html",
+      "bytes": 9631076,
+      "sha256": "cec8d7f00301715ced7b89bb2268e151263d17113520a5c0ae18fc4ea920942f",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/one-frame/observations.npz",
+      "bytes": 29679,
+      "sha256": "c463ef7d36f91345aecd5515be6611ff22c315abe521833f6237e2af3e44adcc",
+      "retention": "original local file preserved; not copied into Git archive"
+    },
+    {
+      "path": "outputs/sensors/one-frame/one_frame.html",
+      "bytes": 10026753,
+      "sha256": "1bbd4ac1a6cbd03692d4adde4254475f0a66ed956100a79b78d54d6fea97403a",
+      "retention": "original local file preserved; not copied into Git archive"
+    }
+  ],
+  "archive_verification": [
+    {
+      "path": "evidence/archive-verification/copy-integrity.json",
+      "original": "outputs/render-history-archive-verification.json",
+      "bytes": 122,
+      "sha256": "eccbce995a59aad6eb69f3bdc4230d4e779390c9f4a6454ae51c94224e64e76f"
+    },
+    {
+      "path": "evidence/archive-verification/zone-recovery.json",
+      "original": "docs/rendering-exploration/snapshots/zone-20261017/outputs/reproduce/zones.json",
+      "bytes": 3770,
+      "sha256": "a32a8035c3d0112ac43e64c2ccd64215228e80129ebcf160f32d9446733c775a"
+    },
+    {
+      "path": "evidence/archive-verification/zone-recovery.log",
+      "original": "outputs/archive-zone-verification.log",
+      "bytes": 182,
+      "sha256": "72a0607b36bc686d4bb5e29bb9673e127768479ec8db3acf8c214f1580feb4c5"
+    },
+    {
+      "path": "evidence/archive-verification/main-build.log",
+      "original": "outputs/main-merge-verify/build.log",
+      "bytes": 22012,
+      "sha256": "d017a62208b576cdd7593004fecdd301b03c46739c6fd942ac211eee74fa3cf4"
+    },
+    {
+      "path": "evidence/archive-verification/main-cpu-checks.log",
+      "original": "outputs/main-merge-verify/cpu-checks.log",
+      "bytes": 1532,
+      "sha256": "3e6c77d422d6acb66cf05408bbc8ae07eac6d1054867cca1fbeedeb2aea66278"
+    },
+    {
+      "path": "evidence/archive-verification/main-gpu-checks.log",
+      "original": "outputs/main-merge-verify/gpu-checks.log",
+      "bytes": 645,
+      "sha256": "6c6d0d977043ded2d48e3c514cbe9952458ae4a9054735731de71d586bdc2ef2"
+    },
+    {
+      "path": "evidence/archive-verification/main-sensors.json",
+      "original": "outputs/main-merge-verify/source/outputs/main-sync-sensors.json",
+      "bytes": 11363,
+      "sha256": "fe1dd5a104b3e638156038b55b2eb736e2b1301a741ecd0be7eb456d8f99bc8f"
+    },
+    {
+      "path": "evidence/archive-verification/main-image.json",
+      "original": "outputs/main-merge-verify/image.json",
+      "bytes": 139,
+      "sha256": "9b0f4b58d19d7d2fe6dbc69cc2119fb39df74c85bc36465767715982dedcd137"
+    },
+    {
+      "path": "evidence/archive-verification/main-commit.txt",
+      "original": "outputs/main-merge-verify/commit.txt",
+      "bytes": 630,
+      "sha256": "f33cf6b5e88fb6f48808b87b6225a279cbde5ecd2f26a184d39897e03fa5582a"
+    }
+  ],
+  "integration_verification_commit": "ab0ca007ee79a32d40e296b1ed38893706d3408e",
+  "integration_cpu_image": "tof-tracker-sensor-review:dev (existing Torch 2.9.1+cu128 image)",
+  "integration_gpu_image": "tof-tracker-main-sync-d9fc:torch291 (built from the exact merge index)"
+}

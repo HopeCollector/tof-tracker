@@ -1,0 +1,150 @@
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>
+Timeout (0:00:20)!
+Thread 0x000072bf40462080 (most recent call first):
+  File "/workspace/devtools/rendering.py", line 621 in render
+  File "/workspace/devtools/rendering.py", line 34 in guarded
+  File "/opt/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120 in decorate_context
+  File "/workspace/devtools/sensors.py", line 281 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 308 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 316 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 427 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 439 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/diagnostic_worker.py", line 10 in <module>

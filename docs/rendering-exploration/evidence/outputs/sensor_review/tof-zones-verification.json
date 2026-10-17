@@ -1,0 +1,171 @@
+{
+  "status": "passed",
+  "device": "NVIDIA GeForce RTX 5070 Ti",
+  "checks": [
+    {
+      "name": "small_objects_and_boundaries",
+      "status": "passed",
+      "detail": [
+        {
+          "case": "tiny_inside_zone",
+          "hit_zones": [
+            [
+              3,
+              3
+            ]
+          ],
+          "nearest_m": 4.009987531152684
+        },
+        {
+          "case": "cross_column",
+          "hit_zones": [
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "nearest_m": 4.004996878900157
+        },
+        {
+          "case": "cross_row_column",
+          "hit_zones": [
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "nearest_m": 4.0
+        },
+        {
+          "case": "edge_contact_has_no_area",
+          "hit_zones": [
+            [
+              3,
+              3
+            ]
+          ],
+          "nearest_m": 4.004996878900157
+        },
+        {
+          "case": "corner_contact_has_no_area",
+          "hit_zones": [
+            [
+              3,
+              3
+            ]
+          ],
+          "nearest_m": 4.0
+        }
+      ]
+    },
+    {
+      "name": "plane_and_occlusion",
+      "status": "passed",
+      "detail": {
+        "plane_foot_edge_corner": "64 analytic distances and points matched",
+        "full_occlusion": {
+          "winner": "near",
+          "range_m": 3.0
+        },
+        "partial_occlusion": {
+          "winner": "near",
+          "range_m": 3.0
+        },
+        "radial_not_forward_depth": {
+          "winner": "radial_nearest",
+          "range_m": 3.05013108253479
+        }
+      }
+    },
+    {
+      "name": "near_range_and_whole_cone_coverage",
+      "status": "passed",
+      "detail": {
+        "eye_plane_and_too_close": {
+          "zones": 64,
+          "max_raw_m": 0.07288689911365509
+        },
+        "known_hit_unknown_zone_prefix": "NaN",
+        "known_hit_known_zone_prefix": 4.000024795532227,
+        "center_reprojection_known_real_hit_outside": "NaN",
+        "center_known_edges_unknown": "NaN",
+        "center_and_corners_known_edge_extremum_unknown": "NaN",
+        "whole_cone_known_empty": "+inf"
+      }
+    },
+    {
+      "name": "batch_ownership_transform_updates",
+      "status": "passed",
+      "detail": {
+        "batch_views": 8,
+        "large_batch_views": 256,
+        "transform_updates": 2,
+        "transform_bytes": 128,
+        "target_cells_A_B_A": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "exact_review_screenshot",
+      "status": "passed",
+      "detail": {
+        "map_sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4",
+        "pixel_target_cells": 0,
+        "zone_target_cells": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ]
+        ],
+        "camera_visible_target_pixels": 148,
+        "target_sensor_center_m": [
+          4.3465091815641665,
+          0.12224862982191752,
+          0.0
+        ],
+        "oracle": "analytic sphere angular support and original 8x8/160x120 outputs; no supersampling"
+      }
+    }
+  ],
+  "oracle": "closed-form analytic witnesses and independent active-constraint QP; no finer rasterization"
+}

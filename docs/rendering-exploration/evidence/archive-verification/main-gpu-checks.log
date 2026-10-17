@@ -1,0 +1,13 @@
+No broken requirements found.
+Torch: 2.9.1+cu128 CUDA: 12.8 GPU: NVIDIA GeForce RTX 5070 Ti
+Project requirements: ['numpy >=2.0', 'torch ==2.9.1', "glcontext ==3.0.0 ; extra == 'sensors'", "moderngl ==5.12.0 ; extra == 'sensors'", "plotly ==7.1.0 ; extra == 'viewer'"]
+strict_sensor_config: passed
+independent_planes_boxes_wide_fov: passed
+range_and_coverage: passed
+batched_camera_visibility: passed
+batch_order_storage_stream_thread: passed
+external_rig_mounts: passed
+metadata_and_allocation_failure: passed
+postprocess_pending_cache_streams: passed
+target_A_B_A_transform_sync: passed
+sensors: passed; result: outputs/main-sync-sensors.json

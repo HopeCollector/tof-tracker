@@ -1,0 +1,1 @@
+{"backend": "gl_batch", "mode": "tof", "batch_views": 64, "pillars": 20, "status": "ok"}

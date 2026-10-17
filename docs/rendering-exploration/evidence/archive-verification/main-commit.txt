@@ -1,0 +1,16 @@
+commit ab0ca007ee79a32d40e296b1ed38893706d3408e
+Merge: 4bd11eb 99b9ead
+Author:     HopeCollector <cmw0249@gmail.com>
+AuthorDate: Sat Oct 17 10:58:00 2026 +0800
+Commit:     HopeCollector <cmw0249@gmail.com>
+CommitDate: Sat Oct 17 10:58:00 2026 +0800
+
+    Merge main and align CUDA Torch with 2.9.1
+
+ devtools/README.md         |  28 ++-
+ devtools/trajectory.py     | 200 +++++++++++++++++
+ docker/Dockerfile          |   2 +-
+ pyproject.toml             |   4 +-
+ tests/run_checks.py        |   1 +
+ tests/verify_trajectory.py | 521 +++++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 751 insertions(+), 5 deletions(-)

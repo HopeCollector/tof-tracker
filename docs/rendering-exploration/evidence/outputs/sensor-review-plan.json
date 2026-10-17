@@ -1,0 +1,10 @@
+{
+  "objective": "Online windowed sensor visual review tool in Docker, using formal sensors",
+  "delivery": "Leave running and give browser URL for user trial; DO NOT commit/push/update PR until user has tried it",
+  "integration": "Merge main without commit, unify Torch 2.9.1 and CUDA wheel across base deps and Docker",
+  "interaction": ["load existing OBJ or upload OBJ", "one vehicle and optional target", "RViz press XY, drag yaw, release confirm", "fixed-height horizontal placement, separate up/down buttons", "explicit sample button"],
+  "display": ["windowed 3D scene and diagnostic images", "drag/resize/close/opacity", "raw GL radial distance and object ID, final range, camera mask/hint", "native pixel grid and numeric hover", "click source result to fly to mounted sensor pose", "sensor-FOV-aligned overlay with click-through", "snapshot labels and stale-state indication"],
+  "backend": ["persistent single GPU worker and request queue", "formal sensor diagnostic output from SAME render", "Scene public world geometry only, target transform-only sync", "download only at web display boundary", "reuse main trajectory for camera position, quaternion slerp for full orientation"],
+  "validation": ["Docker CPU regressions and formal GPU sensors under Torch2.9.1", "API integration, diagnostics provenance and transform-only target update", "browser actual RViz gestures, sampling, windows, transitions and overlays", "independent review"],
+  "files": ["tools/sensor_review/server.py", "tools/sensor_review/web/", "devtools/sensors.py", "tests/verify_sensor_review.py", "docker/Dockerfile", "README and module docs"]
+}

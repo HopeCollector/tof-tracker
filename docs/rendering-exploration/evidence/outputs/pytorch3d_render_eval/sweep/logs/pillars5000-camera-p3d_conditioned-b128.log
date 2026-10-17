@@ -1,0 +1,1 @@
+{"backend": "p3d_conditioned", "mode": "camera", "batch_views": 128, "pillars": 5000, "status": "ok"}

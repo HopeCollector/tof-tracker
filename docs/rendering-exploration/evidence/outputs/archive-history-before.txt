@@ -1,0 +1,5 @@
+4bd11eb006bd4d633541de0e80e4a0fbc19511f6 Promote shared-scene CUDA batching to formal sensors
+104c3ee1f167a2c4f3578672d2a6f86180c53012 Evaluate shared-scene OpenGL multiview batching on CUDA
+3630c0c14e036a7c3923cb313685a5f32ec74deb Evaluate batched PyTorch3D sensor rendering in Docker
+7d3d2e34c9f01150178c96a3e8a154246bccfbfc Add GPU mesh sensing and target visibility observations
+a9bdff77095cf97d93e6c9399b79ac7a0393d9e2 Clarify development tool responsibilities and next steps

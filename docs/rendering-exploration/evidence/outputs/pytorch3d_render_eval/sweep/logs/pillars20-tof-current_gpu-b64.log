@@ -1,0 +1,1 @@
+{"backend": "current_gpu", "mode": "tof", "batch_views": 64, "pillars": 20, "status": "ok"}

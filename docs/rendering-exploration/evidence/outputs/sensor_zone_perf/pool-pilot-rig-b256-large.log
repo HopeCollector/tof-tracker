@@ -1,0 +1,51 @@
+CUDA formatting preload 126.858ms
+CUDA allocator pre-reserved 4297064448 bytes
+{"stage": "provenance", "elapsed_s": 0.0007771250002406305, "mode": "rig", "batch": 256}
+{"stage": "cuda_init", "elapsed_s": 0.018654421999599435, "mode": "rig", "batch": 256}
+{"stage": "scene_load", "elapsed_s": 0.018800342999384156, "mode": "rig", "batch": 256}
+{"stage": "pose_upload", "elapsed_s": 0.49185802300053183, "mode": "rig", "batch": 256}
+{"stage": "renderer_setup", "elapsed_s": 0.5170642720004253, "mode": "rig", "batch": 256}
+{"stage": "renderer_ready", "elapsed_s": 0.7487365270008013, "mode": "rig", "batch": 256}
+{"stage": "first_forward", "elapsed_s": 0.7496156939996581, "mode": "rig", "batch": 256}
+Timeout (0:00:20)!
+Thread 0x00007884dd2a8080 (most recent call first):
+  File "/workspace/devtools/_sensor_processing.py", line 238 in postprocess_depth
+  File "/workspace/devtools/sensors.py", line 181 in _depth
+  File "/workspace/devtools/sensors.py", line 282 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 328 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 337 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 456 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 468 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/preload_diagnostic.py", line 26 in <module>
+Timeout (0:00:20)!
+Thread 0x00007884dd2a8080 (most recent call first):
+  File "/workspace/devtools/_sensor_processing.py", line 238 in postprocess_depth
+  File "/workspace/devtools/sensors.py", line 181 in _depth
+  File "/workspace/devtools/sensors.py", line 282 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 328 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 337 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 456 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 468 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/preload_diagnostic.py", line 26 in <module>
+Timeout (0:00:20)!
+Thread 0x00007884dd2a8080 (most recent call first):
+  File "/workspace/devtools/_sensor_processing.py", line 238 in postprocess_depth
+  File "/workspace/devtools/sensors.py", line 181 in _depth
+  File "/workspace/devtools/sensors.py", line 282 in sample_rig_diagnostics
+  File "/workspace/devtools/sensors.py", line 261 in sample_rig
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 328 in <lambda>
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 337 in run
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 456 in main
+  File "/workspace/experiments/sensor_zone_perf/benchmark.py", line 468 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 286 in run_path
+  File "/workspace/outputs/sensor_zone_perf/preload_diagnostic.py", line 26 in <module>

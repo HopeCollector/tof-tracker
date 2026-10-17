@@ -1,0 +1,66 @@
+{
+  "time_utc": "2026-10-16T02:05:25Z",
+  "python": "3.10.18 (main, Sep 15 2026, 10:39:07) [GCC 9.4.0]",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.31",
+  "arguments": {
+    "output": "outputs/pytorch3d_render_eval/timing-smoke",
+    "pillars": [
+      20
+    ],
+    "batches": [
+      1,
+      16
+    ],
+    "backends": [
+      "current",
+      "current_gpu",
+      "p3d"
+    ],
+    "modes": [
+      "tof",
+      "camera"
+    ],
+    "repeats": 3,
+    "warmup": 1,
+    "skip_validation": true,
+    "bin_capacity": "32768",
+    "resume": false
+  },
+  "gpu": {
+    "returncode": 0,
+    "stdout": "NVIDIA GeForce RTX 5070 Ti, 595.91.07, 16303 MiB, 1328 MiB\n",
+    "stderr": ""
+  },
+  "gpu_processes_before": {
+    "returncode": 0,
+    "stdout": "Fri Oct 16 02:05:25 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 595.91.07              Driver Version: 595.91.07      CUDA Version: 13.2     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 5070 Ti     Off |   00000000:01:00.0  On |                  N/A |\n| 30%   39C    P1             44W /  300W |    1328MiB /  16303MiB |     10%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+    "stderr": ""
+  },
+  "source_sha256": {
+    "experiments/pytorch3d_render_eval/postprocess.py": "3355b798df66f99856024eab3a8d2ab35e92d9125d48e58f55c6231d7b35360a",
+    "experiments/pytorch3d_render_eval/backend.py": "2cba06ed5106db9126f698c489fae8a5c87a84a48b4187fdecffb788feef9090",
+    "experiments/pytorch3d_render_eval/run_eval.py": "8423d9f133c4b7f0be0ea7227b62f2d9f4014818250139f41db814184cd00aa6",
+    "experiments/pytorch3d_render_eval/worker.py": "61239f13d4ed5abdcbb4410b0e00aad56ba496fbd105b74ede6a6125a8c923ce",
+    "experiments/pytorch3d_render_eval/validate.py": "55c3bf8771d686acd057f412fe35a5f81313721ceced7d31e2a87e889be20a90",
+    "experiments/pytorch3d_render_eval/fixtures.py": "91e083a9c137819f3180cf03004248f08fac79858ee8146f666a1eac163fb70b",
+    "devtools/__init__.py": "be8f39361407ae1f6648213def16960c66f397763102e30c332b9d8e1361c79d",
+    "devtools/scene.py": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e",
+    "devtools/config.py": "5da368a665b2f93f92e7e7f8ae6684070f99f462374e17c33679b1062a1a85ad",
+    "devtools/sensors.py": "88e00d3c2a627fb7b4449cc730d16b159bb2c557087fe9347a7e9f19764c5d79",
+    "devtools/esdf.py": "dc57bc0b8a549e66250a54263aaf9ad5eba00845b1f1e0072846f69d30698308",
+    "devtools/mesh.py": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56",
+    "src/tof_tracker/geometry.py": "461a7c557d57202e9fb2ce16a4241c782da4638ec25a677034217c318a2e2331"
+  },
+  "packages": {
+    "returncode": 0,
+    "stdout": "absl-py==2.5.0\naddict==2.4.0\nannotated-types==0.8.0\nasttokens==3.0.2\nattrs==26.1.0\nblinker==1.9.0\ncatkin-pkg==1.0.0\ncertifi==2026.7.22\ncffi==2.1.1\ncharset-normalizer==3.5.1\nclick==8.5.0\ncloudpickle==3.1.2\ncomm==0.2.3\nConfigArgParse==1.7.7\ncontourpy==1.3.2\ncryptography==50.0.1\ncycler==0.12.1\ndash==4.4.1\ndecorator==5.3.1\ndistro==1.9.0\ndocutils==0.23\nempy==3.3.4\nexceptiongroup==1.3.1\nexecuting==2.2.1\nfastjsonschema==2.22.2\nfilelock==3.32.3\nFlask==3.1.3\nfonttools==4.65.0\nfsspec==2026.7.0\nfvcore==0.1.5.post20221221\nglcontext==3.0.0\ngoogle-auth==2.58.0\ngoogle-auth-oauthlib==1.0.0\ngrpcio==1.84.0\nidna==3.19\nimportlib_metadata==9.0.1\niniconfig==2.3.0\niopath==0.1.10\nipython==8.39.0\nipywidgets==8.1.9\nitsdangerous==2.2.0\njanus==2.0.0\njedi==0.20.0\nJinja2==3.1.6\njoblib==1.6.0\njsonschema==4.26.0\njsonschema-specifications==2025.9.1\njupyter_core==5.9.1\njupyterlab_widgets==3.0.17\nkiwisolver==1.5.1\nMarkdown==3.10.3\nmarkdown-it-py==4.2.0\nMarkupSafe==3.0.3\nmatplotlib==3.10.9\nmatplotlib-inline==0.2.2\nmdurl==0.1.2\nmoderngl==5.12.0\nmpmath==1.3.0\nnarwhals==2.26.0\nnbformat==5.11.1\nnest-asyncio==1.6.0\nnetifaces==0.11.0\nnetworkx==3.4.2\nninja==1.11.1.4\nnumpy==2.2.6\nnvidia-cublas-cu12==12.8.3.14\nnvidia-cuda-cupti-cu12==12.8.57\nnvidia-cuda-nvrtc-cu12==12.8.61\nnvidia-cuda-runtime-cu12==12.8.57\nnvidia-cudnn-cu12==9.7.1.26\nnvidia-cufft-cu12==11.3.3.41\nnvidia-cufile-cu12==1.13.0.11\nnvidia-curand-cu12==10.3.9.55\nnvidia-cusolver-cu12==11.7.2.55\nnvidia-cusparse-cu12==12.5.7.53\nnvidia-cusparselt-cu12==0.6.3\nnvidia-ml-py==12.570.86\nnvidia-nccl-cu12==2.26.2\nnvidia-nvjitlink-cu12==12.8.61\nnvidia-nvtx-cu12==12.8.55\noauthlib==3.3.1\nopen3d==0.19.0\nopencv-python==4.11.0.86\npackaging==26.3\npandas==2.3.3\nparso==0.8.7\npexpect==4.9.0\npillow==12.3.0\nplatformdirs==4.11.8\nplotly==7.0.0\npluggy==1.6.0\nportalocker==4.4.0\nprompt_toolkit==3.0.53\nprotobuf==7.36.1\nptyprocess==0.7.0\npure_eval==0.2.4\npyasn1==0.6.4\npyasn1_modules==0.4.2\npycparser==3.0\npydantic==2.13.5\npydantic_core==2.46.5\nPygments==2.21.0\npyparsing==3.3.2\npyquaternion==0.9.9\npytest==8.4.2\npython-dateutil==2.9.0.post0\npytorch3d @ file:///tmp/pytorch3d-source\npytz==2026.3.post1\nPyYAML==6.0.2\nreferencing==0.37.0\nrequests==2.34.2\nrequests-oauthlib==2.0.0\nretrying==1.4.2\nrich==14.0.0\nrospkg==1.6.0\nrpds-py==0.30.0\nruamel.yaml==0.17.21\nruamel.yaml.clib==0.2.15\nscikit-learn==1.6.1\nscipy==1.15.3\nsix==1.17.0\nstack-data==0.6.3\nsympy==1.14.0\ntabulate==0.10.0\ntensorboard==2.14.0\ntensorboard-data-server==0.7.2\ntermcolor==3.3.0\nthreadpoolctl==3.6.0\ntomli==2.4.1\ntorch==2.7.1+cu128\ntorchvision==0.22.1+cu128\ntqdm==4.70.1\ntraitlets==5.16.1\ntrimesh==4.8.3\ntriton==3.3.1\ntyping-inspection==0.4.4\ntyping_extensions==4.16.0\ntzdata==2026.4\nurllib3==2.7.0\nwarp-lang==1.15.0\nwcwidth==0.8.3\nWerkzeug==3.1.8\nwidgetsnbextension==4.0.16\nyacs==0.1.8\nzipp==4.1.0\n",
+    "stderr": ""
+  },
+  "pytorch3d_revision": "88e182f989c80836f4bd744e0d9cb1852762ce01",
+  "fingerprint": "e1fd1d59d030d8ea0b81e7400ba611862fcd24f3bb125bbffd62848215c8c2f2",
+  "gpu_processes_after": {
+    "returncode": 0,
+    "stdout": "Fri Oct 16 02:05:43 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 595.91.07              Driver Version: 595.91.07      CUDA Version: 13.2     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 5070 Ti     Off |   00000000:01:00.0  On |                  N/A |\n| 30%   48C    P1            104W /  300W |    1339MiB /  16303MiB |     97%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+    "stderr": ""
+  }
+}

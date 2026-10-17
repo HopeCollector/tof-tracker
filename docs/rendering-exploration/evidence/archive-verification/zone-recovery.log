@@ -1,0 +1,5 @@
+small_objects_and_boundaries: passed
+plane_and_occlusion: passed
+near_range_and_whole_cone_coverage: passed
+batch_ownership_transform_updates: passed
+exact_review_screenshot: passed

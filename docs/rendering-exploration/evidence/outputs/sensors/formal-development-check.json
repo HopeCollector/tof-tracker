@@ -1,0 +1,233 @@
+{
+  "status": "failed",
+  "backend": "formal OpenGL layered CUDA sensor",
+  "device": "NVIDIA GeForce RTX 5070 Ti",
+  "checks": [
+    {
+      "name": "strict_sensor_config",
+      "status": "passed",
+      "detail": [
+        "immutable explicit sensor facts; strict finite/nonboolean values, ranges/FOV/resolution/8x8/mounts; one JSON read, legacy compatibility and complete exact-key sensor schema"
+      ]
+    },
+    {
+      "name": "independent_planes_boxes_wide_fov",
+      "status": "failed",
+      "error_type": "AssertionError",
+      "error": "(2.8255313698013893, 2e-05)",
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/tests/verify_sensors.py\", line 581, in run\n    detail = action()\n  File \"/workspace/tests/verify_sensors.py\", line 186, in verify_planes_and_boxes\n    records[\"boxes_independent\"] = independent_box_result(actual, expected, config, poses, boxes, (0, 0, 0))\n  File \"/workspace/tests/verify_sensors.py\", line 165, in independent_box_result\n    same_ranges(actual[\"range_m\"], distance)\n  File \"/workspace/tests/verify_sensors.py\", line 73, in same_ranges\n    assert maximum <= atol, (maximum, atol)\nAssertionError: (2.8255313698013893, 2e-05)\n"
+    },
+    {
+      "name": "range_and_coverage",
+      "status": "passed",
+      "detail": {
+        "inclusive_min": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "inclusive_max": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "too_close": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "beyond_range": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 1,
+          "unavailable_pixels": 0
+        },
+        "camera_plane_crossing_occluder": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 9
+        },
+        "uncertain_near_max": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "empty_declared_True": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 1,
+          "unavailable_pixels": 0
+        },
+        "hit_declared_True": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "empty_declared_False": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "hit_declared_False": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "uncovered_empty": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "in_domain_hit_outside_origin": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        }
+      }
+    },
+    {
+      "name": "batched_camera_visibility",
+      "status": "passed",
+      "detail": {
+        "clear": {
+          "finite_max_abs_m": 1.9073486328125e-06,
+          "finite_pixels": 1972,
+          "empty_pixels": 12428,
+          "unavailable_pixels": 0
+        },
+        "sphere_independent": {
+          "silhouette_disagreement_pixels": 0,
+          "interior_max_abs_m": 0.00184315934578283
+        },
+        "zero_denominator": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 14400,
+          "unavailable_pixels": 0
+        },
+        "half_occlusion": {
+          "finite_max_abs_m": 9.5367431640625e-07,
+          "finite_pixels": 8186,
+          "empty_pixels": 6214,
+          "unavailable_pixels": 0
+        },
+        "inclusive_threshold": {
+          "finite_max_abs_m": 9.5367431640625e-07,
+          "finite_pixels": 2732,
+          "empty_pixels": 2068,
+          "unavailable_pixels": 0
+        },
+        "threshold_reject": {
+          "finite_max_abs_m": 9.5367431640625e-07,
+          "finite_pixels": 2732,
+          "empty_pixels": 2068,
+          "unavailable_pixels": 0
+        },
+        "full_occlusion": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 14400,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "target_outside_declared_domain": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 0,
+          "empty_pixels": 0,
+          "unavailable_pixels": 1
+        },
+        "target_exact_domain_boundary": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        }
+      }
+    },
+    {
+      "name": "batch_order_storage_stream_thread",
+      "status": "passed",
+      "detail": {
+        "renderer": {
+          "GL_VENDOR": "NVIDIA Corporation",
+          "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+          "GL_VERSION": "4.5.0 NVIDIA 595.91.07"
+        },
+        "48_views_frozen_reference": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1680,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "48_views_independent": {
+          "oracle_identity_disagreement_pixels": 0,
+          "frozen_reference_identity_disagreement_pixels": 0,
+          "policy": "same positions as frozen reference; all new disagreements fail"
+        },
+        "mutated_cuda_pose_storage": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 1680,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "256_views_frozen_reference": {
+          "finite_max_abs_m": 0.0,
+          "finite_pixels": 16384,
+          "empty_pixels": 0,
+          "unavailable_pixels": 0
+        },
+        "shared_geometry": {
+          "scene_geometry_buffer_name": 1,
+          "scene_geometry_buffer_bytes": 1355928,
+          "geometry_uploads": 1,
+          "cpu_image_readbacks": 0,
+          "per_view_draw_calls": 0
+        }
+      }
+    },
+    {
+      "name": "external_rig_mounts",
+      "status": "passed",
+      "detail": {
+        "body_poses": 2,
+        "tof_views": 8,
+        "full_and_target_camera_views": 4,
+        "instanced_draws": 3,
+        "mount_geometry": "independent Euler composition and slab intersections"
+      }
+    },
+    {
+      "name": "metadata_and_allocation_failure",
+      "status": "passed",
+      "detail": {
+        "invalid_metadata_cases": 3,
+        "allocation_failure": "propagated and closed",
+        "previous_output": "retained after failed allocation and close"
+      }
+    },
+    {
+      "name": "target_A_B_A_transform_sync",
+      "status": "failed",
+      "error_type": "ValueError",
+      "error": "mesh vertices must all be used by faces",
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/tests/verify_sensors.py\", line 581, in run\n    detail = action()\n  File \"/workspace/tests/verify_sensors.py\", line 541, in verify_target_sync\n    changed_mesh = replace(map_object, geometry=MeshObject(map_shape.name, map_shape.vertices_m,\n  File \"<string>\", line 7, in __init__\n  File \"/workspace/devtools/mesh.py\", line 88, in __post_init__\n    raise ValueError(\"mesh vertices must all be used by faces\")\nValueError: mesh vertices must all be used by faces\n"
+    }
+  ],
+  "acceptance": {
+    "finite_atol_m": 2e-05,
+    "new_category_or_identity_errors": 0,
+    "camera_mask_hint_count_errors": 0,
+    "moving_vs_cold_atol_m": 0
+  },
+  "scope": "noiseless mesh pinhole observations; explicit assertion downloads only",
+  "check_groups": 8
+}

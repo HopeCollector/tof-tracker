@@ -1,0 +1,340 @@
+{
+  "map": "/workspace/outputs/mapgen/demo.obj",
+  "config": "/workspace/configs/devtools.json",
+  "t_ref": 0.0,
+  "assumptions": "Noiseless ideal pinhole development configuration; not hardware specifications.",
+  "vehicle_pose": {
+    "position_m": [
+      -1.0,
+      0.0,
+      1.0
+    ],
+    "quaternion_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "target_position_m": [
+    1.0,
+    0.6,
+    1.2
+  ],
+  "sensor_config": {
+    "tof": {
+      "width": 8,
+      "height": 8,
+      "hfov_deg": 60.0,
+      "vfov_deg": 60.0,
+      "min_range_m": 0.05,
+      "max_range_m": 12.0
+    },
+    "camera": {
+      "width": 160,
+      "height": 120,
+      "hfov_deg": 80.0,
+      "vfov_deg": 60.0,
+      "min_range_m": 0.01,
+      "max_range_m": 30.0
+    },
+    "tof_mounts": [
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          -0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ]
+      }
+    ],
+    "camera_mount": {
+      "position_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "min_visible_fraction": 0.2
+  },
+  "renderer": {
+    "backend": "opengl_layered_instanced_cuda_pbo",
+    "device": "cuda:0",
+    "renderer": {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "4.5.0 NVIDIA 595.91.07"
+    },
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/ground",
+      "target"
+    ],
+    "triangle_count": 16274,
+    "vertex_count": 48822,
+    "scene_geometry_buffer_name": 1,
+    "scene_geometry_buffer_bytes": 1367016,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 896,
+    "scene_version": 0,
+    "batch_geometry_policy": "one VBO; world meshes and local spheres; independent of B",
+    "full_pass_instanced_draws": 1,
+    "selected_object_pass_instanced_draws": 1,
+    "instanced_draw_count": 4,
+    "render_calls": 4,
+    "max_array_texture_layers": 2048,
+    "input_pose": "float32 CUDA B44; row-major camera FLU to world",
+    "output": "owned CUDA distance float32 and identity int64 BHW",
+    "output_transfer": "whole array to PBO in GL; one CUDA D2D PBO-to-Torch copy",
+    "cpu_image_readbacks": 0,
+    "per_view_draw_calls": 0,
+    "interop_synchronization": "CUDA GL-resource map/unmap on current PyTorch stream",
+    "vertex_shader_sha256": "c7a9a725b92a45bdf57ee6dcd7ea9c6648b586f96f099bf3d4871eccfbf36889",
+    "fragment_shader_sha256": "8f68a2678b3a8d6bd3016b02acb38776711967ecae9227dd842a0565b1071757",
+    "near_clip_policy": "unchanged GL w=forward, clip z=0, no positive near plane",
+    "depth_component_bits": 24
+  },
+  "triangles": 16274,
+  "geometry_uploads": 1,
+  "map_bounds_m": [
+    [
+      -4.0,
+      4.0
+    ],
+    [
+      -3.0,
+      3.0
+    ],
+    [
+      0.0,
+      3.0
+    ]
+  ],
+  "tof_order": [
+    "right",
+    "front",
+    "left",
+    "rear"
+  ],
+  "tof": {
+    "right": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 58,
+      "positive_infinity": 0,
+      "nan": 6,
+      "finite_min_m": 0.051793381571769714,
+      "finite_max_m": 1.165382981300354
+    },
+    "front": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 0,
+      "positive_infinity": 0,
+      "nan": 64,
+      "finite_min_m": null,
+      "finite_max_m": null
+    },
+    "left": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 58,
+      "positive_infinity": 0,
+      "nan": 6,
+      "finite_min_m": 0.051793381571769714,
+      "finite_max_m": 0.18015509843826294
+    },
+    "rear": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 64,
+      "positive_infinity": 0,
+      "nan": 0,
+      "finite_min_m": 0.32576754689216614,
+      "finite_max_m": 1.3193728923797607
+    }
+  },
+  "camera": {
+    "shape": [
+      120,
+      160
+    ],
+    "finite": 19200,
+    "positive_infinity": 0,
+    "nan": 0,
+    "finite_min_m": 0.021290423348546028,
+    "finite_max_m": 0.03028193861246109,
+    "visible_target_pixels": 0,
+    "unoccluded_target_pixels": 751,
+    "visible_fraction": 0.0,
+    "target_hint": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sample_many": {
+    "view": "front ToF",
+    "mode": "one instanced draw; CUDA output and batched postprocessing",
+    "body_pose_changes": [
+      "reference",
+      "body +X 0.25 m",
+      "world yaw +15 degrees"
+    ],
+    "sensor_poses": [
+      {
+        "position_m": [
+          -1.0,
+          0.0,
+          1.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "position_m": [
+          -0.75,
+          0.0,
+          1.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "position_m": [
+          -1.0,
+          0.0,
+          1.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.13052619222005157,
+          0.9914448613738104
+        ]
+      }
+    ],
+    "frames": [
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 0,
+        "positive_infinity": 0,
+        "nan": 64,
+        "finite_min_m": null,
+        "finite_max_m": null
+      },
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 38,
+        "positive_infinity": 0,
+        "nan": 26,
+        "finite_min_m": 1.5700236558914185,
+        "finite_max_m": 5.270462512969971
+      },
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 0,
+        "positive_infinity": 0,
+        "nan": 64,
+        "finite_min_m": null,
+        "finite_max_m": null
+      }
+    ]
+  },
+  "timing_seconds": {
+    "prepare_scene_gpu": 0.3530809470003078,
+    "first_rig_sample": 0.16665759199986496,
+    "sample_many_three_poses": 0.001191516999824671,
+    "sample_many_mean_per_pose": 0.0003971723332748904
+  }
+}

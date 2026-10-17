@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "checks": [
+    "immutable explicit sensor facts; strict finite/nonboolean values, ranges/FOV/resolution/8x8/mounts; one JSON read, legacy compatibility and complete exact-key sensor schema",
+    "independent pinhole row/column signs, plane/closed-box Euclidean distances, nearest surfaces and asymmetric upper-left occlusion; metadata-boundary ground and wide-FOV clipped-wall regressions; vehicle self-geometry excluded",
+    "inclusive min/max and uncertain near-max hits remain NaN; too-close and camera-plane-crossing occluders block farther surfaces; covered empty=inf, unknown=NaN; out-of-domain hits/origins rejected and partial-domain valid hits retained; finite-only aggregation",
+    "analytic sphere interior/silhouette bounds account for declared mesh approximation; visible target mask, target-only denominator, half-open normalized box, inclusive visibility threshold, full occlusion and zero-denominator rejection",
+    "full roll/pitch/yaw and translated mounts preserve independent Euler geometry; sample_many preserves pose order/time, reuses one public snapshot/upload and leaves earlier images immutable; explicit/idempotent close rejects further sampling",
+    "external rig assembly yields raw (right,front,left,rear)x8x8 row-major ranges, matches independent four-wall intersections and common scene time; camera and immutable hint remain separate"
+  ],
+  "check_groups": 6,
+  "renderer_info": [
+    {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "3.3.0 NVIDIA 595.91.07"
+    }
+  ],
+  "measured_errors": {
+    "box_nearest_surface_max_abs_m": 5.0747206801204925e-06,
+    "ground_plane_max_abs_m": 4.4553025979610084e-07,
+    "wide_fov_clipped_wall_witness_abs_m": 3.067238864673527e-06,
+    "sphere_interior_max_abs_m": 0.00184315934578283,
+    "sphere_silhouette_disagreement_pixels": 0,
+    "full_roll_pitch_yaw_box_max_abs_m": 5.401173375219059e-07,
+    "right_front_left_rear_rig_max_abs_m": 8.181734836298915e-07
+  },
+  "finite_range_example": {
+    "finite_count": 2,
+    "mean_m": 4.0,
+    "empty_count": 2,
+    "unavailable_count": 2
+  },
+  "batch_fixture_performance": {
+    "poses": 48,
+    "pixels_per_pose": 35,
+    "sample_many_seconds": 0.011579223995795473,
+    "poses_per_second": 4145.355510648145,
+    "geometry_uploads": 1,
+    "renderer_info": {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "3.3.0 NVIDIA 595.91.07"
+    },
+    "scope": "measured only for this small analytic fixture; sequential GPU render/readback loop"
+  },
+  "scope": "noiseless GPU pinhole pixel-center mesh sensing; no hardware/noise/zone-response or training claim"
+}

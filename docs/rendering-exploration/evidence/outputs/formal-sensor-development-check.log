@@ -1,0 +1,11 @@
+strict_sensor_config: passed
+independent_planes_boxes_wide_fov: failed: AssertionError: (2.8255313698013893, 2e-05)
+range_and_coverage: passed
+batched_camera_visibility: passed
+batch_order_storage_stream_thread: passed
+external_rig_mounts: passed
+/workspace/devtools/rendering.py:43: RuntimeWarning: overflow encountered in cast
+  if (config.max_range_m > np.finfo(np.float32).max / 2
+metadata_and_allocation_failure: passed
+target_A_B_A_transform_sync: failed: ValueError: mesh vertices must all be used by faces
+sensors: failed; result: outputs/sensors/formal-development-check.json

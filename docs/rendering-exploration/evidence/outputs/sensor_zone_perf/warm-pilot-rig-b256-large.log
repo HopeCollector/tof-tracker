@@ -1,0 +1,9 @@
+{"stage": "provenance", "elapsed_s": 0.0007822850002412451, "mode": "rig", "batch": 256}
+{"stage": "cuda_init", "elapsed_s": 0.043097515999761526, "mode": "rig", "batch": 256}
+{"stage": "scene_load", "elapsed_s": 0.12298625299990817, "mode": "rig", "batch": 256}
+{"stage": "pose_upload", "elapsed_s": 0.5998493389997748, "mode": "rig", "batch": 256}
+{"stage": "renderer_setup", "elapsed_s": 0.6255351319996407, "mode": "rig", "batch": 256}
+{"stage": "renderer_ready", "elapsed_s": 0.8426883849988371, "mode": "rig", "batch": 256}
+{"stage": "first_forward", "elapsed_s": 0.8435481710002932, "mode": "rig", "batch": 256}
+{"stage": "first_forward_done", "elapsed_s": 5.574150688998998, "mode": "rig", "batch": 256}
+{"stage": "pipeline_measure", "elapsed_s": 5.574478870999883, "mode": "rig", "batch": 256}

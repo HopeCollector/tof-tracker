@@ -1,0 +1,10 @@
+strict_sensor_config: passed
+independent_planes_boxes_wide_fov: passed
+range_and_coverage: passed
+batched_camera_visibility: passed
+batch_order_storage_stream_thread: passed
+external_rig_mounts: passed
+metadata_and_allocation_failure: passed
+postprocess_pending_cache_streams: passed
+target_A_B_A_transform_sync: passed
+sensors: passed; result: outputs/sensor_review/formal-sensors-zone.json

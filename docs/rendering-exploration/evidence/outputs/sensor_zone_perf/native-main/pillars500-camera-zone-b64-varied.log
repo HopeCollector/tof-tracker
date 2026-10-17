@@ -1,0 +1,15 @@
+{"stage": "provenance", "elapsed_s": 0.0007807150013832143, "mode": "camera", "batch": 64}
+{"stage": "cuda_init", "elapsed_s": 0.020550736000586767, "mode": "camera", "batch": 64}
+{"stage": "scene_load", "elapsed_s": 0.09111013700021431, "mode": "camera", "batch": 64}
+{"stage": "pose_upload", "elapsed_s": 0.14284673500151257, "mode": "camera", "batch": 64}
+{"stage": "renderer_setup", "elapsed_s": 0.15013167600045563, "mode": "camera", "batch": 64}
+{"stage": "renderer_ready", "elapsed_s": 0.26378350400045747, "mode": "camera", "batch": 64}
+{"stage": "first_forward", "elapsed_s": 0.2639018340014445, "mode": "camera", "batch": 64}
+{"stage": "first_forward_done", "elapsed_s": 0.3937866270007362, "mode": "camera", "batch": 64}
+{"stage": "pipeline_measure", "elapsed_s": 0.3938272670002334, "mode": "camera", "batch": 64}
+{"stage": "production_parity", "elapsed_s": 0.46391535500151804, "mode": "camera", "batch": 64}
+{"stage": "postprocess_measure", "elapsed_s": 0.4943140410014166, "mode": "camera", "batch": 64}
+{"stage": "end_to_end_measure", "elapsed_s": 0.7421838210011629, "mode": "camera", "batch": 64}
+{"stage": "gl_draw_probe", "elapsed_s": 1.0086973940015014, "mode": "camera", "batch": 64}
+{"stage": "complete", "elapsed_s": 1.0122437490008451, "mode": "camera", "batch": 64}
+{"status": "ok", "mode": "camera", "sampling": "zone", "batch": 64, "output": "outputs/sensor_zone_perf/native-main/pillars500-camera-zone-b64-varied.json", "end_to_end_median_ms": 6.489436000265414, "error": null}

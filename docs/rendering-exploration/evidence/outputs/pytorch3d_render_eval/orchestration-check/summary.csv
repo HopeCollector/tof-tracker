@@ -1,0 +1,4 @@
+pillars,mode,backend,batch_views,status,validation_status,validation_file,median_ms,views_per_second,torch_peak_allocated_mib,torch_peak_reserved_mib,nvml_peak_device_mib,nvml_increment_mib,prepare_ms,first_forward_ms,postprocess_ms,error
+20,tof,current_gpu,1,ok,not_validated,,0.5549739871639758,1801.8862561652538,0.0009765625,2.0,2052.0625,291.625,119.5467910147272,3.696823987411335,,
+20,tof,p3d,1,ok,failed,validation-p3d.json,5.5753960041329265,179.35945702488587,13.30810546875,26.0,2459.5,699.0625,79.28896101657301,188.54253701283596,0.2938710094895214,
+20,tof,p3d_conditioned,1,ok,failed,validation-p3d_conditioned.json,5.854057002579793,170.8217052822197,14.05615234375,28.0,2461.8125,701.625,109.23002500203438,173.62566999509,0.25249100872315466,

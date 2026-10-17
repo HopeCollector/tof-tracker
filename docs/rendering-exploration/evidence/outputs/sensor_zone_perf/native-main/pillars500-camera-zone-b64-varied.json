@@ -1,0 +1,5736 @@
+{
+  "status": "ok",
+  "mode": "camera",
+  "sampling": "zone",
+  "synchronized_first_forward": false,
+  "pose_pattern": "varied",
+  "batch": 64,
+  "grad_enabled": false,
+  "scope": {
+    "pipeline": "prepared CUDA sensor poses to raw owned CUDA distance/identity/hit/triangle; includes GL draw, GL/CUDA interop, D2D copies and Torch output formatting",
+    "postprocess": "fixed raw CUDA images and prepared mounted poses to formal GPU observation; no rendering",
+    "end_to_end": "unmodified formal sample_depth/sample_camera/sample_rig API on CUDA input poses; rig includes mounts",
+    "excluded": "map load, source hashing, CPU pose generation/upload, UI HTTP/base64/image downloads, scene motion and renderer construction",
+    "nonadditive": "stages measured independently with synchronization; their medians need not sum to complete-call latency"
+  },
+  "unit": "views",
+  "expected_draws_per_action": 2,
+  "source": {
+    "head": null,
+    "working_tree_status": null,
+    "files_sha256": {
+      "devtools/rendering.py": "fe0a8fa1a8239c4ea0bde686603d9ae886b9a2fe706f9b116e29c90dbb7663c5",
+      "devtools/_zone_shaders.py": "a18c77d5ff042c5d76836b944fea8745b0c9c89d667d9a5c1928b85c88f6b101",
+      "devtools/_gl_cuda.py": "701dc60c8f316651bedf8281e8b58ff4c35f6b22a786fffcf5a66f3a55e169bb",
+      "devtools/sensors.py": "3e9f2f10695e6934c374e06710846817def8d992b5e1e96655667fc68f3bcf59",
+      "devtools/_sensor_processing.py": "a07faa16fd23b7d6420a986858e7a727633e71226fc7a6f9c888fe0b524c1f2e",
+      "devtools/config.py": "365f616a3d64d474ee6860384453255d0e1d38c7197a2c05457b87ad8dbc8968",
+      "experiments/sensor_zone_perf/benchmark.py": "f367280e1f9110e240a41a1b35905556b637257d57b1c7fc556dcae474933bb1"
+    }
+  },
+  "map": {
+    "path": "/workspace/outputs/sensor_perf/maps/pillars-500.obj",
+    "sha256": "07223be6eb755914209b8a7636b451bd9a43d0a83115ccea751db389c6e57dac"
+  },
+  "config": {
+    "path": "/workspace/configs/devtools.json",
+    "sha256": "b31f0099e2adc1d4ad4ab1d480b70b268f74bd058dc318e0ca588e09d8f0bcc1",
+    "values": {
+      "vehicle_radius_m": 0.2,
+      "target_radius_m": 0.3,
+      "sensors": {
+        "tof": {
+          "width": 8,
+          "height": 8,
+          "hfov_deg": 60.0,
+          "vfov_deg": 60.0,
+          "min_range_m": 0.05,
+          "max_range_m": 12.0
+        },
+        "camera": {
+          "width": 160,
+          "height": 120,
+          "hfov_deg": 80.0,
+          "vfov_deg": 60.0,
+          "min_range_m": 0.01,
+          "max_range_m": 30.0
+        },
+        "tof_mounts": [
+          {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "camera_mount": {
+          "position_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion_xyzw": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "min_visible_fraction": 0.2
+      }
+    }
+  },
+  "environment": {
+    "torch": "2.9.1+cu128",
+    "cuda_runtime": "12.8",
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "numpy": "2.5.4",
+    "cpu_threads": 4,
+    "torch_cuda_arch_list": [
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90",
+      "sm_100",
+      "sm_120"
+    ],
+    "cuda_gl_environment": {
+      "CUDA_MODULE_LOADING": null,
+      "CUDA_MODULE_DATA_LOADING": null,
+      "CUDA_CACHE_PATH": null,
+      "CUDA_CACHE_DISABLE": null,
+      "CUDA_FORCE_PTX_JIT": null,
+      "CUDA_LAUNCH_BLOCKING": null,
+      "__GL_SHADER_DISK_CACHE": null,
+      "__GL_SHADER_DISK_CACHE_PATH": null,
+      "__GL_SHADER_DISK_CACHE_SKIP_CLEANUP": null,
+      "HOME": "/tmp",
+      "XDG_CACHE_HOME": "/tmp/.cache"
+    },
+    "nvidia_smi": "0, NVIDIA GeForce RTX 5070 Ti, 595.91.07, 16303 MiB",
+    "gpu": "NVIDIA GeForce RTX 5070 Ti",
+    "gpu_total_memory_bytes": 16608133120
+  },
+  "cuda_init_ms": 70.40333000077226,
+  "map_load_ms": 51.70337799972913,
+  "input": {
+    "seed": 20261016,
+    "pattern": "varied",
+    "algorithm": "repeat: duplicate first case; varied: numpy.default_rng.uniform(-1,1,6) per view after first, translation offsets scaled by (.25,.25,.15)m and RPY offsets (8,6,12)deg; prefixes identical across batch sizes",
+    "first_position_m": [
+      0.00400000019,
+      -17.60400009,
+      1.5
+    ],
+    "first_rpy_deg": [
+      0.0,
+      0.0,
+      78.6839981
+    ],
+    "target_position_m": [
+      0.7369999886,
+      -13.31799984,
+      1.5
+    ],
+    "float32_pose_sha256": "0227952f6ef5a00a7f116f0e869b0e66b1dc85a9ee2a78e79ae4b245dde1e0a9",
+    "pose_shape": [
+      64,
+      4,
+      4
+    ],
+    "pose_device": "cuda:0"
+  },
+  "renderer_setup_ms": 113.56627699933597,
+  "geometry": {
+    "backend": "opengl_layered_instanced_cuda_pbo",
+    "device": "cuda:0",
+    "renderer": {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "4.5.0 NVIDIA 595.91.07"
+    },
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/pillar_12",
+      "map/pillar_13",
+      "map/pillar_14",
+      "map/pillar_15",
+      "map/pillar_16",
+      "map/pillar_17",
+      "map/pillar_18",
+      "map/pillar_19",
+      "map/pillar_20",
+      "map/pillar_21",
+      "map/pillar_22",
+      "map/pillar_23",
+      "map/pillar_24",
+      "map/pillar_25",
+      "map/pillar_26",
+      "map/pillar_27",
+      "map/pillar_28",
+      "map/pillar_29",
+      "map/pillar_30",
+      "map/pillar_31",
+      "map/pillar_32",
+      "map/pillar_33",
+      "map/pillar_34",
+      "map/pillar_35",
+      "map/pillar_36",
+      "map/pillar_37",
+      "map/pillar_38",
+      "map/pillar_39",
+      "map/pillar_40",
+      "map/pillar_41",
+      "map/pillar_42",
+      "map/pillar_43",
+      "map/pillar_44",
+      "map/pillar_45",
+      "map/pillar_46",
+      "map/pillar_47",
+      "map/pillar_48",
+      "map/pillar_49",
+      "map/pillar_50",
+      "map/pillar_51",
+      "map/pillar_52",
+      "map/pillar_53",
+      "map/pillar_54",
+      "map/pillar_55",
+      "map/pillar_56",
+      "map/pillar_57",
+      "map/pillar_58",
+      "map/pillar_59",
+      "map/pillar_60",
+      "map/pillar_61",
+      "map/pillar_62",
+      "map/pillar_63",
+      "map/pillar_64",
+      "map/pillar_65",
+      "map/pillar_66",
+      "map/pillar_67",
+      "map/pillar_68",
+      "map/pillar_69",
+      "map/pillar_70",
+      "map/pillar_71",
+      "map/pillar_72",
+      "map/pillar_73",
+      "map/pillar_74",
+      "map/pillar_75",
+      "map/pillar_76",
+      "map/pillar_77",
+      "map/pillar_78",
+      "map/pillar_79",
+      "map/pillar_80",
+      "map/pillar_81",
+      "map/pillar_82",
+      "map/pillar_83",
+      "map/pillar_84",
+      "map/pillar_85",
+      "map/pillar_86",
+      "map/pillar_87",
+      "map/pillar_88",
+      "map/pillar_89",
+      "map/pillar_90",
+      "map/pillar_91",
+      "map/pillar_92",
+      "map/pillar_93",
+      "map/pillar_94",
+      "map/pillar_95",
+      "map/pillar_96",
+      "map/pillar_97",
+      "map/pillar_98",
+      "map/pillar_99",
+      "map/pillar_100",
+      "map/pillar_101",
+      "map/pillar_102",
+      "map/pillar_103",
+      "map/pillar_104",
+      "map/pillar_105",
+      "map/pillar_106",
+      "map/pillar_107",
+      "map/pillar_108",
+      "map/pillar_109",
+      "map/pillar_110",
+      "map/pillar_111",
+      "map/pillar_112",
+      "map/pillar_113",
+      "map/pillar_114",
+      "map/pillar_115",
+      "map/pillar_116",
+      "map/pillar_117",
+      "map/pillar_118",
+      "map/pillar_119",
+      "map/pillar_120",
+      "map/pillar_121",
+      "map/pillar_122",
+      "map/pillar_123",
+      "map/pillar_124",
+      "map/pillar_125",
+      "map/pillar_126",
+      "map/pillar_127",
+      "map/pillar_128",
+      "map/pillar_129",
+      "map/pillar_130",
+      "map/pillar_131",
+      "map/pillar_132",
+      "map/pillar_133",
+      "map/pillar_134",
+      "map/pillar_135",
+      "map/pillar_136",
+      "map/pillar_137",
+      "map/pillar_138",
+      "map/pillar_139",
+      "map/pillar_140",
+      "map/pillar_141",
+      "map/pillar_142",
+      "map/pillar_143",
+      "map/pillar_144",
+      "map/pillar_145",
+      "map/pillar_146",
+      "map/pillar_147",
+      "map/pillar_148",
+      "map/pillar_149",
+      "map/pillar_150",
+      "map/pillar_151",
+      "map/pillar_152",
+      "map/pillar_153",
+      "map/pillar_154",
+      "map/pillar_155",
+      "map/pillar_156",
+      "map/pillar_157",
+      "map/pillar_158",
+      "map/pillar_159",
+      "map/pillar_160",
+      "map/pillar_161",
+      "map/pillar_162",
+      "map/pillar_163",
+      "map/pillar_164",
+      "map/pillar_165",
+      "map/pillar_166",
+      "map/pillar_167",
+      "map/pillar_168",
+      "map/pillar_169",
+      "map/pillar_170",
+      "map/pillar_171",
+      "map/pillar_172",
+      "map/pillar_173",
+      "map/pillar_174",
+      "map/pillar_175",
+      "map/pillar_176",
+      "map/pillar_177",
+      "map/pillar_178",
+      "map/pillar_179",
+      "map/pillar_180",
+      "map/pillar_181",
+      "map/pillar_182",
+      "map/pillar_183",
+      "map/pillar_184",
+      "map/pillar_185",
+      "map/pillar_186",
+      "map/pillar_187",
+      "map/pillar_188",
+      "map/pillar_189",
+      "map/pillar_190",
+      "map/pillar_191",
+      "map/pillar_192",
+      "map/pillar_193",
+      "map/pillar_194",
+      "map/pillar_195",
+      "map/pillar_196",
+      "map/pillar_197",
+      "map/pillar_198",
+      "map/pillar_199",
+      "map/pillar_200",
+      "map/pillar_201",
+      "map/pillar_202",
+      "map/pillar_203",
+      "map/pillar_204",
+      "map/pillar_205",
+      "map/pillar_206",
+      "map/pillar_207",
+      "map/pillar_208",
+      "map/pillar_209",
+      "map/pillar_210",
+      "map/pillar_211",
+      "map/pillar_212",
+      "map/pillar_213",
+      "map/pillar_214",
+      "map/pillar_215",
+      "map/pillar_216",
+      "map/pillar_217",
+      "map/pillar_218",
+      "map/pillar_219",
+      "map/pillar_220",
+      "map/pillar_221",
+      "map/pillar_222",
+      "map/pillar_223",
+      "map/pillar_224",
+      "map/pillar_225",
+      "map/pillar_226",
+      "map/pillar_227",
+      "map/pillar_228",
+      "map/pillar_229",
+      "map/pillar_230",
+      "map/pillar_231",
+      "map/pillar_232",
+      "map/pillar_233",
+      "map/pillar_234",
+      "map/pillar_235",
+      "map/pillar_236",
+      "map/pillar_237",
+      "map/pillar_238",
+      "map/pillar_239",
+      "map/pillar_240",
+      "map/pillar_241",
+      "map/pillar_242",
+      "map/pillar_243",
+      "map/pillar_244",
+      "map/pillar_245",
+      "map/pillar_246",
+      "map/pillar_247",
+      "map/pillar_248",
+      "map/pillar_249",
+      "map/pillar_250",
+      "map/pillar_251",
+      "map/pillar_252",
+      "map/pillar_253",
+      "map/pillar_254",
+      "map/pillar_255",
+      "map/pillar_256",
+      "map/pillar_257",
+      "map/pillar_258",
+      "map/pillar_259",
+      "map/pillar_260",
+      "map/pillar_261",
+      "map/pillar_262",
+      "map/pillar_263",
+      "map/pillar_264",
+      "map/pillar_265",
+      "map/pillar_266",
+      "map/pillar_267",
+      "map/pillar_268",
+      "map/pillar_269",
+      "map/pillar_270",
+      "map/pillar_271",
+      "map/pillar_272",
+      "map/pillar_273",
+      "map/pillar_274",
+      "map/pillar_275",
+      "map/pillar_276",
+      "map/pillar_277",
+      "map/pillar_278",
+      "map/pillar_279",
+      "map/pillar_280",
+      "map/pillar_281",
+      "map/pillar_282",
+      "map/pillar_283",
+      "map/pillar_284",
+      "map/pillar_285",
+      "map/pillar_286",
+      "map/pillar_287",
+      "map/pillar_288",
+      "map/pillar_289",
+      "map/pillar_290",
+      "map/pillar_291",
+      "map/pillar_292",
+      "map/pillar_293",
+      "map/pillar_294",
+      "map/pillar_295",
+      "map/pillar_296",
+      "map/pillar_297",
+      "map/pillar_298",
+      "map/pillar_299",
+      "map/pillar_300",
+      "map/pillar_301",
+      "map/pillar_302",
+      "map/pillar_303",
+      "map/pillar_304",
+      "map/pillar_305",
+      "map/pillar_306",
+      "map/pillar_307",
+      "map/pillar_308",
+      "map/pillar_309",
+      "map/pillar_310",
+      "map/pillar_311",
+      "map/pillar_312",
+      "map/pillar_313",
+      "map/pillar_314",
+      "map/pillar_315",
+      "map/pillar_316",
+      "map/pillar_317",
+      "map/pillar_318",
+      "map/pillar_319",
+      "map/pillar_320",
+      "map/pillar_321",
+      "map/pillar_322",
+      "map/pillar_323",
+      "map/pillar_324",
+      "map/pillar_325",
+      "map/pillar_326",
+      "map/pillar_327",
+      "map/pillar_328",
+      "map/pillar_329",
+      "map/pillar_330",
+      "map/pillar_331",
+      "map/pillar_332",
+      "map/pillar_333",
+      "map/pillar_334",
+      "map/pillar_335",
+      "map/pillar_336",
+      "map/pillar_337",
+      "map/pillar_338",
+      "map/pillar_339",
+      "map/pillar_340",
+      "map/pillar_341",
+      "map/pillar_342",
+      "map/pillar_343",
+      "map/pillar_344",
+      "map/pillar_345",
+      "map/pillar_346",
+      "map/pillar_347",
+      "map/pillar_348",
+      "map/pillar_349",
+      "map/pillar_350",
+      "map/pillar_351",
+      "map/pillar_352",
+      "map/pillar_353",
+      "map/pillar_354",
+      "map/pillar_355",
+      "map/pillar_356",
+      "map/pillar_357",
+      "map/pillar_358",
+      "map/pillar_359",
+      "map/pillar_360",
+      "map/pillar_361",
+      "map/pillar_362",
+      "map/pillar_363",
+      "map/pillar_364",
+      "map/pillar_365",
+      "map/pillar_366",
+      "map/pillar_367",
+      "map/pillar_368",
+      "map/pillar_369",
+      "map/pillar_370",
+      "map/pillar_371",
+      "map/pillar_372",
+      "map/pillar_373",
+      "map/pillar_374",
+      "map/pillar_375",
+      "map/pillar_376",
+      "map/pillar_377",
+      "map/pillar_378",
+      "map/pillar_379",
+      "map/pillar_380",
+      "map/pillar_381",
+      "map/pillar_382",
+      "map/pillar_383",
+      "map/pillar_384",
+      "map/pillar_385",
+      "map/pillar_386",
+      "map/pillar_387",
+      "map/pillar_388",
+      "map/pillar_389",
+      "map/pillar_390",
+      "map/pillar_391",
+      "map/pillar_392",
+      "map/pillar_393",
+      "map/pillar_394",
+      "map/pillar_395",
+      "map/pillar_396",
+      "map/pillar_397",
+      "map/pillar_398",
+      "map/pillar_399",
+      "map/pillar_400",
+      "map/pillar_401",
+      "map/pillar_402",
+      "map/pillar_403",
+      "map/pillar_404",
+      "map/pillar_405",
+      "map/pillar_406",
+      "map/pillar_407",
+      "map/pillar_408",
+      "map/pillar_409",
+      "map/pillar_410",
+      "map/pillar_411",
+      "map/pillar_412",
+      "map/pillar_413",
+      "map/pillar_414",
+      "map/pillar_415",
+      "map/pillar_416",
+      "map/pillar_417",
+      "map/pillar_418",
+      "map/pillar_419",
+      "map/pillar_420",
+      "map/pillar_421",
+      "map/pillar_422",
+      "map/pillar_423",
+      "map/pillar_424",
+      "map/pillar_425",
+      "map/pillar_426",
+      "map/pillar_427",
+      "map/pillar_428",
+      "map/pillar_429",
+      "map/pillar_430",
+      "map/pillar_431",
+      "map/pillar_432",
+      "map/pillar_433",
+      "map/pillar_434",
+      "map/pillar_435",
+      "map/pillar_436",
+      "map/pillar_437",
+      "map/pillar_438",
+      "map/pillar_439",
+      "map/pillar_440",
+      "map/pillar_441",
+      "map/pillar_442",
+      "map/pillar_443",
+      "map/pillar_444",
+      "map/pillar_445",
+      "map/pillar_446",
+      "map/pillar_447",
+      "map/pillar_448",
+      "map/pillar_449",
+      "map/pillar_450",
+      "map/pillar_451",
+      "map/pillar_452",
+      "map/pillar_453",
+      "map/pillar_454",
+      "map/pillar_455",
+      "map/pillar_456",
+      "map/pillar_457",
+      "map/pillar_458",
+      "map/pillar_459",
+      "map/pillar_460",
+      "map/pillar_461",
+      "map/pillar_462",
+      "map/pillar_463",
+      "map/pillar_464",
+      "map/pillar_465",
+      "map/pillar_466",
+      "map/pillar_467",
+      "map/pillar_468",
+      "map/pillar_469",
+      "map/pillar_470",
+      "map/pillar_471",
+      "map/pillar_472",
+      "map/pillar_473",
+      "map/pillar_474",
+      "map/pillar_475",
+      "map/pillar_476",
+      "map/pillar_477",
+      "map/pillar_478",
+      "map/pillar_479",
+      "map/pillar_480",
+      "map/pillar_481",
+      "map/pillar_482",
+      "map/pillar_483",
+      "map/pillar_484",
+      "map/pillar_485",
+      "map/pillar_486",
+      "map/pillar_487",
+      "map/pillar_488",
+      "map/pillar_489",
+      "map/pillar_490",
+      "map/pillar_491",
+      "map/pillar_492",
+      "map/pillar_493",
+      "map/pillar_494",
+      "map/pillar_495",
+      "map/pillar_496",
+      "map/pillar_497",
+      "map/pillar_498",
+      "map/pillar_499",
+      "map/ground",
+      "target"
+    ],
+    "triangle_count": 22130,
+    "vertex_count": 66390,
+    "scene_geometry_buffer_name": 1,
+    "scene_geometry_buffer_bytes": 1858920,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 32128,
+    "scene_version": 0,
+    "object_triangle_ranges": {
+      "map/pillar_0": [
+        0,
+        12
+      ],
+      "map/pillar_1": [
+        12,
+        12
+      ],
+      "map/pillar_2": [
+        24,
+        12
+      ],
+      "map/pillar_3": [
+        36,
+        12
+      ],
+      "map/pillar_4": [
+        48,
+        12
+      ],
+      "map/pillar_5": [
+        60,
+        12
+      ],
+      "map/pillar_6": [
+        72,
+        12
+      ],
+      "map/pillar_7": [
+        84,
+        12
+      ],
+      "map/pillar_8": [
+        96,
+        12
+      ],
+      "map/pillar_9": [
+        108,
+        12
+      ],
+      "map/pillar_10": [
+        120,
+        12
+      ],
+      "map/pillar_11": [
+        132,
+        12
+      ],
+      "map/pillar_12": [
+        144,
+        12
+      ],
+      "map/pillar_13": [
+        156,
+        12
+      ],
+      "map/pillar_14": [
+        168,
+        12
+      ],
+      "map/pillar_15": [
+        180,
+        12
+      ],
+      "map/pillar_16": [
+        192,
+        12
+      ],
+      "map/pillar_17": [
+        204,
+        12
+      ],
+      "map/pillar_18": [
+        216,
+        12
+      ],
+      "map/pillar_19": [
+        228,
+        12
+      ],
+      "map/pillar_20": [
+        240,
+        12
+      ],
+      "map/pillar_21": [
+        252,
+        12
+      ],
+      "map/pillar_22": [
+        264,
+        12
+      ],
+      "map/pillar_23": [
+        276,
+        12
+      ],
+      "map/pillar_24": [
+        288,
+        12
+      ],
+      "map/pillar_25": [
+        300,
+        12
+      ],
+      "map/pillar_26": [
+        312,
+        12
+      ],
+      "map/pillar_27": [
+        324,
+        12
+      ],
+      "map/pillar_28": [
+        336,
+        12
+      ],
+      "map/pillar_29": [
+        348,
+        12
+      ],
+      "map/pillar_30": [
+        360,
+        12
+      ],
+      "map/pillar_31": [
+        372,
+        12
+      ],
+      "map/pillar_32": [
+        384,
+        12
+      ],
+      "map/pillar_33": [
+        396,
+        12
+      ],
+      "map/pillar_34": [
+        408,
+        12
+      ],
+      "map/pillar_35": [
+        420,
+        12
+      ],
+      "map/pillar_36": [
+        432,
+        12
+      ],
+      "map/pillar_37": [
+        444,
+        12
+      ],
+      "map/pillar_38": [
+        456,
+        12
+      ],
+      "map/pillar_39": [
+        468,
+        12
+      ],
+      "map/pillar_40": [
+        480,
+        12
+      ],
+      "map/pillar_41": [
+        492,
+        12
+      ],
+      "map/pillar_42": [
+        504,
+        12
+      ],
+      "map/pillar_43": [
+        516,
+        12
+      ],
+      "map/pillar_44": [
+        528,
+        12
+      ],
+      "map/pillar_45": [
+        540,
+        12
+      ],
+      "map/pillar_46": [
+        552,
+        12
+      ],
+      "map/pillar_47": [
+        564,
+        12
+      ],
+      "map/pillar_48": [
+        576,
+        12
+      ],
+      "map/pillar_49": [
+        588,
+        12
+      ],
+      "map/pillar_50": [
+        600,
+        12
+      ],
+      "map/pillar_51": [
+        612,
+        12
+      ],
+      "map/pillar_52": [
+        624,
+        12
+      ],
+      "map/pillar_53": [
+        636,
+        12
+      ],
+      "map/pillar_54": [
+        648,
+        12
+      ],
+      "map/pillar_55": [
+        660,
+        12
+      ],
+      "map/pillar_56": [
+        672,
+        12
+      ],
+      "map/pillar_57": [
+        684,
+        12
+      ],
+      "map/pillar_58": [
+        696,
+        12
+      ],
+      "map/pillar_59": [
+        708,
+        12
+      ],
+      "map/pillar_60": [
+        720,
+        12
+      ],
+      "map/pillar_61": [
+        732,
+        12
+      ],
+      "map/pillar_62": [
+        744,
+        12
+      ],
+      "map/pillar_63": [
+        756,
+        12
+      ],
+      "map/pillar_64": [
+        768,
+        12
+      ],
+      "map/pillar_65": [
+        780,
+        12
+      ],
+      "map/pillar_66": [
+        792,
+        12
+      ],
+      "map/pillar_67": [
+        804,
+        12
+      ],
+      "map/pillar_68": [
+        816,
+        12
+      ],
+      "map/pillar_69": [
+        828,
+        12
+      ],
+      "map/pillar_70": [
+        840,
+        12
+      ],
+      "map/pillar_71": [
+        852,
+        12
+      ],
+      "map/pillar_72": [
+        864,
+        12
+      ],
+      "map/pillar_73": [
+        876,
+        12
+      ],
+      "map/pillar_74": [
+        888,
+        12
+      ],
+      "map/pillar_75": [
+        900,
+        12
+      ],
+      "map/pillar_76": [
+        912,
+        12
+      ],
+      "map/pillar_77": [
+        924,
+        12
+      ],
+      "map/pillar_78": [
+        936,
+        12
+      ],
+      "map/pillar_79": [
+        948,
+        12
+      ],
+      "map/pillar_80": [
+        960,
+        12
+      ],
+      "map/pillar_81": [
+        972,
+        12
+      ],
+      "map/pillar_82": [
+        984,
+        12
+      ],
+      "map/pillar_83": [
+        996,
+        12
+      ],
+      "map/pillar_84": [
+        1008,
+        12
+      ],
+      "map/pillar_85": [
+        1020,
+        12
+      ],
+      "map/pillar_86": [
+        1032,
+        12
+      ],
+      "map/pillar_87": [
+        1044,
+        12
+      ],
+      "map/pillar_88": [
+        1056,
+        12
+      ],
+      "map/pillar_89": [
+        1068,
+        12
+      ],
+      "map/pillar_90": [
+        1080,
+        12
+      ],
+      "map/pillar_91": [
+        1092,
+        12
+      ],
+      "map/pillar_92": [
+        1104,
+        12
+      ],
+      "map/pillar_93": [
+        1116,
+        12
+      ],
+      "map/pillar_94": [
+        1128,
+        12
+      ],
+      "map/pillar_95": [
+        1140,
+        12
+      ],
+      "map/pillar_96": [
+        1152,
+        12
+      ],
+      "map/pillar_97": [
+        1164,
+        12
+      ],
+      "map/pillar_98": [
+        1176,
+        12
+      ],
+      "map/pillar_99": [
+        1188,
+        12
+      ],
+      "map/pillar_100": [
+        1200,
+        12
+      ],
+      "map/pillar_101": [
+        1212,
+        12
+      ],
+      "map/pillar_102": [
+        1224,
+        12
+      ],
+      "map/pillar_103": [
+        1236,
+        12
+      ],
+      "map/pillar_104": [
+        1248,
+        12
+      ],
+      "map/pillar_105": [
+        1260,
+        12
+      ],
+      "map/pillar_106": [
+        1272,
+        12
+      ],
+      "map/pillar_107": [
+        1284,
+        12
+      ],
+      "map/pillar_108": [
+        1296,
+        12
+      ],
+      "map/pillar_109": [
+        1308,
+        12
+      ],
+      "map/pillar_110": [
+        1320,
+        12
+      ],
+      "map/pillar_111": [
+        1332,
+        12
+      ],
+      "map/pillar_112": [
+        1344,
+        12
+      ],
+      "map/pillar_113": [
+        1356,
+        12
+      ],
+      "map/pillar_114": [
+        1368,
+        12
+      ],
+      "map/pillar_115": [
+        1380,
+        12
+      ],
+      "map/pillar_116": [
+        1392,
+        12
+      ],
+      "map/pillar_117": [
+        1404,
+        12
+      ],
+      "map/pillar_118": [
+        1416,
+        12
+      ],
+      "map/pillar_119": [
+        1428,
+        12
+      ],
+      "map/pillar_120": [
+        1440,
+        12
+      ],
+      "map/pillar_121": [
+        1452,
+        12
+      ],
+      "map/pillar_122": [
+        1464,
+        12
+      ],
+      "map/pillar_123": [
+        1476,
+        12
+      ],
+      "map/pillar_124": [
+        1488,
+        12
+      ],
+      "map/pillar_125": [
+        1500,
+        12
+      ],
+      "map/pillar_126": [
+        1512,
+        12
+      ],
+      "map/pillar_127": [
+        1524,
+        12
+      ],
+      "map/pillar_128": [
+        1536,
+        12
+      ],
+      "map/pillar_129": [
+        1548,
+        12
+      ],
+      "map/pillar_130": [
+        1560,
+        12
+      ],
+      "map/pillar_131": [
+        1572,
+        12
+      ],
+      "map/pillar_132": [
+        1584,
+        12
+      ],
+      "map/pillar_133": [
+        1596,
+        12
+      ],
+      "map/pillar_134": [
+        1608,
+        12
+      ],
+      "map/pillar_135": [
+        1620,
+        12
+      ],
+      "map/pillar_136": [
+        1632,
+        12
+      ],
+      "map/pillar_137": [
+        1644,
+        12
+      ],
+      "map/pillar_138": [
+        1656,
+        12
+      ],
+      "map/pillar_139": [
+        1668,
+        12
+      ],
+      "map/pillar_140": [
+        1680,
+        12
+      ],
+      "map/pillar_141": [
+        1692,
+        12
+      ],
+      "map/pillar_142": [
+        1704,
+        12
+      ],
+      "map/pillar_143": [
+        1716,
+        12
+      ],
+      "map/pillar_144": [
+        1728,
+        12
+      ],
+      "map/pillar_145": [
+        1740,
+        12
+      ],
+      "map/pillar_146": [
+        1752,
+        12
+      ],
+      "map/pillar_147": [
+        1764,
+        12
+      ],
+      "map/pillar_148": [
+        1776,
+        12
+      ],
+      "map/pillar_149": [
+        1788,
+        12
+      ],
+      "map/pillar_150": [
+        1800,
+        12
+      ],
+      "map/pillar_151": [
+        1812,
+        12
+      ],
+      "map/pillar_152": [
+        1824,
+        12
+      ],
+      "map/pillar_153": [
+        1836,
+        12
+      ],
+      "map/pillar_154": [
+        1848,
+        12
+      ],
+      "map/pillar_155": [
+        1860,
+        12
+      ],
+      "map/pillar_156": [
+        1872,
+        12
+      ],
+      "map/pillar_157": [
+        1884,
+        12
+      ],
+      "map/pillar_158": [
+        1896,
+        12
+      ],
+      "map/pillar_159": [
+        1908,
+        12
+      ],
+      "map/pillar_160": [
+        1920,
+        12
+      ],
+      "map/pillar_161": [
+        1932,
+        12
+      ],
+      "map/pillar_162": [
+        1944,
+        12
+      ],
+      "map/pillar_163": [
+        1956,
+        12
+      ],
+      "map/pillar_164": [
+        1968,
+        12
+      ],
+      "map/pillar_165": [
+        1980,
+        12
+      ],
+      "map/pillar_166": [
+        1992,
+        12
+      ],
+      "map/pillar_167": [
+        2004,
+        12
+      ],
+      "map/pillar_168": [
+        2016,
+        12
+      ],
+      "map/pillar_169": [
+        2028,
+        12
+      ],
+      "map/pillar_170": [
+        2040,
+        12
+      ],
+      "map/pillar_171": [
+        2052,
+        12
+      ],
+      "map/pillar_172": [
+        2064,
+        12
+      ],
+      "map/pillar_173": [
+        2076,
+        12
+      ],
+      "map/pillar_174": [
+        2088,
+        12
+      ],
+      "map/pillar_175": [
+        2100,
+        12
+      ],
+      "map/pillar_176": [
+        2112,
+        12
+      ],
+      "map/pillar_177": [
+        2124,
+        12
+      ],
+      "map/pillar_178": [
+        2136,
+        12
+      ],
+      "map/pillar_179": [
+        2148,
+        12
+      ],
+      "map/pillar_180": [
+        2160,
+        12
+      ],
+      "map/pillar_181": [
+        2172,
+        12
+      ],
+      "map/pillar_182": [
+        2184,
+        12
+      ],
+      "map/pillar_183": [
+        2196,
+        12
+      ],
+      "map/pillar_184": [
+        2208,
+        12
+      ],
+      "map/pillar_185": [
+        2220,
+        12
+      ],
+      "map/pillar_186": [
+        2232,
+        12
+      ],
+      "map/pillar_187": [
+        2244,
+        12
+      ],
+      "map/pillar_188": [
+        2256,
+        12
+      ],
+      "map/pillar_189": [
+        2268,
+        12
+      ],
+      "map/pillar_190": [
+        2280,
+        12
+      ],
+      "map/pillar_191": [
+        2292,
+        12
+      ],
+      "map/pillar_192": [
+        2304,
+        12
+      ],
+      "map/pillar_193": [
+        2316,
+        12
+      ],
+      "map/pillar_194": [
+        2328,
+        12
+      ],
+      "map/pillar_195": [
+        2340,
+        12
+      ],
+      "map/pillar_196": [
+        2352,
+        12
+      ],
+      "map/pillar_197": [
+        2364,
+        12
+      ],
+      "map/pillar_198": [
+        2376,
+        12
+      ],
+      "map/pillar_199": [
+        2388,
+        12
+      ],
+      "map/pillar_200": [
+        2400,
+        12
+      ],
+      "map/pillar_201": [
+        2412,
+        12
+      ],
+      "map/pillar_202": [
+        2424,
+        12
+      ],
+      "map/pillar_203": [
+        2436,
+        12
+      ],
+      "map/pillar_204": [
+        2448,
+        12
+      ],
+      "map/pillar_205": [
+        2460,
+        12
+      ],
+      "map/pillar_206": [
+        2472,
+        12
+      ],
+      "map/pillar_207": [
+        2484,
+        12
+      ],
+      "map/pillar_208": [
+        2496,
+        12
+      ],
+      "map/pillar_209": [
+        2508,
+        12
+      ],
+      "map/pillar_210": [
+        2520,
+        12
+      ],
+      "map/pillar_211": [
+        2532,
+        12
+      ],
+      "map/pillar_212": [
+        2544,
+        12
+      ],
+      "map/pillar_213": [
+        2556,
+        12
+      ],
+      "map/pillar_214": [
+        2568,
+        12
+      ],
+      "map/pillar_215": [
+        2580,
+        12
+      ],
+      "map/pillar_216": [
+        2592,
+        12
+      ],
+      "map/pillar_217": [
+        2604,
+        12
+      ],
+      "map/pillar_218": [
+        2616,
+        12
+      ],
+      "map/pillar_219": [
+        2628,
+        12
+      ],
+      "map/pillar_220": [
+        2640,
+        12
+      ],
+      "map/pillar_221": [
+        2652,
+        12
+      ],
+      "map/pillar_222": [
+        2664,
+        12
+      ],
+      "map/pillar_223": [
+        2676,
+        12
+      ],
+      "map/pillar_224": [
+        2688,
+        12
+      ],
+      "map/pillar_225": [
+        2700,
+        12
+      ],
+      "map/pillar_226": [
+        2712,
+        12
+      ],
+      "map/pillar_227": [
+        2724,
+        12
+      ],
+      "map/pillar_228": [
+        2736,
+        12
+      ],
+      "map/pillar_229": [
+        2748,
+        12
+      ],
+      "map/pillar_230": [
+        2760,
+        12
+      ],
+      "map/pillar_231": [
+        2772,
+        12
+      ],
+      "map/pillar_232": [
+        2784,
+        12
+      ],
+      "map/pillar_233": [
+        2796,
+        12
+      ],
+      "map/pillar_234": [
+        2808,
+        12
+      ],
+      "map/pillar_235": [
+        2820,
+        12
+      ],
+      "map/pillar_236": [
+        2832,
+        12
+      ],
+      "map/pillar_237": [
+        2844,
+        12
+      ],
+      "map/pillar_238": [
+        2856,
+        12
+      ],
+      "map/pillar_239": [
+        2868,
+        12
+      ],
+      "map/pillar_240": [
+        2880,
+        12
+      ],
+      "map/pillar_241": [
+        2892,
+        12
+      ],
+      "map/pillar_242": [
+        2904,
+        12
+      ],
+      "map/pillar_243": [
+        2916,
+        12
+      ],
+      "map/pillar_244": [
+        2928,
+        12
+      ],
+      "map/pillar_245": [
+        2940,
+        12
+      ],
+      "map/pillar_246": [
+        2952,
+        12
+      ],
+      "map/pillar_247": [
+        2964,
+        12
+      ],
+      "map/pillar_248": [
+        2976,
+        12
+      ],
+      "map/pillar_249": [
+        2988,
+        12
+      ],
+      "map/pillar_250": [
+        3000,
+        12
+      ],
+      "map/pillar_251": [
+        3012,
+        12
+      ],
+      "map/pillar_252": [
+        3024,
+        12
+      ],
+      "map/pillar_253": [
+        3036,
+        12
+      ],
+      "map/pillar_254": [
+        3048,
+        12
+      ],
+      "map/pillar_255": [
+        3060,
+        12
+      ],
+      "map/pillar_256": [
+        3072,
+        12
+      ],
+      "map/pillar_257": [
+        3084,
+        12
+      ],
+      "map/pillar_258": [
+        3096,
+        12
+      ],
+      "map/pillar_259": [
+        3108,
+        12
+      ],
+      "map/pillar_260": [
+        3120,
+        12
+      ],
+      "map/pillar_261": [
+        3132,
+        12
+      ],
+      "map/pillar_262": [
+        3144,
+        12
+      ],
+      "map/pillar_263": [
+        3156,
+        12
+      ],
+      "map/pillar_264": [
+        3168,
+        12
+      ],
+      "map/pillar_265": [
+        3180,
+        12
+      ],
+      "map/pillar_266": [
+        3192,
+        12
+      ],
+      "map/pillar_267": [
+        3204,
+        12
+      ],
+      "map/pillar_268": [
+        3216,
+        12
+      ],
+      "map/pillar_269": [
+        3228,
+        12
+      ],
+      "map/pillar_270": [
+        3240,
+        12
+      ],
+      "map/pillar_271": [
+        3252,
+        12
+      ],
+      "map/pillar_272": [
+        3264,
+        12
+      ],
+      "map/pillar_273": [
+        3276,
+        12
+      ],
+      "map/pillar_274": [
+        3288,
+        12
+      ],
+      "map/pillar_275": [
+        3300,
+        12
+      ],
+      "map/pillar_276": [
+        3312,
+        12
+      ],
+      "map/pillar_277": [
+        3324,
+        12
+      ],
+      "map/pillar_278": [
+        3336,
+        12
+      ],
+      "map/pillar_279": [
+        3348,
+        12
+      ],
+      "map/pillar_280": [
+        3360,
+        12
+      ],
+      "map/pillar_281": [
+        3372,
+        12
+      ],
+      "map/pillar_282": [
+        3384,
+        12
+      ],
+      "map/pillar_283": [
+        3396,
+        12
+      ],
+      "map/pillar_284": [
+        3408,
+        12
+      ],
+      "map/pillar_285": [
+        3420,
+        12
+      ],
+      "map/pillar_286": [
+        3432,
+        12
+      ],
+      "map/pillar_287": [
+        3444,
+        12
+      ],
+      "map/pillar_288": [
+        3456,
+        12
+      ],
+      "map/pillar_289": [
+        3468,
+        12
+      ],
+      "map/pillar_290": [
+        3480,
+        12
+      ],
+      "map/pillar_291": [
+        3492,
+        12
+      ],
+      "map/pillar_292": [
+        3504,
+        12
+      ],
+      "map/pillar_293": [
+        3516,
+        12
+      ],
+      "map/pillar_294": [
+        3528,
+        12
+      ],
+      "map/pillar_295": [
+        3540,
+        12
+      ],
+      "map/pillar_296": [
+        3552,
+        12
+      ],
+      "map/pillar_297": [
+        3564,
+        12
+      ],
+      "map/pillar_298": [
+        3576,
+        12
+      ],
+      "map/pillar_299": [
+        3588,
+        12
+      ],
+      "map/pillar_300": [
+        3600,
+        12
+      ],
+      "map/pillar_301": [
+        3612,
+        12
+      ],
+      "map/pillar_302": [
+        3624,
+        12
+      ],
+      "map/pillar_303": [
+        3636,
+        12
+      ],
+      "map/pillar_304": [
+        3648,
+        12
+      ],
+      "map/pillar_305": [
+        3660,
+        12
+      ],
+      "map/pillar_306": [
+        3672,
+        12
+      ],
+      "map/pillar_307": [
+        3684,
+        12
+      ],
+      "map/pillar_308": [
+        3696,
+        12
+      ],
+      "map/pillar_309": [
+        3708,
+        12
+      ],
+      "map/pillar_310": [
+        3720,
+        12
+      ],
+      "map/pillar_311": [
+        3732,
+        12
+      ],
+      "map/pillar_312": [
+        3744,
+        12
+      ],
+      "map/pillar_313": [
+        3756,
+        12
+      ],
+      "map/pillar_314": [
+        3768,
+        12
+      ],
+      "map/pillar_315": [
+        3780,
+        12
+      ],
+      "map/pillar_316": [
+        3792,
+        12
+      ],
+      "map/pillar_317": [
+        3804,
+        12
+      ],
+      "map/pillar_318": [
+        3816,
+        12
+      ],
+      "map/pillar_319": [
+        3828,
+        12
+      ],
+      "map/pillar_320": [
+        3840,
+        12
+      ],
+      "map/pillar_321": [
+        3852,
+        12
+      ],
+      "map/pillar_322": [
+        3864,
+        12
+      ],
+      "map/pillar_323": [
+        3876,
+        12
+      ],
+      "map/pillar_324": [
+        3888,
+        12
+      ],
+      "map/pillar_325": [
+        3900,
+        12
+      ],
+      "map/pillar_326": [
+        3912,
+        12
+      ],
+      "map/pillar_327": [
+        3924,
+        12
+      ],
+      "map/pillar_328": [
+        3936,
+        12
+      ],
+      "map/pillar_329": [
+        3948,
+        12
+      ],
+      "map/pillar_330": [
+        3960,
+        12
+      ],
+      "map/pillar_331": [
+        3972,
+        12
+      ],
+      "map/pillar_332": [
+        3984,
+        12
+      ],
+      "map/pillar_333": [
+        3996,
+        12
+      ],
+      "map/pillar_334": [
+        4008,
+        12
+      ],
+      "map/pillar_335": [
+        4020,
+        12
+      ],
+      "map/pillar_336": [
+        4032,
+        12
+      ],
+      "map/pillar_337": [
+        4044,
+        12
+      ],
+      "map/pillar_338": [
+        4056,
+        12
+      ],
+      "map/pillar_339": [
+        4068,
+        12
+      ],
+      "map/pillar_340": [
+        4080,
+        12
+      ],
+      "map/pillar_341": [
+        4092,
+        12
+      ],
+      "map/pillar_342": [
+        4104,
+        12
+      ],
+      "map/pillar_343": [
+        4116,
+        12
+      ],
+      "map/pillar_344": [
+        4128,
+        12
+      ],
+      "map/pillar_345": [
+        4140,
+        12
+      ],
+      "map/pillar_346": [
+        4152,
+        12
+      ],
+      "map/pillar_347": [
+        4164,
+        12
+      ],
+      "map/pillar_348": [
+        4176,
+        12
+      ],
+      "map/pillar_349": [
+        4188,
+        12
+      ],
+      "map/pillar_350": [
+        4200,
+        12
+      ],
+      "map/pillar_351": [
+        4212,
+        12
+      ],
+      "map/pillar_352": [
+        4224,
+        12
+      ],
+      "map/pillar_353": [
+        4236,
+        12
+      ],
+      "map/pillar_354": [
+        4248,
+        12
+      ],
+      "map/pillar_355": [
+        4260,
+        12
+      ],
+      "map/pillar_356": [
+        4272,
+        12
+      ],
+      "map/pillar_357": [
+        4284,
+        12
+      ],
+      "map/pillar_358": [
+        4296,
+        12
+      ],
+      "map/pillar_359": [
+        4308,
+        12
+      ],
+      "map/pillar_360": [
+        4320,
+        12
+      ],
+      "map/pillar_361": [
+        4332,
+        12
+      ],
+      "map/pillar_362": [
+        4344,
+        12
+      ],
+      "map/pillar_363": [
+        4356,
+        12
+      ],
+      "map/pillar_364": [
+        4368,
+        12
+      ],
+      "map/pillar_365": [
+        4380,
+        12
+      ],
+      "map/pillar_366": [
+        4392,
+        12
+      ],
+      "map/pillar_367": [
+        4404,
+        12
+      ],
+      "map/pillar_368": [
+        4416,
+        12
+      ],
+      "map/pillar_369": [
+        4428,
+        12
+      ],
+      "map/pillar_370": [
+        4440,
+        12
+      ],
+      "map/pillar_371": [
+        4452,
+        12
+      ],
+      "map/pillar_372": [
+        4464,
+        12
+      ],
+      "map/pillar_373": [
+        4476,
+        12
+      ],
+      "map/pillar_374": [
+        4488,
+        12
+      ],
+      "map/pillar_375": [
+        4500,
+        12
+      ],
+      "map/pillar_376": [
+        4512,
+        12
+      ],
+      "map/pillar_377": [
+        4524,
+        12
+      ],
+      "map/pillar_378": [
+        4536,
+        12
+      ],
+      "map/pillar_379": [
+        4548,
+        12
+      ],
+      "map/pillar_380": [
+        4560,
+        12
+      ],
+      "map/pillar_381": [
+        4572,
+        12
+      ],
+      "map/pillar_382": [
+        4584,
+        12
+      ],
+      "map/pillar_383": [
+        4596,
+        12
+      ],
+      "map/pillar_384": [
+        4608,
+        12
+      ],
+      "map/pillar_385": [
+        4620,
+        12
+      ],
+      "map/pillar_386": [
+        4632,
+        12
+      ],
+      "map/pillar_387": [
+        4644,
+        12
+      ],
+      "map/pillar_388": [
+        4656,
+        12
+      ],
+      "map/pillar_389": [
+        4668,
+        12
+      ],
+      "map/pillar_390": [
+        4680,
+        12
+      ],
+      "map/pillar_391": [
+        4692,
+        12
+      ],
+      "map/pillar_392": [
+        4704,
+        12
+      ],
+      "map/pillar_393": [
+        4716,
+        12
+      ],
+      "map/pillar_394": [
+        4728,
+        12
+      ],
+      "map/pillar_395": [
+        4740,
+        12
+      ],
+      "map/pillar_396": [
+        4752,
+        12
+      ],
+      "map/pillar_397": [
+        4764,
+        12
+      ],
+      "map/pillar_398": [
+        4776,
+        12
+      ],
+      "map/pillar_399": [
+        4788,
+        12
+      ],
+      "map/pillar_400": [
+        4800,
+        12
+      ],
+      "map/pillar_401": [
+        4812,
+        12
+      ],
+      "map/pillar_402": [
+        4824,
+        12
+      ],
+      "map/pillar_403": [
+        4836,
+        12
+      ],
+      "map/pillar_404": [
+        4848,
+        12
+      ],
+      "map/pillar_405": [
+        4860,
+        12
+      ],
+      "map/pillar_406": [
+        4872,
+        12
+      ],
+      "map/pillar_407": [
+        4884,
+        12
+      ],
+      "map/pillar_408": [
+        4896,
+        12
+      ],
+      "map/pillar_409": [
+        4908,
+        12
+      ],
+      "map/pillar_410": [
+        4920,
+        12
+      ],
+      "map/pillar_411": [
+        4932,
+        12
+      ],
+      "map/pillar_412": [
+        4944,
+        12
+      ],
+      "map/pillar_413": [
+        4956,
+        12
+      ],
+      "map/pillar_414": [
+        4968,
+        12
+      ],
+      "map/pillar_415": [
+        4980,
+        12
+      ],
+      "map/pillar_416": [
+        4992,
+        12
+      ],
+      "map/pillar_417": [
+        5004,
+        12
+      ],
+      "map/pillar_418": [
+        5016,
+        12
+      ],
+      "map/pillar_419": [
+        5028,
+        12
+      ],
+      "map/pillar_420": [
+        5040,
+        12
+      ],
+      "map/pillar_421": [
+        5052,
+        12
+      ],
+      "map/pillar_422": [
+        5064,
+        12
+      ],
+      "map/pillar_423": [
+        5076,
+        12
+      ],
+      "map/pillar_424": [
+        5088,
+        12
+      ],
+      "map/pillar_425": [
+        5100,
+        12
+      ],
+      "map/pillar_426": [
+        5112,
+        12
+      ],
+      "map/pillar_427": [
+        5124,
+        12
+      ],
+      "map/pillar_428": [
+        5136,
+        12
+      ],
+      "map/pillar_429": [
+        5148,
+        12
+      ],
+      "map/pillar_430": [
+        5160,
+        12
+      ],
+      "map/pillar_431": [
+        5172,
+        12
+      ],
+      "map/pillar_432": [
+        5184,
+        12
+      ],
+      "map/pillar_433": [
+        5196,
+        12
+      ],
+      "map/pillar_434": [
+        5208,
+        12
+      ],
+      "map/pillar_435": [
+        5220,
+        12
+      ],
+      "map/pillar_436": [
+        5232,
+        12
+      ],
+      "map/pillar_437": [
+        5244,
+        12
+      ],
+      "map/pillar_438": [
+        5256,
+        12
+      ],
+      "map/pillar_439": [
+        5268,
+        12
+      ],
+      "map/pillar_440": [
+        5280,
+        12
+      ],
+      "map/pillar_441": [
+        5292,
+        12
+      ],
+      "map/pillar_442": [
+        5304,
+        12
+      ],
+      "map/pillar_443": [
+        5316,
+        12
+      ],
+      "map/pillar_444": [
+        5328,
+        12
+      ],
+      "map/pillar_445": [
+        5340,
+        12
+      ],
+      "map/pillar_446": [
+        5352,
+        12
+      ],
+      "map/pillar_447": [
+        5364,
+        12
+      ],
+      "map/pillar_448": [
+        5376,
+        12
+      ],
+      "map/pillar_449": [
+        5388,
+        12
+      ],
+      "map/pillar_450": [
+        5400,
+        12
+      ],
+      "map/pillar_451": [
+        5412,
+        12
+      ],
+      "map/pillar_452": [
+        5424,
+        12
+      ],
+      "map/pillar_453": [
+        5436,
+        12
+      ],
+      "map/pillar_454": [
+        5448,
+        12
+      ],
+      "map/pillar_455": [
+        5460,
+        12
+      ],
+      "map/pillar_456": [
+        5472,
+        12
+      ],
+      "map/pillar_457": [
+        5484,
+        12
+      ],
+      "map/pillar_458": [
+        5496,
+        12
+      ],
+      "map/pillar_459": [
+        5508,
+        12
+      ],
+      "map/pillar_460": [
+        5520,
+        12
+      ],
+      "map/pillar_461": [
+        5532,
+        12
+      ],
+      "map/pillar_462": [
+        5544,
+        12
+      ],
+      "map/pillar_463": [
+        5556,
+        12
+      ],
+      "map/pillar_464": [
+        5568,
+        12
+      ],
+      "map/pillar_465": [
+        5580,
+        12
+      ],
+      "map/pillar_466": [
+        5592,
+        12
+      ],
+      "map/pillar_467": [
+        5604,
+        12
+      ],
+      "map/pillar_468": [
+        5616,
+        12
+      ],
+      "map/pillar_469": [
+        5628,
+        12
+      ],
+      "map/pillar_470": [
+        5640,
+        12
+      ],
+      "map/pillar_471": [
+        5652,
+        12
+      ],
+      "map/pillar_472": [
+        5664,
+        12
+      ],
+      "map/pillar_473": [
+        5676,
+        12
+      ],
+      "map/pillar_474": [
+        5688,
+        12
+      ],
+      "map/pillar_475": [
+        5700,
+        12
+      ],
+      "map/pillar_476": [
+        5712,
+        12
+      ],
+      "map/pillar_477": [
+        5724,
+        12
+      ],
+      "map/pillar_478": [
+        5736,
+        12
+      ],
+      "map/pillar_479": [
+        5748,
+        12
+      ],
+      "map/pillar_480": [
+        5760,
+        12
+      ],
+      "map/pillar_481": [
+        5772,
+        12
+      ],
+      "map/pillar_482": [
+        5784,
+        12
+      ],
+      "map/pillar_483": [
+        5796,
+        12
+      ],
+      "map/pillar_484": [
+        5808,
+        12
+      ],
+      "map/pillar_485": [
+        5820,
+        12
+      ],
+      "map/pillar_486": [
+        5832,
+        12
+      ],
+      "map/pillar_487": [
+        5844,
+        12
+      ],
+      "map/pillar_488": [
+        5856,
+        12
+      ],
+      "map/pillar_489": [
+        5868,
+        12
+      ],
+      "map/pillar_490": [
+        5880,
+        12
+      ],
+      "map/pillar_491": [
+        5892,
+        12
+      ],
+      "map/pillar_492": [
+        5904,
+        12
+      ],
+      "map/pillar_493": [
+        5916,
+        12
+      ],
+      "map/pillar_494": [
+        5928,
+        12
+      ],
+      "map/pillar_495": [
+        5940,
+        12
+      ],
+      "map/pillar_496": [
+        5952,
+        12
+      ],
+      "map/pillar_497": [
+        5964,
+        12
+      ],
+      "map/pillar_498": [
+        5976,
+        12
+      ],
+      "map/pillar_499": [
+        5988,
+        12
+      ],
+      "map/ground": [
+        6000,
+        2
+      ],
+      "target": [
+        6002,
+        16128
+      ]
+    },
+    "batch_geometry_policy": "one VBO; world meshes and local spheres; independent of B",
+    "full_pass_instanced_draws": 1,
+    "selected_object_pass_instanced_draws": 1,
+    "instanced_draw_count": 0,
+    "render_calls": 0,
+    "max_array_texture_layers": 2048,
+    "input_pose": "float32 CUDA B44; row-major camera FLU to world",
+    "output": "owned CUDA distance float32 and identity int64 BHW",
+    "output_transfer": "whole array to PBO in GL; one CUDA D2D PBO-to-Torch copy",
+    "cpu_image_readbacks": 0,
+    "per_view_draw_calls": 0,
+    "interop_synchronization": "CUDA GL-resource map/unmap on current PyTorch stream",
+    "vertex_shader_sha256": "c7a9a725b92a45bdf57ee6dcd7ea9c6648b586f96f099bf3d4871eccfbf36889",
+    "fragment_shader_sha256": "8f68a2678b3a8d6bd3016b02acb38776711967ecae9227dd842a0565b1071757",
+    "near_clip_policy": "unchanged GL w=forward, clip z=0, no positive near plane",
+    "depth_component_bits": 24,
+    "zone_depth_component_bits": 32,
+    "zone_sampling": "exact triangle/cell cone clip and nearest point; no supersampling"
+  },
+  "first_forward_ms": 129.32875800106558,
+  "first_forward_scope": "default cold formal API",
+  "first_forward_memory": {
+    "allocated_bytes": 24964608,
+    "reserved_bytes": 201326592,
+    "peak_allocated_bytes": 162678272,
+    "peak_reserved_bytes": 201326592
+  },
+  "first_forward_gl_memory": {
+    "scene_geometry_buffer_bytes": 1858920,
+    "pose_ssbo_bytes": 4352,
+    "object_transform_ssbo_bytes": 32128,
+    "layered_color_texture_bytes": 9830400,
+    "layered_depth_texture_bytes_estimate": 4915200,
+    "output_pbo_bytes": 9830400,
+    "tracked_total_bytes": 26471400,
+    "tracked_total_scope": "explicit GL storage; depth24 estimated as 4 bytes/texel; zone depth32 uses 4 bytes/texel; excludes driver padding/objects and all Torch allocations",
+    "input_pose_transfer_bytes_per_render": 4352,
+    "output_cuda_transfer_bytes_per_render": 9830400,
+    "image_cpu_transfer_bytes_per_render": 0,
+    "texture_array_count": 1
+  },
+  "output_tensors": {
+    "depth.range_m": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 4915200
+    },
+    "depth.object_index": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 9830400
+    },
+    "target_mask": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.bool",
+      "device": "cuda:0",
+      "bytes": 1228800
+    },
+    "target_hint": {
+      "shape": [
+        64,
+        5
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 1280
+    },
+    "visible_fraction": {
+      "shape": [
+        64
+      ],
+      "dtype": "torch.float64",
+      "device": "cuda:0",
+      "bytes": 512
+    },
+    "unoccluded_pixels": {
+      "shape": [
+        64
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 512
+    }
+  },
+  "first_forward_contract": {
+    "draw_delta": 2,
+    "render_delta": 2,
+    "geometry_uploads": 1,
+    "geometry_buffer_unchanged": true
+  },
+  "pipeline": {
+    "wall_median_ms": 1.124208000874205,
+    "wall_p95_ms": 1.3741825005126884,
+    "wall_min_ms": 1.1014279989467468,
+    "wall_samples_ms": [
+      1.1233579989493592,
+      1.1225880007259548,
+      1.1309580004308373,
+      1.1651280001387931,
+      1.131898001403897,
+      1.1252069998590741,
+      1.1700380000547739,
+      1.1198379997949814,
+      1.1296780012344243,
+      1.1240980002185097,
+      1.1014279989467468,
+      1.1243180015299004,
+      1.122867999583832,
+      1.121477998822229,
+      1.1179480006831,
+      1.1272179999650689,
+      1.120078000894864,
+      1.1268979997112183,
+      1.121838000472053,
+      1.119128000937053,
+      1.12858800093818,
+      1.3901800011808518,
+      1.7163619995699264,
+      1.3546299996960443,
+      1.1280479993729386,
+      1.1208069990971126,
+      1.1178879994986346,
+      1.1209479998797178,
+      1.1230480013182387,
+      1.1351379998814082
+    ],
+    "warmup": 3,
+    "pilot_ms": 1.3857600006303983,
+    "repeats": 30,
+    "target_budget_ms": 300.0,
+    "actual_measured_total_ms": 34.88162600478972,
+    "units_per_second": 56928.96683730449,
+    "cuda_event_span_ms": [
+      1.0274239778518677,
+      1.0133119821548462,
+      1.0080959796905518
+    ],
+    "cuda_event_span_median_ms": 1.0133119821548462,
+    "cuda_event_scope": "whole CUDA stream span, including host submission/interop gaps; not pure kernel execution",
+    "torch_memory_before": {
+      "allocated_bytes": 8987648,
+      "reserved_bytes": 201326592,
+      "peak_allocated_bytes": 8987648,
+      "peak_reserved_bytes": 201326592
+    },
+    "torch_memory_after": {
+      "allocated_bytes": 8987648,
+      "reserved_bytes": 201326592,
+      "peak_allocated_bytes": 58146304,
+      "peak_reserved_bytes": 201326592
+    },
+    "torch_peak_increment_bytes": 49158656,
+    "gl_memory_after": {
+      "scene_geometry_buffer_bytes": 1858920,
+      "pose_ssbo_bytes": 4352,
+      "object_transform_ssbo_bytes": 32128,
+      "layered_color_texture_bytes": 9830400,
+      "layered_depth_texture_bytes_estimate": 4915200,
+      "output_pbo_bytes": 9830400,
+      "tracked_total_bytes": 26471400,
+      "tracked_total_scope": "explicit GL storage; depth24 estimated as 4 bytes/texel; zone depth32 uses 4 bytes/texel; excludes driver padding/objects and all Torch allocations",
+      "input_pose_transfer_bytes_per_render": 4352,
+      "output_cuda_transfer_bytes_per_render": 9830400,
+      "image_cpu_transfer_bytes_per_render": 0,
+      "texture_array_count": 1
+    },
+    "draw_contract": {
+      "action_count": 37,
+      "expected_draws_per_action": 2,
+      "draw_delta": 74,
+      "render_delta": 74,
+      "geometry_uploads_before": 1,
+      "geometry_uploads_after": 1,
+      "geometry_buffer_unchanged": true,
+      "passed": true
+    }
+  },
+  "fixed_raw_tensors": {
+    "0.distance_m": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 4915200
+    },
+    "0.object_index": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 9830400
+    },
+    "1.distance_m": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 4915200
+    },
+    "1.object_index": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 9830400
+    }
+  },
+  "production_parity": {
+    "passed": true,
+    "comparison": "exact, including NaN/+inf classes, masks and IDs",
+    "tensors": {
+      "depth.range_m": {
+        "category_disagreements": 0,
+        "finite_max_abs": 0.0,
+        "passed": true
+      },
+      "depth.object_index": {
+        "disagreements": 0,
+        "passed": true
+      },
+      "target_mask": {
+        "disagreements": 0,
+        "passed": true
+      },
+      "target_hint": {
+        "category_disagreements": 0,
+        "finite_max_abs": 0.0,
+        "passed": true
+      },
+      "visible_fraction": {
+        "category_disagreements": 0,
+        "finite_max_abs": 0.0,
+        "passed": true
+      },
+      "unoccluded_pixels": {
+        "disagreements": 0,
+        "passed": true
+      }
+    }
+  },
+  "postprocess": {
+    "wall_median_ms": 5.173331999685615,
+    "wall_p95_ms": 6.192073000329401,
+    "wall_min_ms": 5.159287000424229,
+    "wall_samples_ms": [
+      5.194846999074798,
+      5.715449999115663,
+      6.135523999546422,
+      5.173826999453013,
+      5.169415999262128,
+      5.179276000490063,
+      5.1750969996646745,
+      5.640609999318258,
+      6.188893999933498,
+      5.170906999410363,
+      5.167756999071571,
+      5.1610070004244335,
+      5.166275999727077,
+      5.58742999965034,
+      6.144942999526393,
+      5.276707999655628,
+      5.159287000424229,
+      5.161506000149529,
+      5.170186999748694,
+      5.161376999240019,
+      6.315525000900379,
+      5.5193890002556145,
+      5.172836999918218,
+      5.167806000827113,
+      5.163587000424741,
+      5.162707000636146,
+      6.194674000653322,
+      5.637700000079349,
+      5.171716999029741,
+      5.163476000234368
+    ],
+    "warmup": 3,
+    "pilot_ms": 5.3330080008890945,
+    "repeats": 30,
+    "target_budget_ms": 300.0,
+    "actual_measured_total_ms": 162.56974399584578,
+    "units_per_second": 12371.137209807779,
+    "cuda_event_span_ms": [
+      5.172832012176514,
+      5.1599040031433105,
+      6.199295997619629
+    ],
+    "cuda_event_span_median_ms": 5.172832012176514,
+    "cuda_event_scope": "whole CUDA stream span, including host submission/interop gaps; not pure kernel execution",
+    "torch_memory_before": {
+      "allocated_bytes": 38478848,
+      "reserved_bytes": 264241152,
+      "peak_allocated_bytes": 38478848,
+      "peak_reserved_bytes": 264241152
+    },
+    "torch_memory_after": {
+      "allocated_bytes": 38478848,
+      "reserved_bytes": 264241152,
+      "peak_allocated_bytes": 163333632,
+      "peak_reserved_bytes": 264241152
+    },
+    "torch_peak_increment_bytes": 124854784,
+    "gl_memory_after": {
+      "scene_geometry_buffer_bytes": 1858920,
+      "pose_ssbo_bytes": 4352,
+      "object_transform_ssbo_bytes": 32128,
+      "layered_color_texture_bytes": 9830400,
+      "layered_depth_texture_bytes_estimate": 4915200,
+      "output_pbo_bytes": 9830400,
+      "tracked_total_bytes": 26471400,
+      "tracked_total_scope": "explicit GL storage; depth24 estimated as 4 bytes/texel; zone depth32 uses 4 bytes/texel; excludes driver padding/objects and all Torch allocations",
+      "input_pose_transfer_bytes_per_render": 4352,
+      "output_cuda_transfer_bytes_per_render": 9830400,
+      "image_cpu_transfer_bytes_per_render": 0,
+      "texture_array_count": 1
+    },
+    "draw_contract": {
+      "action_count": 37,
+      "expected_draws_per_action": 0,
+      "draw_delta": 0,
+      "render_delta": 0,
+      "geometry_uploads_before": 1,
+      "geometry_uploads_after": 1,
+      "geometry_buffer_unchanged": true,
+      "passed": true
+    }
+  },
+  "end_to_end": {
+    "wall_median_ms": 6.489436000265414,
+    "wall_p95_ms": 7.501395500821673,
+    "wall_min_ms": 6.462675999500789,
+    "wall_samples_ms": [
+      6.5116259993374115,
+      6.470155998613336,
+      6.477386001279228,
+      6.473465999079053,
+      7.506323001507553,
+      6.498846998510999,
+      6.462675999500789,
+      6.464516000050935,
+      6.478846000391059,
+      7.495372999983374,
+      6.4769060008984525,
+      6.497316000604769,
+      6.463116000304581,
+      6.490616000519367,
+      7.5165140005992725,
+      6.4649359992472455,
+      6.474566000179038,
+      6.49335599882761,
+      6.789118000597227,
+      7.235340999613982,
+      6.524845999592799,
+      6.476255999587011,
+      6.4793660003488185,
+      6.783118000385002,
+      7.245681999847875,
+      6.465906000812538,
+      6.488256000011461,
+      6.472346000009566,
+      6.758767998690018,
+      7.237630999952671
+    ],
+    "warmup": 3,
+    "pilot_ms": 7.119460999092553,
+    "repeats": 30,
+    "target_budget_ms": 300.0,
+    "actual_measured_total_ms": 200.67317499888304,
+    "units_per_second": 9862.182167661787,
+    "cuda_event_span_ms": [
+      6.477791786193848,
+      6.47983980178833,
+      6.491903781890869
+    ],
+    "cuda_event_span_median_ms": 6.47983980178833,
+    "cuda_event_scope": "whole CUDA stream span, including host submission/interop gaps; not pure kernel execution",
+    "torch_memory_before": {
+      "allocated_bytes": 8987648,
+      "reserved_bytes": 264241152,
+      "peak_allocated_bytes": 8987648,
+      "peak_reserved_bytes": 264241152
+    },
+    "torch_memory_after": {
+      "allocated_bytes": 8987648,
+      "reserved_bytes": 264241152,
+      "peak_allocated_bytes": 163333632,
+      "peak_reserved_bytes": 264241152
+    },
+    "torch_peak_increment_bytes": 154345984,
+    "gl_memory_after": {
+      "scene_geometry_buffer_bytes": 1858920,
+      "pose_ssbo_bytes": 4352,
+      "object_transform_ssbo_bytes": 32128,
+      "layered_color_texture_bytes": 9830400,
+      "layered_depth_texture_bytes_estimate": 4915200,
+      "output_pbo_bytes": 9830400,
+      "tracked_total_bytes": 26471400,
+      "tracked_total_scope": "explicit GL storage; depth24 estimated as 4 bytes/texel; zone depth32 uses 4 bytes/texel; excludes driver padding/objects and all Torch allocations",
+      "input_pose_transfer_bytes_per_render": 4352,
+      "output_cuda_transfer_bytes_per_render": 9830400,
+      "image_cpu_transfer_bytes_per_render": 0,
+      "texture_array_count": 1
+    },
+    "draw_contract": {
+      "action_count": 37,
+      "expected_draws_per_action": 2,
+      "draw_delta": 74,
+      "render_delta": 74,
+      "geometry_uploads_before": 1,
+      "geometry_uploads_after": 1,
+      "geometry_buffer_unchanged": true,
+      "passed": true
+    }
+  },
+  "gl_draw_probe": {
+    "scope": "GL_TIME_ELAPSED around each glDrawArraysInstanced only; excludes clear/transfer/interop/Torch work",
+    "repeats": 3,
+    "per_draw_samples_ms": [
+      [
+        0.160256,
+        0.107904
+      ],
+      [
+        0.160512,
+        0.108032
+      ],
+      [
+        0.160768,
+        0.108
+      ]
+    ],
+    "per_action_sum_samples_ms": [
+      0.26816,
+      0.268544,
+      0.268768
+    ],
+    "per_action_sum_median_ms": 0.268544
+  },
+  "geometry_after_warm": {
+    "backend": "opengl_layered_instanced_cuda_pbo",
+    "device": "cuda:0",
+    "renderer": {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "4.5.0 NVIDIA 595.91.07"
+    },
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/pillar_12",
+      "map/pillar_13",
+      "map/pillar_14",
+      "map/pillar_15",
+      "map/pillar_16",
+      "map/pillar_17",
+      "map/pillar_18",
+      "map/pillar_19",
+      "map/pillar_20",
+      "map/pillar_21",
+      "map/pillar_22",
+      "map/pillar_23",
+      "map/pillar_24",
+      "map/pillar_25",
+      "map/pillar_26",
+      "map/pillar_27",
+      "map/pillar_28",
+      "map/pillar_29",
+      "map/pillar_30",
+      "map/pillar_31",
+      "map/pillar_32",
+      "map/pillar_33",
+      "map/pillar_34",
+      "map/pillar_35",
+      "map/pillar_36",
+      "map/pillar_37",
+      "map/pillar_38",
+      "map/pillar_39",
+      "map/pillar_40",
+      "map/pillar_41",
+      "map/pillar_42",
+      "map/pillar_43",
+      "map/pillar_44",
+      "map/pillar_45",
+      "map/pillar_46",
+      "map/pillar_47",
+      "map/pillar_48",
+      "map/pillar_49",
+      "map/pillar_50",
+      "map/pillar_51",
+      "map/pillar_52",
+      "map/pillar_53",
+      "map/pillar_54",
+      "map/pillar_55",
+      "map/pillar_56",
+      "map/pillar_57",
+      "map/pillar_58",
+      "map/pillar_59",
+      "map/pillar_60",
+      "map/pillar_61",
+      "map/pillar_62",
+      "map/pillar_63",
+      "map/pillar_64",
+      "map/pillar_65",
+      "map/pillar_66",
+      "map/pillar_67",
+      "map/pillar_68",
+      "map/pillar_69",
+      "map/pillar_70",
+      "map/pillar_71",
+      "map/pillar_72",
+      "map/pillar_73",
+      "map/pillar_74",
+      "map/pillar_75",
+      "map/pillar_76",
+      "map/pillar_77",
+      "map/pillar_78",
+      "map/pillar_79",
+      "map/pillar_80",
+      "map/pillar_81",
+      "map/pillar_82",
+      "map/pillar_83",
+      "map/pillar_84",
+      "map/pillar_85",
+      "map/pillar_86",
+      "map/pillar_87",
+      "map/pillar_88",
+      "map/pillar_89",
+      "map/pillar_90",
+      "map/pillar_91",
+      "map/pillar_92",
+      "map/pillar_93",
+      "map/pillar_94",
+      "map/pillar_95",
+      "map/pillar_96",
+      "map/pillar_97",
+      "map/pillar_98",
+      "map/pillar_99",
+      "map/pillar_100",
+      "map/pillar_101",
+      "map/pillar_102",
+      "map/pillar_103",
+      "map/pillar_104",
+      "map/pillar_105",
+      "map/pillar_106",
+      "map/pillar_107",
+      "map/pillar_108",
+      "map/pillar_109",
+      "map/pillar_110",
+      "map/pillar_111",
+      "map/pillar_112",
+      "map/pillar_113",
+      "map/pillar_114",
+      "map/pillar_115",
+      "map/pillar_116",
+      "map/pillar_117",
+      "map/pillar_118",
+      "map/pillar_119",
+      "map/pillar_120",
+      "map/pillar_121",
+      "map/pillar_122",
+      "map/pillar_123",
+      "map/pillar_124",
+      "map/pillar_125",
+      "map/pillar_126",
+      "map/pillar_127",
+      "map/pillar_128",
+      "map/pillar_129",
+      "map/pillar_130",
+      "map/pillar_131",
+      "map/pillar_132",
+      "map/pillar_133",
+      "map/pillar_134",
+      "map/pillar_135",
+      "map/pillar_136",
+      "map/pillar_137",
+      "map/pillar_138",
+      "map/pillar_139",
+      "map/pillar_140",
+      "map/pillar_141",
+      "map/pillar_142",
+      "map/pillar_143",
+      "map/pillar_144",
+      "map/pillar_145",
+      "map/pillar_146",
+      "map/pillar_147",
+      "map/pillar_148",
+      "map/pillar_149",
+      "map/pillar_150",
+      "map/pillar_151",
+      "map/pillar_152",
+      "map/pillar_153",
+      "map/pillar_154",
+      "map/pillar_155",
+      "map/pillar_156",
+      "map/pillar_157",
+      "map/pillar_158",
+      "map/pillar_159",
+      "map/pillar_160",
+      "map/pillar_161",
+      "map/pillar_162",
+      "map/pillar_163",
+      "map/pillar_164",
+      "map/pillar_165",
+      "map/pillar_166",
+      "map/pillar_167",
+      "map/pillar_168",
+      "map/pillar_169",
+      "map/pillar_170",
+      "map/pillar_171",
+      "map/pillar_172",
+      "map/pillar_173",
+      "map/pillar_174",
+      "map/pillar_175",
+      "map/pillar_176",
+      "map/pillar_177",
+      "map/pillar_178",
+      "map/pillar_179",
+      "map/pillar_180",
+      "map/pillar_181",
+      "map/pillar_182",
+      "map/pillar_183",
+      "map/pillar_184",
+      "map/pillar_185",
+      "map/pillar_186",
+      "map/pillar_187",
+      "map/pillar_188",
+      "map/pillar_189",
+      "map/pillar_190",
+      "map/pillar_191",
+      "map/pillar_192",
+      "map/pillar_193",
+      "map/pillar_194",
+      "map/pillar_195",
+      "map/pillar_196",
+      "map/pillar_197",
+      "map/pillar_198",
+      "map/pillar_199",
+      "map/pillar_200",
+      "map/pillar_201",
+      "map/pillar_202",
+      "map/pillar_203",
+      "map/pillar_204",
+      "map/pillar_205",
+      "map/pillar_206",
+      "map/pillar_207",
+      "map/pillar_208",
+      "map/pillar_209",
+      "map/pillar_210",
+      "map/pillar_211",
+      "map/pillar_212",
+      "map/pillar_213",
+      "map/pillar_214",
+      "map/pillar_215",
+      "map/pillar_216",
+      "map/pillar_217",
+      "map/pillar_218",
+      "map/pillar_219",
+      "map/pillar_220",
+      "map/pillar_221",
+      "map/pillar_222",
+      "map/pillar_223",
+      "map/pillar_224",
+      "map/pillar_225",
+      "map/pillar_226",
+      "map/pillar_227",
+      "map/pillar_228",
+      "map/pillar_229",
+      "map/pillar_230",
+      "map/pillar_231",
+      "map/pillar_232",
+      "map/pillar_233",
+      "map/pillar_234",
+      "map/pillar_235",
+      "map/pillar_236",
+      "map/pillar_237",
+      "map/pillar_238",
+      "map/pillar_239",
+      "map/pillar_240",
+      "map/pillar_241",
+      "map/pillar_242",
+      "map/pillar_243",
+      "map/pillar_244",
+      "map/pillar_245",
+      "map/pillar_246",
+      "map/pillar_247",
+      "map/pillar_248",
+      "map/pillar_249",
+      "map/pillar_250",
+      "map/pillar_251",
+      "map/pillar_252",
+      "map/pillar_253",
+      "map/pillar_254",
+      "map/pillar_255",
+      "map/pillar_256",
+      "map/pillar_257",
+      "map/pillar_258",
+      "map/pillar_259",
+      "map/pillar_260",
+      "map/pillar_261",
+      "map/pillar_262",
+      "map/pillar_263",
+      "map/pillar_264",
+      "map/pillar_265",
+      "map/pillar_266",
+      "map/pillar_267",
+      "map/pillar_268",
+      "map/pillar_269",
+      "map/pillar_270",
+      "map/pillar_271",
+      "map/pillar_272",
+      "map/pillar_273",
+      "map/pillar_274",
+      "map/pillar_275",
+      "map/pillar_276",
+      "map/pillar_277",
+      "map/pillar_278",
+      "map/pillar_279",
+      "map/pillar_280",
+      "map/pillar_281",
+      "map/pillar_282",
+      "map/pillar_283",
+      "map/pillar_284",
+      "map/pillar_285",
+      "map/pillar_286",
+      "map/pillar_287",
+      "map/pillar_288",
+      "map/pillar_289",
+      "map/pillar_290",
+      "map/pillar_291",
+      "map/pillar_292",
+      "map/pillar_293",
+      "map/pillar_294",
+      "map/pillar_295",
+      "map/pillar_296",
+      "map/pillar_297",
+      "map/pillar_298",
+      "map/pillar_299",
+      "map/pillar_300",
+      "map/pillar_301",
+      "map/pillar_302",
+      "map/pillar_303",
+      "map/pillar_304",
+      "map/pillar_305",
+      "map/pillar_306",
+      "map/pillar_307",
+      "map/pillar_308",
+      "map/pillar_309",
+      "map/pillar_310",
+      "map/pillar_311",
+      "map/pillar_312",
+      "map/pillar_313",
+      "map/pillar_314",
+      "map/pillar_315",
+      "map/pillar_316",
+      "map/pillar_317",
+      "map/pillar_318",
+      "map/pillar_319",
+      "map/pillar_320",
+      "map/pillar_321",
+      "map/pillar_322",
+      "map/pillar_323",
+      "map/pillar_324",
+      "map/pillar_325",
+      "map/pillar_326",
+      "map/pillar_327",
+      "map/pillar_328",
+      "map/pillar_329",
+      "map/pillar_330",
+      "map/pillar_331",
+      "map/pillar_332",
+      "map/pillar_333",
+      "map/pillar_334",
+      "map/pillar_335",
+      "map/pillar_336",
+      "map/pillar_337",
+      "map/pillar_338",
+      "map/pillar_339",
+      "map/pillar_340",
+      "map/pillar_341",
+      "map/pillar_342",
+      "map/pillar_343",
+      "map/pillar_344",
+      "map/pillar_345",
+      "map/pillar_346",
+      "map/pillar_347",
+      "map/pillar_348",
+      "map/pillar_349",
+      "map/pillar_350",
+      "map/pillar_351",
+      "map/pillar_352",
+      "map/pillar_353",
+      "map/pillar_354",
+      "map/pillar_355",
+      "map/pillar_356",
+      "map/pillar_357",
+      "map/pillar_358",
+      "map/pillar_359",
+      "map/pillar_360",
+      "map/pillar_361",
+      "map/pillar_362",
+      "map/pillar_363",
+      "map/pillar_364",
+      "map/pillar_365",
+      "map/pillar_366",
+      "map/pillar_367",
+      "map/pillar_368",
+      "map/pillar_369",
+      "map/pillar_370",
+      "map/pillar_371",
+      "map/pillar_372",
+      "map/pillar_373",
+      "map/pillar_374",
+      "map/pillar_375",
+      "map/pillar_376",
+      "map/pillar_377",
+      "map/pillar_378",
+      "map/pillar_379",
+      "map/pillar_380",
+      "map/pillar_381",
+      "map/pillar_382",
+      "map/pillar_383",
+      "map/pillar_384",
+      "map/pillar_385",
+      "map/pillar_386",
+      "map/pillar_387",
+      "map/pillar_388",
+      "map/pillar_389",
+      "map/pillar_390",
+      "map/pillar_391",
+      "map/pillar_392",
+      "map/pillar_393",
+      "map/pillar_394",
+      "map/pillar_395",
+      "map/pillar_396",
+      "map/pillar_397",
+      "map/pillar_398",
+      "map/pillar_399",
+      "map/pillar_400",
+      "map/pillar_401",
+      "map/pillar_402",
+      "map/pillar_403",
+      "map/pillar_404",
+      "map/pillar_405",
+      "map/pillar_406",
+      "map/pillar_407",
+      "map/pillar_408",
+      "map/pillar_409",
+      "map/pillar_410",
+      "map/pillar_411",
+      "map/pillar_412",
+      "map/pillar_413",
+      "map/pillar_414",
+      "map/pillar_415",
+      "map/pillar_416",
+      "map/pillar_417",
+      "map/pillar_418",
+      "map/pillar_419",
+      "map/pillar_420",
+      "map/pillar_421",
+      "map/pillar_422",
+      "map/pillar_423",
+      "map/pillar_424",
+      "map/pillar_425",
+      "map/pillar_426",
+      "map/pillar_427",
+      "map/pillar_428",
+      "map/pillar_429",
+      "map/pillar_430",
+      "map/pillar_431",
+      "map/pillar_432",
+      "map/pillar_433",
+      "map/pillar_434",
+      "map/pillar_435",
+      "map/pillar_436",
+      "map/pillar_437",
+      "map/pillar_438",
+      "map/pillar_439",
+      "map/pillar_440",
+      "map/pillar_441",
+      "map/pillar_442",
+      "map/pillar_443",
+      "map/pillar_444",
+      "map/pillar_445",
+      "map/pillar_446",
+      "map/pillar_447",
+      "map/pillar_448",
+      "map/pillar_449",
+      "map/pillar_450",
+      "map/pillar_451",
+      "map/pillar_452",
+      "map/pillar_453",
+      "map/pillar_454",
+      "map/pillar_455",
+      "map/pillar_456",
+      "map/pillar_457",
+      "map/pillar_458",
+      "map/pillar_459",
+      "map/pillar_460",
+      "map/pillar_461",
+      "map/pillar_462",
+      "map/pillar_463",
+      "map/pillar_464",
+      "map/pillar_465",
+      "map/pillar_466",
+      "map/pillar_467",
+      "map/pillar_468",
+      "map/pillar_469",
+      "map/pillar_470",
+      "map/pillar_471",
+      "map/pillar_472",
+      "map/pillar_473",
+      "map/pillar_474",
+      "map/pillar_475",
+      "map/pillar_476",
+      "map/pillar_477",
+      "map/pillar_478",
+      "map/pillar_479",
+      "map/pillar_480",
+      "map/pillar_481",
+      "map/pillar_482",
+      "map/pillar_483",
+      "map/pillar_484",
+      "map/pillar_485",
+      "map/pillar_486",
+      "map/pillar_487",
+      "map/pillar_488",
+      "map/pillar_489",
+      "map/pillar_490",
+      "map/pillar_491",
+      "map/pillar_492",
+      "map/pillar_493",
+      "map/pillar_494",
+      "map/pillar_495",
+      "map/pillar_496",
+      "map/pillar_497",
+      "map/pillar_498",
+      "map/pillar_499",
+      "map/ground",
+      "target"
+    ],
+    "triangle_count": 22130,
+    "vertex_count": 66390,
+    "scene_geometry_buffer_name": 1,
+    "scene_geometry_buffer_bytes": 1858920,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 32128,
+    "scene_version": 0,
+    "object_triangle_ranges": {
+      "map/pillar_0": [
+        0,
+        12
+      ],
+      "map/pillar_1": [
+        12,
+        12
+      ],
+      "map/pillar_2": [
+        24,
+        12
+      ],
+      "map/pillar_3": [
+        36,
+        12
+      ],
+      "map/pillar_4": [
+        48,
+        12
+      ],
+      "map/pillar_5": [
+        60,
+        12
+      ],
+      "map/pillar_6": [
+        72,
+        12
+      ],
+      "map/pillar_7": [
+        84,
+        12
+      ],
+      "map/pillar_8": [
+        96,
+        12
+      ],
+      "map/pillar_9": [
+        108,
+        12
+      ],
+      "map/pillar_10": [
+        120,
+        12
+      ],
+      "map/pillar_11": [
+        132,
+        12
+      ],
+      "map/pillar_12": [
+        144,
+        12
+      ],
+      "map/pillar_13": [
+        156,
+        12
+      ],
+      "map/pillar_14": [
+        168,
+        12
+      ],
+      "map/pillar_15": [
+        180,
+        12
+      ],
+      "map/pillar_16": [
+        192,
+        12
+      ],
+      "map/pillar_17": [
+        204,
+        12
+      ],
+      "map/pillar_18": [
+        216,
+        12
+      ],
+      "map/pillar_19": [
+        228,
+        12
+      ],
+      "map/pillar_20": [
+        240,
+        12
+      ],
+      "map/pillar_21": [
+        252,
+        12
+      ],
+      "map/pillar_22": [
+        264,
+        12
+      ],
+      "map/pillar_23": [
+        276,
+        12
+      ],
+      "map/pillar_24": [
+        288,
+        12
+      ],
+      "map/pillar_25": [
+        300,
+        12
+      ],
+      "map/pillar_26": [
+        312,
+        12
+      ],
+      "map/pillar_27": [
+        324,
+        12
+      ],
+      "map/pillar_28": [
+        336,
+        12
+      ],
+      "map/pillar_29": [
+        348,
+        12
+      ],
+      "map/pillar_30": [
+        360,
+        12
+      ],
+      "map/pillar_31": [
+        372,
+        12
+      ],
+      "map/pillar_32": [
+        384,
+        12
+      ],
+      "map/pillar_33": [
+        396,
+        12
+      ],
+      "map/pillar_34": [
+        408,
+        12
+      ],
+      "map/pillar_35": [
+        420,
+        12
+      ],
+      "map/pillar_36": [
+        432,
+        12
+      ],
+      "map/pillar_37": [
+        444,
+        12
+      ],
+      "map/pillar_38": [
+        456,
+        12
+      ],
+      "map/pillar_39": [
+        468,
+        12
+      ],
+      "map/pillar_40": [
+        480,
+        12
+      ],
+      "map/pillar_41": [
+        492,
+        12
+      ],
+      "map/pillar_42": [
+        504,
+        12
+      ],
+      "map/pillar_43": [
+        516,
+        12
+      ],
+      "map/pillar_44": [
+        528,
+        12
+      ],
+      "map/pillar_45": [
+        540,
+        12
+      ],
+      "map/pillar_46": [
+        552,
+        12
+      ],
+      "map/pillar_47": [
+        564,
+        12
+      ],
+      "map/pillar_48": [
+        576,
+        12
+      ],
+      "map/pillar_49": [
+        588,
+        12
+      ],
+      "map/pillar_50": [
+        600,
+        12
+      ],
+      "map/pillar_51": [
+        612,
+        12
+      ],
+      "map/pillar_52": [
+        624,
+        12
+      ],
+      "map/pillar_53": [
+        636,
+        12
+      ],
+      "map/pillar_54": [
+        648,
+        12
+      ],
+      "map/pillar_55": [
+        660,
+        12
+      ],
+      "map/pillar_56": [
+        672,
+        12
+      ],
+      "map/pillar_57": [
+        684,
+        12
+      ],
+      "map/pillar_58": [
+        696,
+        12
+      ],
+      "map/pillar_59": [
+        708,
+        12
+      ],
+      "map/pillar_60": [
+        720,
+        12
+      ],
+      "map/pillar_61": [
+        732,
+        12
+      ],
+      "map/pillar_62": [
+        744,
+        12
+      ],
+      "map/pillar_63": [
+        756,
+        12
+      ],
+      "map/pillar_64": [
+        768,
+        12
+      ],
+      "map/pillar_65": [
+        780,
+        12
+      ],
+      "map/pillar_66": [
+        792,
+        12
+      ],
+      "map/pillar_67": [
+        804,
+        12
+      ],
+      "map/pillar_68": [
+        816,
+        12
+      ],
+      "map/pillar_69": [
+        828,
+        12
+      ],
+      "map/pillar_70": [
+        840,
+        12
+      ],
+      "map/pillar_71": [
+        852,
+        12
+      ],
+      "map/pillar_72": [
+        864,
+        12
+      ],
+      "map/pillar_73": [
+        876,
+        12
+      ],
+      "map/pillar_74": [
+        888,
+        12
+      ],
+      "map/pillar_75": [
+        900,
+        12
+      ],
+      "map/pillar_76": [
+        912,
+        12
+      ],
+      "map/pillar_77": [
+        924,
+        12
+      ],
+      "map/pillar_78": [
+        936,
+        12
+      ],
+      "map/pillar_79": [
+        948,
+        12
+      ],
+      "map/pillar_80": [
+        960,
+        12
+      ],
+      "map/pillar_81": [
+        972,
+        12
+      ],
+      "map/pillar_82": [
+        984,
+        12
+      ],
+      "map/pillar_83": [
+        996,
+        12
+      ],
+      "map/pillar_84": [
+        1008,
+        12
+      ],
+      "map/pillar_85": [
+        1020,
+        12
+      ],
+      "map/pillar_86": [
+        1032,
+        12
+      ],
+      "map/pillar_87": [
+        1044,
+        12
+      ],
+      "map/pillar_88": [
+        1056,
+        12
+      ],
+      "map/pillar_89": [
+        1068,
+        12
+      ],
+      "map/pillar_90": [
+        1080,
+        12
+      ],
+      "map/pillar_91": [
+        1092,
+        12
+      ],
+      "map/pillar_92": [
+        1104,
+        12
+      ],
+      "map/pillar_93": [
+        1116,
+        12
+      ],
+      "map/pillar_94": [
+        1128,
+        12
+      ],
+      "map/pillar_95": [
+        1140,
+        12
+      ],
+      "map/pillar_96": [
+        1152,
+        12
+      ],
+      "map/pillar_97": [
+        1164,
+        12
+      ],
+      "map/pillar_98": [
+        1176,
+        12
+      ],
+      "map/pillar_99": [
+        1188,
+        12
+      ],
+      "map/pillar_100": [
+        1200,
+        12
+      ],
+      "map/pillar_101": [
+        1212,
+        12
+      ],
+      "map/pillar_102": [
+        1224,
+        12
+      ],
+      "map/pillar_103": [
+        1236,
+        12
+      ],
+      "map/pillar_104": [
+        1248,
+        12
+      ],
+      "map/pillar_105": [
+        1260,
+        12
+      ],
+      "map/pillar_106": [
+        1272,
+        12
+      ],
+      "map/pillar_107": [
+        1284,
+        12
+      ],
+      "map/pillar_108": [
+        1296,
+        12
+      ],
+      "map/pillar_109": [
+        1308,
+        12
+      ],
+      "map/pillar_110": [
+        1320,
+        12
+      ],
+      "map/pillar_111": [
+        1332,
+        12
+      ],
+      "map/pillar_112": [
+        1344,
+        12
+      ],
+      "map/pillar_113": [
+        1356,
+        12
+      ],
+      "map/pillar_114": [
+        1368,
+        12
+      ],
+      "map/pillar_115": [
+        1380,
+        12
+      ],
+      "map/pillar_116": [
+        1392,
+        12
+      ],
+      "map/pillar_117": [
+        1404,
+        12
+      ],
+      "map/pillar_118": [
+        1416,
+        12
+      ],
+      "map/pillar_119": [
+        1428,
+        12
+      ],
+      "map/pillar_120": [
+        1440,
+        12
+      ],
+      "map/pillar_121": [
+        1452,
+        12
+      ],
+      "map/pillar_122": [
+        1464,
+        12
+      ],
+      "map/pillar_123": [
+        1476,
+        12
+      ],
+      "map/pillar_124": [
+        1488,
+        12
+      ],
+      "map/pillar_125": [
+        1500,
+        12
+      ],
+      "map/pillar_126": [
+        1512,
+        12
+      ],
+      "map/pillar_127": [
+        1524,
+        12
+      ],
+      "map/pillar_128": [
+        1536,
+        12
+      ],
+      "map/pillar_129": [
+        1548,
+        12
+      ],
+      "map/pillar_130": [
+        1560,
+        12
+      ],
+      "map/pillar_131": [
+        1572,
+        12
+      ],
+      "map/pillar_132": [
+        1584,
+        12
+      ],
+      "map/pillar_133": [
+        1596,
+        12
+      ],
+      "map/pillar_134": [
+        1608,
+        12
+      ],
+      "map/pillar_135": [
+        1620,
+        12
+      ],
+      "map/pillar_136": [
+        1632,
+        12
+      ],
+      "map/pillar_137": [
+        1644,
+        12
+      ],
+      "map/pillar_138": [
+        1656,
+        12
+      ],
+      "map/pillar_139": [
+        1668,
+        12
+      ],
+      "map/pillar_140": [
+        1680,
+        12
+      ],
+      "map/pillar_141": [
+        1692,
+        12
+      ],
+      "map/pillar_142": [
+        1704,
+        12
+      ],
+      "map/pillar_143": [
+        1716,
+        12
+      ],
+      "map/pillar_144": [
+        1728,
+        12
+      ],
+      "map/pillar_145": [
+        1740,
+        12
+      ],
+      "map/pillar_146": [
+        1752,
+        12
+      ],
+      "map/pillar_147": [
+        1764,
+        12
+      ],
+      "map/pillar_148": [
+        1776,
+        12
+      ],
+      "map/pillar_149": [
+        1788,
+        12
+      ],
+      "map/pillar_150": [
+        1800,
+        12
+      ],
+      "map/pillar_151": [
+        1812,
+        12
+      ],
+      "map/pillar_152": [
+        1824,
+        12
+      ],
+      "map/pillar_153": [
+        1836,
+        12
+      ],
+      "map/pillar_154": [
+        1848,
+        12
+      ],
+      "map/pillar_155": [
+        1860,
+        12
+      ],
+      "map/pillar_156": [
+        1872,
+        12
+      ],
+      "map/pillar_157": [
+        1884,
+        12
+      ],
+      "map/pillar_158": [
+        1896,
+        12
+      ],
+      "map/pillar_159": [
+        1908,
+        12
+      ],
+      "map/pillar_160": [
+        1920,
+        12
+      ],
+      "map/pillar_161": [
+        1932,
+        12
+      ],
+      "map/pillar_162": [
+        1944,
+        12
+      ],
+      "map/pillar_163": [
+        1956,
+        12
+      ],
+      "map/pillar_164": [
+        1968,
+        12
+      ],
+      "map/pillar_165": [
+        1980,
+        12
+      ],
+      "map/pillar_166": [
+        1992,
+        12
+      ],
+      "map/pillar_167": [
+        2004,
+        12
+      ],
+      "map/pillar_168": [
+        2016,
+        12
+      ],
+      "map/pillar_169": [
+        2028,
+        12
+      ],
+      "map/pillar_170": [
+        2040,
+        12
+      ],
+      "map/pillar_171": [
+        2052,
+        12
+      ],
+      "map/pillar_172": [
+        2064,
+        12
+      ],
+      "map/pillar_173": [
+        2076,
+        12
+      ],
+      "map/pillar_174": [
+        2088,
+        12
+      ],
+      "map/pillar_175": [
+        2100,
+        12
+      ],
+      "map/pillar_176": [
+        2112,
+        12
+      ],
+      "map/pillar_177": [
+        2124,
+        12
+      ],
+      "map/pillar_178": [
+        2136,
+        12
+      ],
+      "map/pillar_179": [
+        2148,
+        12
+      ],
+      "map/pillar_180": [
+        2160,
+        12
+      ],
+      "map/pillar_181": [
+        2172,
+        12
+      ],
+      "map/pillar_182": [
+        2184,
+        12
+      ],
+      "map/pillar_183": [
+        2196,
+        12
+      ],
+      "map/pillar_184": [
+        2208,
+        12
+      ],
+      "map/pillar_185": [
+        2220,
+        12
+      ],
+      "map/pillar_186": [
+        2232,
+        12
+      ],
+      "map/pillar_187": [
+        2244,
+        12
+      ],
+      "map/pillar_188": [
+        2256,
+        12
+      ],
+      "map/pillar_189": [
+        2268,
+        12
+      ],
+      "map/pillar_190": [
+        2280,
+        12
+      ],
+      "map/pillar_191": [
+        2292,
+        12
+      ],
+      "map/pillar_192": [
+        2304,
+        12
+      ],
+      "map/pillar_193": [
+        2316,
+        12
+      ],
+      "map/pillar_194": [
+        2328,
+        12
+      ],
+      "map/pillar_195": [
+        2340,
+        12
+      ],
+      "map/pillar_196": [
+        2352,
+        12
+      ],
+      "map/pillar_197": [
+        2364,
+        12
+      ],
+      "map/pillar_198": [
+        2376,
+        12
+      ],
+      "map/pillar_199": [
+        2388,
+        12
+      ],
+      "map/pillar_200": [
+        2400,
+        12
+      ],
+      "map/pillar_201": [
+        2412,
+        12
+      ],
+      "map/pillar_202": [
+        2424,
+        12
+      ],
+      "map/pillar_203": [
+        2436,
+        12
+      ],
+      "map/pillar_204": [
+        2448,
+        12
+      ],
+      "map/pillar_205": [
+        2460,
+        12
+      ],
+      "map/pillar_206": [
+        2472,
+        12
+      ],
+      "map/pillar_207": [
+        2484,
+        12
+      ],
+      "map/pillar_208": [
+        2496,
+        12
+      ],
+      "map/pillar_209": [
+        2508,
+        12
+      ],
+      "map/pillar_210": [
+        2520,
+        12
+      ],
+      "map/pillar_211": [
+        2532,
+        12
+      ],
+      "map/pillar_212": [
+        2544,
+        12
+      ],
+      "map/pillar_213": [
+        2556,
+        12
+      ],
+      "map/pillar_214": [
+        2568,
+        12
+      ],
+      "map/pillar_215": [
+        2580,
+        12
+      ],
+      "map/pillar_216": [
+        2592,
+        12
+      ],
+      "map/pillar_217": [
+        2604,
+        12
+      ],
+      "map/pillar_218": [
+        2616,
+        12
+      ],
+      "map/pillar_219": [
+        2628,
+        12
+      ],
+      "map/pillar_220": [
+        2640,
+        12
+      ],
+      "map/pillar_221": [
+        2652,
+        12
+      ],
+      "map/pillar_222": [
+        2664,
+        12
+      ],
+      "map/pillar_223": [
+        2676,
+        12
+      ],
+      "map/pillar_224": [
+        2688,
+        12
+      ],
+      "map/pillar_225": [
+        2700,
+        12
+      ],
+      "map/pillar_226": [
+        2712,
+        12
+      ],
+      "map/pillar_227": [
+        2724,
+        12
+      ],
+      "map/pillar_228": [
+        2736,
+        12
+      ],
+      "map/pillar_229": [
+        2748,
+        12
+      ],
+      "map/pillar_230": [
+        2760,
+        12
+      ],
+      "map/pillar_231": [
+        2772,
+        12
+      ],
+      "map/pillar_232": [
+        2784,
+        12
+      ],
+      "map/pillar_233": [
+        2796,
+        12
+      ],
+      "map/pillar_234": [
+        2808,
+        12
+      ],
+      "map/pillar_235": [
+        2820,
+        12
+      ],
+      "map/pillar_236": [
+        2832,
+        12
+      ],
+      "map/pillar_237": [
+        2844,
+        12
+      ],
+      "map/pillar_238": [
+        2856,
+        12
+      ],
+      "map/pillar_239": [
+        2868,
+        12
+      ],
+      "map/pillar_240": [
+        2880,
+        12
+      ],
+      "map/pillar_241": [
+        2892,
+        12
+      ],
+      "map/pillar_242": [
+        2904,
+        12
+      ],
+      "map/pillar_243": [
+        2916,
+        12
+      ],
+      "map/pillar_244": [
+        2928,
+        12
+      ],
+      "map/pillar_245": [
+        2940,
+        12
+      ],
+      "map/pillar_246": [
+        2952,
+        12
+      ],
+      "map/pillar_247": [
+        2964,
+        12
+      ],
+      "map/pillar_248": [
+        2976,
+        12
+      ],
+      "map/pillar_249": [
+        2988,
+        12
+      ],
+      "map/pillar_250": [
+        3000,
+        12
+      ],
+      "map/pillar_251": [
+        3012,
+        12
+      ],
+      "map/pillar_252": [
+        3024,
+        12
+      ],
+      "map/pillar_253": [
+        3036,
+        12
+      ],
+      "map/pillar_254": [
+        3048,
+        12
+      ],
+      "map/pillar_255": [
+        3060,
+        12
+      ],
+      "map/pillar_256": [
+        3072,
+        12
+      ],
+      "map/pillar_257": [
+        3084,
+        12
+      ],
+      "map/pillar_258": [
+        3096,
+        12
+      ],
+      "map/pillar_259": [
+        3108,
+        12
+      ],
+      "map/pillar_260": [
+        3120,
+        12
+      ],
+      "map/pillar_261": [
+        3132,
+        12
+      ],
+      "map/pillar_262": [
+        3144,
+        12
+      ],
+      "map/pillar_263": [
+        3156,
+        12
+      ],
+      "map/pillar_264": [
+        3168,
+        12
+      ],
+      "map/pillar_265": [
+        3180,
+        12
+      ],
+      "map/pillar_266": [
+        3192,
+        12
+      ],
+      "map/pillar_267": [
+        3204,
+        12
+      ],
+      "map/pillar_268": [
+        3216,
+        12
+      ],
+      "map/pillar_269": [
+        3228,
+        12
+      ],
+      "map/pillar_270": [
+        3240,
+        12
+      ],
+      "map/pillar_271": [
+        3252,
+        12
+      ],
+      "map/pillar_272": [
+        3264,
+        12
+      ],
+      "map/pillar_273": [
+        3276,
+        12
+      ],
+      "map/pillar_274": [
+        3288,
+        12
+      ],
+      "map/pillar_275": [
+        3300,
+        12
+      ],
+      "map/pillar_276": [
+        3312,
+        12
+      ],
+      "map/pillar_277": [
+        3324,
+        12
+      ],
+      "map/pillar_278": [
+        3336,
+        12
+      ],
+      "map/pillar_279": [
+        3348,
+        12
+      ],
+      "map/pillar_280": [
+        3360,
+        12
+      ],
+      "map/pillar_281": [
+        3372,
+        12
+      ],
+      "map/pillar_282": [
+        3384,
+        12
+      ],
+      "map/pillar_283": [
+        3396,
+        12
+      ],
+      "map/pillar_284": [
+        3408,
+        12
+      ],
+      "map/pillar_285": [
+        3420,
+        12
+      ],
+      "map/pillar_286": [
+        3432,
+        12
+      ],
+      "map/pillar_287": [
+        3444,
+        12
+      ],
+      "map/pillar_288": [
+        3456,
+        12
+      ],
+      "map/pillar_289": [
+        3468,
+        12
+      ],
+      "map/pillar_290": [
+        3480,
+        12
+      ],
+      "map/pillar_291": [
+        3492,
+        12
+      ],
+      "map/pillar_292": [
+        3504,
+        12
+      ],
+      "map/pillar_293": [
+        3516,
+        12
+      ],
+      "map/pillar_294": [
+        3528,
+        12
+      ],
+      "map/pillar_295": [
+        3540,
+        12
+      ],
+      "map/pillar_296": [
+        3552,
+        12
+      ],
+      "map/pillar_297": [
+        3564,
+        12
+      ],
+      "map/pillar_298": [
+        3576,
+        12
+      ],
+      "map/pillar_299": [
+        3588,
+        12
+      ],
+      "map/pillar_300": [
+        3600,
+        12
+      ],
+      "map/pillar_301": [
+        3612,
+        12
+      ],
+      "map/pillar_302": [
+        3624,
+        12
+      ],
+      "map/pillar_303": [
+        3636,
+        12
+      ],
+      "map/pillar_304": [
+        3648,
+        12
+      ],
+      "map/pillar_305": [
+        3660,
+        12
+      ],
+      "map/pillar_306": [
+        3672,
+        12
+      ],
+      "map/pillar_307": [
+        3684,
+        12
+      ],
+      "map/pillar_308": [
+        3696,
+        12
+      ],
+      "map/pillar_309": [
+        3708,
+        12
+      ],
+      "map/pillar_310": [
+        3720,
+        12
+      ],
+      "map/pillar_311": [
+        3732,
+        12
+      ],
+      "map/pillar_312": [
+        3744,
+        12
+      ],
+      "map/pillar_313": [
+        3756,
+        12
+      ],
+      "map/pillar_314": [
+        3768,
+        12
+      ],
+      "map/pillar_315": [
+        3780,
+        12
+      ],
+      "map/pillar_316": [
+        3792,
+        12
+      ],
+      "map/pillar_317": [
+        3804,
+        12
+      ],
+      "map/pillar_318": [
+        3816,
+        12
+      ],
+      "map/pillar_319": [
+        3828,
+        12
+      ],
+      "map/pillar_320": [
+        3840,
+        12
+      ],
+      "map/pillar_321": [
+        3852,
+        12
+      ],
+      "map/pillar_322": [
+        3864,
+        12
+      ],
+      "map/pillar_323": [
+        3876,
+        12
+      ],
+      "map/pillar_324": [
+        3888,
+        12
+      ],
+      "map/pillar_325": [
+        3900,
+        12
+      ],
+      "map/pillar_326": [
+        3912,
+        12
+      ],
+      "map/pillar_327": [
+        3924,
+        12
+      ],
+      "map/pillar_328": [
+        3936,
+        12
+      ],
+      "map/pillar_329": [
+        3948,
+        12
+      ],
+      "map/pillar_330": [
+        3960,
+        12
+      ],
+      "map/pillar_331": [
+        3972,
+        12
+      ],
+      "map/pillar_332": [
+        3984,
+        12
+      ],
+      "map/pillar_333": [
+        3996,
+        12
+      ],
+      "map/pillar_334": [
+        4008,
+        12
+      ],
+      "map/pillar_335": [
+        4020,
+        12
+      ],
+      "map/pillar_336": [
+        4032,
+        12
+      ],
+      "map/pillar_337": [
+        4044,
+        12
+      ],
+      "map/pillar_338": [
+        4056,
+        12
+      ],
+      "map/pillar_339": [
+        4068,
+        12
+      ],
+      "map/pillar_340": [
+        4080,
+        12
+      ],
+      "map/pillar_341": [
+        4092,
+        12
+      ],
+      "map/pillar_342": [
+        4104,
+        12
+      ],
+      "map/pillar_343": [
+        4116,
+        12
+      ],
+      "map/pillar_344": [
+        4128,
+        12
+      ],
+      "map/pillar_345": [
+        4140,
+        12
+      ],
+      "map/pillar_346": [
+        4152,
+        12
+      ],
+      "map/pillar_347": [
+        4164,
+        12
+      ],
+      "map/pillar_348": [
+        4176,
+        12
+      ],
+      "map/pillar_349": [
+        4188,
+        12
+      ],
+      "map/pillar_350": [
+        4200,
+        12
+      ],
+      "map/pillar_351": [
+        4212,
+        12
+      ],
+      "map/pillar_352": [
+        4224,
+        12
+      ],
+      "map/pillar_353": [
+        4236,
+        12
+      ],
+      "map/pillar_354": [
+        4248,
+        12
+      ],
+      "map/pillar_355": [
+        4260,
+        12
+      ],
+      "map/pillar_356": [
+        4272,
+        12
+      ],
+      "map/pillar_357": [
+        4284,
+        12
+      ],
+      "map/pillar_358": [
+        4296,
+        12
+      ],
+      "map/pillar_359": [
+        4308,
+        12
+      ],
+      "map/pillar_360": [
+        4320,
+        12
+      ],
+      "map/pillar_361": [
+        4332,
+        12
+      ],
+      "map/pillar_362": [
+        4344,
+        12
+      ],
+      "map/pillar_363": [
+        4356,
+        12
+      ],
+      "map/pillar_364": [
+        4368,
+        12
+      ],
+      "map/pillar_365": [
+        4380,
+        12
+      ],
+      "map/pillar_366": [
+        4392,
+        12
+      ],
+      "map/pillar_367": [
+        4404,
+        12
+      ],
+      "map/pillar_368": [
+        4416,
+        12
+      ],
+      "map/pillar_369": [
+        4428,
+        12
+      ],
+      "map/pillar_370": [
+        4440,
+        12
+      ],
+      "map/pillar_371": [
+        4452,
+        12
+      ],
+      "map/pillar_372": [
+        4464,
+        12
+      ],
+      "map/pillar_373": [
+        4476,
+        12
+      ],
+      "map/pillar_374": [
+        4488,
+        12
+      ],
+      "map/pillar_375": [
+        4500,
+        12
+      ],
+      "map/pillar_376": [
+        4512,
+        12
+      ],
+      "map/pillar_377": [
+        4524,
+        12
+      ],
+      "map/pillar_378": [
+        4536,
+        12
+      ],
+      "map/pillar_379": [
+        4548,
+        12
+      ],
+      "map/pillar_380": [
+        4560,
+        12
+      ],
+      "map/pillar_381": [
+        4572,
+        12
+      ],
+      "map/pillar_382": [
+        4584,
+        12
+      ],
+      "map/pillar_383": [
+        4596,
+        12
+      ],
+      "map/pillar_384": [
+        4608,
+        12
+      ],
+      "map/pillar_385": [
+        4620,
+        12
+      ],
+      "map/pillar_386": [
+        4632,
+        12
+      ],
+      "map/pillar_387": [
+        4644,
+        12
+      ],
+      "map/pillar_388": [
+        4656,
+        12
+      ],
+      "map/pillar_389": [
+        4668,
+        12
+      ],
+      "map/pillar_390": [
+        4680,
+        12
+      ],
+      "map/pillar_391": [
+        4692,
+        12
+      ],
+      "map/pillar_392": [
+        4704,
+        12
+      ],
+      "map/pillar_393": [
+        4716,
+        12
+      ],
+      "map/pillar_394": [
+        4728,
+        12
+      ],
+      "map/pillar_395": [
+        4740,
+        12
+      ],
+      "map/pillar_396": [
+        4752,
+        12
+      ],
+      "map/pillar_397": [
+        4764,
+        12
+      ],
+      "map/pillar_398": [
+        4776,
+        12
+      ],
+      "map/pillar_399": [
+        4788,
+        12
+      ],
+      "map/pillar_400": [
+        4800,
+        12
+      ],
+      "map/pillar_401": [
+        4812,
+        12
+      ],
+      "map/pillar_402": [
+        4824,
+        12
+      ],
+      "map/pillar_403": [
+        4836,
+        12
+      ],
+      "map/pillar_404": [
+        4848,
+        12
+      ],
+      "map/pillar_405": [
+        4860,
+        12
+      ],
+      "map/pillar_406": [
+        4872,
+        12
+      ],
+      "map/pillar_407": [
+        4884,
+        12
+      ],
+      "map/pillar_408": [
+        4896,
+        12
+      ],
+      "map/pillar_409": [
+        4908,
+        12
+      ],
+      "map/pillar_410": [
+        4920,
+        12
+      ],
+      "map/pillar_411": [
+        4932,
+        12
+      ],
+      "map/pillar_412": [
+        4944,
+        12
+      ],
+      "map/pillar_413": [
+        4956,
+        12
+      ],
+      "map/pillar_414": [
+        4968,
+        12
+      ],
+      "map/pillar_415": [
+        4980,
+        12
+      ],
+      "map/pillar_416": [
+        4992,
+        12
+      ],
+      "map/pillar_417": [
+        5004,
+        12
+      ],
+      "map/pillar_418": [
+        5016,
+        12
+      ],
+      "map/pillar_419": [
+        5028,
+        12
+      ],
+      "map/pillar_420": [
+        5040,
+        12
+      ],
+      "map/pillar_421": [
+        5052,
+        12
+      ],
+      "map/pillar_422": [
+        5064,
+        12
+      ],
+      "map/pillar_423": [
+        5076,
+        12
+      ],
+      "map/pillar_424": [
+        5088,
+        12
+      ],
+      "map/pillar_425": [
+        5100,
+        12
+      ],
+      "map/pillar_426": [
+        5112,
+        12
+      ],
+      "map/pillar_427": [
+        5124,
+        12
+      ],
+      "map/pillar_428": [
+        5136,
+        12
+      ],
+      "map/pillar_429": [
+        5148,
+        12
+      ],
+      "map/pillar_430": [
+        5160,
+        12
+      ],
+      "map/pillar_431": [
+        5172,
+        12
+      ],
+      "map/pillar_432": [
+        5184,
+        12
+      ],
+      "map/pillar_433": [
+        5196,
+        12
+      ],
+      "map/pillar_434": [
+        5208,
+        12
+      ],
+      "map/pillar_435": [
+        5220,
+        12
+      ],
+      "map/pillar_436": [
+        5232,
+        12
+      ],
+      "map/pillar_437": [
+        5244,
+        12
+      ],
+      "map/pillar_438": [
+        5256,
+        12
+      ],
+      "map/pillar_439": [
+        5268,
+        12
+      ],
+      "map/pillar_440": [
+        5280,
+        12
+      ],
+      "map/pillar_441": [
+        5292,
+        12
+      ],
+      "map/pillar_442": [
+        5304,
+        12
+      ],
+      "map/pillar_443": [
+        5316,
+        12
+      ],
+      "map/pillar_444": [
+        5328,
+        12
+      ],
+      "map/pillar_445": [
+        5340,
+        12
+      ],
+      "map/pillar_446": [
+        5352,
+        12
+      ],
+      "map/pillar_447": [
+        5364,
+        12
+      ],
+      "map/pillar_448": [
+        5376,
+        12
+      ],
+      "map/pillar_449": [
+        5388,
+        12
+      ],
+      "map/pillar_450": [
+        5400,
+        12
+      ],
+      "map/pillar_451": [
+        5412,
+        12
+      ],
+      "map/pillar_452": [
+        5424,
+        12
+      ],
+      "map/pillar_453": [
+        5436,
+        12
+      ],
+      "map/pillar_454": [
+        5448,
+        12
+      ],
+      "map/pillar_455": [
+        5460,
+        12
+      ],
+      "map/pillar_456": [
+        5472,
+        12
+      ],
+      "map/pillar_457": [
+        5484,
+        12
+      ],
+      "map/pillar_458": [
+        5496,
+        12
+      ],
+      "map/pillar_459": [
+        5508,
+        12
+      ],
+      "map/pillar_460": [
+        5520,
+        12
+      ],
+      "map/pillar_461": [
+        5532,
+        12
+      ],
+      "map/pillar_462": [
+        5544,
+        12
+      ],
+      "map/pillar_463": [
+        5556,
+        12
+      ],
+      "map/pillar_464": [
+        5568,
+        12
+      ],
+      "map/pillar_465": [
+        5580,
+        12
+      ],
+      "map/pillar_466": [
+        5592,
+        12
+      ],
+      "map/pillar_467": [
+        5604,
+        12
+      ],
+      "map/pillar_468": [
+        5616,
+        12
+      ],
+      "map/pillar_469": [
+        5628,
+        12
+      ],
+      "map/pillar_470": [
+        5640,
+        12
+      ],
+      "map/pillar_471": [
+        5652,
+        12
+      ],
+      "map/pillar_472": [
+        5664,
+        12
+      ],
+      "map/pillar_473": [
+        5676,
+        12
+      ],
+      "map/pillar_474": [
+        5688,
+        12
+      ],
+      "map/pillar_475": [
+        5700,
+        12
+      ],
+      "map/pillar_476": [
+        5712,
+        12
+      ],
+      "map/pillar_477": [
+        5724,
+        12
+      ],
+      "map/pillar_478": [
+        5736,
+        12
+      ],
+      "map/pillar_479": [
+        5748,
+        12
+      ],
+      "map/pillar_480": [
+        5760,
+        12
+      ],
+      "map/pillar_481": [
+        5772,
+        12
+      ],
+      "map/pillar_482": [
+        5784,
+        12
+      ],
+      "map/pillar_483": [
+        5796,
+        12
+      ],
+      "map/pillar_484": [
+        5808,
+        12
+      ],
+      "map/pillar_485": [
+        5820,
+        12
+      ],
+      "map/pillar_486": [
+        5832,
+        12
+      ],
+      "map/pillar_487": [
+        5844,
+        12
+      ],
+      "map/pillar_488": [
+        5856,
+        12
+      ],
+      "map/pillar_489": [
+        5868,
+        12
+      ],
+      "map/pillar_490": [
+        5880,
+        12
+      ],
+      "map/pillar_491": [
+        5892,
+        12
+      ],
+      "map/pillar_492": [
+        5904,
+        12
+      ],
+      "map/pillar_493": [
+        5916,
+        12
+      ],
+      "map/pillar_494": [
+        5928,
+        12
+      ],
+      "map/pillar_495": [
+        5940,
+        12
+      ],
+      "map/pillar_496": [
+        5952,
+        12
+      ],
+      "map/pillar_497": [
+        5964,
+        12
+      ],
+      "map/pillar_498": [
+        5976,
+        12
+      ],
+      "map/pillar_499": [
+        5988,
+        12
+      ],
+      "map/ground": [
+        6000,
+        2
+      ],
+      "target": [
+        6002,
+        16128
+      ]
+    },
+    "batch_geometry_policy": "one VBO; world meshes and local spheres; independent of B",
+    "full_pass_instanced_draws": 1,
+    "selected_object_pass_instanced_draws": 1,
+    "instanced_draw_count": 160,
+    "render_calls": 160,
+    "max_array_texture_layers": 2048,
+    "input_pose": "float32 CUDA B44; row-major camera FLU to world",
+    "output": "owned CUDA distance float32 and identity int64 BHW",
+    "output_transfer": "whole array to PBO in GL; one CUDA D2D PBO-to-Torch copy",
+    "cpu_image_readbacks": 0,
+    "per_view_draw_calls": 0,
+    "interop_synchronization": "CUDA GL-resource map/unmap on current PyTorch stream",
+    "vertex_shader_sha256": "c7a9a725b92a45bdf57ee6dcd7ea9c6648b586f96f099bf3d4871eccfbf36889",
+    "fragment_shader_sha256": "8f68a2678b3a8d6bd3016b02acb38776711967ecae9227dd842a0565b1071757",
+    "near_clip_policy": "unchanged GL w=forward, clip z=0, no positive near plane",
+    "depth_component_bits": 24,
+    "zone_depth_component_bits": 32,
+    "zone_sampling": "exact triangle/cell cone clip and nearest point; no supersampling"
+  }
+}

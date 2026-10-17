@@ -1,0 +1,34 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "browser": "Codex in-app browser, visible WebGL scene",
+  "map": "pillars-20.obj",
+  "verified_with_actual_UI": [
+    "RViz press-drag-release places XY and yaw at fixed Z",
+    "height button changes Z without moving XY",
+    "native keyboard numeric pose edits persist and mark samples stale",
+    "formal online sampling returns five sensor views",
+    "raw distance, object ID and target mask windows open from server results",
+    "diagnostic windows drag, resize and change opacity",
+    "camera moves along formal trajectory and aligns both sensor FOV axes",
+    "target mask and bbox overlay coincide with visible target",
+    "mouse pass-through toggles on and back off from titlebar",
+    "3D scene can float, drag, resize and restore maximized",
+    "pixel hover reports row/column, target ID, raw range and final range"
+  ],
+  "example": {
+    "vehicle_position_m": [0, 0, 1.5],
+    "vehicle_yaw_deg": 0,
+    "target_position_m": [4, 0, 1.5],
+    "sample_id": 2,
+    "scene_version": 1,
+    "geometry_uploads": 1,
+    "object_transform_updates": 1,
+    "camera_target_hint": [1, 0.45625, 0.4333333, 0.54375, 0.5666667],
+    "visible_fraction": 1,
+    "hover_pixel": {"row": 61, "col": 81, "object": "target", "raw_and_final_range_m": 3.71160}
+  },
+  "console_errors_or_warnings": 0,
+  "screenshot": "browser-proof.jpg",
+  "delivery": "service left running, no commit or PR update before user trial",
+  "limits": "browser rendering remains a visual reference; raw backend arrays are authoritative, including existing GL edge counterexamples"
+}

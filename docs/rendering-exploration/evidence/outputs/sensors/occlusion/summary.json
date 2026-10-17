@@ -1,0 +1,295 @@
+{
+  "map": "/workspace/outputs/sensors/occlusion.obj",
+  "config": "/workspace/configs/devtools.json",
+  "t_ref": 0.0,
+  "assumptions": "Noiseless ideal pinhole development configuration; not hardware specifications.",
+  "vehicle_pose": {
+    "position_m": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "quaternion_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "target_position_m": [
+    3.0,
+    0.0,
+    1.0
+  ],
+  "sensor_config": {
+    "tof": {
+      "width": 8,
+      "height": 8,
+      "hfov_deg": 60.0,
+      "vfov_deg": 60.0,
+      "min_range_m": 0.05,
+      "max_range_m": 12.0
+    },
+    "camera": {
+      "width": 160,
+      "height": 120,
+      "hfov_deg": 80.0,
+      "vfov_deg": 60.0,
+      "min_range_m": 0.01,
+      "max_range_m": 30.0
+    },
+    "tof_mounts": [
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          -0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ]
+      }
+    ],
+    "camera_mount": {
+      "position_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "min_visible_fraction": 0.2
+  },
+  "renderer": {
+    "GL_VENDOR": "NVIDIA Corporation",
+    "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+    "GL_VERSION": "3.3.0 NVIDIA 595.91.07"
+  },
+  "triangles": 16142,
+  "geometry_uploads": 1,
+  "map_bounds_m": [
+    [
+      -5.0,
+      5.0
+    ],
+    [
+      -4.0,
+      4.0
+    ],
+    [
+      0.0,
+      4.0
+    ]
+  ],
+  "tof_order": [
+    "right",
+    "front",
+    "left",
+    "rear"
+  ],
+  "tof": {
+    "right": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 22,
+      "positive_infinity": 0,
+      "nan": 42,
+      "finite_min_m": 2.2223355770111084,
+      "finite_max_m": 3.261901617050171
+    },
+    "front": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 44,
+      "positive_infinity": 0,
+      "nan": 20,
+      "finite_min_m": 1.005194902420044,
+      "finite_max_m": 5.270462512969971
+    },
+    "left": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 16,
+      "positive_infinity": 0,
+      "nan": 48,
+      "finite_min_m": 2.2223355770111084,
+      "finite_max_m": 3.261901617050171
+    },
+    "rear": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 24,
+      "positive_infinity": 0,
+      "nan": 40,
+      "finite_min_m": 2.2223355770111084,
+      "finite_max_m": 5.270462512969971
+    }
+  },
+  "camera": {
+    "shape": [
+      120,
+      160
+    ],
+    "finite": 12875,
+    "positive_infinity": 0,
+    "nan": 6325,
+    "finite_min_m": 1.0000252723693848,
+    "finite_max_m": 6.3405985832214355,
+    "visible_target_pixels": 156,
+    "unoccluded_target_pixels": 312,
+    "visible_fraction": 0.5,
+    "target_hint": [
+      1.0,
+      0.4375,
+      0.4166666567325592,
+      0.5,
+      0.5833333134651184
+    ]
+  },
+  "sample_many": {
+    "view": "front ToF",
+    "mode": "sequential GPU render and readback on one context",
+    "body_pose_changes": [
+      "reference",
+      "body +X 0.25 m",
+      "world yaw +15 degrees"
+    ],
+    "sensor_poses": [
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "position_m": [
+          0.25,
+          0.0,
+          1.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.13052619222005157,
+          0.9914448613738104
+        ]
+      }
+    ],
+    "frames": [
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 44,
+        "positive_infinity": 0,
+        "nan": 20,
+        "finite_min_m": 1.005194902420044,
+        "finite_max_m": 5.270462512969971
+      },
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 46,
+        "positive_infinity": 0,
+        "nan": 18,
+        "finite_min_m": 0.753896176815033,
+        "finite_max_m": 5.270462512969971
+      },
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 36,
+        "positive_infinity": 0,
+        "nan": 28,
+        "finite_min_m": 1.0058907270431519,
+        "finite_max_m": 5.270462512969971
+      }
+    ]
+  },
+  "timing_seconds": {
+    "prepare_scene_gpu": 0.08200765399669763,
+    "first_rig_sample": 0.00794194200716447,
+    "sample_many_three_poses": 0.0008092359930742532,
+    "sample_many_mean_per_pose": 0.00026974533102475107
+  }
+}

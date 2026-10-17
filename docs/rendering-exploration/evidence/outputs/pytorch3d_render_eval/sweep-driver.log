@@ -1,0 +1,217 @@
+validation exit=0; detailed status in validation.json
+running pillars20-tof-current_gpu-b1
+  ok: 0.4258330154698342 ms
+running pillars20-tof-current_gpu-b4
+  ok: 1.1280879843980074 ms
+running pillars20-tof-current_gpu-b16
+  ok: 4.039046005345881 ms
+running pillars20-tof-current_gpu-b64
+  ok: 15.273798984708264 ms
+running pillars20-tof-current_gpu-b128
+  ok: 30.62557801604271 ms
+running pillars20-tof-current_gpu-b256
+  ok: 60.411490994738415 ms
+running pillars20-tof-p3d-b1
+  ok: 5.489225004566833 ms
+running pillars20-tof-p3d-b4
+  ok: 11.09649200225249 ms
+running pillars20-tof-p3d-b16
+  ok: 11.742986011086032 ms
+running pillars20-tof-p3d-b64
+  ok: 21.487658988917246 ms
+running pillars20-tof-p3d-b128
+  ok: 51.392343011684716 ms
+running pillars20-tof-p3d-b256
+  ok: 156.14922199165449 ms
+running pillars20-tof-p3d_conditioned-b1
+  ok: 5.719208013033494 ms
+running pillars20-tof-p3d_conditioned-b4
+  ok: 10.125735017936677 ms
+running pillars20-tof-p3d_conditioned-b16
+  ok: 10.921750974375755 ms
+running pillars20-tof-p3d_conditioned-b64
+  ok: 22.173153003677726 ms
+running pillars20-tof-p3d_conditioned-b128
+  ok: 50.73072900995612 ms
+running pillars20-tof-p3d_conditioned-b256
+  ok: 156.91717699519359 ms
+running pillars20-camera-current_gpu-b1
+  ok: 3.1938809843268245 ms
+running pillars20-camera-current_gpu-b4
+  ok: 11.47741498425603 ms
+running pillars20-camera-current_gpu-b16
+  ok: 45.019792014500126 ms
+running pillars20-camera-current_gpu-b64
+  ok: 181.5690970106516 ms
+running pillars20-camera-current_gpu-b128
+  ok: 363.7971880089026 ms
+running pillars20-camera-current_gpu-b256
+  ok: 721.6356070130132 ms
+running pillars20-camera-p3d-b1
+  ok: 14.983447006670758 ms
+running pillars20-camera-p3d-b4
+  ok: 23.615182988578454 ms
+running pillars20-camera-p3d-b16
+  ok: 49.34868001146242 ms
+running pillars20-camera-p3d-b64
+  ok: 187.66529599088244 ms
+running pillars20-camera-p3d-b128
+  ok: 442.6465389842633 ms
+running pillars20-camera-p3d-b256
+  ok: 1201.4123580011073 ms
+running pillars20-camera-p3d_conditioned-b1
+  ok: 14.988696988439187 ms
+running pillars20-camera-p3d_conditioned-b4
+  ok: 23.831575002986938 ms
+running pillars20-camera-p3d_conditioned-b16
+  ok: 49.06928801210597 ms
+running pillars20-camera-p3d_conditioned-b64
+  ok: 188.4215219761245 ms
+running pillars20-camera-p3d_conditioned-b128
+  ok: 448.10057399445213 ms
+running pillars20-camera-p3d_conditioned-b256
+  ok: 1210.3471260052174 ms
+running pillars500-tof-current_gpu-b1
+  ok: 0.4591330070979893 ms
+running pillars500-tof-current_gpu-b4
+  ok: 1.1028370063286275 ms
+running pillars500-tof-current_gpu-b16
+  ok: 4.1682959999889135 ms
+running pillars500-tof-current_gpu-b64
+  ok: 15.532860008534044 ms
+running pillars500-tof-current_gpu-b128
+  ok: 30.625229002907872 ms
+running pillars500-tof-current_gpu-b256
+  ok: 59.38461498590186 ms
+running pillars500-tof-p3d-b1
+  ok: 5.916488007642329 ms
+running pillars500-tof-p3d-b4
+  ok: 10.923460009507835 ms
+running pillars500-tof-p3d-b16
+  ok: 12.173958995845169 ms
+running pillars500-tof-p3d-b64
+  ok: 27.763719990616664 ms
+running pillars500-tof-p3d-b128
+  ok: 64.20964599237777 ms
+running pillars500-tof-p3d-b256
+  ok: 208.9489639911335 ms
+running pillars500-tof-p3d_conditioned-b1
+  ok: 6.137069984106347 ms
+running pillars500-tof-p3d_conditioned-b4
+  ok: 10.390797979198396 ms
+running pillars500-tof-p3d_conditioned-b16
+  ok: 11.658774979878217 ms
+running pillars500-tof-p3d_conditioned-b64
+  ok: 27.283745992463082 ms
+running pillars500-tof-p3d_conditioned-b128
+  ok: 63.54158199974336 ms
+running pillars500-tof-p3d_conditioned-b256
+  ok: 208.31960000214167 ms
+running pillars500-camera-current_gpu-b1
+  ok: 2.998579991981387 ms
+running pillars500-camera-current_gpu-b4
+  ok: 11.988187994575128 ms
+running pillars500-camera-current_gpu-b16
+  ok: 44.43763801828027 ms
+running pillars500-camera-current_gpu-b64
+  ok: 178.1165940046776 ms
+running pillars500-camera-current_gpu-b128
+  ok: 351.226407015929 ms
+running pillars500-camera-current_gpu-b256
+  ok: 696.6015459911432 ms
+running pillars500-camera-p3d-b1
+  ok: 14.824455982306972 ms
+running pillars500-camera-p3d-b4
+  ok: 24.700690992176533 ms
+running pillars500-camera-p3d-b16
+  ok: 48.516974988160655 ms
+running pillars500-camera-p3d-b64
+  ok: 191.60128198564053 ms
+running pillars500-camera-p3d-b128
+  ok: 459.5908490009606 ms
+running pillars500-camera-p3d-b256
+  ok: 1265.5698729795404 ms
+running pillars500-camera-p3d_conditioned-b1
+  ok: 14.327173004858196 ms
+running pillars500-camera-p3d_conditioned-b4
+  ok: 23.05677000549622 ms
+running pillars500-camera-p3d_conditioned-b16
+  ok: 48.50469500524923 ms
+running pillars500-camera-p3d_conditioned-b64
+  ok: 191.74197301617824 ms
+running pillars500-camera-p3d_conditioned-b128
+  ok: 461.5310219815001 ms
+running pillars500-camera-p3d_conditioned-b256
+  ok: 1272.5503990077414 ms
+running pillars5000-tof-current_gpu-b1
+  ok: 0.40901199099607766 ms
+running pillars5000-tof-current_gpu-b4
+  ok: 1.1553980002645403 ms
+running pillars5000-tof-current_gpu-b16
+  ok: 4.113047005375847 ms
+running pillars5000-tof-current_gpu-b64
+  ok: 15.677891991799697 ms
+running pillars5000-tof-current_gpu-b128
+  ok: 30.835348996333778 ms
+running pillars5000-tof-current_gpu-b256
+  ok: 61.579949979204684 ms
+running pillars5000-tof-p3d-b1
+  ok: 8.500425989041105 ms
+running pillars5000-tof-p3d-b4
+  ok: 14.451044000452384 ms
+running pillars5000-tof-p3d-b16
+  ok: 23.18570000352338 ms
+running pillars5000-tof-p3d-b64
+  ok: 67.4536669976078 ms
+running pillars5000-tof-p3d-b128
+  ok: 198.37141601601616 ms
+running pillars5000-tof-p3d-b256
+  ok: 697.772391984472 ms
+running pillars5000-tof-p3d_conditioned-b1
+  ok: 8.37691401829943 ms
+running pillars5000-tof-p3d_conditioned-b4
+  ok: 14.564713987056166 ms
+running pillars5000-tof-p3d_conditioned-b16
+  ok: 23.096780001651496 ms
+running pillars5000-tof-p3d_conditioned-b64
+  ok: 68.23636198532768 ms
+running pillars5000-tof-p3d_conditioned-b128
+  ok: 199.2494009900838 ms
+running pillars5000-tof-p3d_conditioned-b256
+  ok: 698.3144760015421 ms
+running pillars5000-camera-current_gpu-b1
+  ok: 3.010309999808669 ms
+running pillars5000-camera-current_gpu-b4
+  ok: 11.477565014502034 ms
+running pillars5000-camera-current_gpu-b16
+  ok: 43.26583101646975 ms
+running pillars5000-camera-current_gpu-b64
+  ok: 180.2357880224008 ms
+running pillars5000-camera-current_gpu-b128
+  ok: 353.6070820118766 ms
+running pillars5000-camera-current_gpu-b256
+  ok: 703.9854930189904 ms
+running pillars5000-camera-p3d-b1
+  ok: 15.794942009961233 ms
+running pillars5000-camera-p3d-b4
+  ok: 26.224519009701908 ms
+running pillars5000-camera-p3d-b16
+  ok: 55.81022199476138 ms
+running pillars5000-camera-p3d-b64
+  ok: 244.5330449991161 ms
+running pillars5000-camera-p3d-b128
+  ok: 639.460725011304 ms
+running pillars5000-camera-p3d-b256
+  ok: 1898.0818830023054 ms
+running pillars5000-camera-p3d_conditioned-b1
+  ok: 15.760992013383657 ms
+running pillars5000-camera-p3d_conditioned-b4
+  ok: 26.493930985452607 ms
+running pillars5000-camera-p3d_conditioned-b16
+  ok: 57.33263201545924 ms
+running pillars5000-camera-p3d_conditioned-b64
+  ok: 251.41063450428192 ms
+running pillars5000-camera-p3d_conditioned-b128
+  ok: 652.9106219823007 ms
+running pillars5000-camera-p3d_conditioned-b256
+  ok: 1925.3332650114316 ms

@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "verify_bootstrap",
+      "passed": true,
+      "torch_version": "2.9.1+cu128",
+      "discovered_maps": 1
+    },
+    {
+      "name": "verify_upload_and_map_invalidation",
+      "passed": true,
+      "map_change_rejects_stale_sample": true,
+      "canonical_objects": 2
+    },
+    {
+      "name": "verify_no_target_analytic_and_binary",
+      "passed": true,
+      "views": 5,
+      "camera_finite_pixels": 14032,
+      "camera_nan_pixels": 5168,
+      "tof_empty_pixels": 104,
+      "no_target_draws": 2,
+      "analytic_tolerance_m": 2e-05
+    },
+    {
+      "name": "verify_mounted_pose_rotation",
+      "passed": true,
+      "full_attitude_mounted_views": 5
+    },
+    {
+      "name": "verify_target_motion_same_pass",
+      "passed": true,
+      "target_move_transform_bytes": 64,
+      "geometry_uploads": 1,
+      "sample_draws": 3,
+      "target_visible_pixels": 720
+    },
+    {
+      "name": "verify_request_validation",
+      "passed": true,
+      "invalid_requests_rejected": 17,
+      "worker_survived": true
+    },
+    {
+      "name": "verify_concurrent_snapshot_requests",
+      "passed": true,
+      "concurrent_requests": 4,
+      "serialized_draw_counts": [
+        6,
+        9,
+        12,
+        15
+      ]
+    },
+    {
+      "name": "verify_transition",
+      "passed": true,
+      "moving_and_stationary_transitions": 2,
+      "endpoint_derivative_max": 0.0
+    }
+  ],
+  "failures": [],
+  "server_log": "2026-10-16 10:36:40,128 INFO sensor review listening at http://127.0.0.1:40591\n2026-10-16 10:36:40,129 INFO 127.0.0.1 \"GET /api/bootstrap HTTP/1.1\" 200 -\n2026-10-16 10:36:40,130 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:40,131 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:40,132 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:40,132 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 409 -\n2026-10-16 10:36:40,133 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:40,133 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:40,584 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:41,302 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:41,304 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:41,442 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:41,622 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:41,780 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:41,791 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:41,802 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:41,806 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:41,806 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 10:36:41,807 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 404 -\n2026-10-16 10:36:41,807 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 10:36:41,807 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 10:36:41,808 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 10:36:41,808 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 10:36:41,808 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 10:36:41,808 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 10:36:41,809 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 10:36:41,809 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 10:36:41,809 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 10:36:41,809 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 10:36:41,810 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 404 -\n2026-10-16 10:36:41,810 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 10:36:41,810 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 10:36:41,810 INFO 127.0.0.1 \"GET /api/raw?path=/etc/passwd HTTP/1.1\" 404 -\n2026-10-16 10:36:41,811 INFO 127.0.0.1 \"GET /api/map?path=/etc/passwd HTTP/1.1\" 404 -\n2026-10-16 10:36:41,944 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:41,946 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 10:36:42,097 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:42,110 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:42,120 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:42,131 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:42,141 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 10:36:43,126 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 200 -\n2026-10-16 10:36:43,128 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 200 -\n2026-10-16 10:36:43,129 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 400 -\n2026-10-16 10:36:43,130 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 400 -\n"
+}

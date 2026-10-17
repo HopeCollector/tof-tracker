@@ -1,0 +1,3 @@
+2.7.1+cu128 0.7.9 NVIDIA GeForce RTX 5070 Ti
+CUDA extension and renderer imports OK
+sensors: 6 check groups passed; result: outputs/pytorch3d_render_eval/baseline_verification.json

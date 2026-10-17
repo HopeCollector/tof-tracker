@@ -1,0 +1,219 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.70kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 197B done
+#3 DONE 0.0s
+
+#4 [ 1/12] FROM docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
+#4 resolve docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55 0.0s done
+#4 DONE 0.0s
+
+#5 [ 2/12] RUN apt-get update     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends         build-essential         ca-certificates         cmake         git         libegl1         libgl1         python3         python3-setuptools         python3-venv         python3-wheel     && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [ 3/12] RUN python3 -m venv --system-site-packages /opt/venv
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 35.03kB done
+#7 DONE 0.0s
+
+#8 [ 4/12] RUN python -m pip install --no-cache-dir torch==2.9.1+cu128 --index-url https://download.pytorch.org/whl/cu128
+#8 0.924 Looking in indexes: https://download.pytorch.org/whl/cu128
+#8 1.069 Collecting torch==2.9.1+cu128
+#8 1.192   Downloading https://download-r2.pytorch.org/whl/cu128/torch-2.9.1%2Bcu128-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (30 kB)
+#8 1.261 Collecting filelock (from torch==2.9.1+cu128)
+#8 1.475   Downloading filelock-3.32.3-py3-none-any.whl.metadata (2.0 kB)
+#8 1.517 Collecting typing-extensions>=4.10.0 (from torch==2.9.1+cu128)
+#8 1.589   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#8 1.590 Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (from torch==2.9.1+cu128) (68.1.2)
+#8 1.634 Collecting sympy>=1.13.3 (from torch==2.9.1+cu128)
+#8 1.704   Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+#8 1.758 Collecting networkx>=2.5.1 (from torch==2.9.1+cu128)
+#8 1.831   Downloading networkx-3.6.1-py3-none-any.whl.metadata (6.8 kB)
+#8 1.870 Collecting jinja2 (from torch==2.9.1+cu128)
+#8 1.904   Downloading https://download.pytorch.org/whl/jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#8 1.952 Collecting fsspec>=0.8.5 (from torch==2.9.1+cu128)
+#8 2.022   Downloading fsspec-2026.7.0-py3-none-any.whl.metadata (10 kB)
+#8 2.069 Collecting nvidia-cuda-nvrtc-cu12==12.8.93 (from torch==2.9.1+cu128)
+#8 2.198   Downloading https://pypi.nvidia.com/nvidia-cuda-nvrtc-cu12/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (88.0 MB)
+#8 3.986      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.0/88.0 MB 44.7 MB/s eta 0:00:00
+#8 4.102 Collecting nvidia-cuda-runtime-cu12==12.8.90 (from torch==2.9.1+cu128)
+#8 4.146   Downloading https://pypi.nvidia.com/nvidia-cuda-runtime-cu12/nvidia_cuda_runtime_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (954 kB)
+#8 4.166      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 954.8/954.8 kB 49.1 MB/s eta 0:00:00
+#8 4.209 Collecting nvidia-cuda-cupti-cu12==12.8.90 (from torch==2.9.1+cu128)
+#8 4.772   Downloading https://pypi.nvidia.com/nvidia-cuda-cupti-cu12/nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (10.2 MB)
+#8 4.964      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 53.6 MB/s eta 0:00:00
+#8 5.013 Collecting nvidia-cudnn-cu12==9.10.2.21 (from torch==2.9.1+cu128)
+#8 5.051   Downloading https://pypi.nvidia.com/nvidia-cudnn-cu12/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_x86_64.whl (706.8 MB)
+#8 20.00      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 706.8/706.8 MB 52.2 MB/s eta 0:00:00
+#8 20.38 Collecting nvidia-cublas-cu12==12.8.4.1 (from torch==2.9.1+cu128)
+#8 20.42   Downloading https://pypi.nvidia.com/nvidia-cublas-cu12/nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_x86_64.whl (594.3 MB)
+#8 32.76      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 594.3/594.3 MB 48.4 MB/s eta 0:00:00
+#8 33.09 Collecting nvidia-cufft-cu12==11.3.3.83 (from torch==2.9.1+cu128)
+#8 33.37   Downloading https://pypi.nvidia.com/nvidia-cufft-cu12/nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (193.1 MB)
+#8 37.17      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 193.1/193.1 MB 47.5 MB/s eta 0:00:00
+#8 37.30 Collecting nvidia-curand-cu12==10.3.9.90 (from torch==2.9.1+cu128)
+#8 37.34   Downloading https://pypi.nvidia.com/nvidia-curand-cu12/nvidia_curand_cu12-10.3.9.90-py3-none-manylinux_2_27_x86_64.whl (63.6 MB)
+#8 38.49      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.6/63.6 MB 48.5 MB/s eta 0:00:00
+#8 38.56 Collecting nvidia-cusolver-cu12==11.7.3.90 (from torch==2.9.1+cu128)
+#8 38.60   Downloading https://pypi.nvidia.com/nvidia-cusolver-cu12/nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_x86_64.whl (267.5 MB)
+#8 44.08      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 267.5/267.5 MB 48.5 MB/s eta 0:00:00
+#8 44.25 Collecting nvidia-cusparse-cu12==12.5.8.93 (from torch==2.9.1+cu128)
+#8 44.29   Downloading https://pypi.nvidia.com/nvidia-cusparse-cu12/nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (288.2 MB)
+#8 50.12      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 288.2/288.2 MB 46.5 MB/s eta 0:00:00
+#8 50.30 Collecting nvidia-cusparselt-cu12==0.7.1 (from torch==2.9.1+cu128)
+#8 50.34   Downloading https://pypi.nvidia.com/nvidia-cusparselt-cu12/nvidia_cusparselt_cu12-0.7.1-py3-none-manylinux2014_x86_64.whl (287.2 MB)
+#8 56.12      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 287.2/287.2 MB 49.2 MB/s eta 0:00:00
+#8 56.30 Collecting nvidia-nccl-cu12==2.27.5 (from torch==2.9.1+cu128)
+#8 56.33   Downloading https://pypi.nvidia.com/nvidia-nccl-cu12/nvidia_nccl_cu12-2.27.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (322.3 MB)
+#8 62.96      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 322.3/322.3 MB 39.9 MB/s eta 0:00:00
+#8 63.16 Collecting nvidia-nvshmem-cu12==3.3.20 (from torch==2.9.1+cu128)
+#8 63.19   Downloading https://pypi.nvidia.com/nvidia-nvshmem-cu12/nvidia_nvshmem_cu12-3.3.20-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (124.7 MB)
+#8 66.04      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.7/124.7 MB 47.8 MB/s eta 0:00:00
+#8 66.14 Collecting nvidia-nvtx-cu12==12.8.90 (from torch==2.9.1+cu128)
+#8 66.18   Downloading https://pypi.nvidia.com/nvidia-nvtx-cu12/nvidia_nvtx_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (89 kB)
+#8 66.18      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.0/90.0 kB 143.7 MB/s eta 0:00:00
+#8 66.22 Collecting nvidia-nvjitlink-cu12==12.8.93 (from torch==2.9.1+cu128)
+#8 66.26   Downloading https://pypi.nvidia.com/nvidia-nvjitlink-cu12/nvidia_nvjitlink_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (39.3 MB)
+#8 67.05      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 39.3/39.3 MB 56.8 MB/s eta 0:00:00
+#8 67.11 Collecting nvidia-cufile-cu12==1.13.1.3 (from torch==2.9.1+cu128)
+#8 67.15   Downloading https://pypi.nvidia.com/nvidia-cufile-cu12/nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+#8 67.17      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 62.6 MB/s eta 0:00:00
+#8 67.21 Collecting triton==3.5.1 (from torch==2.9.1+cu128)
+#8 67.46   Downloading https://download-r2.pytorch.org/whl/triton-3.5.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (1.7 kB)
+#8 67.56 Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch==2.9.1+cu128)
+#8 67.63   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+#8 67.69 Collecting MarkupSafe>=2.0 (from jinja2->torch==2.9.1+cu128)
+#8 67.72   Downloading https://download.pytorch.org/whl/markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#8 67.76 Downloading https://download-r2.pytorch.org/whl/cu128/torch-2.9.1%2Bcu128-cp312-cp312-manylinux_2_28_x86_64.whl (900.9 MB)
+#8 86.73    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 900.9/900.9 MB 48.2 MB/s eta 0:00:00
+#8 86.77 Downloading https://download-r2.pytorch.org/whl/triton-3.5.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (170.5 MB)
+#8 90.38    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 170.5/170.5 MB 45.6 MB/s eta 0:00:00
+#8 90.45 Downloading fsspec-2026.7.0-py3-none-any.whl (206 kB)
+#8 90.70    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 206.6/206.6 kB 802.4 kB/s eta 0:00:00
+#8 90.77 Downloading networkx-3.6.1-py3-none-any.whl (2.1 MB)
+#8 90.91    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 14.9 MB/s eta 0:00:00
+#8 90.98 Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+#8 91.06    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 79.7 MB/s eta 0:00:00
+#8 91.14 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#8 91.14    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 33.9 MB/s eta 0:00:00
+#8 91.21 Downloading filelock-3.32.3-py3-none-any.whl (98 kB)
+#8 91.21    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.9/98.9 kB 382.5 MB/s eta 0:00:00
+#8 91.25 Downloading https://download.pytorch.org/whl/jinja2-3.1.6-py3-none-any.whl (134 kB)
+#8 91.25    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 217.9 MB/s eta 0:00:00
+#8 91.28 Downloading https://download.pytorch.org/whl/markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#8 91.35 Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+#8 91.36    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 141.6 MB/s eta 0:00:00
+#8 92.02 Installing collected packages: nvidia-cusparselt-cu12, mpmath, typing-extensions, triton, sympy, nvidia-nvtx-cu12, nvidia-nvshmem-cu12, nvidia-nvjitlink-cu12, nvidia-nccl-cu12, nvidia-curand-cu12, nvidia-cufile-cu12, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cuda-cupti-cu12, nvidia-cublas-cu12, networkx, MarkupSafe, fsspec, filelock, nvidia-cusparse-cu12, nvidia-cufft-cu12, nvidia-cudnn-cu12, jinja2, nvidia-cusolver-cu12, torch
+#8 117.3 Successfully installed MarkupSafe-3.0.3 filelock-3.32.3 fsspec-2026.7.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.6.1 nvidia-cublas-cu12-12.8.4.1 nvidia-cuda-cupti-cu12-12.8.90 nvidia-cuda-nvrtc-cu12-12.8.93 nvidia-cuda-runtime-cu12-12.8.90 nvidia-cudnn-cu12-9.10.2.21 nvidia-cufft-cu12-11.3.3.83 nvidia-cufile-cu12-1.13.1.3 nvidia-curand-cu12-10.3.9.90 nvidia-cusolver-cu12-11.7.3.90 nvidia-cusparse-cu12-12.5.8.93 nvidia-cusparselt-cu12-0.7.1 nvidia-nccl-cu12-2.27.5 nvidia-nvjitlink-cu12-12.8.93 nvidia-nvshmem-cu12-3.3.20 nvidia-nvtx-cu12-12.8.90 sympy-1.14.0 torch-2.9.1+cu128 triton-3.5.1 typing-extensions-4.16.0
+#8 DONE 118.0s
+
+#9 [ 5/12] COPY docker/fetch_review_assets.py /tmp/fetch_review_assets.py
+#9 DONE 0.1s
+
+#10 [ 6/12] RUN python /tmp/fetch_review_assets.py
+#10 0.686 Installed verified Three.js 0.180.0 assets in /opt/sensor-review-web
+#10 DONE 0.7s
+
+#11 [ 7/12] WORKDIR /workspace
+#11 DONE 0.0s
+
+#12 [ 8/12] COPY pyproject.toml README.md ./
+#12 DONE 0.0s
+
+#13 [ 9/12] COPY src ./src
+#13 DONE 0.0s
+
+#14 [10/12] COPY devtools ./devtools
+#14 DONE 0.0s
+
+#15 [11/12] COPY training ./training
+#15 DONE 0.0s
+
+#16 [12/12] RUN python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer,sensors]'
+#16 0.242 Obtaining file:///workspace
+#16 0.252   Checking if build backend supports build_editable: started
+#16 0.388   Checking if build backend supports build_editable: finished with status 'done'
+#16 0.389   Preparing editable metadata (pyproject.toml): started
+#16 0.643   Preparing editable metadata (pyproject.toml): finished with status 'done'
+#16 1.070 Collecting numpy>=2.0 (from tof-tracker==0.0.0)
+#16 1.268   Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+#16 1.270 Requirement already satisfied: torch==2.9.1 in /opt/venv/lib/python3.12/site-packages (from tof-tracker==0.0.0) (2.9.1+cu128)
+#16 1.281 Requirement already satisfied: filelock in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (3.32.3)
+#16 1.281 Requirement already satisfied: typing-extensions>=4.10.0 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (4.16.0)
+#16 1.281 Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (from torch==2.9.1->tof-tracker==0.0.0) (68.1.2)
+#16 1.282 Requirement already satisfied: sympy>=1.13.3 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (1.14.0)
+#16 1.282 Requirement already satisfied: networkx>=2.5.1 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (3.6.1)
+#16 1.283 Requirement already satisfied: jinja2 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (3.1.6)
+#16 1.283 Requirement already satisfied: fsspec>=0.8.5 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (2026.7.0)
+#16 1.284 Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (12.8.93)
+#16 1.285 Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (12.8.90)
+#16 1.285 Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (12.8.90)
+#16 1.286 Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (9.10.2.21)
+#16 1.286 Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (12.8.4.1)
+#16 1.287 Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (11.3.3.83)
+#16 1.287 Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (10.3.9.90)
+#16 1.288 Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (11.7.3.90)
+#16 1.289 Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (12.5.8.93)
+#16 1.289 Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (0.7.1)
+#16 1.290 Requirement already satisfied: nvidia-nccl-cu12==2.27.5 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (2.27.5)
+#16 1.290 Requirement already satisfied: nvidia-nvshmem-cu12==3.3.20 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (3.3.20)
+#16 1.291 Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (12.8.90)
+#16 1.291 Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (12.8.93)
+#16 1.292 Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (1.13.1.3)
+#16 1.292 Requirement already satisfied: triton==3.5.1 in /opt/venv/lib/python3.12/site-packages (from torch==2.9.1->tof-tracker==0.0.0) (3.5.1)
+#16 1.391 Collecting glcontext==3.0.0 (from tof-tracker==0.0.0)
+#16 1.457   Downloading glcontext-3.0.0-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.0 kB)
+#16 1.566 Collecting moderngl==5.12.0 (from tof-tracker==0.0.0)
+#16 1.633   Downloading moderngl-5.12.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.8 kB)
+#16 1.723 Collecting plotly==7.1.0 (from tof-tracker==0.0.0)
+#16 1.791   Downloading plotly-7.1.0-py3-none-any.whl.metadata (8.8 kB)
+#16 1.920 Collecting narwhals>=1.15.1 (from plotly==7.1.0->tof-tracker==0.0.0)
+#16 1.985   Downloading narwhals-2.27.1-py3-none-any.whl.metadata (15 kB)
+#16 2.066 Collecting packaging (from plotly==7.1.0->tof-tracker==0.0.0)
+#16 2.133   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+#16 2.171 Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/venv/lib/python3.12/site-packages (from sympy>=1.13.3->torch==2.9.1->tof-tracker==0.0.0) (1.3.0)
+#16 2.174 Requirement already satisfied: MarkupSafe>=2.0 in /opt/venv/lib/python3.12/site-packages (from jinja2->torch==2.9.1->tof-tracker==0.0.0) (3.0.3)
+#16 2.247 Downloading glcontext-3.0.0-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (51 kB)
+#16 2.280    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.4/51.4 kB 1.5 MB/s eta 0:00:00
+#16 2.349 Downloading moderngl-5.12.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (296 kB)
+#16 2.413    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 296.4/296.4 kB 4.5 MB/s eta 0:00:00
+#16 2.480 Downloading plotly-7.1.0-py3-none-any.whl (9.7 MB)
+#16 2.649    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.7/9.7 MB 57.6 MB/s eta 0:00:00
+#16 2.714 Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+#16 2.890    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 91.0 MB/s eta 0:00:00
+#16 2.957 Downloading narwhals-2.27.1-py3-none-any.whl (483 kB)
+#16 2.965    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 483.2/483.2 kB 82.5 MB/s eta 0:00:00
+#16 3.031 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+#16 3.033    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 180.0 MB/s eta 0:00:00
+#16 3.055 Checking if build backend supports build_editable: started
+#16 3.109 Checking if build backend supports build_editable: finished with status 'done'
+#16 3.109 Building wheels for collected packages: tof-tracker
+#16 3.110   Building editable for tof-tracker (pyproject.toml): started
+#16 3.256   Building editable for tof-tracker (pyproject.toml): finished with status 'done'
+#16 3.256   Created wheel for tof-tracker: filename=tof_tracker-0.0.0-0.editable-py3-none-any.whl size=4694 sha256=8b0bd63587ec84f4ee9ab7cc28208684a0a4aa5dad06ae7944b1dd0f949b7de2
+#16 3.256   Stored in directory: /tmp/pip-ephem-wheel-cache-qgcab_p6/wheels/b0/41/ab/4e04a8678980f3355548f1261923479fbf2a713a7393a7dea8
+#16 3.257 Successfully built tof-tracker
+#16 3.336 Installing collected packages: glcontext, packaging, numpy, narwhals, moderngl, plotly, tof-tracker
+#16 5.207 Successfully installed glcontext-3.0.0 moderngl-5.12.0 narwhals-2.27.1 numpy-2.5.4 packaging-26.3 plotly-7.1.0 tof-tracker-0.0.0
+#16 DONE 5.3s
+
+#17 exporting to image
+#17 exporting layers
+#17 exporting layers 101.8s done
+#17 exporting manifest sha256:8fae2e4d6b54011d56787414fd58fef19a9bdadc813499b75b9fd55a9d6434e5 done
+#17 exporting config sha256:e3f4d917d2ab29acac9793f07cb7e97810c36f2dc2b4760f099c617d66f30234 0.0s done
+#17 exporting attestation manifest sha256:42abd91f3f1992771e90e27439d79a915630a5ccdfc32cb6e0b25f909c9e7969 done
+#17 exporting manifest list sha256:ab236da17b260e327c81e61c5fab8f8d716c4ab1758cf727ab5893f242dc1e7d done
+#17 naming to docker.io/library/tof-tracker-sensor-review:dev done
+#17 unpacking to docker.io/library/tof-tracker-sensor-review:dev
+#17 unpacking to docker.io/library/tof-tracker-sensor-review:dev 16.9s done
+#17 DONE 118.7s

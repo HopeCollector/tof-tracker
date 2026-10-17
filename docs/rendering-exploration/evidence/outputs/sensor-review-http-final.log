@@ -1,0 +1,9 @@
+PASS verify_bootstrap
+PASS verify_upload_and_map_invalidation
+PASS verify_no_target_analytic_and_binary
+PASS verify_mounted_pose_rotation
+PASS verify_target_motion_same_pass
+PASS verify_request_validation
+PASS verify_concurrent_snapshot_requests
+PASS verify_transition
+{"passed": true, "checks": 8, "failures": 0, "results": "outputs/sensor_review/verification.json"}

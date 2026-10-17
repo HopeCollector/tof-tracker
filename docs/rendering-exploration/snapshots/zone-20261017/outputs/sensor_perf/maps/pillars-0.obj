@@ -1,0 +1,11 @@
+# unit metre
+# offline_mapgen type pillars seed 3
+# size_xyz 60 60 15
+# count 0 width_min 0.29999999999999999 width_max 1 height_min 1.5 height_max 15
+o ground
+v -30 -30 0
+v 30 -30 0
+v 30 30 0
+v -30 30 0
+f 1 2 3
+f 1 3 4

@@ -1,0 +1,74 @@
+{
+  "status": "ok",
+  "backend": "current",
+  "mode": "camera",
+  "batch_views": 16,
+  "pillars": 20,
+  "torch_memory_fraction_cap": null,
+  "output_location": "cpu",
+  "timing_scope": "prepared input poses; warm scene; render + required postprocessing; synchronized wall",
+  "grad_enabled": false,
+  "scene": {
+    "map": "outputs/pytorch3d_render_eval/timing-smoke/maps/pillars-20.obj",
+    "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4",
+    "pillars": 20,
+    "target_position_m": [
+      4,
+      0,
+      1.5
+    ]
+  },
+  "config": {
+    "width": 160,
+    "height": 120,
+    "hfov_deg": 80.0,
+    "vfov_deg": 60.0,
+    "min_range_m": 0.01,
+    "max_range_m": 30.0
+  },
+  "base_prepare_ms": 118.09040501248091,
+  "batch_prepare_ms": 0,
+  "geometry": {
+    "triangle_count": 16370,
+    "geometry_uploads": 1,
+    "renderer": {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "3.3.0 NVIDIA 595.91.07"
+    }
+  },
+  "first_forward_ms": 48.48657501861453,
+  "first_forward_memory": {
+    "allocated_bytes": 0,
+    "reserved_bytes": 0,
+    "peak_allocated_bytes": 0,
+    "peak_reserved_bytes": 0
+  },
+  "end_to_end": {
+    "wall_ms": [
+      43.15097999642603,
+      44.65028899721801,
+      45.798637002008036
+    ],
+    "wall_median_ms": 44.65028899721801,
+    "wall_p95_ms": 45.68380220152903,
+    "repeats": 3,
+    "cuda_event_span_ms": [],
+    "cuda_event_span_median_ms": null,
+    "views_per_second": 358.34034581493745
+  },
+  "warm_memory": {
+    "allocated_bytes": 0,
+    "reserved_bytes": 0,
+    "peak_allocated_bytes": 0,
+    "peak_reserved_bytes": 0
+  },
+  "nvml": {
+    "scope": "whole device; sampled 5ms; includes other processes and CUDA/GL drivers",
+    "before_bytes": 1890582528,
+    "peak_bytes": 1907818496,
+    "peak_increment_bytes": 17235968,
+    "end_bytes": 1907818496,
+    "samples": 48
+  }
+}

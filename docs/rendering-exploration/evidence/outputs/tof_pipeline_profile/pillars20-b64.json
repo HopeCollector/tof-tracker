@@ -1,0 +1,1819 @@
+{
+  "status": "ok",
+  "batch": 64,
+  "map": "outputs/sensor_perf/maps/pillars-20.obj",
+  "groups": [
+    "stages",
+    "objects",
+    "variants"
+  ],
+  "scope": "All timings use native 8x8 cells, original scene VBO and CUDA poses. No subrays, high-resolution rendering, mesh simplification or production changes.",
+  "source_hashes": {
+    "devtools/rendering.py": "fe0a8fa1a8239c4ea0bde686603d9ae886b9a2fe706f9b116e29c90dbb7663c5",
+    "devtools/_zone_shaders.py": "a18c77d5ff042c5d76836b944fea8745b0c9c89d667d9a5c1928b85c88f6b101",
+    "devtools/_gl_cuda.py": "701dc60c8f316651bedf8281e8b58ff4c35f6b22a786fffcf5a66f3a55e169bb",
+    "experiments/tof_pipeline_profile/counters.py": "bbec2e156461d6aef76d2e6ba03b7dd87ef159651632182e23ed69a2e450db4b",
+    "experiments/tof_pipeline_profile/stages.py": "ac9b3daedc1068bc969f8af538535d75e8bea3f5cf218a5e3ad1d5b1afcdda00",
+    "experiments/tof_pipeline_profile/variants.py": "0fba41ec7ae211e2382d8c2fd6b7b541a23daad40e45bdb8caa4903acfd3d799",
+    "experiments/tof_pipeline_profile/worker.py": "3a41dd8575049825fe24d26dc53980765d5c7b8c4b52d392ea970f39d5036ecd"
+  },
+  "map_sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4",
+  "torch": "2.9.1+cu128",
+  "static_analysis": {
+    "invariant": "Every positive-area triangle/cell-cone overlap participates; choose nearest Euclidean hit and its ID.",
+    "front_end": [
+      "All scene triangles are transformed and processed once for every pose; there is no range/spatial broad phase.",
+      "Each GS invocation FP64-clips a triangle against five view planes before its projected cell bounding box.",
+      "The cell rectangle expands one cell on every side; a triangle contained in one interior cell can generate nine cell fragments."
+    ],
+    "fragment": [
+      "Every candidate triangle/cell pair repeats five-plane FP64 clipping, projected-area filtering and exact nearest-point work.",
+      "Local fixed arrays and variable loops may produce register pressure or spills; timing alone cannot establish actual spills.",
+      "Depth is explicitly written only after nearest-radius calculation; regular early-Z rejection must not be assumed.",
+      "FP64 cost is a hypothesis; compare isolated GS/FS precision ablations before assigning causality."
+    ],
+    "safe_direction": [
+      "Use convex half-space trivial accept/reject before full clipping, keeping the current partial clip algorithm.",
+      "A conservative triangle/object/BVH broad phase can reject triangles outside the cell cone or max-range sphere without approximating surviving intersections.",
+      "Tightening the expanded bbox needs a proof and robust outward rounding; simply deleting the one-cell guard is not accepted.",
+      "Nearest-point and projected-area algorithm simplification requires preserving zero-area rejection, within-cell minimum and stable depth/ID ties."
+    ]
+  },
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "geometry": {
+    "backend": "opengl_layered_instanced_cuda_pbo",
+    "device": "cuda:0",
+    "renderer": {
+      "GL_VENDOR": "NVIDIA Corporation",
+      "GL_RENDERER": "NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2",
+      "GL_VERSION": "4.5.0 NVIDIA 595.91.07"
+    },
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/pillar_12",
+      "map/pillar_13",
+      "map/pillar_14",
+      "map/pillar_15",
+      "map/pillar_16",
+      "map/pillar_17",
+      "map/pillar_18",
+      "map/pillar_19",
+      "map/ground",
+      "target"
+    ],
+    "triangle_count": 16370,
+    "vertex_count": 49110,
+    "scene_geometry_buffer_name": 1,
+    "scene_geometry_buffer_bytes": 1375080,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 1408,
+    "scene_version": 0,
+    "object_triangle_ranges": {
+      "map/pillar_0": [
+        0,
+        12
+      ],
+      "map/pillar_1": [
+        12,
+        12
+      ],
+      "map/pillar_2": [
+        24,
+        12
+      ],
+      "map/pillar_3": [
+        36,
+        12
+      ],
+      "map/pillar_4": [
+        48,
+        12
+      ],
+      "map/pillar_5": [
+        60,
+        12
+      ],
+      "map/pillar_6": [
+        72,
+        12
+      ],
+      "map/pillar_7": [
+        84,
+        12
+      ],
+      "map/pillar_8": [
+        96,
+        12
+      ],
+      "map/pillar_9": [
+        108,
+        12
+      ],
+      "map/pillar_10": [
+        120,
+        12
+      ],
+      "map/pillar_11": [
+        132,
+        12
+      ],
+      "map/pillar_12": [
+        144,
+        12
+      ],
+      "map/pillar_13": [
+        156,
+        12
+      ],
+      "map/pillar_14": [
+        168,
+        12
+      ],
+      "map/pillar_15": [
+        180,
+        12
+      ],
+      "map/pillar_16": [
+        192,
+        12
+      ],
+      "map/pillar_17": [
+        204,
+        12
+      ],
+      "map/pillar_18": [
+        216,
+        12
+      ],
+      "map/pillar_19": [
+        228,
+        12
+      ],
+      "map/ground": [
+        240,
+        2
+      ],
+      "target": [
+        242,
+        16128
+      ]
+    },
+    "batch_geometry_policy": "one VBO; world meshes and local spheres; independent of B",
+    "full_pass_instanced_draws": 1,
+    "selected_object_pass_instanced_draws": 1,
+    "instanced_draw_count": 0,
+    "render_calls": 0,
+    "max_array_texture_layers": 2048,
+    "input_pose": "float32 CUDA B44; row-major camera FLU to world",
+    "output": "owned CUDA distance float32 and identity int64 BHW",
+    "output_transfer": "whole array to PBO in GL; one CUDA D2D PBO-to-Torch copy",
+    "cpu_image_readbacks": 0,
+    "per_view_draw_calls": 0,
+    "interop_synchronization": "CUDA GL-resource map/unmap on current PyTorch stream",
+    "vertex_shader_sha256": "c7a9a725b92a45bdf57ee6dcd7ea9c6648b586f96f099bf3d4871eccfbf36889",
+    "fragment_shader_sha256": "8f68a2678b3a8d6bd3016b02acb38776711967ecae9227dd842a0565b1071757",
+    "near_clip_policy": "unchanged GL w=forward, clip z=0, no positive near plane",
+    "depth_component_bits": 24,
+    "zone_depth_component_bits": 32,
+    "zone_sampling": "exact triangle/cell cone clip and nearest point; no supersampling"
+  },
+  "object_draw_ranges": {
+    "map/pillar_0": [
+      0,
+      36
+    ],
+    "map/pillar_1": [
+      36,
+      36
+    ],
+    "map/pillar_2": [
+      72,
+      36
+    ],
+    "map/pillar_3": [
+      108,
+      36
+    ],
+    "map/pillar_4": [
+      144,
+      36
+    ],
+    "map/pillar_5": [
+      180,
+      36
+    ],
+    "map/pillar_6": [
+      216,
+      36
+    ],
+    "map/pillar_7": [
+      252,
+      36
+    ],
+    "map/pillar_8": [
+      288,
+      36
+    ],
+    "map/pillar_9": [
+      324,
+      36
+    ],
+    "map/pillar_10": [
+      360,
+      36
+    ],
+    "map/pillar_11": [
+      396,
+      36
+    ],
+    "map/pillar_12": [
+      432,
+      36
+    ],
+    "map/pillar_13": [
+      468,
+      36
+    ],
+    "map/pillar_14": [
+      504,
+      36
+    ],
+    "map/pillar_15": [
+      540,
+      36
+    ],
+    "map/pillar_16": [
+      576,
+      36
+    ],
+    "map/pillar_17": [
+      612,
+      36
+    ],
+    "map/pillar_18": [
+      648,
+      36
+    ],
+    "map/pillar_19": [
+      684,
+      36
+    ],
+    "map/ground": [
+      720,
+      6
+    ],
+    "target": [
+      726,
+      48384
+    ]
+  },
+  "pose_sha256": "0227952f6ef5a00a7f116f0e869b0e66b1dc85a9ee2a78e79ae4b245dde1e0a9",
+  "last_stage": "complete",
+  "stages": {
+    "scope": "ToF raw zone render; pre-existing CUDA poses to owned CUDA RasterBatch",
+    "batch": 64,
+    "resolution": [
+      8,
+      8
+    ],
+    "warmup": 3,
+    "repeats": 3,
+    "native_hot_render_wall_ms": {
+      "median": 296.13492200223845,
+      "p95": 297.2331632030546,
+      "min": 296.1079719971167,
+      "max": 297.35519000314525,
+      "samples": [
+        296.1079719971167,
+        296.13492200223845,
+        297.35519000314525
+      ]
+    },
+    "isolated_profile_wall_ms": {
+      "median": 297.35876099948655,
+      "p95": 298.1085654017079,
+      "min": 297.1034190013597,
+      "max": 298.1918770019547,
+      "samples": [
+        297.1034190013597,
+        298.1918770019547,
+        297.35876099948655
+      ]
+    },
+    "stages": {
+      "pose_pack_cuda": {
+        "cpu_submit_ms": {
+          "median": 0.1988910007639788,
+          "p95": 0.20728890158352442,
+          "min": 0.16665200018906035,
+          "max": 0.20822200167458504,
+          "samples": [
+            0.1988910007639788,
+            0.20822200167458504,
+            0.16665200018906035
+          ]
+        },
+        "wall_complete_ms": {
+          "median": 0.23844200040912256,
+          "p95": 0.4306298003939446,
+          "min": 0.22377099958248436,
+          "max": 0.45198400039225817,
+          "samples": [
+            0.22377099958248436,
+            0.45198400039225817,
+            0.23844200040912256
+          ]
+        },
+        "cuda_event_ms": {
+          "median": 0.19977599382400513,
+          "p95": 0.21737280040979384,
+          "min": 0.017023999243974686,
+          "max": 0.21932800114154816,
+          "samples": [
+            0.21932800114154816,
+            0.017023999243974686,
+            0.19977599382400513
+          ]
+        }
+      },
+      "pose_cuda_to_gl": {
+        "cpu_submit_ms": {
+          "median": 0.052160998166073114,
+          "p95": 0.08013209990167525,
+          "min": 0.043050997192040086,
+          "max": 0.08324000009451993,
+          "samples": [
+            0.052160998166073114,
+            0.08324000009451993,
+            0.043050997192040086
+          ]
+        },
+        "wall_complete_ms": {
+          "median": 0.13633099661092274,
+          "p95": 0.5441417004476534,
+          "min": 0.1300509975408204,
+          "max": 0.5894540008739568,
+          "samples": [
+            0.1300509975408204,
+            0.5894540008739568,
+            0.13633099661092274
+          ]
+        },
+        "map_host_ms": {
+          "median": 0.02402099926257506,
+          "p95": 0.043676100540324114,
+          "min": 0.01762000101734884,
+          "max": 0.04586000068229623,
+          "samples": [
+            0.02402099926257506,
+            0.04586000068229623,
+            0.01762000101734884
+          ]
+        },
+        "copy_submit_host_ms": {
+          "median": 0.013199998647905886,
+          "p95": 0.018455998724675737,
+          "min": 0.01123000038205646,
+          "max": 0.01903999873320572,
+          "samples": [
+            0.013199998647905886,
+            0.01903999873320572,
+            0.01123000038205646
+          ]
+        },
+        "unmap_host_ms": {
+          "median": 0.005589998181676492,
+          "p95": 0.008118998448480852,
+          "min": 0.00512100086780265,
+          "max": 0.00839999847812578,
+          "samples": [
+            0.005589998181676492,
+            0.00839999847812578,
+            0.00512100086780265
+          ]
+        },
+        "copy_cuda_event_ms": {
+          "median": 0.0021120000164955854,
+          "p95": 0.008937600231729447,
+          "min": 0.0019519999623298645,
+          "max": 0.009696000255644321,
+          "samples": [
+            0.0019519999623298645,
+            0.009696000255644321,
+            0.0021120000164955854
+          ]
+        },
+        "bytes": 4352
+      },
+      "gl_clear": {
+        "cpu_submit_ms": {
+          "median": 0.017071000911528245,
+          "p95": 0.018996098151546903,
+          "min": 0.015650002751499414,
+          "max": 0.01920999784488231,
+          "samples": [
+            0.017071000911528245,
+            0.01920999784488231,
+            0.015650002751499414
+          ]
+        },
+        "wall_complete_ms": {
+          "median": 0.05504100045072846,
+          "p95": 0.09019500030262861,
+          "min": 0.05223100015427917,
+          "max": 0.09410100028617308,
+          "samples": [
+            0.05504100045072846,
+            0.09410100028617308,
+            0.05223100015427917
+          ]
+        },
+        "gl_gpu_ms": {
+          "median": 0.0024,
+          "p95": 0.0026592,
+          "min": 0.002336,
+          "max": 0.002688,
+          "samples": [
+            0.0024,
+            0.002688,
+            0.002336
+          ]
+        }
+      },
+      "gl_draw_state": {
+        "cpu_submit_ms": {
+          "median": 0.01790999885997735,
+          "p95": 0.0186119996214984,
+          "min": 0.01666000025579706,
+          "max": 0.01868999970611185,
+          "samples": [
+            0.01868999970611185,
+            0.01790999885997735,
+            0.01666000025579706
+          ]
+        },
+        "wall_complete_ms": {
+          "median": 0.06414999734261073,
+          "p95": 0.10623400085023604,
+          "min": 0.06207999831531197,
+          "max": 0.11091000123997219,
+          "samples": [
+            0.06414999734261073,
+            0.11091000123997219,
+            0.06207999831531197
+          ]
+        },
+        "gl_gpu_ms": {
+          "median": 0.000608,
+          "p95": 0.0006368000000000001,
+          "min": 0.000192,
+          "max": 0.00064,
+          "samples": [
+            0.00064,
+            0.000192,
+            0.000608
+          ]
+        }
+      },
+      "gl_draw": {
+        "cpu_submit_ms": {
+          "median": 0.019719998817890882,
+          "p95": 0.023815000531612895,
+          "min": 0.019330000213813037,
+          "max": 0.024270000722026452,
+          "samples": [
+            0.019719998817890882,
+            0.024270000722026452,
+            0.019330000213813037
+          ]
+        },
+        "wall_complete_ms": {
+          "median": 295.8480800007237,
+          "p95": 296.16404569933366,
+          "min": 295.5537180023384,
+          "max": 296.1991529991792,
+          "samples": [
+            295.5537180023384,
+            295.8480800007237,
+            296.1991529991792
+          ]
+        },
+        "gl_gpu_ms": {
+          "median": 295.300672,
+          "p95": 295.3187584,
+          "min": 295.256096,
+          "max": 295.320768,
+          "samples": [
+            295.320768,
+            295.300672,
+            295.256096
+          ]
+        }
+      },
+      "texture_to_pbo": {
+        "cpu_submit_ms": {
+          "median": 0.06383000072673894,
+          "p95": 0.3280627992353402,
+          "min": 0.040820003050612286,
+          "max": 0.35742199906962924,
+          "samples": [
+            0.06383000072673894,
+            0.35742199906962924,
+            0.040820003050612286
+          ]
+        },
+        "wall_complete_ms": {
+          "median": 0.20579099873430096,
+          "p95": 0.4294697988370899,
+          "min": 0.1913110027089715,
+          "max": 0.4543229988485109,
+          "samples": [
+            0.20579099873430096,
+            0.4543229988485109,
+            0.1913110027089715
+          ]
+        },
+        "gl_gpu_ms": {
+          "median": 0.129056,
+          "p95": 0.2823872,
+          "min": 0.122368,
+          "max": 0.299424,
+          "samples": [
+            0.122368,
+            0.299424,
+            0.129056
+          ]
+        }
+      },
+      "output_allocate": {
+        "cpu_submit_ms": {
+          "median": 0.05108099867356941,
+          "p95": 0.059226001758361235,
+          "min": 0.031480001780437306,
+          "max": 0.06013100210111588,
+          "samples": [
+            0.05108099867356941,
+            0.06013100210111588,
+            0.031480001780437306
+          ]
+        }
+      },
+      "pbo_to_cuda": {
+        "cpu_submit_ms": {
+          "median": 0.12596099986694753,
+          "p95": 0.1522770031442633,
+          "min": 0.08102100036921911,
+          "max": 0.15520100350840949,
+          "samples": [
+            0.15520100350840949,
+            0.12596099986694753,
+            0.08102100036921911
+          ]
+        },
+        "wall_complete_ms": {
+          "median": 0.1466510002501309,
+          "p95": 0.18392000310996082,
+          "min": 0.13056100215180777,
+          "max": 0.1880610034277197,
+          "samples": [
+            0.1880610034277197,
+            0.1466510002501309,
+            0.13056100215180777
+          ]
+        },
+        "map_host_ms": {
+          "median": 0.041229999624192715,
+          "p95": 0.045540999053628184,
+          "min": 0.029320999601623043,
+          "max": 0.046019998990232125,
+          "samples": [
+            0.041229999624192715,
+            0.046019998990232125,
+            0.029320999601623043
+          ]
+        },
+        "copy_submit_host_ms": {
+          "median": 0.027050002245232463,
+          "p95": 0.038489898724947125,
+          "min": 0.016149999282788485,
+          "max": 0.03976099833380431,
+          "samples": [
+            0.03976099833380431,
+            0.027050002245232463,
+            0.016149999282788485
+          ]
+        },
+        "unmap_host_ms": {
+          "median": 0.006350001058308408,
+          "p95": 0.01003099896479398,
+          "min": 0.00622999868937768,
+          "max": 0.010439998732181266,
+          "samples": [
+            0.010439998732181266,
+            0.006350001058308408,
+            0.00622999868937768
+          ]
+        },
+        "copy_cuda_event_ms": {
+          "median": 0.001888000057078898,
+          "p95": 0.0020320000010542573,
+          "min": 0.0015999999595806003,
+          "max": 0.002047999994829297,
+          "samples": [
+            0.002047999994829297,
+            0.001888000057078898,
+            0.0015999999595806003
+          ]
+        },
+        "bytes": 98304
+      },
+      "torch_output_format": {
+        "cpu_submit_ms": {
+          "median": 0.18672100122785196,
+          "p95": 0.26447290038049687,
+          "min": 0.13941100041847676,
+          "max": 0.2731120002863463,
+          "samples": [
+            0.2731120002863463,
+            0.18672100122785196,
+            0.13941100041847676
+          ]
+        },
+        "wall_complete_ms": {
+          "median": 0.24268200286314823,
+          "p95": 0.4010648997791577,
+          "min": 0.1790020032785833,
+          "max": 0.4186629994364921,
+          "samples": [
+            0.4186629994364921,
+            0.24268200286314823,
+            0.1790020032785833
+          ]
+        },
+        "cuda_event_ms": {
+          "median": 0.14140799641609192,
+          "p95": 0.32558399736881255,
+          "min": 0.0745600014925003,
+          "max": 0.3460479974746704,
+          "samples": [
+            0.3460479974746704,
+            0.14140799641609192,
+            0.0745600014925003
+          ]
+        }
+      }
+    },
+    "pipeline_statistics": {
+      "supported": true,
+      "draw_calls": 1,
+      "counter_bits": {
+        "vertices_submitted": 64,
+        "primitives_submitted": 64,
+        "vertex_shader_invocations": 64,
+        "geometry_shader_invocations": 64,
+        "geometry_shader_primitives_emitted": 64,
+        "fragment_shader_invocations": 64,
+        "clipping_input_primitives": 64,
+        "clipping_output_primitives": 64
+      },
+      "counts": {
+        "vertices_submitted": 3143040,
+        "primitives_submitted": 1047680,
+        "vertex_shader_invocations": 3143040,
+        "geometry_shader_invocations": 1047680,
+        "geometry_shader_primitives_emitted": 2077354,
+        "fragment_shader_invocations": 9482335,
+        "clipping_input_primitives": 2077354,
+        "clipping_output_primitives": 2077354
+      },
+      "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+      "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+    },
+    "exact_output_parity": {
+      "staged": {
+        "passed": true,
+        "comparison": "exact values, dtypes, shapes and metadata",
+        "fields": {
+          "distance_m": true,
+          "object_index": true,
+          "object_ids": true,
+          "scene_version": true,
+          "t_ref": true,
+          "map_bounds_m": true,
+          "hit_point_sensor_m": true,
+          "triangle_index": true
+        }
+      },
+      "last_staged": {
+        "passed": true,
+        "comparison": "exact values, dtypes, shapes and metadata",
+        "fields": {
+          "distance_m": true,
+          "object_index": true,
+          "object_ids": true,
+          "scene_version": true,
+          "t_ref": true,
+          "map_bounds_m": true,
+          "hit_point_sensor_m": true,
+          "triangle_index": true
+        }
+      },
+      "statistics_probe": {
+        "passed": true,
+        "comparison": "exact values, dtypes, shapes and metadata",
+        "fields": {
+          "distance_m": true,
+          "object_index": true,
+          "object_ids": true,
+          "scene_version": true,
+          "t_ref": true,
+          "map_bounds_m": true,
+          "hit_point_sensor_m": true,
+          "triangle_index": true
+        }
+      }
+    },
+    "measurement_notes": [
+      "Native hot baseline calls unchanged BatchRenderer.render without hooks.",
+      "Isolated stages explicitly finish GL or synchronize CUDA at each boundary; their times must not be added to reconstruct native scheduling.",
+      "CPU submit measures API enqueue/host wait time. A CUDA interop map can block.",
+      "GL elapsed queries measure GPU command spans; host-only draw state need not have meaningful GPU cost. Query collection is outside recorded stage times.",
+      "CUDA events around tiny operations can include host enqueue gaps; copy event duration is not a pure device memcpy bandwidth benchmark.",
+      "Pipeline statistics are collected in a separate untimed native render; no statistics query overlaps timed draw measurements.",
+      "Pose construction/mounts, scene preparation, shader compilation, sensor postprocessing and validation downloads are outside this profile.",
+      "No sampling, geometry, precision, occlusion, output or resolution change."
+    ]
+  },
+  "objects": {
+    "full": {
+      "wall": {
+        "median_ms": 296.003561001271,
+        "p95_ms": 296.1953077985527,
+        "samples_ms": [
+          296.21661299825064,
+          295.9763409999141,
+          296.003561001271
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 295.30512,
+          "p95": 295.37720640000003,
+          "min": 295.256192,
+          "max": 295.385216,
+          "samples": [
+            295.256192,
+            295.385216,
+            295.30512
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 295.30512,
+            "p95": 295.37720640000003,
+            "min": 295.256192,
+            "max": 295.385216,
+            "samples": [
+              295.256192,
+              295.385216,
+              295.30512
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 296.31750300177373,
+          "p95": 296.4175658999011,
+          "min": 296.0612319984648,
+          "max": 296.428683999693,
+          "samples": [
+            296.428683999693,
+            296.31750300177373,
+            296.0612319984648
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 3143040,
+            "primitives_submitted": 1047680,
+            "vertex_shader_invocations": 3143040,
+            "geometry_shader_invocations": 1047680,
+            "geometry_shader_primitives_emitted": 2077354,
+            "fragment_shader_invocations": 9482335,
+            "clipping_input_primitives": 2077354,
+            "clipping_output_primitives": 2077354
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      },
+      "scope": "Selected-object workload diagnostic; not an equivalent full-scene optimization"
+    },
+    "map": {
+      "wall": {
+        "median_ms": 3.919137001503259,
+        "p95_ms": 4.023483900164138,
+        "samples_ms": [
+          4.035078000015346,
+          3.919137001503259,
+          3.8709180007572286
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 3.371104,
+          "p95": 3.3739263999999998,
+          "min": 3.345472,
+          "max": 3.37424,
+          "samples": [
+            3.345472,
+            3.371104,
+            3.37424
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 3.371104,
+            "p95": 3.3739263999999998,
+            "min": 3.345472,
+            "max": 3.37424,
+            "samples": [
+              3.345472,
+              3.371104,
+              3.37424
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 4.165790000115521,
+          "p95": 4.84696849998727,
+          "min": 4.008839001471642,
+          "max": 4.92265499997302,
+          "samples": [
+            4.165790000115521,
+            4.92265499997302,
+            4.008839001471642
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 46464,
+            "primitives_submitted": 15488,
+            "vertex_shader_invocations": 46464,
+            "geometry_shader_invocations": 15488,
+            "geometry_shader_primitives_emitted": 12970,
+            "fragment_shader_invocations": 88749,
+            "clipping_input_primitives": 12970,
+            "clipping_output_primitives": 12970
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      },
+      "scope": "Selected-object workload diagnostic; not an equivalent full-scene optimization"
+    },
+    "target": {
+      "wall": {
+        "median_ms": 292.6104079997458,
+        "p95_ms": 292.7481530008663,
+        "samples_ms": [
+          292.7634580009908,
+          292.6104079997458,
+          292.5468169996748
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 291.895616,
+          "p95": 291.93927679999996,
+          "min": 291.87696,
+          "max": 291.944128,
+          "samples": [
+            291.87696,
+            291.895616,
+            291.944128
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 291.895616,
+            "p95": 291.93927679999996,
+            "min": 291.87696,
+            "max": 291.944128,
+            "samples": [
+              291.87696,
+              291.895616,
+              291.944128
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 292.8765789984027,
+          "p95": 293.284713698813,
+          "min": 292.6428569990094,
+          "max": 293.3300619988586,
+          "samples": [
+            293.3300619988586,
+            292.6428569990094,
+            292.8765789984027
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 3096576,
+            "primitives_submitted": 1032192,
+            "vertex_shader_invocations": 3096576,
+            "geometry_shader_invocations": 1032192,
+            "geometry_shader_primitives_emitted": 2064384,
+            "fragment_shader_invocations": 9393586,
+            "clipping_input_primitives": 2064384,
+            "clipping_output_primitives": 2064384
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      },
+      "scope": "Selected-object workload diagnostic; not an equivalent full-scene optimization"
+    }
+  },
+  "variants": {
+    "baseline": {
+      "metadata": {
+        "name": "baseline",
+        "semantic_status": "production-identical",
+        "description": "Unmodified production vertex/geometry/fragment shaders.",
+        "caveats": [],
+        "rasterizer_discard": false
+      },
+      "output_comparison": {
+        "exact": true,
+        "fields": {
+          "distance_m": {
+            "exact": true,
+            "different_elements": 0,
+            "max_abs_finite": 0.0
+          },
+          "object_index": {
+            "exact": true,
+            "different_elements": 0
+          },
+          "object_ids": {
+            "exact": true
+          },
+          "scene_version": {
+            "exact": true
+          },
+          "t_ref": {
+            "exact": true
+          },
+          "map_bounds_m": {
+            "exact": true
+          },
+          "hit_point_sensor_m": {
+            "exact": true,
+            "different_elements": 0,
+            "max_abs_finite": 0.0
+          },
+          "triangle_index": {
+            "exact": true,
+            "different_elements": 0
+          }
+        }
+      },
+      "wall": {
+        "median_ms": 296.03793100250186,
+        "p95_ms": 297.4212058012199,
+        "samples_ms": [
+          296.03793100250186,
+          295.93388099965523,
+          297.5749030010775
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 295.287616,
+          "p95": 295.3327456,
+          "min": 295.18912,
+          "max": 295.33776,
+          "samples": [
+            295.287616,
+            295.33776,
+            295.18912
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 295.287616,
+            "p95": 295.3327456,
+            "min": 295.18912,
+            "max": 295.33776,
+            "samples": [
+              295.287616,
+              295.33776,
+              295.18912
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 296.19791300137877,
+          "p95": 297.0831142996758,
+          "min": 295.96372099695145,
+          "max": 297.1814699994866,
+          "samples": [
+            297.1814699994866,
+            296.19791300137877,
+            295.96372099695145
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 3143040,
+            "primitives_submitted": 1047680,
+            "vertex_shader_invocations": 3143040,
+            "geometry_shader_invocations": 1047680,
+            "geometry_shader_primitives_emitted": 2077354,
+            "fragment_shader_invocations": 9482335,
+            "clipping_input_primitives": 2077354,
+            "clipping_output_primitives": 2077354
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      }
+    },
+    "cheap_fragment": {
+      "metadata": {
+        "name": "cheap_fragment",
+        "semantic_status": "diagnostic-non-equivalent",
+        "description": "Keep conservative GS rectangles; replace exact cell work with invalid cheap output.",
+        "caveats": [
+          "Measures a remaining-program cost, not an additive FS cost.",
+          "Coverage, distance, ID selection and visibility are invalid.",
+          "Compiler register pressure and depth-test behavior may differ."
+        ],
+        "rasterizer_discard": false
+      },
+      "output_comparison": {
+        "exact": false,
+        "fields": {
+          "distance_m": {
+            "exact": false,
+            "different_elements": 4021,
+            "max_abs_finite": 6.00600004196167
+          },
+          "object_index": {
+            "exact": false,
+            "different_elements": 2670
+          },
+          "object_ids": {
+            "exact": true
+          },
+          "scene_version": {
+            "exact": true
+          },
+          "t_ref": {
+            "exact": true
+          },
+          "map_bounds_m": {
+            "exact": true
+          },
+          "hit_point_sensor_m": {
+            "exact": false,
+            "different_elements": 12050,
+            "max_abs_finite": 46.39982223510742
+          },
+          "triangle_index": {
+            "exact": false,
+            "different_elements": 3527
+          }
+        }
+      },
+      "wall": {
+        "median_ms": 7.6511539991770405,
+        "p95_ms": 7.68183499967563,
+        "samples_ms": [
+          7.650374998775078,
+          7.6852439997310285,
+          7.6511539991770405
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 7.17488,
+          "p95": 7.1759744,
+          "min": 7.155424,
+          "max": 7.176096,
+          "samples": [
+            7.155424,
+            7.176096,
+            7.17488
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 7.17488,
+            "p95": 7.1759744,
+            "min": 7.155424,
+            "max": 7.176096,
+            "samples": [
+              7.155424,
+              7.176096,
+              7.17488
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 8.222098000260303,
+          "p95": 8.326795000539278,
+          "min": 7.80415500048548,
+          "max": 8.338428000570275,
+          "samples": [
+            8.222098000260303,
+            8.338428000570275,
+            7.80415500048548
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 3143040,
+            "primitives_submitted": 1047680,
+            "vertex_shader_invocations": 3143040,
+            "geometry_shader_invocations": 1047680,
+            "geometry_shader_primitives_emitted": 2077354,
+            "fragment_shader_invocations": 9482335,
+            "clipping_input_primitives": 2077354,
+            "clipping_output_primitives": 2077354
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      }
+    },
+    "fp32_fs": {
+      "metadata": {
+        "name": "fp32_fs",
+        "semantic_status": "diagnostic-precision-changed",
+        "description": "Keep the same geometric algorithm; change FP64 to FP32 in fs.",
+        "caveats": [
+          "Floating-point boundary, thin-area, distance and tie behavior may change.",
+          "Performance evidence only; not an approved production-equivalent optimization."
+        ],
+        "rasterizer_discard": false
+      },
+      "output_comparison": {
+        "exact": false,
+        "fields": {
+          "distance_m": {
+            "exact": false,
+            "different_elements": 1411,
+            "max_abs_finite": 5.9604644775390625e-06
+          },
+          "object_index": {
+            "exact": true,
+            "different_elements": 0
+          },
+          "object_ids": {
+            "exact": true
+          },
+          "scene_version": {
+            "exact": true
+          },
+          "t_ref": {
+            "exact": true
+          },
+          "map_bounds_m": {
+            "exact": true
+          },
+          "hit_point_sensor_m": {
+            "exact": false,
+            "different_elements": 4367,
+            "max_abs_finite": 0.001297973096370697
+          },
+          "triangle_index": {
+            "exact": false,
+            "different_elements": 68
+          }
+        }
+      },
+      "wall": {
+        "median_ms": 28.442270999221364,
+        "p95_ms": 28.52220990062051,
+        "samples_ms": [
+          28.53109200077597,
+          28.442270999221364,
+          28.414251002686797
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 27.845664,
+          "p95": 27.849264,
+          "min": 27.725504,
+          "max": 27.849664,
+          "samples": [
+            27.725504,
+            27.845664,
+            27.849664
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 27.845664,
+            "p95": 27.849264,
+            "min": 27.725504,
+            "max": 27.849664,
+            "samples": [
+              27.725504,
+              27.845664,
+              27.849664
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 28.534390999993775,
+          "p95": 28.788192798310774,
+          "min": 28.44515099786804,
+          "max": 28.816392998123774,
+          "samples": [
+            28.816392998123774,
+            28.534390999993775,
+            28.44515099786804
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 3143040,
+            "primitives_submitted": 1047680,
+            "vertex_shader_invocations": 3143040,
+            "geometry_shader_invocations": 1047680,
+            "geometry_shader_primitives_emitted": 2077354,
+            "fragment_shader_invocations": 9482335,
+            "clipping_input_primitives": 2077354,
+            "clipping_output_primitives": 2077354
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      }
+    },
+    "single_cell_tight_gs": {
+      "metadata": {
+        "name": "single_cell_tight_gs",
+        "semantic_status": "geometry-equivalent-candidate",
+        "description": "Keep original FP64 full-view GS clip and original FS; emit one cell only when the original triangle is certified strictly inside that cell cone.",
+        "caveats": [
+          "All original vertices must be forward, project into the same legal cell, and be strictly inside all four cone sides.",
+          "Each side requires dot > 1e-10 * L1(plane) * max(1, max_abs(vertex)); uncertain/boundary cases use the original expanded rectangle.",
+          "A triangle is convex; strict vertex containment proves no positive-area overlap with another cell, in exact arithmetic.",
+          "The margin is an engineering guard, not a formal bound on every GPU compiler transformation; validate boundary cases and full-output parity.",
+          "No geometry, arithmetic precision, primitive order, fragment coverage test, nearest hit or depth/ID tie rule is changed."
+        ],
+        "rasterizer_discard": false
+      },
+      "output_comparison": {
+        "exact": true,
+        "fields": {
+          "distance_m": {
+            "exact": true,
+            "different_elements": 0,
+            "max_abs_finite": 0.0
+          },
+          "object_index": {
+            "exact": true,
+            "different_elements": 0
+          },
+          "object_ids": {
+            "exact": true
+          },
+          "scene_version": {
+            "exact": true
+          },
+          "t_ref": {
+            "exact": true
+          },
+          "map_bounds_m": {
+            "exact": true
+          },
+          "hit_point_sensor_m": {
+            "exact": true,
+            "different_elements": 0,
+            "max_abs_finite": 0.0
+          },
+          "triangle_index": {
+            "exact": true,
+            "different_elements": 0
+          }
+        }
+      },
+      "wall": {
+        "median_ms": 93.57251099936548,
+        "p95_ms": 93.62557589847711,
+        "samples_ms": [
+          93.6314719983784,
+          93.57251099936548,
+          93.4298200008925
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 92.856096,
+          "p95": 92.8626048,
+          "min": 92.85088,
+          "max": 92.863328,
+          "samples": [
+            92.85088,
+            92.856096,
+            92.863328
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 92.856096,
+            "p95": 92.8626048,
+            "min": 92.85088,
+            "max": 92.863328,
+            "samples": [
+              92.85088,
+              92.856096,
+              92.863328
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 93.57709100004286,
+          "p95": 94.11166760037304,
+          "min": 93.56202199705876,
+          "max": 94.17106500040973,
+          "samples": [
+            94.17106500040973,
+            93.57709100004286,
+            93.56202199705876
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 3143040,
+            "primitives_submitted": 1047680,
+            "vertex_shader_invocations": 3143040,
+            "geometry_shader_invocations": 1047680,
+            "geometry_shader_primitives_emitted": 2077354,
+            "fragment_shader_invocations": 1488029,
+            "clipping_input_primitives": 2077354,
+            "clipping_output_primitives": 2077354
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      }
+    },
+    "range_aabb_gs": {
+      "metadata": {
+        "name": "range_aabb_gs",
+        "semantic_status": "geometry-equivalent-candidate",
+        "description": "Conservatively reject triangles whose AABB is strictly outside the maximum-range sphere; original FS.",
+        "caveats": [
+          "A triangle is contained in its sensor-space AABB; distance to that AABB is a lower bound on distance to every triangle point.",
+          "Reject only lower_sq > max_range_sq + 1e-10 * max(1, lower_sq, max_range_sq); boundary cases fall through.",
+          "Only maximum range is used; minimum-range occluders are not removed.",
+          "FP64 margin guards ordinary rounding but is not a formal GPU-compiler error bound; validate exact outputs and range-boundary cases.",
+          "No mesh, transform, primitive order, surviving fragment algorithm, nearest hit or depth/ID tie rule is changed."
+        ],
+        "rasterizer_discard": false
+      },
+      "output_comparison": {
+        "exact": true,
+        "fields": {
+          "distance_m": {
+            "exact": true,
+            "different_elements": 0,
+            "max_abs_finite": 0.0
+          },
+          "object_index": {
+            "exact": true,
+            "different_elements": 0
+          },
+          "object_ids": {
+            "exact": true
+          },
+          "scene_version": {
+            "exact": true
+          },
+          "t_ref": {
+            "exact": true
+          },
+          "map_bounds_m": {
+            "exact": true
+          },
+          "hit_point_sensor_m": {
+            "exact": true,
+            "different_elements": 0,
+            "max_abs_finite": 0.0
+          },
+          "triangle_index": {
+            "exact": true,
+            "different_elements": 0
+          }
+        }
+      },
+      "wall": {
+        "median_ms": 294.13538800145034,
+        "p95_ms": 294.2355049006437,
+        "samples_ms": [
+          294.12505800064537,
+          294.2466290005541,
+          294.13538800145034
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 293.413472,
+          "p95": 293.4770336,
+          "min": 293.348352,
+          "max": 293.484096,
+          "samples": [
+            293.348352,
+            293.484096,
+            293.413472
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 293.413472,
+            "p95": 293.4770336,
+            "min": 293.348352,
+            "max": 293.484096,
+            "samples": [
+              293.348352,
+              293.484096,
+              293.413472
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 294.2309989994101,
+          "p95": 294.6231767007703,
+          "min": 294.1195280000102,
+          "max": 294.6667520009214,
+          "samples": [
+            294.6667520009214,
+            294.2309989994101,
+            294.1195280000102
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 3143040,
+            "primitives_submitted": 1047680,
+            "vertex_shader_invocations": 3143040,
+            "geometry_shader_invocations": 1047680,
+            "geometry_shader_primitives_emitted": 2066866,
+            "fragment_shader_invocations": 9421207,
+            "clipping_input_primitives": 2066866,
+            "clipping_output_primitives": 2066866
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      }
+    },
+    "range_aabb_single_cell_gs": {
+      "metadata": {
+        "name": "range_aabb_single_cell_gs",
+        "semantic_status": "geometry-equivalent-candidate",
+        "description": "Combine maximum-range AABB rejection with strictly certified one-cell rectangles; original FS.",
+        "caveats": [
+          "A triangle is contained in its sensor-space AABB; distance to that AABB is a lower bound on distance to every triangle point.",
+          "Reject only lower_sq > max_range_sq + 1e-10 * max(1, lower_sq, max_range_sq); boundary cases fall through.",
+          "Only maximum range is used; minimum-range occluders are not removed.",
+          "FP64 margin guards ordinary rounding but is not a formal GPU-compiler error bound; validate exact outputs and range-boundary cases.",
+          "No mesh, transform, primitive order, surviving fragment algorithm, nearest hit or depth/ID tie rule is changed.",
+          "Also uses the single_cell_tight_gs containment certificate and its conservative boundary fallback."
+        ],
+        "rasterizer_discard": false
+      },
+      "output_comparison": {
+        "exact": true,
+        "fields": {
+          "distance_m": {
+            "exact": true,
+            "different_elements": 0,
+            "max_abs_finite": 0.0
+          },
+          "object_index": {
+            "exact": true,
+            "different_elements": 0
+          },
+          "object_ids": {
+            "exact": true
+          },
+          "scene_version": {
+            "exact": true
+          },
+          "t_ref": {
+            "exact": true
+          },
+          "map_bounds_m": {
+            "exact": true
+          },
+          "hit_point_sensor_m": {
+            "exact": true,
+            "different_elements": 0,
+            "max_abs_finite": 0.0
+          },
+          "triangle_index": {
+            "exact": true,
+            "different_elements": 0
+          }
+        }
+      },
+      "wall": {
+        "median_ms": 92.1457200020086,
+        "p95_ms": 92.29716480149364,
+        "samples_ms": [
+          92.07862000039313,
+          92.31399200143642,
+          92.1457200020086
+        ]
+      },
+      "draw": {
+        "repeats": 3,
+        "draw_calls_per_action": [
+          1,
+          1,
+          1
+        ],
+        "draw_gpu_sum_ms": {
+          "median": 91.371712,
+          "p95": 91.383808,
+          "min": 91.267104,
+          "max": 91.385152,
+          "samples": [
+            91.267104,
+            91.385152,
+            91.371712
+          ]
+        },
+        "draw_gpu_ms_by_index": [
+          {
+            "median": 91.371712,
+            "p95": 91.383808,
+            "min": 91.267104,
+            "max": 91.385152,
+            "samples": [
+              91.267104,
+              91.385152,
+              91.371712
+            ]
+          }
+        ],
+        "instrumented_action_wall_ms": {
+          "median": 92.13923099741805,
+          "p95": 92.69036759942537,
+          "min": 91.9878790009534,
+          "max": 92.7516049996484,
+          "samples": [
+            92.7516049996484,
+            92.13923099741805,
+            91.9878790009534
+          ]
+        },
+        "pipeline_statistics": {
+          "supported": true,
+          "draw_calls": 1,
+          "counter_bits": {
+            "vertices_submitted": 64,
+            "primitives_submitted": 64,
+            "vertex_shader_invocations": 64,
+            "geometry_shader_invocations": 64,
+            "geometry_shader_primitives_emitted": 64,
+            "fragment_shader_invocations": 64,
+            "clipping_input_primitives": 64,
+            "clipping_output_primitives": 64
+          },
+          "counts": {
+            "vertices_submitted": 3143040,
+            "primitives_submitted": 1047680,
+            "vertex_shader_invocations": 3143040,
+            "geometry_shader_invocations": 1047680,
+            "geometry_shader_primitives_emitted": 2066866,
+            "fragment_shader_invocations": 1439975,
+            "clipping_input_primitives": 2066866,
+            "clipping_output_primitives": 2066866
+          },
+          "interpretation": "Hardware invocation counts can include helper/replayed work; they are not an exact count of distinct intersecting cells.",
+          "specification": "https://registry.khronos.org/OpenGL/extensions/ARB/ARB_pipeline_statistics_query.txt"
+        },
+        "measurement_notes": [
+          "GL TIME_ELAPSED queries surround only glDrawArraysInstanced.",
+          "No finish or CUDA synchronization is inserted inside each timed draw.",
+          "The action wall includes timer enqueue and final GL/CUDA synchronization; it is not the uninstrumented production baseline.",
+          "Pipeline statistics use a separate untimed action and can include helpers."
+        ]
+      }
+    }
+  }
+}

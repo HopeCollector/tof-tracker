@@ -1,0 +1,498 @@
+{
+  "status": "passed",
+  "variant": {
+    "name": "range_aabb_gs",
+    "semantic_status": "geometry-equivalent-candidate",
+    "description": "Conservatively reject triangles whose AABB is strictly outside the maximum-range sphere; original FS.",
+    "caveats": [
+      "A triangle is contained in its sensor-space AABB; distance to that AABB is a lower bound on distance to every triangle point.",
+      "Reject only lower_sq > max_range_sq + 1e-10 * max(1, lower_sq, max_range_sq); boundary cases fall through.",
+      "Only maximum range is used; minimum-range occluders are not removed.",
+      "FP64 margin guards ordinary rounding but is not a formal GPU-compiler error bound; validate exact outputs and range-boundary cases.",
+      "No mesh, transform, primitive order, surviving fragment algorithm, nearest hit or depth/ID tie rule is changed."
+    ],
+    "rasterizer_discard": false
+  },
+  "checks": [
+    {
+      "name": "existing_small_objects_and_boundaries",
+      "status": "passed",
+      "detail": [
+        {
+          "case": "tiny_inside_zone",
+          "hit_zones": [
+            [
+              3,
+              3
+            ]
+          ],
+          "nearest_m": 4.009987531152684
+        },
+        {
+          "case": "cross_column",
+          "hit_zones": [
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "nearest_m": 4.004996878900157
+        },
+        {
+          "case": "cross_row_column",
+          "hit_zones": [
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "nearest_m": 4.0
+        },
+        {
+          "case": "edge_contact_has_no_area",
+          "hit_zones": [
+            [
+              3,
+              3
+            ]
+          ],
+          "nearest_m": 4.004996878900157
+        },
+        {
+          "case": "corner_contact_has_no_area",
+          "hit_zones": [
+            [
+              3,
+              3
+            ]
+          ],
+          "nearest_m": 4.0
+        }
+      ]
+    },
+    {
+      "name": "existing_plane_and_occlusion",
+      "status": "passed",
+      "detail": {
+        "plane_foot_edge_corner": "64 analytic distances and points matched",
+        "full_occlusion": {
+          "winner": "near",
+          "range_m": 3.0
+        },
+        "partial_occlusion": {
+          "winner": "near",
+          "range_m": 3.0
+        },
+        "radial_not_forward_depth": {
+          "winner": "radial_nearest",
+          "range_m": 3.05013108253479
+        }
+      }
+    },
+    {
+      "name": "existing_near_range_and_coverage",
+      "status": "passed",
+      "detail": {
+        "eye_plane_and_too_close": {
+          "zones": 64,
+          "max_raw_m": 0.07288689911365509
+        },
+        "known_hit_unknown_zone_prefix": "NaN",
+        "known_hit_known_zone_prefix": 4.000024795532227,
+        "center_reprojection_known_real_hit_outside": "NaN",
+        "center_known_edges_unknown": "NaN",
+        "center_and_corners_known_edge_extremum_unknown": "NaN",
+        "whole_cone_known_empty": "+inf"
+      }
+    },
+    {
+      "name": "existing_batch_ownership_and_updates",
+      "status": "passed",
+      "detail": {
+        "batch_views": 8,
+        "large_batch_views": 256,
+        "transform_updates": 2,
+        "transform_bytes": 128,
+        "target_cells_A_B_A": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "existing_exact_review_screenshot",
+      "status": "passed",
+      "detail": {
+        "map_sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4",
+        "pixel_target_cells": 0,
+        "zone_target_cells": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ]
+        ],
+        "camera_visible_target_pixels": 148,
+        "target_sensor_center_m": [
+          4.3465091815641665,
+          0.12224862982191752,
+          0.0
+        ],
+        "oracle": "analytic sphere angular support and original 8x8/160x120 outputs; no supersampling"
+      }
+    },
+    {
+      "name": "extra_boundary_raw_parity",
+      "status": "passed",
+      "detail": [
+        {
+          "case": "cell_side_below",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 1,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "cell_side_touch",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 1,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "cell_side_above",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 2,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "central_side_below",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 1,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "central_side_touch",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 1,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "central_side_above",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 1,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "cell_corner_touch",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 1,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "sensor_max_below",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 4,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "sensor_max_equal",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 4,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "sensor_max_above",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 4,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "render_guard_below",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 4,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "render_guard_equal",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 0,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "render_guard_above",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 0,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "face_crosses_range_ball",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            8,
+            8
+          ],
+          "baseline_hit_cells": 64,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        },
+        {
+          "case": "non_power_of_two_7x9",
+          "status": "passed",
+          "exact_fields": {
+            "distance_m": true,
+            "object_index": true,
+            "object_ids": true,
+            "scene_version": true,
+            "t_ref": true,
+            "map_bounds_m": true,
+            "hit_point_sensor_m": true,
+            "triangle_index": true
+          },
+          "resolution": [
+            7,
+            9
+          ],
+          "baseline_hit_cells": 63,
+          "oracle": "exact production raw-output parity; no independent boundary oracle"
+        }
+      ]
+    }
+  ],
+  "scope": "Experimental GS candidates only; production files and running review unchanged.",
+  "torch": "2.9.1+cu128",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "source_sha256": {
+    "experiments/tof_pipeline_profile/verify_candidates.py": "2172d051a7e77f1b238258c6c6c3c9a2f26921003c44e4599968cb4be7432177",
+    "experiments/tof_pipeline_profile/variants.py": "8b18f4e2adaa9154d63afa7eab6f3a155d52e2d8b88c9a05cd189ba0e8d6332e",
+    "devtools/_zone_shaders.py": "a18c77d5ff042c5d76836b944fea8745b0c9c89d667d9a5c1928b85c88f6b101",
+    "devtools/rendering.py": "fe0a8fa1a8239c4ea0bde686603d9ae886b9a2fe706f9b116e29c90dbb7663c5",
+    "tests/verify_tof_zones.py": "6033ff9615cec8ae5aed2efc0cb93acca10930b8798c5565c27a706b78dc8fd4"
+  }
+}

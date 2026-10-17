@@ -1,0 +1,8 @@
+running pillars20-tof-gl_batch-b1
+  ok: 0.5341340147424489 ms
+running pillars20-tof-gl_batch-b4
+  ok: 0.5214039993006736 ms
+running pillars20-camera-gl_batch-b1
+  ok: 1.2638870102819055 ms
+running pillars20-camera-gl_batch-b4
+  ok: 1.1649279913399369 ms

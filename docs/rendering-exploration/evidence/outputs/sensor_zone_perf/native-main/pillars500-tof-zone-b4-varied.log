@@ -1,0 +1,15 @@
+{"stage": "provenance", "elapsed_s": 0.0007841050010028994, "mode": "tof", "batch": 4}
+{"stage": "cuda_init", "elapsed_s": 0.020838567999817315, "mode": "tof", "batch": 4}
+{"stage": "scene_load", "elapsed_s": 0.09203984300074808, "mode": "tof", "batch": 4}
+{"stage": "pose_upload", "elapsed_s": 0.14314812600059668, "mode": "tof", "batch": 4}
+{"stage": "renderer_setup", "elapsed_s": 0.14450564600156213, "mode": "tof", "batch": 4}
+{"stage": "renderer_ready", "elapsed_s": 0.26559724600156187, "mode": "tof", "batch": 4}
+{"stage": "first_forward", "elapsed_s": 0.26571415699982026, "mode": "tof", "batch": 4}
+{"stage": "first_forward_done", "elapsed_s": 0.4765477140008443, "mode": "tof", "batch": 4}
+{"stage": "pipeline_measure", "elapsed_s": 0.47658898400004546, "mode": "tof", "batch": 4}
+{"stage": "production_parity", "elapsed_s": 0.9762079530009942, "mode": "tof", "batch": 4}
+{"stage": "postprocess_measure", "elapsed_s": 1.0258450450000964, "mode": "tof", "batch": 4}
+{"stage": "end_to_end_measure", "elapsed_s": 1.0989901749999262, "mode": "tof", "batch": 4}
+{"stage": "gl_draw_probe", "elapsed_s": 1.5966830600009416, "mode": "tof", "batch": 4}
+{"stage": "complete", "elapsed_s": 1.6674733720010408, "mode": "tof", "batch": 4}
+{"status": "ok", "mode": "tof", "sampling": "zone", "batch": 4, "output": "outputs/sensor_zone_perf/native-main/pillars500-tof-zone-b4-varied.json", "end_to_end_median_ms": 23.832569000660442, "error": null}

@@ -1,0 +1,72 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "name": "verify_bootstrap",
+      "passed": false,
+      "error": "2.7.1+cu128",
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/tests/verify_sensor_review.py\", line 489, in main\n    details = group(service)\n              ^^^^^^^^^^^^^^\n  File \"/workspace/tests/verify_sensor_review.py\", line 247, in verify_bootstrap\n    assert bootstrap[\"torch_version\"].split(\"+\")[0] == \"2.9.1\", bootstrap[\"torch_version\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 2.7.1+cu128\n"
+    },
+    {
+      "name": "verify_upload_and_map_invalidation",
+      "passed": true,
+      "map_change_rejects_stale_sample": true,
+      "canonical_objects": 2
+    },
+    {
+      "name": "verify_no_target_analytic_and_binary",
+      "passed": true,
+      "views": 5,
+      "camera_finite_pixels": 14032,
+      "camera_nan_pixels": 5168,
+      "tof_empty_pixels": 130,
+      "no_target_draws": 2,
+      "analytic_tolerance_m": 2e-05
+    },
+    {
+      "name": "verify_mounted_pose_rotation",
+      "passed": true,
+      "full_attitude_mounted_views": 5
+    },
+    {
+      "name": "verify_target_motion_same_pass",
+      "passed": true,
+      "target_move_transform_bytes": 64,
+      "geometry_uploads": 1,
+      "sample_draws": 3,
+      "target_visible_pixels": 720
+    },
+    {
+      "name": "verify_request_validation",
+      "passed": true,
+      "invalid_requests_rejected": 17,
+      "worker_survived": true
+    },
+    {
+      "name": "verify_concurrent_snapshot_requests",
+      "passed": true,
+      "concurrent_requests": 4,
+      "serialized_draw_counts": [
+        6,
+        9,
+        12,
+        15
+      ]
+    },
+    {
+      "name": "verify_transition",
+      "passed": true,
+      "moving_and_stationary_transitions": 2,
+      "endpoint_derivative_max": 0.0
+    }
+  ],
+  "failures": [
+    {
+      "name": "verify_bootstrap",
+      "passed": false,
+      "error": "2.7.1+cu128",
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/tests/verify_sensor_review.py\", line 489, in main\n    details = group(service)\n              ^^^^^^^^^^^^^^\n  File \"/workspace/tests/verify_sensor_review.py\", line 247, in verify_bootstrap\n    assert bootstrap[\"torch_version\"].split(\"+\")[0] == \"2.9.1\", bootstrap[\"torch_version\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 2.7.1+cu128\n"
+    }
+  ],
+  "server_log": "2026-10-16 09:21:35,082 INFO sensor review listening at http://127.0.0.1:43773\n2026-10-16 09:21:35,167 INFO 127.0.0.1 \"GET /api/bootstrap HTTP/1.1\" 200 -\n2026-10-16 09:21:35,169 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 09:21:35,170 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 09:21:35,171 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 409 -\n2026-10-16 09:21:35,171 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 09:21:35,172 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 09:21:35,607 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,618 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,620 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 09:21:35,667 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,673 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 09:21:35,748 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,755 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,762 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,765 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 09:21:35,766 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 09:21:35,766 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 404 -\n2026-10-16 09:21:35,767 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 09:21:35,767 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 09:21:35,767 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 09:21:35,768 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 09:21:35,768 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-16 09:21:35,768 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 09:21:35,768 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 09:21:35,769 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 09:21:35,769 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 09:21:35,769 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 09:21:35,769 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 404 -\n2026-10-16 09:21:35,770 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 09:21:35,770 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-16 09:21:35,770 INFO 127.0.0.1 \"GET /api/raw?path=/etc/passwd HTTP/1.1\" 404 -\n2026-10-16 09:21:35,771 INFO 127.0.0.1 \"GET /api/map?path=/etc/passwd HTTP/1.1\" 404 -\n2026-10-16 09:21:35,817 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,819 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-16 09:21:35,876 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,883 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,888 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,893 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:35,899 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-16 09:21:36,946 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 200 -\n2026-10-16 09:21:36,949 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 200 -\n2026-10-16 09:21:36,950 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 400 -\n2026-10-16 09:21:36,950 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 400 -\n"
+}
