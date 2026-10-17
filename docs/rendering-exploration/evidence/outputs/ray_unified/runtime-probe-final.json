@@ -1,0 +1,1305 @@
+{
+  "status": "failed",
+  "source_sha256": {
+    "devtools/ray_rendering.py": "909aee8f29d946ae125ed551a826ab380b745d4fee1a42202bb708f323acaa54",
+    "devtools/_ray_budget.py": "1746b3a31a9e2f2abf2914137df1fd139c210fe84b227d6ba3b3d10ea6d469ba",
+    "devtools/sensors.py": "1c5b162fa5a9aac5aebf64d3b069fc72718266655dbfd0853248e4a556d456e8",
+    "devtools/_ray_processing.py": "3cd3fb325a3048cf79397e083f00912d83915cbc32542a0aaff470db380032f2",
+    "devtools/perception.py": "fc12778b41841f138f8fc3d296a0d611241a26d90001c868717ca919fc572904",
+    "devtools/config.py": "e6995b751d6be7df57526b1d0cbb12dd7b7b6d2000188542a087c334a49e0d36"
+  },
+  "groups": [
+    {
+      "name": "actual_runtime_fraction_chunking",
+      "status": "passed",
+      "batch": 16,
+      "default_camera": {
+        "width": 160,
+        "height": 120,
+        "samples_per_axis": 2
+      },
+      "configured_fraction": 0.007183868237202569,
+      "plan": {
+        "max_gpu_memory_fraction": 0.007183868237202569,
+        "cuda_total_bytes": 16608133120,
+        "sampling_workset_limit_bytes": 119310640,
+        "scene_tensor_bytes": 6832,
+        "native_bvh_estimated_bytes": 35072,
+        "native_bvh_measured_bytes": null,
+        "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+        "retained_output_bytes": 5563776,
+        "retained_output_allocated_bytes": 0,
+        "future_retained_output_bytes": 5563776,
+        "extra_fixed_bytes": 0,
+        "safety_margin_bytes": 67108864,
+        "cuda_free_bytes": 14556659712,
+        "torch_allocated_bytes": 9728,
+        "torch_reserved_bytes": 2097152,
+        "torch_reusable_cache_bytes": 2087424,
+        "physical_available_estimated_bytes": 14558747136,
+        "fraction_workspace_bytes": 46596096,
+        "physical_workspace_bytes": 14486074496,
+        "workspace_bytes_per_ray": 384,
+        "rays_per_item": 80896,
+        "workspace_bytes_per_item": 31064064,
+        "requested_items": 16,
+        "chunk_items": 1,
+        "chunk_count": 16,
+        "limiting_factor": "sampling_workset_fraction",
+        "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+        "planned_chunk_workset_bytes": 103778608
+      },
+      "control_execution": {
+        "chunks": 1,
+        "chunk_count": 1,
+        "chunk_items": 16,
+        "trace_calls": 1,
+        "rays_per_item": 80896,
+        "compact_origins": true,
+        "planner": {
+          "max_gpu_memory_fraction": 0.5,
+          "cuda_total_bytes": 16608133120,
+          "sampling_workset_limit_bytes": 8304066560,
+          "scene_tensor_bytes": 6832,
+          "native_bvh_estimated_bytes": 35072,
+          "native_bvh_measured_bytes": null,
+          "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+          "retained_output_bytes": 5563776,
+          "retained_output_allocated_bytes": 0,
+          "future_retained_output_bytes": 5563776,
+          "extra_fixed_bytes": 0,
+          "safety_margin_bytes": 67108864,
+          "cuda_free_bytes": 14556659712,
+          "torch_allocated_bytes": 9728,
+          "torch_reserved_bytes": 2097152,
+          "torch_reusable_cache_bytes": 2087424,
+          "physical_available_estimated_bytes": 14558747136,
+          "fraction_workspace_bytes": 8231352016,
+          "physical_workspace_bytes": 14486074496,
+          "workspace_bytes_per_ray": 384,
+          "rays_per_item": 80896,
+          "workspace_bytes_per_item": 31064064,
+          "requested_items": 16,
+          "chunk_items": 16,
+          "chunk_count": 1,
+          "limiting_factor": "sampling_workset_fraction",
+          "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+          "planned_chunk_workset_bytes": 569739568
+        },
+        "full_scene_queries_per_chunk": 1,
+        "analytic_perception": "sphere_torch",
+        "perception_scene_queries": 0,
+        "diagnostics": false
+      },
+      "chunked_execution": {
+        "chunks": 16,
+        "chunk_count": 16,
+        "chunk_items": 1,
+        "trace_calls": 16,
+        "rays_per_item": 80896,
+        "compact_origins": true,
+        "planner": {
+          "max_gpu_memory_fraction": 0.007183868237202569,
+          "cuda_total_bytes": 16608133120,
+          "sampling_workset_limit_bytes": 119310640,
+          "scene_tensor_bytes": 6832,
+          "native_bvh_estimated_bytes": 35072,
+          "native_bvh_measured_bytes": null,
+          "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+          "retained_output_bytes": 5563776,
+          "retained_output_allocated_bytes": 0,
+          "future_retained_output_bytes": 5563776,
+          "extra_fixed_bytes": 0,
+          "safety_margin_bytes": 67108864,
+          "cuda_free_bytes": 14248247296,
+          "torch_allocated_bytes": 13050880,
+          "torch_reserved_bytes": 264241152,
+          "torch_reusable_cache_bytes": 251190272,
+          "physical_available_estimated_bytes": 14499437568,
+          "fraction_workspace_bytes": 46596096,
+          "physical_workspace_bytes": 14426764928,
+          "workspace_bytes_per_ray": 384,
+          "rays_per_item": 80896,
+          "workspace_bytes_per_item": 31064064,
+          "requested_items": 16,
+          "chunk_items": 1,
+          "chunk_count": 16,
+          "limiting_factor": "sampling_workset_fraction",
+          "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+          "planned_chunk_workset_bytes": 103778608
+        },
+        "full_scene_queries_per_chunk": 1,
+        "analytic_perception": "sphere_torch",
+        "perception_scene_queries": 0,
+        "diagnostics": false
+      },
+      "parity": {
+        "passed": true,
+        "float_atol": 3e-05,
+        "fields": {
+          "tof_m": {
+            "max_abs": 0.0
+          },
+          "camera.depth.range_m": {
+            "max_abs": 0.0
+          },
+          "camera.target_mask": {
+            "exact": true
+          },
+          "camera.target_hint": {
+            "max_abs": 0.0
+          },
+          "camera.visible_fraction": {
+            "max_abs": 0.0
+          },
+          "camera.unoccluded_pixels": {
+            "exact": true
+          },
+          "camera.target_coverage": {
+            "max_abs": 0.0
+          },
+          "camera.unoccluded_samples": {
+            "exact": true
+          }
+        }
+      },
+      "sampling_cpu_readbacks": 0,
+      "large_diagnostic_prequery_rejections": [
+        {
+          "name": "physical_diagnostics",
+          "query_delta": 0,
+          "error": "ray sampling budget cannot fit scene, retained output and one item: fraction workspace -140878320128 B, physical workspace -126501574528 B, required per item 31064064 B; reduce retained output or batch size, or raise the sampling workset fraction",
+          "budget": {
+            "max_gpu_memory_fraction": 0.007183868237202569,
+            "cuda_total_bytes": 16608133120,
+            "sampling_workset_limit_bytes": 119310640,
+            "scene_tensor_bytes": 6832,
+            "native_bvh_estimated_bytes": 35072,
+            "native_bvh_measured_bytes": null,
+            "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+            "retained_output_bytes": 140930480000,
+            "retained_output_allocated_bytes": 0,
+            "future_retained_output_bytes": 140930480000,
+            "extra_fixed_bytes": 0,
+            "safety_margin_bytes": 67108864,
+            "cuda_free_bytes": 14235664384,
+            "torch_allocated_bytes": 16474112,
+            "torch_reserved_bytes": 276824064,
+            "torch_reusable_cache_bytes": 260349952,
+            "physical_available_estimated_bytes": 14496014336,
+            "fraction_workspace_bytes": -140878320128,
+            "physical_workspace_bytes": -126501574528,
+            "workspace_bytes_per_ray": 384,
+            "rays_per_item": 80896,
+            "workspace_bytes_per_item": 31064064,
+            "requested_items": 10000,
+            "chunk_items": 0,
+            "chunk_count": null,
+            "limiting_factor": "sampling_workset_fraction",
+            "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+            "planned_chunk_workset_bytes": 140997630768
+          }
+        },
+        {
+          "name": "measurement_diagnostics",
+          "query_delta": 0,
+          "error": "ray sampling budget cannot fit scene, retained output and one item: fraction workspace -265679200128 B, physical workspace -251302454528 B, required per item 31064064 B; reduce retained output or batch size, or raise the sampling workset fraction",
+          "budget": {
+            "max_gpu_memory_fraction": 0.007183868237202569,
+            "cuda_total_bytes": 16608133120,
+            "sampling_workset_limit_bytes": 119310640,
+            "scene_tensor_bytes": 6832,
+            "native_bvh_estimated_bytes": 35072,
+            "native_bvh_measured_bytes": null,
+            "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+            "retained_output_bytes": 265731360000,
+            "retained_output_allocated_bytes": 0,
+            "future_retained_output_bytes": 265731360000,
+            "extra_fixed_bytes": 0,
+            "safety_margin_bytes": 67108864,
+            "cuda_free_bytes": 14235664384,
+            "torch_allocated_bytes": 16474112,
+            "torch_reserved_bytes": 276824064,
+            "torch_reusable_cache_bytes": 260349952,
+            "physical_available_estimated_bytes": 14496014336,
+            "fraction_workspace_bytes": -265679200128,
+            "physical_workspace_bytes": -251302454528,
+            "workspace_bytes_per_ray": 384,
+            "rays_per_item": 80896,
+            "workspace_bytes_per_item": 31064064,
+            "requested_items": 10000,
+            "chunk_items": 0,
+            "chunk_count": null,
+            "limiting_factor": "sampling_workset_fraction",
+            "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+            "planned_chunk_workset_bytes": 265798510768
+          }
+        }
+      ]
+    },
+    {
+      "name": "pose_cross_stream_storage_lifetime",
+      "status": "failed",
+      "error": "stream finished before reuse stress was queued",
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/outputs/ray_unified/runtime_probe.py\", line 277, in main\n    result = action()\n             ^^^^^^^^\n  File \"/workspace/outputs/ray_unified/runtime_probe.py\", line 274, in <lambda>\n    (\"pose_cross_stream_storage_lifetime\", lambda: storage_lifetime_probe(renderer, snapshot, config)),\n                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/outputs/ray_unified/runtime_probe.py\", line 164, in storage_lifetime_probe\n    assert pending_before_reuse, \"stream finished before reuse stress was queued\"\n           ^^^^^^^^^^^^^^^^^^^^\nAssertionError: stream finished before reuse stress was queued\n"
+    },
+    {
+      "name": "warp_vs_torch_tangent_spheres",
+      "status": "observed",
+      "scope": "nominal tangent and both angular sides, then quantized float32; double oracles distinguish public and uploaded geometry; no ideal nextafter correctness guarantee",
+      "case_count": 6,
+      "discrepancy_count": 2,
+      "any_fraction_above_one": false,
+      "any_denominator_missed": false,
+      "witnesses": [
+        {
+          "case": 2,
+          "ray": 5,
+          "offset_rad": 0.0,
+          "direction_float32": [
+            0.7742730379104614,
+            0.6328516602516174,
+            0.0
+          ],
+          "warp_hit": false,
+          "torch_hit": true,
+          "denominator_missed": false
+        },
+        {
+          "case": 2,
+          "ray": 6,
+          "offset_rad": 1e-08,
+          "direction_float32": [
+            0.7742730379104614,
+            0.6328516602516174,
+            0.0
+          ],
+          "warp_hit": false,
+          "torch_hit": true,
+          "denominator_missed": false
+        }
+      ],
+      "cases": [
+        {
+          "case": 0,
+          "origin_m": [
+            0.0,
+            0.0,
+            2.0
+          ],
+          "center_m": [
+            3.0,
+            0.0,
+            2.0
+          ],
+          "radius_m": 0.3,
+          "nominal_tangent_angle_rad": 0.10016742116155979,
+          "angle_offsets_rad": [
+            -4e-06,
+            -1e-06,
+            -2e-07,
+            -5e-08,
+            -1e-08,
+            0.0,
+            1e-08,
+            5e-08,
+            2e-07,
+            1e-06,
+            4e-06
+          ],
+          "input_directions_float32": [
+            [
+              0.9949878454208374,
+              -0.09999602288007736,
+              0.0
+            ],
+            [
+              0.9949875473976135,
+              -0.09999900311231613,
+              0.0
+            ],
+            [
+              0.994987428188324,
+              -0.09999980032444,
+              0.0
+            ],
+            [
+              0.994987428188324,
+              -0.09999994933605194,
+              0.0
+            ],
+            [
+              0.994987428188324,
+              -0.09999998658895493,
+              0.0
+            ],
+            [
+              0.994987428188324,
+              -0.10000000149011612,
+              0.0
+            ],
+            [
+              0.994987428188324,
+              -0.10000000894069672,
+              0.0
+            ],
+            [
+              0.994987428188324,
+              -0.1000000461935997,
+              0.0
+            ],
+            [
+              0.994987428188324,
+              -0.10000020265579224,
+              0.0
+            ],
+            [
+              0.9949873089790344,
+              -0.10000099241733551,
+              0.0
+            ],
+            [
+              0.9949870109558105,
+              -0.10000398010015488,
+              0.0
+            ]
+          ],
+          "public_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "uploaded_geometry_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "torch_target_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_distance_m": [
+            2.9822826385498047,
+            2.9836182594299316,
+            2.9843552112579346,
+            2.9846456050872803,
+            2.9847798347473145,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "torch_target_distance_m": [
+            2.982283353805542,
+            2.9836196899414062,
+            2.984358310699463,
+            2.9846513271331787,
+            2.9847898483276367,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unoccluded_samples": 5,
+          "visible_samples": 5,
+          "visible_fraction": 1.0,
+          "fraction_above_one": false,
+          "denominator_missed_indices": [],
+          "hit_disagreement_indices": []
+        },
+        {
+          "case": 1,
+          "origin_m": [
+            0.0,
+            0.0,
+            2.0
+          ],
+          "center_m": [
+            4.0,
+            0.0,
+            2.0
+          ],
+          "radius_m": 0.2,
+          "nominal_tangent_angle_rad": 0.050020856805770016,
+          "angle_offsets_rad": [
+            -4e-06,
+            -1e-06,
+            -2e-07,
+            -5e-08,
+            -1e-08,
+            0.0,
+            1e-08,
+            5e-08,
+            2e-07,
+            1e-06,
+            4e-06
+          ],
+          "input_directions_float32": [
+            [
+              0.9987494349479675,
+              -0.04999600350856781,
+              0.0
+            ],
+            [
+              0.9987492561340332,
+              -0.04999900236725807,
+              0.0
+            ],
+            [
+              0.9987492561340332,
+              -0.04999979957938194,
+              0.0
+            ],
+            [
+              0.9987491965293884,
+              -0.04999994859099388,
+              0.0
+            ],
+            [
+              0.9987491965293884,
+              -0.049999989569187164,
+              0.0
+            ],
+            [
+              0.9987491965293884,
+              -0.05000000074505806,
+              0.0
+            ],
+            [
+              0.9987491965293884,
+              -0.05000000819563866,
+              0.0
+            ],
+            [
+              0.9987491965293884,
+              -0.05000004917383194,
+              0.0
+            ],
+            [
+              0.9987491965293884,
+              -0.05000019818544388,
+              0.0
+            ],
+            [
+              0.9987491965293884,
+              -0.05000099912285805,
+              0.0
+            ],
+            [
+              0.9987490177154541,
+              -0.05000399425625801,
+              0.0
+            ]
+          ],
+          "public_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "uploaded_geometry_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "torch_target_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_distance_m": [
+            3.99246883392334,
+            3.9937334060668945,
+            3.994429111480713,
+            3.994713544845581,
+            3.9948818683624268,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "torch_target_distance_m": [
+            3.9924683570861816,
+            3.9937329292297363,
+            3.9944276809692383,
+            3.994710683822632,
+            3.994874954223633,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unoccluded_samples": 5,
+          "visible_samples": 5,
+          "visible_fraction": 1.0,
+          "fraction_above_one": false,
+          "denominator_missed_indices": [],
+          "hit_disagreement_indices": []
+        },
+        {
+          "case": 2,
+          "origin_m": [
+            0.0,
+            0.0,
+            2.0
+          ],
+          "center_m": [
+            2.1213203435596424,
+            2.1213203435596424,
+            2.0
+          ],
+          "radius_m": 0.3,
+          "nominal_tangent_angle_rad": 0.10016742116155979,
+          "angle_offsets_rad": [
+            -4e-06,
+            -1e-06,
+            -2e-07,
+            -5e-08,
+            -1e-08,
+            0.0,
+            1e-08,
+            5e-08,
+            2e-07,
+            1e-06,
+            4e-06
+          ],
+          "input_directions_float32": [
+            [
+              0.7742705345153809,
+              0.6328547596931458,
+              0.0
+            ],
+            [
+              0.7742723822593689,
+              0.6328524351119995,
+              0.0
+            ],
+            [
+              0.7742729187011719,
+              0.6328518390655518,
+              0.0
+            ],
+            [
+              0.7742730379104614,
+              0.6328517198562622,
+              0.0
+            ],
+            [
+              0.7742730379104614,
+              0.6328517198562622,
+              0.0
+            ],
+            [
+              0.7742730379104614,
+              0.6328516602516174,
+              0.0
+            ],
+            [
+              0.7742730379104614,
+              0.6328516602516174,
+              0.0
+            ],
+            [
+              0.7742730975151062,
+              0.6328516602516174,
+              0.0
+            ],
+            [
+              0.774273157119751,
+              0.6328515410423279,
+              0.0
+            ],
+            [
+              0.774273693561554,
+              0.6328508853912354,
+              0.0
+            ],
+            [
+              0.7742756009101868,
+              0.6328485608100891,
+              0.0
+            ]
+          ],
+          "public_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "uploaded_geometry_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "torch_target_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_distance_m": [
+            2.982295274734497,
+            2.9836182594299316,
+            2.984361171722412,
+            2.984696388244629,
+            2.984696388244629,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "torch_target_distance_m": [
+            2.982287645339966,
+            2.9836196899414062,
+            2.984351873397827,
+            2.9847896099090576,
+            2.9847896099090576,
+            2.9848756790161133,
+            2.9848756790161133,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unoccluded_samples": 7,
+          "visible_samples": 5,
+          "visible_fraction": 0.7142857142857143,
+          "fraction_above_one": false,
+          "denominator_missed_indices": [],
+          "hit_disagreement_indices": [
+            5,
+            6
+          ]
+        },
+        {
+          "case": 3,
+          "origin_m": [
+            7.123,
+            -5.456,
+            1.5
+          ],
+          "center_m": [
+            9.945162605150792,
+            -4.609351218454763,
+            2.0644325210301586
+          ],
+          "radius_m": 0.3,
+          "nominal_tangent_angle_rad": 0.10016742116155979,
+          "angle_offsets_rad": [
+            -4e-06,
+            -1e-06,
+            -2e-07,
+            -5e-08,
+            -1e-08,
+            0.0,
+            1e-08,
+            5e-08,
+            2e-07,
+            1e-06,
+            4e-06
+          ],
+          "input_directions_float32": [
+            [
+              0.9647394418716431,
+              0.18502293527126312,
+              0.18720115721225739
+            ],
+            [
+              0.9647400379180908,
+              0.18501998484134674,
+              0.1872011125087738
+            ],
+            [
+              0.9647402167320251,
+              0.18501919507980347,
+              0.1872010976076126
+            ],
+            [
+              0.9647402167320251,
+              0.18501906096935272,
+              0.18720108270645142
+            ],
+            [
+              0.9647402167320251,
+              0.18501901626586914,
+              0.18720108270645142
+            ],
+            [
+              0.9647402167320251,
+              0.18501900136470795,
+              0.18720108270645142
+            ],
+            [
+              0.9647402167320251,
+              0.18501900136470795,
+              0.18720108270645142
+            ],
+            [
+              0.9647402167320251,
+              0.18501895666122437,
+              0.18720108270645142
+            ],
+            [
+              0.9647402763366699,
+              0.18501880764961243,
+              0.18720108270645142
+            ],
+            [
+              0.9647404551506042,
+              0.18501801788806915,
+              0.18720106780529022
+            ],
+            [
+              0.9647409915924072,
+              0.18501508235931396,
+              0.18720100820064545
+            ]
+          ],
+          "public_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "uploaded_geometry_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "torch_target_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_distance_m": [
+            2.9822731018066406,
+            2.983604669570923,
+            2.984325408935547,
+            2.9845528602600098,
+            2.98468279838562,
+            2.984710931777954,
+            2.984710931777954,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "torch_target_distance_m": [
+            2.9822747707366943,
+            2.983600378036499,
+            2.984328269958496,
+            2.9845669269561768,
+            2.984675884246826,
+            2.984750747680664,
+            2.984750747680664,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unoccluded_samples": 7,
+          "visible_samples": 7,
+          "visible_fraction": 1.0,
+          "fraction_above_one": false,
+          "denominator_missed_indices": [],
+          "hit_disagreement_indices": []
+        },
+        {
+          "case": 4,
+          "origin_m": [
+            1000.125,
+            -300.25,
+            50.0
+          ],
+          "center_m": [
+            1002.9471626051508,
+            -299.40335121845476,
+            50.564432521030156
+          ],
+          "radius_m": 0.3,
+          "nominal_tangent_angle_rad": 0.10016742116155979,
+          "angle_offsets_rad": [
+            -4e-06,
+            -1e-06,
+            -2e-07,
+            -5e-08,
+            -1e-08,
+            0.0,
+            1e-08,
+            5e-08,
+            2e-07,
+            1e-06,
+            4e-06
+          ],
+          "input_directions_float32": [
+            [
+              0.9647394418716431,
+              0.18502293527126312,
+              0.18720115721225739
+            ],
+            [
+              0.9647400379180908,
+              0.18501998484134674,
+              0.1872011125087738
+            ],
+            [
+              0.9647402167320251,
+              0.18501919507980347,
+              0.1872010976076126
+            ],
+            [
+              0.9647402167320251,
+              0.18501906096935272,
+              0.18720108270645142
+            ],
+            [
+              0.9647402167320251,
+              0.18501901626586914,
+              0.18720108270645142
+            ],
+            [
+              0.9647402167320251,
+              0.18501900136470795,
+              0.18720108270645142
+            ],
+            [
+              0.9647402167320251,
+              0.18501900136470795,
+              0.18720108270645142
+            ],
+            [
+              0.9647402167320251,
+              0.18501895666122437,
+              0.18720108270645142
+            ],
+            [
+              0.9647402763366699,
+              0.18501880764961243,
+              0.18720108270645142
+            ],
+            [
+              0.9647404551506042,
+              0.18501801788806915,
+              0.18720106780529022
+            ],
+            [
+              0.9647409915924072,
+              0.18501508235931396,
+              0.18720100820064545
+            ]
+          ],
+          "public_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "uploaded_geometry_double_hit": [
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_hit": [
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "torch_target_hit": [
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_distance_m": [
+            2.9827678203582764,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "torch_target_distance_m": [
+            2.9827651977539062,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unoccluded_samples": 1,
+          "visible_samples": 1,
+          "visible_fraction": 1.0,
+          "fraction_above_one": false,
+          "denominator_missed_indices": [],
+          "hit_disagreement_indices": []
+        },
+        {
+          "case": 5,
+          "origin_m": [
+            0.0,
+            0.0,
+            2.0
+          ],
+          "center_m": [
+            9.407208683835972,
+            1.8814417367671945,
+            4.822162605150791
+          ],
+          "radius_m": 0.1,
+          "nominal_tangent_angle_rad": 0.010000166674167114,
+          "angle_offsets_rad": [
+            -4e-06,
+            -1e-06,
+            -2e-07,
+            -5e-08,
+            -1e-08,
+            0.0,
+            1e-08,
+            5e-08,
+            2e-07,
+            1e-06,
+            4e-06
+          ],
+          "input_directions_float32": [
+            [
+              0.9426342248916626,
+              0.17833289504051208,
+              0.2822021543979645
+            ],
+            [
+              0.9426348209381104,
+              0.1783299446105957,
+              0.2822021543979645
+            ],
+            [
+              0.9426349401473999,
+              0.17832915484905243,
+              0.2822021543979645
+            ],
+            [
+              0.9426349997520447,
+              0.1783290058374405,
+              0.2822021543979645
+            ],
+            [
+              0.9426349997520447,
+              0.1783289760351181,
+              0.2822021543979645
+            ],
+            [
+              0.9426349997520447,
+              0.1783289611339569,
+              0.2822021543979645
+            ],
+            [
+              0.9426349997520447,
+              0.17832894623279572,
+              0.2822021543979645
+            ],
+            [
+              0.9426349997520447,
+              0.17832891643047333,
+              0.2822021543979645
+            ],
+            [
+              0.9426350593566895,
+              0.1783287674188614,
+              0.2822021543979645
+            ],
+            [
+              0.942635178565979,
+              0.17832797765731812,
+              0.2822021543979645
+            ],
+            [
+              0.942635715007782,
+              0.17832502722740173,
+              0.2822021245956421
+            ]
+          ],
+          "public_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "uploaded_geometry_double_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "torch_target_hit": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "warp_distance_m": [
+            9.99666976928711,
+            9.998086929321289,
+            9.998867988586426,
+            9.999221801757812,
+            9.999363899230957,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "torch_target_distance_m": [
+            9.996668815612793,
+            9.998096466064453,
+            9.998866081237793,
+            9.999229431152344,
+            9.999341011047363,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unoccluded_samples": 5,
+          "visible_samples": 5,
+          "visible_fraction": 1.0,
+          "fraction_above_one": false,
+          "denominator_missed_indices": [],
+          "hit_disagreement_indices": []
+        }
+      ]
+    }
+  ],
+  "needs_attention": true,
+  "formal_source_unchanged": true
+}

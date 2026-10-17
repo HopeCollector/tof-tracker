@@ -1,0 +1,201 @@
+{
+  "head_at_sweep": "bb5ca53c21031e69019d0e9f2d808178ad8b8974",
+  "image": "tof-tracker-warp-review:dev",
+  "image_id": "sha256:ac5f3fc82a876257aa8c14e1c4e46a03e96f20001e6232765f8edc78eaf687df",
+  "cell_count": 30,
+  "all_cell_source_hashes_identical": true,
+  "all_source_snapshots_hash_exact": true,
+  "sources": {
+    "devtools/ray_rendering.py": {
+      "timed_sha256": "502831a57f2d45d14be489a5f06d3f3287e3e5da2301bfdae8f77cba1cffef22",
+      "snapshot_sha256": "502831a57f2d45d14be489a5f06d3f3287e3e5da2301bfdae8f77cba1cffef22",
+      "current_sha256": "334d623e4155d1cd1c8c51e9815ff856698d3cde66693374f50aa86698fbc451",
+      "matched": true,
+      "transformations_to_recover_timed_source": [
+        "Restore the pre-sweep scalar validation condition; final code additionally rejects positive scalars that underflow to float32 zero. No valid benchmark input changes."
+      ]
+    },
+    "devtools/sensors.py": {
+      "timed_sha256": "5abe1ce632d678188630cbc962288af9a35859d7cfd989a562a80fd2c0e75e54",
+      "snapshot_sha256": "5abe1ce632d678188630cbc962288af9a35859d7cfd989a562a80fd2c0e75e54",
+      "current_sha256": "5abe1ce632d678188630cbc962288af9a35859d7cfd989a562a80fd2c0e75e54",
+      "matched": true,
+      "transformations_to_recover_timed_source": []
+    },
+    "devtools/_ray_processing.py": {
+      "timed_sha256": "5ecc0b74787a3f22c6fdffefb94626bd486d6ba48c1d99df69c004d60e9945aa",
+      "snapshot_sha256": "5ecc0b74787a3f22c6fdffefb94626bd486d6ba48c1d99df69c004d60e9945aa",
+      "current_sha256": "8f3ec38ba1f2dfe3d60027631dd38009ecf3cbe07ac0eaadec4e657565c2ea60",
+      "matched": true,
+      "transformations_to_recover_timed_source": [
+        "Remove the post-sweep module docstring provenance paragraph only; no executable code changes."
+      ]
+    },
+    "devtools/config.py": {
+      "timed_sha256": "ebbbbd901124db12264d33e72e78c5f75f44f6f29c09612abdd4dfd1b983f43b",
+      "snapshot_sha256": "ebbbbd901124db12264d33e72e78c5f75f44f6f29c09612abdd4dfd1b983f43b",
+      "current_sha256": "ebbbbd901124db12264d33e72e78c5f75f44f6f29c09612abdd4dfd1b983f43b",
+      "matched": true,
+      "transformations_to_recover_timed_source": []
+    },
+    "devtools/scene.py": {
+      "timed_sha256": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e",
+      "snapshot_sha256": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e",
+      "current_sha256": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e",
+      "matched": true,
+      "transformations_to_recover_timed_source": []
+    },
+    "devtools/mesh.py": {
+      "timed_sha256": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56",
+      "snapshot_sha256": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56",
+      "current_sha256": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56",
+      "matched": true,
+      "transformations_to_recover_timed_source": []
+    },
+    "experiments/warp_ray_perf/benchmark.py": {
+      "timed_sha256": "c7876e0155eed9667ca395a5448a28b23e7feacc93649795ee2e364a7a06ccf9",
+      "snapshot_sha256": "c7876e0155eed9667ca395a5448a28b23e7feacc93649795ee2e364a7a06ccf9",
+      "current_sha256": "c7876e0155eed9667ca395a5448a28b23e7feacc93649795ee2e364a7a06ccf9",
+      "matched": true,
+      "transformations_to_recover_timed_source": []
+    }
+  },
+  "config": {
+    "path": "configs/devtools.json",
+    "sha256": "e9fc6762295feeb5a176385378d9dc63b0b379b12f8e3ea8457a9647c65fe5a2"
+  },
+  "raw_cells": [
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-tof-b1.json",
+      "sha256": "e697b11990fd752b5d6ef64929c01f5e5e8b6ec696c977dd777e8c242771f82e"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-tof-b4.json",
+      "sha256": "5eb7a12f39bd6fd368e6d101c537f0ca8272cf19cb462e9fd824e48fba6bbcf0"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-tof-b16.json",
+      "sha256": "eaedc0f962d1e3923d07280a394b654f1fd23fd16b737f78e2d540644874c878"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-tof-b64.json",
+      "sha256": "8c485fe5ccdef80ea1f32637d008690676ba7e929f169975b549a43d7838b8de"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-tof-b256.json",
+      "sha256": "d0aa3d39001454aee0431c0271c8b65d1f2e8b0ac8c8337db264e2c191138c0a"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-tof-b1024.json",
+      "sha256": "5447431fb6839df82f3bbe62c9ef50815bf83a4a6debfacc6ab5b5e0a07c721e"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-tof-b10000.json",
+      "sha256": "43b1cbcc08c84794b6bd249d9848960ef383932f30fd30b7a0db8f301b7ac185"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-camera-b1.json",
+      "sha256": "16c900a2dc08c8b9ca1900f4baa7d6a0a27e494a069ede6950f208b85a2ce9a5"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-camera-b4.json",
+      "sha256": "a619e79702560c56794fd7cf19e1eef60590af477f73855bb8f168a390c85e9f"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-camera-b16.json",
+      "sha256": "85859e0d2ed8b27bddaf00cdad811996d44073f410e056d6b5697a05cfd4698d"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-camera-b64.json",
+      "sha256": "11274169f7294b8592316b5274fe62a72793dbc0d522b4a1beb50fd43f0a21d7"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-rig-b1.json",
+      "sha256": "5727b4344bf13a69c92dd251f52efa4edf46f752c884f33352b8728ea743a829"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-rig-b4.json",
+      "sha256": "cf1838aaff8fdf5050f8467678078494778fdf73fb926d2a38b0c072744cff3a"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-rig-b16.json",
+      "sha256": "23772add7fb19ea607525d9a0c5d023d17e5ef0d61bd2d9cf1a51552ee5ff102"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars20-rig-b64.json",
+      "sha256": "daccc0c36b0ef86eff81cd042664fa8463e9fbac50381b5588d2aee212962704"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-tof-b1.json",
+      "sha256": "4ec9019a7e2475c0b9d5d8121e14cca2db6bd0f332fec23002c6b8e3f62afb16"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-tof-b4.json",
+      "sha256": "2920706b09a07721684d46288cd7ca18b9cebb6a72daa348f08f44538c6af9a8"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-tof-b16.json",
+      "sha256": "bd2dd89e93184f77c7b8d0e059e700234647db4e2c33808b47a7f9b6a6dbe5a7"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-tof-b64.json",
+      "sha256": "763e93c145bd5c17eaf5f5d2cc64dccc7815a615953e1018356e29436b03a039"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-tof-b256.json",
+      "sha256": "f3661853cb141c6d54047c4621d39a75473fce9eff92d3eb865c1a88b6259d6b"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-tof-b1024.json",
+      "sha256": "9491d144c3a251cc8383ef345837d2e85e235de5cf580767d867c99c3e387e88"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-tof-b10000.json",
+      "sha256": "9292496a2623067bb636c339d76211d469bf048174febd08da3d375e38f2381c"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-camera-b1.json",
+      "sha256": "29f04bb7f8d54c6924b75631e46936f5787bea99901b4a39cfde48b9b0452f3e"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-camera-b4.json",
+      "sha256": "4c83a9251ae1a4048554d7f290fd0976b974cba4db090b4244f8f7c02deed4f7"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-camera-b16.json",
+      "sha256": "64732ece4ca689869c335b8e0a3ab7af8517cf5cd1a2ab54cddf5ea01c4ad6cf"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-camera-b64.json",
+      "sha256": "aef796581c16a5ae4a420c05d4c5620099060902b1ed52dc039f103ca008dee5"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-rig-b1.json",
+      "sha256": "e7e8085702f79f31e5656bc7afa617904a773c7ea01627872ea33ecbe8541d5b"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-rig-b4.json",
+      "sha256": "26d4acd43393d6b4c190f8ffb17532d7517cb992a833aed165d87ba772a8e865"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-rig-b16.json",
+      "sha256": "efc5f8c2147a4a7528ed382da52d983588c54fd1e484121a4cdabe4a40124cbb"
+    },
+    {
+      "path": "outputs/warp_ray_perf/main/cells/pillars5000-rig-b64.json",
+      "sha256": "4243c763ecae8836c5fdc6fdaca91e9fe5c9719af62e173e1fa902e8ba2e00d1"
+    }
+  ],
+  "final_correctness": {
+    "path": "outputs/ray_sensors/verification-final.json",
+    "sha256": "7e2f2cf9192030fccd21490c8324b54b6211704722560f85626fbbdc8d0c4632",
+    "status": "passed",
+    "passed_groups": 8,
+    "scope": "Final code after scalar-underflow validation and docstring addition; includes the underflow regression. The performance sweep was not rerun after these two changes."
+  },
+  "snapshots": {
+    "timed_source": "hash-exact source and config measured by every one of the 30 cells",
+    "current_source": "current source and config at report creation, with the two post-sweep changes"
+  },
+  "memory_scope": "Torch allocated/reserved peaks are process allocator statistics, excluding native Warp BVH; exact BVH bytes unknown. Device mem_get_info is shared-device approximate snapshot/delta, not exclusive BVH memory or whole-run peak."
+}

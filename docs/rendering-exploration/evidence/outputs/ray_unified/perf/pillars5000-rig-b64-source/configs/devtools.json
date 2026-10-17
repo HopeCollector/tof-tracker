@@ -1,0 +1,29 @@
+{
+  "vehicle": {"radius_m": 0.2},
+  "target": {"radius_m": 0.3},
+  "sensors": {
+    "tof": {
+      "width": 8, "height": 8,
+      "hfov_deg": 45, "vfov_deg": 45,
+      "min_range_m": 0.015, "max_range_m": 4,
+      "samples_per_axis": 4
+    },
+    "camera": {
+      "width": 160, "height": 120,
+      "hfov_deg": 80, "vfov_deg": 60,
+      "min_range_m": 0.01, "max_range_m": 30,
+      "samples_per_axis": 2
+    },
+    "tof_mounts": {
+      "right": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, -0.7071067811865475, 0.7071067811865476]},
+      "front": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, 0, 1]},
+      "left": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, 0.7071067811865475, 0.7071067811865476]},
+      "rear": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, 1, 0]}
+    },
+    "camera_mount": {"position_m": [0, 0, 0], "quaternion_xyzw": [0, 0, 0, 1]},
+    "tof_depth_quantile": 0.2,
+    "tof_signal_floor": 0.08
+  },
+  "sampling_runtime": {"max_gpu_memory_fraction": 0.5},
+  "perception": {"min_visible_fraction": 0.2}
+}

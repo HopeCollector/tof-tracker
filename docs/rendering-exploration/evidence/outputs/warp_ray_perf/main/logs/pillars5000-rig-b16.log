@@ -1,0 +1,24 @@
+{"stage": "provenance", "mode": "rig", "batch": 16, "elapsed_s": 2.720000338740647e-06}
+{"stage": "cuda_init", "mode": "rig", "batch": 16, "elapsed_s": 0.01596061300369911}
+{"stage": "warp_init", "mode": "rig", "batch": 16, "elapsed_s": 0.10084569599712268}
+{"stage": "scene_load", "mode": "rig", "batch": 16, "elapsed_s": 0.11693555999954697}
+{"stage": "pose_upload", "mode": "rig", "batch": 16, "elapsed_s": 0.5949345639965031}
+{"stage": "scene_bvh_setup", "mode": "rig", "batch": 16, "elapsed_s": 0.5976374029996805}
+{"stage": "first_forward", "mode": "rig", "batch": 16, "elapsed_s": 0.6599104549968615}
+{"stage": "ray_generation_measure", "mode": "rig", "batch": 16, "elapsed_s": 0.8268468110036338}
+{"stage": "fixed_rays", "mode": "rig", "batch": 16, "elapsed_s": 0.9509839319944149}
+{"stage": "trace_measure", "mode": "rig", "batch": 16, "elapsed_s": 0.9512357039930066}
+{"stage": "production_parity", "mode": "rig", "batch": 16, "elapsed_s": 1.0658115669939434}
+{"stage": "postprocess_measure", "mode": "rig", "batch": 16, "elapsed_s": 1.3262103960005334}
+{"stage": "pipeline_measure", "mode": "rig", "batch": 16, "elapsed_s": 1.5134573859977536}
+{"stage": "end_to_end_measure", "mode": "rig", "batch": 16, "elapsed_s": 1.6353845120029291}
+{"stage": "complete", "mode": "rig", "batch": 16, "elapsed_s": 1.8447374679963104}
+Warp 1.15.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.2
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 5070 Ti" (15 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /tmp/.cache/warp/1.15.0
+Module devtools.ray_rendering 54f3e0a load on device 'cuda:0' took 0.57 ms  (cached)
+{"status": "ok", "mode": "rig", "batch": 16, "output": "/workspace/outputs/warp_ray_perf/main/cells/pillars5000-rig-b16.json", "end_to_end_median_ms": 4.5710319973295555, "error": null}

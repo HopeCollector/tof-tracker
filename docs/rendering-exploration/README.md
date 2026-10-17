@@ -6,13 +6,18 @@
 
 | 路线 | 固定版本 | 主要内容与阅读入口 |
 | --- | --- | --- |
-| 单帧 OpenGL | `7d3d2e34c9f01150178c96a3e8a154246bccfbfc` | 逐视角绘制、读回 CPU 和后处理；后续实验保留的串行实现见 [sensor_reference.py](../../experiments/sensor_reference.py) |
-| PyTorch3D batch | `3630c0c14e036a7c3923cb313685a5f32ec74deb` | [实验及报告](../../experiments/pytorch3d_render_eval/REPORT.md)；[原始单元、环境和验证](evidence/outputs/pytorch3d_render_eval/sweep/) |
-| 共享场景 OpenGL batch | `104c3ee1f167a2c4f3578672d2a6f86180c53012` | [实验及报告](../../experiments/opengl_batch_eval/REPORT.md)；[原始单元与验证](evidence/outputs/opengl_batch_eval/sweep/) |
+| 单帧 OpenGL | `7d3d2e34c9f01150178c96a3e8a154246bccfbfc` | 逐视角绘制、读回 CPU 和后处理；后续实验保留的串行实现见 [sensor_reference.py](snapshots/zone-20261017/experiments/sensor_reference.py) |
+| PyTorch3D batch | `3630c0c14e036a7c3923cb313685a5f32ec74deb` | [实验及报告](snapshots/zone-20261017/experiments/pytorch3d_render_eval/REPORT.md)；[原始单元、环境和验证](evidence/outputs/pytorch3d_render_eval/sweep/) |
+| 共享场景 OpenGL batch | `104c3ee1f167a2c4f3578672d2a6f86180c53012` | [实验及报告](snapshots/zone-20261017/experiments/opengl_batch_eval/REPORT.md)；[原始单元与验证](evidence/outputs/opengl_batch_eval/sweep/) |
 | 正式 GPU sensor | `4bd11eb006bd4d633541de0e80e4a0fbc19511f6` | 把共享几何、批量 Pose、GPU 输出及后处理接入正式接口，刚性移动更新物体变换；此提交仍是像素中心采样 |
 | 连续区域 ToF | [zone-20261017 快照](snapshots/zone-20261017/) | 每格求整个角区域内的最近表面；含对应源码、配置、地图和测试。该实现与后续诊断在归档时尚未提交，不以当时 HEAD 代替快照 |
+| Warp 射线采样 | [测量源码](evidence/outputs/warp_ray_perf/timed_source/) | [30 组性能与验证](evidence/outputs/warp_ray_perf/report.md)；场景共享，ToF、camera、target 当时仍分别查询 |
+| Warp 后处理剖析 | [冻结 harness](snapshots/warp-20261017/harnesses/experiments/warp_postprocess_profile/) | [固定 raw 的五组剖析及 Graph 诊断](evidence/outputs/warp_postprocess_profile/report.md)；不改变查询核心 |
+| 统一射线与显存分块 | [交付时源码](evidence/outputs/ray_unified/delivery-source/) | [18 组性能、独立验证和失败记录](evidence/outputs/ray_unified/report.md)；每 chunk 一次场景查询，外层解析球计算识别分母 |
 
 [manifest.json](manifest.json) 记录归档文件和校验值。`evidence/` 保留原来的项目相对路径，便于对照日志中的文件名；`snapshots/` 是独立源码副本，不依赖将来的正式后端实现。归档不覆盖原输出目录，也不修改原始测量值。
+
+Warp 阶段的增补清单为 [warp-20261017.json](warp-20261017.json)，逐文件索引为 [warp-20261017.sha256](warp-20261017.sha256)。原清单的历史字段保持原值；活动 `experiments/` 只保留当前统一后端入口，旧实验在这里的固定快照中恢复。
 
 快照恢复、归档完整性及 main / Torch 收尾的验证原件见[归档验证](evidence/archive-verification/)。
 
@@ -71,6 +76,20 @@
 速度优先后，后续方向改为 GPU ray / mesh BVH 采样，接受子射线之间可能漏检的取舍；归档时没有实现新后端或声称它的性能。保留一份静态场景，刚体通过局部几何和变换参与最近命中查询；输入是一批视角 / 射线，距离统一为沿归一化射线的米制距离。最小量程不用于跳过近遮挡物。
 
 核心只负责最近命中的距离、ID 和命中点，不感知飞机、采样触发、ToF、camera 或扰动 hook。输入扰动在核心前发生，回波和最终测量扰动在核心后发生。ToF 与 camera 共享查询机制，都可以采用子射线，但分别定义归约规则；ToF 的加权分位不自动套给 camera。所有数据继续驻留 GPU，按请求区间与处理类型分流，不要求迁到 CPU。有限采样、加权归约和最终量程过滤都可能影响小目标是否进入观测，验证时必须分别观察。
+
+## Warp 阶段补档
+
+这部分在上面的历史归档之后补入，旧结论及原始报告没有改写。ToF 已采用 45°、0.015～4m 和每格 4×4 子射线加权 20% 分位；camera 采用每像素 2×2 子射线并自行归约。第一版 Warp 的 `timed_source` 与报告生成时的 `current_source` 有两个后续修正，区别由 [provenance.json](evidence/outputs/warp_ray_perf/provenance.json)记录，不能混用计时与验证版本。
+
+统一管线保留了两轮完整 cell：`perf/` 是最终 action-only 计时；`perf-with-counter-wrapper/` 是把随场景大小增长的计数检查包进计时的首轮，不能当作纯 sensor 延迟。`runtime-probe.json` 和 `runtime-probe-final.json` 没有形成预期的未完成 stream 压力，记录的是探针条件未满足；后来的 `runtime-probe-stream-final.json` 才完成该项压力验证。近切线 float32 命中差异也原样保留，没有通过 clamp 隐藏。
+
+首个 `pilot-before-stream-record` 的相邻源码目录后来被完成的 sweep 覆盖；其 `sensors.py` 仅撤销已知两处 `record_stream` 增补后，SHA 与 pilot 记录完全相同，恢复结果在 [pre-stream-record](snapshots/warp-20261017/pre-stream-record/)。其余文件使用首轮相邻覆盖层；恢复变换留在归档生成器中。
+
+后处理报告中的 Graph 是预先准备 bounds 的实验调度包装，保留 initial / changed / restored parity；它不表示正式 API 已支持直接 Graph capture。原始 cell、CSV、日志、报告生成脚本、相邻测量源码与交付审计均保留。大型 Chrome trace、可重建 HTML 和恢复 tar 仍留在原 `outputs/`，增补清单记录其大小、SHA 和排除原因；报告中原有的 trace 路径描述的是本地原件。
+
+测量源码目录是**覆盖层**，不是独立完整工程。复跑应先复制 `zone-20261017` 作为固定基础，再覆盖对应阶段文件：Warp 性能使用 `timed_source`；后处理使用同代 `current_source` 的配置、对应 `*-source` 和冻结的两个旧 Warp harness；统一管线使用对应 cell 的 `*-source`，其独立验证与 UI 状态在 `delivery-source`。共用 geometry、包入口和两张柱图复用旧快照，路径与 SHA 见增补清单的 `reused`。`snapshots/warp-20261017/support` 保存补档时的构建输入，`pre-unified` 保存恢复 tar 中的旧 Warp 测试和网页；它们不代替 cell 自带的测量哈希。早期八组验证没有记录测试源码哈希，因此不声称恢复测试具有同样严格的来源证明。镜像依赖仍需在 Docker 中准备，图形资产由固定版本脚本获取，旧镜像 tag 也不等于可分发镜像。
+
+补档前未提交的来源说明全文另存于 [pending/docs/origins.md](snapshots/warp-20261017/pending/docs/origins.md)，便于追溯旧区域算法、fixture 和工具来源，不作为当前接口说明。
 
 ## 恢复和复跑
 

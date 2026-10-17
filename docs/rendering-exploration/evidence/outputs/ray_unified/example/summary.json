@@ -1,0 +1,476 @@
+{
+  "map": "/workspace/outputs/sensor_perf/maps/pillars-20.obj",
+  "config": "/workspace/configs/devtools.json",
+  "t_ref": 0.0,
+  "assumptions": "Noiseless ideal pinhole development configuration; not hardware specifications.",
+  "vehicle_pose": {
+    "position_m": [
+      0.0,
+      -17.0,
+      1.5
+    ],
+    "quaternion_xyzw": [
+      0.0,
+      0.0,
+      0.7071067811865475,
+      0.7071067811865476
+    ]
+  },
+  "target_position_m": [
+    0.0,
+    -14.0,
+    1.5
+  ],
+  "sensor_config": {
+    "tof": {
+      "width": 8,
+      "height": 8,
+      "hfov_deg": 45.0,
+      "vfov_deg": 45.0,
+      "min_range_m": 0.015,
+      "max_range_m": 4.0,
+      "samples_per_axis": 4
+    },
+    "camera": {
+      "width": 160,
+      "height": 120,
+      "hfov_deg": 80.0,
+      "vfov_deg": 60.0,
+      "min_range_m": 0.01,
+      "max_range_m": 30.0,
+      "samples_per_axis": 2
+    },
+    "tof_mounts": [
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          -0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ]
+      }
+    ],
+    "camera_mount": {
+      "position_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "tof_depth_quantile": 0.2,
+    "tof_signal_floor": 0.08
+  },
+  "renderer": {
+    "backend": "warp_mesh_bvh_analytic_spheres",
+    "warp_version": "1.15.0",
+    "device": "cuda:0",
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/pillar_12",
+      "map/pillar_13",
+      "map/pillar_14",
+      "map/pillar_15",
+      "map/pillar_16",
+      "map/pillar_17",
+      "map/pillar_18",
+      "map/pillar_19",
+      "map/ground",
+      "target"
+    ],
+    "vertex_count": 164,
+    "triangle_count": 242,
+    "analytic_sphere_count": 1,
+    "mesh_bvh_builds": 1,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 12,
+    "scene_version": 0,
+    "object_triangle_ranges": {
+      "map/pillar_0": [
+        0,
+        12
+      ],
+      "map/pillar_1": [
+        12,
+        12
+      ],
+      "map/pillar_2": [
+        24,
+        12
+      ],
+      "map/pillar_3": [
+        36,
+        12
+      ],
+      "map/pillar_4": [
+        48,
+        12
+      ],
+      "map/pillar_5": [
+        60,
+        12
+      ],
+      "map/pillar_6": [
+        72,
+        12
+      ],
+      "map/pillar_7": [
+        84,
+        12
+      ],
+      "map/pillar_8": [
+        96,
+        12
+      ],
+      "map/pillar_9": [
+        108,
+        12
+      ],
+      "map/pillar_10": [
+        120,
+        12
+      ],
+      "map/pillar_11": [
+        132,
+        12
+      ],
+      "map/pillar_12": [
+        144,
+        12
+      ],
+      "map/pillar_13": [
+        156,
+        12
+      ],
+      "map/pillar_14": [
+        168,
+        12
+      ],
+      "map/pillar_15": [
+        180,
+        12
+      ],
+      "map/pillar_16": [
+        192,
+        12
+      ],
+      "map/pillar_17": [
+        204,
+        12
+      ],
+      "map/pillar_18": [
+        216,
+        12
+      ],
+      "map/pillar_19": [
+        228,
+        12
+      ],
+      "map/ground": [
+        240,
+        2
+      ]
+    },
+    "batch_geometry_policy": "one static mesh BVH and shared analytic spheres; independent of ray count",
+    "trace_calls": 2,
+    "rays_traced": 83968,
+    "cpu_image_readbacks": 0,
+    "per_ray_python_calls": 0,
+    "input": "world directions CUDA N3; dense origins N3, one shared origin 13, or origins M3 plus int32/int64 origin_indices N; radial maximum scalar or CUDA N",
+    "last_origin_count": 3,
+    "last_origin_index_bytes": 12288,
+    "output": "owned CUDA radial distance, object/triangle index and world hit point",
+    "near_clip_policy": "none; nearest nonnegative surface before measurement validity",
+    "selection_policy": "full scene or one analytic sphere; static mesh selection unsupported"
+  },
+  "perception_config": {
+    "min_visible_fraction": 0.2
+  },
+  "sampling_runtime": {
+    "max_gpu_memory_fraction": 0.5
+  },
+  "execution_info": {
+    "chunks": 1,
+    "chunk_count": 1,
+    "chunk_items": 1,
+    "trace_calls": 1,
+    "rays_per_item": 80896,
+    "compact_origins": true,
+    "planner": {
+      "max_gpu_memory_fraction": 0.5,
+      "cuda_total_bytes": 16608133120,
+      "sampling_workset_limit_bytes": 8304066560,
+      "scene_tensor_bytes": 6832,
+      "native_bvh_estimated_bytes": 35072,
+      "native_bvh_measured_bytes": null,
+      "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+      "retained_output_bytes": 26573136,
+      "retained_output_allocated_bytes": 0,
+      "future_retained_output_bytes": 26573136,
+      "extra_fixed_bytes": 0,
+      "safety_margin_bytes": 67108864,
+      "cuda_free_bytes": 14534705152,
+      "torch_allocated_bytes": 9728,
+      "torch_reserved_bytes": 2097152,
+      "torch_reusable_cache_bytes": 2087424,
+      "physical_available_estimated_bytes": 14536792576,
+      "fraction_workspace_bytes": 8210342656,
+      "physical_workspace_bytes": 14443110576,
+      "workspace_bytes_per_ray": 384,
+      "rays_per_item": 80896,
+      "workspace_bytes_per_item": 31064064,
+      "requested_items": 1,
+      "chunk_items": 1,
+      "chunk_count": 1,
+      "limiting_factor": "sampling_workset_fraction",
+      "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+      "planned_chunk_workset_bytes": 124787968
+    },
+    "full_scene_queries_per_chunk": 1,
+    "analytic_perception": "sphere_torch",
+    "perception_scene_queries": 0,
+    "diagnostics": true
+  },
+  "triangles": 242,
+  "geometry_uploads": 1,
+  "map_bounds_m": [
+    [
+      -30.0,
+      30.0
+    ],
+    [
+      -30.0,
+      30.0
+    ],
+    [
+      0.0,
+      15.0
+    ]
+  ],
+  "tof_order": [
+    "right",
+    "front",
+    "left",
+    "rear"
+  ],
+  "tof": {
+    "right": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 0,
+      "positive_infinity": 64,
+      "nan": 0,
+      "finite_min_m": null,
+      "finite_max_m": null
+    },
+    "front": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 20,
+      "positive_infinity": 44,
+      "nan": 0,
+      "finite_min_m": 2.7237279415130615,
+      "finite_max_m": 3.4629833698272705
+    },
+    "left": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 0,
+      "positive_infinity": 64,
+      "nan": 0,
+      "finite_min_m": null,
+      "finite_max_m": null
+    },
+    "rear": {
+      "shape": [
+        8,
+        8
+      ],
+      "finite": 0,
+      "positive_infinity": 64,
+      "nan": 0,
+      "finite_min_m": null,
+      "finite_max_m": null
+    }
+  },
+  "camera": {
+    "shape": [
+      120,
+      160
+    ],
+    "finite": 12530,
+    "positive_infinity": 6186,
+    "nan": 484,
+    "finite_min_m": 1.8947503566741943,
+    "finite_max_m": 29.925655364990234,
+    "visible_target_pixels": 340,
+    "unoccluded_target_pixels": 340,
+    "visible_fraction": 1.0,
+    "target_hint": [
+      1.0,
+      0.4375,
+      0.40833336114883423,
+      0.5625,
+      0.5916666984558105
+    ]
+  },
+  "sample_many": {
+    "view": "front ToF",
+    "mode": "one batch of rays; CUDA output and batched postprocessing",
+    "body_pose_changes": [
+      "reference",
+      "body +X 0.25 m",
+      "world yaw +15 degrees"
+    ],
+    "sensor_poses": [
+      {
+        "position_m": [
+          0.0,
+          -17.0,
+          1.5
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "position_m": [
+          5.551115123125783e-17,
+          -16.75,
+          1.5
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "position_m": [
+          0.0,
+          -17.0,
+          1.5
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.7933533402912352,
+          0.6087614290087207
+        ]
+      }
+    ],
+    "frames": [
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 20,
+        "positive_infinity": 44,
+        "nan": 0,
+        "finite_min_m": 2.7237279415130615,
+        "finite_max_m": 3.4629833698272705
+      },
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 20,
+        "positive_infinity": 44,
+        "nan": 0,
+        "finite_min_m": 2.4695801734924316,
+        "finite_max_m": 3.1910197734832764
+      },
+      {
+        "shape": [
+          8,
+          8
+        ],
+        "finite": 30,
+        "positive_infinity": 34,
+        "nan": 0,
+        "finite_min_m": 2.7199151515960693,
+        "finite_max_m": 3.7481539249420166
+      }
+    ]
+  },
+  "timing_seconds": {
+    "prepare_scene_gpu": 0.21139485399180558,
+    "first_rig_sample": 1.492635340007837,
+    "sample_many_three_poses": 0.001706121998722665,
+    "sample_many_mean_per_pose": 0.000568707332907555
+  }
+}

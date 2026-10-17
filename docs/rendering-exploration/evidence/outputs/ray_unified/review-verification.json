@@ -1,0 +1,186 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "verify_bootstrap",
+      "passed": true,
+      "detail": {
+        "torch_version": "2.9.1+cu128",
+        "discovered_maps": 1,
+        "physical_sensor_and_perception_config_separate": true,
+        "sampling_workset_fraction": 0.5
+      }
+    },
+    {
+      "name": "verify_static_assets",
+      "passed": true,
+      "detail": {
+        "assets": {
+          "/": 2294,
+          "/app.js": 53722,
+          "/style.css": 11349,
+          "/vendor/three.module.js": 603113,
+          "/vendor/three.core.js": 1403455,
+          "/vendor/OrbitControls.js": 38703,
+          "/vendor/three-LICENSE.txt": 1081,
+          "/vendor/manifest.json": 620
+        },
+        "unregistered_asset_paths_rejected": 3
+      }
+    },
+    {
+      "name": "verify_upload_and_map_invalidation",
+      "passed": true,
+      "detail": {
+        "map_change_rejects_stale_sample": true,
+        "canonical_objects": 2
+      }
+    },
+    {
+      "name": "verify_no_target_samples",
+      "passed": true,
+      "detail": {
+        "views": [
+          {
+            "view": "tof/right",
+            "subrays": 1024,
+            "finite": 0,
+            "unknown": 0,
+            "empty": 64
+          },
+          {
+            "view": "tof/front",
+            "subrays": 1024,
+            "finite": 0,
+            "unknown": 0,
+            "empty": 64
+          },
+          {
+            "view": "tof/left",
+            "subrays": 1024,
+            "finite": 0,
+            "unknown": 0,
+            "empty": 64
+          },
+          {
+            "view": "tof/rear",
+            "subrays": 1024,
+            "finite": 0,
+            "unknown": 0,
+            "empty": 64
+          },
+          {
+            "view": "camera",
+            "subrays": 76800,
+            "finite": 13964,
+            "unknown": 5236,
+            "empty": 0
+          }
+        ],
+        "queries_per_no_target_sample": 1
+      }
+    },
+    {
+      "name": "verify_mounted_rays",
+      "passed": true,
+      "detail": {
+        "nonlevel_world_poses_and_subrays": [
+          {
+            "view": "tof/right",
+            "subrays": 1024,
+            "finite": 3,
+            "unknown": 0,
+            "empty": 61
+          },
+          {
+            "view": "tof/front",
+            "subrays": 1024,
+            "finite": 8,
+            "unknown": 0,
+            "empty": 56
+          },
+          {
+            "view": "tof/left",
+            "subrays": 1024,
+            "finite": 0,
+            "unknown": 0,
+            "empty": 64
+          },
+          {
+            "view": "tof/rear",
+            "subrays": 1024,
+            "finite": 31,
+            "unknown": 0,
+            "empty": 33
+          },
+          {
+            "view": "camera",
+            "subrays": 76800,
+            "finite": 4281,
+            "unknown": 14919,
+            "empty": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "verify_target_motion_and_same_pass",
+      "passed": true,
+      "detail": {
+        "visible_subrays": 840,
+        "target_only_subrays": 1264,
+        "partial_pixels": 48,
+        "mask_pixels_with_other_representative": 20,
+        "queries_per_sample": 1,
+        "transform_bytes_per_target_move": 12,
+        "geometry_uploads": 1,
+        "A_B_A_owned_response": "passed"
+      }
+    },
+    {
+      "name": "verify_request_validation",
+      "passed": true,
+      "detail": {
+        "invalid_requests_rejected": 17,
+        "worker_survived": true
+      }
+    },
+    {
+      "name": "verify_concurrent_snapshots",
+      "passed": true,
+      "detail": {
+        "concurrent_requests": 4,
+        "serialized_query_counts": [
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "name": "verify_sensor_ranges_and_target_cases",
+      "passed": true,
+      "detail": {
+        "tof_fov_deg": 45.0,
+        "tof_range_m": [
+          0.015,
+          4.0
+        ],
+        "3m_target": "valid sampled return",
+        "old_case_nearest_surface_m": 4.048228046126042,
+        "old_case_target_beyond_new_range": true
+      }
+    },
+    {
+      "name": "verify_transition",
+      "passed": true,
+      "detail": {
+        "moving_and_stationary_transitions": 2,
+        "endpoint_derivative_max": 0.0
+      }
+    }
+  ],
+  "failures": [],
+  "server_log": "2026-10-17 06:24:01,955 INFO sensor review listening at http://127.0.0.1:45679\n2026-10-17 06:24:02,013 INFO 127.0.0.1 \"GET /api/bootstrap HTTP/1.1\" 200 -\n2026-10-17 06:24:02,015 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:02,015 INFO 127.0.0.1 \"GET / HTTP/1.1\" 200 -\n2026-10-17 06:24:02,016 INFO 127.0.0.1 \"GET /app.js HTTP/1.1\" 200 -\n2026-10-17 06:24:02,016 INFO 127.0.0.1 \"GET /style.css HTTP/1.1\" 200 -\n2026-10-17 06:24:02,016 INFO 127.0.0.1 \"GET /vendor/three.module.js HTTP/1.1\" 200 -\n2026-10-17 06:24:02,017 INFO 127.0.0.1 \"GET /vendor/three.core.js HTTP/1.1\" 200 -\n2026-10-17 06:24:02,018 INFO 127.0.0.1 \"GET /vendor/OrbitControls.js HTTP/1.1\" 200 -\n2026-10-17 06:24:02,018 INFO 127.0.0.1 \"GET /vendor/three-LICENSE.txt HTTP/1.1\" 200 -\n2026-10-17 06:24:02,018 INFO 127.0.0.1 \"GET /vendor/manifest.json HTTP/1.1\" 200 -\n2026-10-17 06:24:02,019 INFO 127.0.0.1 \"GET /../etc/passwd HTTP/1.1\" 404 -\n2026-10-17 06:24:02,019 INFO 127.0.0.1 \"GET /%2e%2e/etc/passwd HTTP/1.1\" 404 -\n2026-10-17 06:24:02,019 INFO 127.0.0.1 \"GET /unknown.js HTTP/1.1\" 404 -\n2026-10-17 06:24:02,020 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:02,021 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:02,021 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 409 -\n2026-10-17 06:24:02,022 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:02,022 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:03,798 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:03,992 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:03,996 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:04,008 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,188 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:04,217 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,238 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,256 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,614 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:04,614 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-17 06:24:04,615 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 404 -\n2026-10-17 06:24:04,615 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-17 06:24:04,615 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-17 06:24:04,616 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-17 06:24:04,616 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-17 06:24:04,616 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 400 -\n2026-10-17 06:24:04,616 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-17 06:24:04,617 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-17 06:24:04,617 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-17 06:24:04,617 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-17 06:24:04,617 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-17 06:24:04,618 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 404 -\n2026-10-17 06:24:04,618 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-17 06:24:04,618 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 400 -\n2026-10-17 06:24:04,619 INFO 127.0.0.1 \"GET /api/raw?path=/etc/passwd HTTP/1.1\" 404 -\n2026-10-17 06:24:04,619 INFO 127.0.0.1 \"GET /api/map?path=/etc/passwd HTTP/1.1\" 404 -\n2026-10-17 06:24:04,630 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,633 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:04,648 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,668 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,684 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,700 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,717 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,769 INFO 127.0.0.1 \"POST /api/map HTTP/1.1\" 200 -\n2026-10-17 06:24:04,783 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,800 INFO 127.0.0.1 \"POST /api/sample HTTP/1.1\" 200 -\n2026-10-17 06:24:04,805 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 200 -\n2026-10-17 06:24:04,807 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 200 -\n2026-10-17 06:24:04,808 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 400 -\n2026-10-17 06:24:04,808 INFO 127.0.0.1 \"POST /api/transition HTTP/1.1\" 400 -\n"
+}

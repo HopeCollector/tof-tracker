@@ -1,0 +1,527 @@
+{
+  "status": "ok",
+  "mode": "tof",
+  "batch": 1,
+  "scope": "Prepared-constant scheduling wrapper diagnostic; original API capture fails.\n\nOnly in this experiment, a strong-held, already-synchronized bounds tensor\nreplaces the Python cache/event/record_stream wrapper during eager/capture/\nreplay. All numeric operations still use formal process_samples and camera\nmeasurement functions. This is not direct graph support or a production change.\n",
+  "original_direct_graph_capture": "unsupported: cached bounds ready-event dependency",
+  "source_sha256": {
+    "devtools/sensors.py": "5abe1ce632d678188630cbc962288af9a35859d7cfd989a562a80fd2c0e75e54",
+    "devtools/_ray_processing.py": "8f3ec38ba1f2dfe3d60027631dd38009ecf3cbe07ac0eaadec4e657565c2ea60",
+    "devtools/ray_rendering.py": "334d623e4155d1cd1c8c51e9815ff856698d3cde66693374f50aa86698fbc451",
+    "experiments/warp_postprocess_profile/analyze.py": "0291649af1049baf42ca4ff269e4df37ca96326d964ec1dd9133403da5d695e4",
+    "experiments/warp_postprocess_profile/graph_diagnostic.py": "b883a3769af4a4010fc74904b704efc04609c46f19c5e9a170aaefe577f27aaa"
+  },
+  "inputs": {
+    "map": "outputs/sensor_perf/maps/pillars-20.obj",
+    "map_sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4",
+    "config": "/workspace/configs/devtools.json",
+    "config_sha256": "e9fc6762295feeb5a176385378d9dc63b0b379b12f8e3ea8457a9647c65fe5a2",
+    "pose_policy": "warp_ray_perf make_poses default prefix; target 3m forward"
+  },
+  "formal_eager_control": {
+    "wall": {
+      "median_ms": 0.48754400631878525,
+      "p95_ms": 0.7341287913732227,
+      "min_ms": 0.4453129949979484,
+      "samples_ms": [
+        1.1385280085960403,
+        0.7577249925816432,
+        0.6397439865395427,
+        0.5275739968055859,
+        0.5663940100930631,
+        0.5607039929600433,
+        0.48920400149654597,
+        0.4652229981729761,
+        0.46525298967026174,
+        0.4518429923336953,
+        0.45903300633654,
+        0.4540630034171045,
+        0.44995300413575023,
+        0.4601030086632818,
+        0.4453129949979484,
+        0.48497300304006785,
+        0.48895399959292263,
+        0.48845399578567594,
+        0.4870929988101125,
+        0.48754400631878525,
+        0.48850299208424985,
+        0.48749399138614535,
+        0.4844030045205727,
+        0.490254009491764,
+        0.496642998768948
+      ]
+    },
+    "cuda_event_span": {
+      "median_ms": 0.4719040095806122,
+      "p95_ms": 0.5191359877586365,
+      "min_ms": 0.466592013835907,
+      "samples_ms": [
+        0.4719040095806122,
+        0.5294399857521057,
+        0.4779199957847595,
+        0.466592013835907,
+        0.47097599506378174
+      ]
+    },
+    "event_scope": "complete stream span including CPU submission gaps; not kernel sum",
+    "memory_before": {
+      "allocated_bytes": 8619008,
+      "reserved_bytes": 23068672,
+      "peak_allocated_bytes": 8619008,
+      "peak_reserved_bytes": 23068672
+    },
+    "memory_after": {
+      "allocated_bytes": 8619008,
+      "reserved_bytes": 23068672,
+      "peak_allocated_bytes": 8699392,
+      "peak_reserved_bytes": 23068672
+    },
+    "peak_increment_bytes": 80384
+  },
+  "prepared_constant_eager_parity": {
+    "passed": true,
+    "comparison": "exact all tensor fields; matching NaN/Inf classes and scene metadata",
+    "host_reads": "verification only, outside every measured block",
+    "fields": {
+      "range_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "object_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "hit_point_sensor_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "triangle_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "raw.distance_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "raw.object_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "raw.hit_point_sensor_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "raw.triangle_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "raw.subray_distance_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "raw.subray_object_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "raw.subray_hit_point_world_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "raw.subray_triangle_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "raw.ray_origins_world_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "raw.ray_directions_world": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "raw.selected_subray": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "subray_range_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      }
+    }
+  },
+  "prepared_constant_eager": {
+    "wall": {
+      "median_ms": 0.48322400834877044,
+      "p95_ms": 0.5521519982721657,
+      "min_ms": 0.43908299994654953,
+      "samples_ms": [
+        0.959316996159032,
+        0.5381439987104386,
+        0.48322400834877044,
+        0.46947300143074244,
+        0.45285299711395055,
+        0.4609830066328868,
+        0.4511439910857007,
+        0.4400629986776039,
+        0.4436629969859496,
+        0.44302399328444153,
+        0.4846430092584342,
+        0.4867039970122278,
+        0.48342300578951836,
+        0.4859730106545612,
+        0.48542300646658987,
+        0.48372299352195114,
+        0.4840540059376508,
+        0.48135299584828317,
+        0.4835540021304041,
+        0.45179300650488585,
+        0.49471401143819094,
+        0.45611300447490066,
+        0.5556539981625974,
+        0.43908299994654953,
+        0.43936300789937377
+      ]
+    },
+    "cuda_event_span": {
+      "median_ms": 0.4546560049057007,
+      "p95_ms": 0.4576255977153778,
+      "min_ms": 0.45155200362205505,
+      "samples_ms": [
+        0.45820799469947815,
+        0.45529600977897644,
+        0.45155200362205505,
+        0.4546560049057007,
+        0.4535999894142151
+      ]
+    },
+    "event_scope": "complete stream span including CPU submission gaps; not kernel sum",
+    "memory_before": {
+      "allocated_bytes": 8619008,
+      "reserved_bytes": 23068672,
+      "peak_allocated_bytes": 8619008,
+      "peak_reserved_bytes": 23068672
+    },
+    "memory_after": {
+      "allocated_bytes": 8619008,
+      "reserved_bytes": 23068672,
+      "peak_allocated_bytes": 8699392,
+      "peak_reserved_bytes": 23068672
+    },
+    "peak_increment_bytes": 80384
+  },
+  "graph": {
+    "wall": {
+      "median_ms": 0.11203100439161062,
+      "p95_ms": 0.11303099745418876,
+      "min_ms": 0.11169099889229983,
+      "samples_ms": [
+        0.18228100088890642,
+        0.11279100726824254,
+        0.1126709976233542,
+        0.11212100798729807,
+        0.11170099605806172,
+        0.11175000690855086,
+        0.11196099512744695,
+        0.11309099500067532,
+        0.11246099893469363,
+        0.11171099322382361,
+        0.11208999785594642,
+        0.11206099588889629,
+        0.11244099005125463,
+        0.11203100439161062,
+        0.11202100722584873,
+        0.11220999294891953,
+        0.11169099889229983,
+        0.11209100193809718,
+        0.11170099605806172,
+        0.11235100100748241,
+        0.11170000652782619,
+        0.11193098907824606,
+        0.11198100401088595,
+        0.11192099191248417,
+        0.11184100003447384
+      ]
+    },
+    "cuda_event_span": {
+      "median_ms": 0.10380800068378448,
+      "p95_ms": 0.10494079738855362,
+      "min_ms": 0.1035199984908104,
+      "samples_ms": [
+        0.1035199984908104,
+        0.10367999970912933,
+        0.10380800068378448,
+        0.10521599650382996,
+        0.10384000092744827
+      ]
+    },
+    "event_scope": "complete stream span including CPU submission gaps; not kernel sum",
+    "memory_before": {
+      "allocated_bytes": 17159680,
+      "reserved_bytes": 48234496,
+      "peak_allocated_bytes": 17159680,
+      "peak_reserved_bytes": 48234496
+    },
+    "memory_after": {
+      "allocated_bytes": 17159680,
+      "reserved_bytes": 48234496,
+      "peak_allocated_bytes": 17159680,
+      "peak_reserved_bytes": 48234496
+    },
+    "peak_increment_bytes": 0,
+    "status": "ok",
+    "parity": {
+      "passed": true,
+      "comparison": "exact all tensor fields; matching NaN/Inf classes and scene metadata",
+      "host_reads": "verification only, outside every measured block",
+      "fields": {
+        "range_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "hit_point_sensor_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.distance_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.hit_point_sensor_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.subray_distance_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.subray_object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.subray_hit_point_world_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.subray_triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.ray_origins_world_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.ray_directions_world": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.selected_subray": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "subray_range_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        }
+      }
+    },
+    "changed_input_parity": {
+      "passed": true,
+      "comparison": "exact all tensor fields; matching NaN/Inf classes and scene metadata",
+      "host_reads": "verification only, outside every measured block",
+      "fields": {
+        "range_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "hit_point_sensor_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.distance_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.hit_point_sensor_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.subray_distance_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.subray_object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.subray_hit_point_world_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.subray_triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.ray_origins_world_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.ray_directions_world": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.selected_subray": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "subray_range_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        }
+      }
+    },
+    "changed_input_observable": true,
+    "restored_input_parity": {
+      "passed": true,
+      "comparison": "exact all tensor fields; matching NaN/Inf classes and scene metadata",
+      "host_reads": "verification only, outside every measured block",
+      "fields": {
+        "range_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "hit_point_sensor_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.distance_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.hit_point_sensor_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.subray_distance_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.subray_object_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.subray_hit_point_world_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.subray_triangle_index": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "raw.ray_origins_world_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.ray_directions_world": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        },
+        "raw.selected_subray": {
+          "passed": true,
+          "disagreements": 0
+        },
+        "subray_range_m": {
+          "passed": true,
+          "finite_max_abs": 0.0,
+          "nonfinite_class_disagreements": 0
+        }
+      }
+    },
+    "initialization": "pre-synchronized bounds tensor held strongly; only Python bounds cache/event/record_stream scheduling wrapper bypassed in this diagnostic; restored finally",
+    "scope": "Prepared-constant scheduling wrapper diagnostic; original API capture fails.\n\nOnly in this experiment, a strong-held, already-synchronized bounds tensor\nreplaces the Python cache/event/record_stream wrapper during eager/capture/\nreplay. All numeric operations still use formal process_samples and camera\nmeasurement functions. This is not direct graph support or a production change.\n",
+    "conclusion_limit": "Replay jointly removes/reduces Python, dispatcher, cached allocator and driver submission work and changes allocation/lifetimes. A faster replay cannot be assigned solely to CUDA kernel launch cost or one exclusive CPU category."
+  },
+  "formal_source_unchanged": true
+}

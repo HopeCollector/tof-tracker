@@ -1,0 +1,154 @@
+{
+  "status": "passed",
+  "perf_cells": [
+    {
+      "path": "outputs/ray_unified/perf/pillars20-measurements-b1.json",
+      "sha256": "3142ddd69c46dfe4ab25d5150406bac1f3c15d144b1d51a7263594d8d22e92b2",
+      "wall_median_ms": 2.229564997833222,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars20-measurements-b10000.json",
+      "sha256": "85e5ca28ebf57046348b2e4a04b2a7a23712a28ea1e6d5fadde96aec2069a91a",
+      "wall_median_ms": 1948.2178399921395,
+      "chunks": 66
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars20-measurements-b64.json",
+      "sha256": "e0ab6417c9287085cfb398f5098b240c027c24a7a4ffd8d5fab2981ff991d058",
+      "wall_median_ms": 11.799223007983528,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars20-rig-b1.json",
+      "sha256": "f6e52f42c9def1e7aa3669616e3a03373a4bc7fe9b7f9820811d397f48a5eb3a",
+      "wall_median_ms": 1.5746610006317496,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars20-rig-b10000.json",
+      "sha256": "3206ef257037fca3c92d7cdb1b58fce15fab8f12e782ec105f4ab7ae5d45ee5e",
+      "wall_median_ms": 1150.0307789974613,
+      "chunks": 47
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars20-rig-b64.json",
+      "sha256": "d08577c1ea08508ac27ebe5bd535ccb1157f9fa7f8dbedbacf601d4acd071172",
+      "wall_median_ms": 7.245750995934941,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars20-tof-b1.json",
+      "sha256": "ca1ae0be54afdc7b51fab9076d28314e173dec133c370ce7825395fd039ecfa8",
+      "wall_median_ms": 1.0252869979012758,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars20-tof-b10000.json",
+      "sha256": "098279fd9545669c9946e9df1796ea5853a1ace4edb51559a24f55ad71db1258",
+      "wall_median_ms": 23.373235992039554,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars20-tof-b64.json",
+      "sha256": "39c44f374c55902b16708092571dc8c68643bc4689b8286cccc26128b7fb5257",
+      "wall_median_ms": 1.0157869983231649,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-measurements-b1.json",
+      "sha256": "724b386f18be1215198cbbcbfbdf79cfcc6446723b2010630e20f395d6ec52a4",
+      "wall_median_ms": 2.481147996149957,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-measurements-b10000.json",
+      "sha256": "515ea7ec840a6b2047e82e14c86ff6f53129d9385534a3ca8a858f2db866bd6a",
+      "wall_median_ms": 2707.61727700301,
+      "chunks": 66
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-measurements-b64.json",
+      "sha256": "f8f15a993aff63cd75f5ef5266d9ca15dbb463711dc2b66805bfe7d8e907e23a",
+      "wall_median_ms": 16.40462600335013,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-rig-b1.json",
+      "sha256": "d62c146f90b2d5ffa8485194a14190ac13e99d91c69079f742b2d9e1ae2b9cbb",
+      "wall_median_ms": 1.591071006259881,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-rig-b10000.json",
+      "sha256": "faa1fa4b47afdcdca599cd9640e15735f960e768588b20dbe0f9de74d5046ca9",
+      "wall_median_ms": 1912.045783989015,
+      "chunks": 47
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-rig-b64.json",
+      "sha256": "fc44b148dc1ebdede4ec9c5472a96db13065823eb3142c5bc7467d7319f1e421",
+      "wall_median_ms": 12.155146003351547,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-tof-b1.json",
+      "sha256": "64beb8eb663179b34e603f3a3f5d5fc9b5510ffc4ff853ced146497534d14ac7",
+      "wall_median_ms": 1.0772480018204078,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-tof-b10000.json",
+      "sha256": "9b03e31a09a15bc50eb4153ad029127f0725977366180c9084dcba2c26ee73e9",
+      "wall_median_ms": 34.82866600097623,
+      "chunks": 1
+    },
+    {
+      "path": "outputs/ray_unified/perf/pillars5000-tof-b64.json",
+      "sha256": "6a22ecd12351bf54f7a9e64a3e32e9c9499f3bfc539094798570aa5396ac3970",
+      "wall_median_ms": 1.047347002895549,
+      "chunks": 1
+    }
+  ],
+  "timed_source_matches_current": true,
+  "protected_unchanged_files": [
+    "devtools/rendering.py",
+    "devtools/_sensor_processing.py",
+    "devtools/_zone_shaders.py",
+    "tests/verify_sensors.py",
+    "tests/verify_tof_zones.py",
+    "devtools/README.md",
+    "devtools/sensors.md",
+    "docker/README.md",
+    "docs/origins.md"
+  ],
+  "validation_sha256": {
+    "verification-delivery.json": "5e04cafc8eb7ac1e5e430a3a5a9611bca76a35961820dba6e00520962550e0ac",
+    "review-verification-delivery.json": "17dde332a70ff1fee7259b5318895e822f26c652e660135391b1db4c5711c523",
+    "runtime-probe-stream-final.json": "c1b3969bc235222164ab3d5fd9b0346e8337650786751d450428130919afd8a6",
+    "cpu-checks.log": "6a3bdfc53165c5fcea1f5f9bd9c50c78e320d1aaff2fbb817df1a58e6776ab9a"
+  },
+  "delivery_source": "outputs/ray_unified/delivery-source",
+  "delivery_source_sha256": {
+    "README.md": "46b7c90bfb303c56166ed4cb093ec049d2526cb79e7b50d77e78c415d4e37124",
+    "configs/devtools.json": "db10a9cef7ff010000ad773258a7bfbd5562e2c04d12976dfb45be5b839e051a",
+    "devtools/_ray_budget.py": "1746b3a31a9e2f2abf2914137df1fd139c210fe84b227d6ba3b3d10ea6d469ba",
+    "devtools/_ray_processing.py": "3cd3fb325a3048cf79397e083f00912d83915cbc32542a0aaff470db380032f2",
+    "devtools/config.py": "e6995b751d6be7df57526b1d0cbb12dd7b7b6d2000188542a087c334a49e0d36",
+    "devtools/mesh.py": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56",
+    "devtools/perception.py": "fc12778b41841f138f8fc3d296a0d611241a26d90001c868717ca919fc572904",
+    "devtools/ray_rendering.py": "909aee8f29d946ae125ed551a826ab380b745d4fee1a42202bb708f323acaa54",
+    "devtools/scene.py": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e",
+    "devtools/sensors.py": "1c5b162fa5a9aac5aebf64d3b069fc72718266655dbfd0853248e4a556d456e8",
+    "examples/one_frame.py": "ca604733bb05eacdf3ee467e87837756c272290ca50d6a7dae62a79cae4b9d1e",
+    "experiments/unified_ray_perf/benchmark.py": "98a37816733caa0704a035bd89a9b55de7ff00d3d1c27078cf54b215b297fc5f",
+    "tests/verify_ray_review.py": "f653e100c66be7ebaa41ecb566cd521c98fd12f47914647662ac8b25255d49a5",
+    "tests/verify_ray_sensors.py": "9dfab2248d3d1dd4cf6738660180b8224b6f1084089eae1528f122da8d747f50",
+    "tools/sensor_review/README.md": "2af642b707ff0c80aaa6ea6e8a465d14bdd396da08754807ceeeec56c4bafcbf",
+    "tools/sensor_review/server.py": "5fdf497ed6c82fda2558027e1d9e43b657166fb48c78c7b9c5a993651734e7da",
+    "tools/sensor_review/web/app.js": "54fc74645f6babad37b7e4ca89b4fd5d4782052f4fe97774f1f90f7af3dd335c",
+    "tools/sensor_review/web/index.html": "f52b36a1af7a4ab8e59a1c8f57b7c256ff09c2d84a695b3bb1cf720ecd0cd952",
+    "tools/sensor_review/web/style.css": "c8d05f4a009dd8eb273d6b6e8c2728e10e99243abac67121be697ef3143e886c"
+  },
+  "numerical_boundary": "Near-tangent float32 Warp/Torch hit disagreement is recorded, not eliminated."
+}

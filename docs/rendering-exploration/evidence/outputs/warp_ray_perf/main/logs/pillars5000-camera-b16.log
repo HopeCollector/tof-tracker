@@ -1,0 +1,24 @@
+{"stage": "provenance", "mode": "camera", "batch": 16, "elapsed_s": 2.6000052457675338e-06}
+{"stage": "cuda_init", "mode": "camera", "batch": 16, "elapsed_s": 0.016286865997244604}
+{"stage": "warp_init", "mode": "camera", "batch": 16, "elapsed_s": 0.10341636500379536}
+{"stage": "scene_load", "mode": "camera", "batch": 16, "elapsed_s": 0.11879552400205284}
+{"stage": "pose_upload", "mode": "camera", "batch": 16, "elapsed_s": 0.5993064360081917}
+{"stage": "scene_bvh_setup", "mode": "camera", "batch": 16, "elapsed_s": 0.6022341970092384}
+{"stage": "first_forward", "mode": "camera", "batch": 16, "elapsed_s": 0.6655136260087602}
+{"stage": "ray_generation_measure", "mode": "camera", "batch": 16, "elapsed_s": 0.8042736610077554}
+{"stage": "fixed_rays", "mode": "camera", "batch": 16, "elapsed_s": 0.9275670170027297}
+{"stage": "trace_measure", "mode": "camera", "batch": 16, "elapsed_s": 0.92776463800692}
+{"stage": "production_parity", "mode": "camera", "batch": 16, "elapsed_s": 1.0382519830018282}
+{"stage": "postprocess_measure", "mode": "camera", "batch": 16, "elapsed_s": 1.2905939240008593}
+{"stage": "pipeline_measure", "mode": "camera", "batch": 16, "elapsed_s": 1.470900635002181}
+{"stage": "end_to_end_measure", "mode": "camera", "batch": 16, "elapsed_s": 1.583754356004647}
+{"stage": "complete", "mode": "camera", "batch": 16, "elapsed_s": 1.7657373380061472}
+Warp 1.15.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.2
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 5070 Ti" (15 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /tmp/.cache/warp/1.15.0
+Module devtools.ray_rendering 54f3e0a load on device 'cuda:0' took 0.64 ms  (cached)
+{"status": "ok", "mode": "camera", "batch": 16, "output": "/workspace/outputs/warp_ray_perf/main/cells/pillars5000-camera-b16.json", "end_to_end_median_ms": 3.8200770068215206, "error": null}

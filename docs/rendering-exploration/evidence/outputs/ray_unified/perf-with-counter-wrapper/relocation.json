@@ -1,0 +1,7 @@
+{
+  "reason": "Preserve the first sweep including O(scene object count) counter checks inside timers; the corrected sweep uses the original perf directory.",
+  "original_prefix": "outputs/ray_unified/perf/",
+  "current_prefix": "outputs/ray_unified/perf-with-counter-wrapper/",
+  "records_unchanged": true,
+  "source_snapshots": "Use the adjacent *-source directories here; JSON source_snapshot fields retain their historical pre-relocation path."
+}

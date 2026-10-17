@@ -1,0 +1,68 @@
+         272201 function calls (240201 primitive calls) in 0.139 seconds
+
+   Ordered by: cumulative time
+   List reduced from 224 to 60 due to restriction <60>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      100    0.000    0.000    0.138    0.001 /workspace/outputs/ray_unified/profile_small.py:18(action)
+      100    0.002    0.000    0.137    0.001 /workspace/devtools/sensors.py:422(sample_depth)
+      100    0.005    0.000    0.066    0.001 /workspace/devtools/sensors.py:236(process_samples)
+      100    0.003    0.000    0.033    0.000 /workspace/devtools/ray_rendering.py:334(trace)
+      100    0.013    0.000    0.031    0.000 /workspace/devtools/_ray_processing.py:101(range_by_sample)
+      100    0.000    0.000    0.027    0.000 /workspace/devtools/sensors.py:342(_plan_chunks)
+      100    0.001    0.000    0.026    0.000 /workspace/devtools/_ray_budget.py:32(plan)
+      200    0.002    0.000    0.023    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/memory.py:227(memory_stats)
+32200/200    0.013    0.000    0.017    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/memory.py:316(_recurse_add_to_result)
+      100    0.005    0.000    0.016    0.000 /workspace/devtools/_ray_processing.py:32(select_subray)
+     1300    0.004    0.000    0.012    0.000 /opt/venv/lib/python3.12/site-packages/warp/_src/torch.py:191(from_torch)
+      100    0.000    0.000    0.012    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/memory.py:525(memory_allocated)
+      100    0.000    0.000    0.011    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/memory.py:563(memory_reserved)
+      100    0.002    0.000    0.011    0.000 /opt/venv/lib/python3.12/site-packages/warp/_src/context.py:10109(launch)
+      100    0.001    0.000    0.008    0.000 /workspace/devtools/sensors.py:330(_compact_rays)
+      200    0.001    0.000    0.007    0.000 /opt/venv/lib/python3.12/site-packages/warp/_src/context.py:10236(pack_args)
+     2100    0.002    0.000    0.006    0.000 /opt/venv/lib/python3.12/site-packages/warp/_src/context.py:9253(pack_arg)
+      200    0.000    0.000    0.006    0.000 /opt/venv/lib/python3.12/site-packages/torch/functional.py:80(broadcast_shapes)
+      700    0.005    0.000    0.005    0.000 {built-in method torch.where}
+      200    0.002    0.000    0.005    0.000 /opt/venv/lib/python3.12/site-packages/torch/_refs/__init__.py:387(_broadcast_shapes)
+     1000    0.001    0.000    0.005    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1099(current_stream)
+     1300    0.001    0.000    0.004    0.000 /opt/venv/lib/python3.12/site-packages/warp/_src/types.py:3185(__init__)
+      200    0.004    0.000    0.004    0.000 {built-in method torch.matmul}
+    68600    0.004    0.000    0.004    0.000 {built-in method builtins.isinstance}
+     1500    0.002    0.000    0.004    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/_utils.py:344(_get_device_index)
+      300    0.004    0.000    0.004    0.000 {built-in method torch.isfinite}
+      500    0.001    0.000    0.003    0.000 /workspace/devtools/_ray_processing.py:69(gather_subray)
+     1300    0.001    0.000    0.002    0.000 /opt/venv/lib/python3.12/site-packages/warp/_src/types.py:3627(_init_from_ptr)
+      600    0.002    0.000    0.002    0.000 {method 'gather' of 'torch._C.TensorBase' objects}
+      300    0.001    0.000    0.002    0.000 /workspace/devtools/sensors.py:158(_check_poses)
+      600    0.002    0.000    0.002    0.000 {method 'all' of 'torch._C.TensorBase' objects}
+    14700    0.001    0.000    0.002    0.000 {built-in method builtins.len}
+      100    0.002    0.000    0.002    0.000 {built-in method torch.sort}
+      100    0.000    0.000    0.002    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1073(synchronize)
+      100    0.000    0.000    0.002    0.000 /workspace/devtools/_ray_processing.py:87(_bounds)
+     1500    0.001    0.000    0.002    0.000 /opt/venv/lib/python3.12/site-packages/torch/_utils.py:831(_get_device_index)
+      100    0.000    0.000    0.002    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/memory.py:822(mem_get_info)
+      200    0.000    0.000    0.002    0.000 /opt/venv/lib/python3.12/site-packages/torch/_tensor.py:38(wrapped)
+      200    0.000    0.000    0.002    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/memory.py:332(memory_stats_as_nested_dict)
+    26600    0.002    0.000    0.002    0.000 {method 'append' of 'list' objects}
+      100    0.002    0.000    0.002    0.000 {built-in method torch._C._cudart.cudaMemGetInfo}
+     1300    0.001    0.000    0.002    0.000 /opt/venv/lib/python3.12/site-packages/warp/_src/types.py:4045(__ctype__)
+      300    0.001    0.000    0.001    0.000 {method 'amax' of 'torch._C.TensorBase' objects}
+      400    0.001    0.000    0.001    0.000 {method 'clamp_min' of 'torch._C.TensorBase' objects}
+      200    0.000    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:528(__init__)
+      100    0.000    0.000    0.001    0.000 /workspace/devtools/ray_rendering.py:220(_stream)
+      200    0.001    0.000    0.001    0.000 {method 'sort' of 'list' objects}
+     3600    0.000    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/torch/fx/experimental/symbolic_shapes.py:1396(guard_or_false)
+      300    0.001    0.000    0.001    0.000 {method 'abs' of 'torch._C.TensorBase' objects}
+     3000    0.001    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/warp/_src/torch.py:224(<genexpr>)
+      100    0.000    0.000    0.001    0.000 /workspace/devtools/ray_rendering.py:223(_record_event)
+     1000    0.001    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/torch/_tensor.py:1145(__len__)
+      200    0.001    0.000    0.001    0.000 {built-in method torch._C._cuda_memoryStats}
+      100    0.001    0.000    0.001    0.000 {method 'sum' of 'torch._C.TensorBase' objects}
+     2500    0.001    0.000    0.001    0.000 {method 'record_stream' of 'torch._C.TensorBase' objects}
+      100    0.001    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/torch/_tensor.py:1077(__rdiv__)
+     1000    0.000    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/torch/cuda/streams.py:34(__new__)
+      100    0.000    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/torch/_utils.py:805(_get_current_device_index)
+     3600    0.001    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/torch/fx/experimental/symbolic_shapes.py:1370(_guard_or)
+      100    0.000    0.000    0.001    0.000 /opt/venv/lib/python3.12/site-packages/torch/_utils.py:789(_get_device_attr)
+
+

@@ -1,0 +1,18 @@
+check: docker/check-env.sh
+Installed project: tof-tracker 0.0.0
+Python import: tof_tracker -> /workspace/src/tof_tracker/__init__.py
+Python import: devtools -> /workspace/devtools/__init__.py
+Python import: training -> /workspace/training/__init__.py
+Python: 3.12.3; venv: /opt/venv
+C++17 filesystem + file round-trip passed
+Environment check passed; ownership record: outputs/docker/environment-check.txt
+check: tests/verify_mapgen.py
+passed: pillar OBJ meshes, seed 17/18, 33 rejected requests; outputs/mapgen/verification.json
+check: tests/verify_geometry.py
+geometry: passed; result: outputs/geometry/verification.json
+check: tests/verify_scene.py
+scene: 11 check groups passed; result: outputs/scene/verification.json
+check: tests/verify_trajectory.py
+trajectory (cpu): 9 groups passed; result: outputs/trajectory/verification.json
+check: tests/verify_map_viewer.py
+passed: 11 groups; outputs/map_viewer/verification.json

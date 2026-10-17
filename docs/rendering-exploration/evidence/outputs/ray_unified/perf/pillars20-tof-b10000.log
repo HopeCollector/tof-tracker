@@ -1,0 +1,9 @@
+Warp 1.15.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.2
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 5070 Ti" (15 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /tmp/.cache/warp/1.15.0
+Module devtools.ray_rendering 0b21315 load on device 'cuda:0' took 0.55 ms  (cached)
+{"status": "ok", "mode": "tof", "batch": 10000, "output": "outputs/ray_unified/perf/pillars20-tof-b10000.json", "median_ms": 23.373235992039554, "error": null}

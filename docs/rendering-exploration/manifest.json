@@ -4354,5 +4354,13 @@
   ],
   "integration_verification_commit": "ab0ca007ee79a32d40e296b1ed38893706d3408e",
   "integration_cpu_image": "tof-tracker-sensor-review:dev (existing Torch 2.9.1+cu128 image)",
-  "integration_gpu_image": "tof-tracker-main-sync-d9fc:torch291 (built from the exact merge index)"
+  "integration_gpu_image": "tof-tracker-main-sync-d9fc:torch291 (built from the exact merge index)",
+  "additional_archives": {
+    "warp-20261017": {
+      "manifest": "warp-20261017.json",
+      "sha256": "0c280f1c1b2e0b0e15bec5a637c331c23cc3a8211073e7a15c9a015a5c40b0ad",
+      "index": "warp-20261017.sha256",
+      "index_sha256": "0f4db3e98a51d1f415ab045887f190c69e852021a5742e09b59ac0eba9b89930"
+    }
+  }
 }

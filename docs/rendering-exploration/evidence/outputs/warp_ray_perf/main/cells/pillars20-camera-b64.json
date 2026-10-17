@@ -1,0 +1,1368 @@
+{
+  "status": "ok",
+  "mode": "camera",
+  "batch": 64,
+  "pose_pattern": "varied",
+  "grad_enabled": false,
+  "unit": "views",
+  "scope": {
+    "ray_generation": "prepared CUDA mounted sensor poses to contiguous world origin/direction arrays",
+    "trace": "fixed CUDA rays to owned CUDA closest-hit results; camera includes target-only query",
+    "postprocess": "fixed raw hits/rays to formal sensor output; no tracing",
+    "pipeline": "ray generation plus trace; prepared mounted poses, no sensor postprocess",
+    "end_to_end": "formal sample_depth(weighted_quantile)/sample_camera/sample_rig on CUDA poses; rig includes mount composition",
+    "excluded": "map parsing, CPU pose generation/upload, renderer/BVH setup, motion, GUI/HTTP/image encoding",
+    "nonadditive": "stages independently synchronized and timed; medians need not add",
+    "residency": "all timed inputs/outputs remain CUDA tensors; parity downloads happen outside timers"
+  },
+  "source": {
+    "head": null,
+    "working_tree_status": null,
+    "files_sha256": {
+      "devtools/ray_rendering.py": "502831a57f2d45d14be489a5f06d3f3287e3e5da2301bfdae8f77cba1cffef22",
+      "devtools/sensors.py": "5abe1ce632d678188630cbc962288af9a35859d7cfd989a562a80fd2c0e75e54",
+      "devtools/_ray_processing.py": "5ecc0b74787a3f22c6fdffefb94626bd486d6ba48c1d99df69c004d60e9945aa",
+      "devtools/config.py": "ebbbbd901124db12264d33e72e78c5f75f44f6f29c09612abdd4dfd1b983f43b",
+      "devtools/scene.py": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e",
+      "devtools/mesh.py": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56",
+      "experiments/warp_ray_perf/benchmark.py": "c7876e0155eed9667ca395a5448a28b23e7feacc93649795ee2e364a7a06ccf9"
+    }
+  },
+  "map": {
+    "path": "/workspace/outputs/sensor_perf/maps/pillars-20.obj",
+    "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+  },
+  "config": {
+    "path": "/workspace/configs/devtools.json",
+    "sha256": "e9fc6762295feeb5a176385378d9dc63b0b379b12f8e3ea8457a9647c65fe5a2",
+    "values": {
+      "vehicle_radius_m": 0.2,
+      "target_radius_m": 0.3,
+      "sensors": {
+        "tof": {
+          "width": 8,
+          "height": 8,
+          "hfov_deg": 45.0,
+          "vfov_deg": 45.0,
+          "min_range_m": 0.015,
+          "max_range_m": 4.0,
+          "samples_per_axis": 4
+        },
+        "camera": {
+          "width": 160,
+          "height": 120,
+          "hfov_deg": 80.0,
+          "vfov_deg": 60.0,
+          "min_range_m": 0.01,
+          "max_range_m": 30.0,
+          "samples_per_axis": 2
+        },
+        "tof_mounts": [
+          {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "camera_mount": {
+          "position_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion_xyzw": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "min_visible_fraction": 0.2,
+        "tof_depth_quantile": 0.2,
+        "tof_signal_floor": 0.08
+      }
+    }
+  },
+  "environment": {
+    "torch": "2.9.1+cu128",
+    "cuda_runtime": "12.8",
+    "warp": "1.15.0",
+    "numpy": "2.5.4",
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "cpu_threads": 4,
+    "environment": {
+      "CUDA_MODULE_LOADING": null,
+      "CUDA_MODULE_DATA_LOADING": null,
+      "CUDA_CACHE_PATH": null,
+      "CUDA_LAUNCH_BLOCKING": null,
+      "WP_CACHE_DIR": null
+    },
+    "nvidia_smi": "0, NVIDIA GeForce RTX 5070 Ti, 595.91.07, 16303 MiB",
+    "gpu": "NVIDIA GeForce RTX 5070 Ti",
+    "gpu_total_memory_bytes": 16608133120,
+    "torch_cuda_arch_list": [
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90",
+      "sm_100",
+      "sm_120"
+    ]
+  },
+  "cuda_init_ms": 84.8449119948782,
+  "warp_init_ms": 15.421959993545897,
+  "map_load_ms": 2.5570779980625957,
+  "input": {
+    "seed": 20261016,
+    "pattern": "varied",
+    "algorithm": "first historical pose; subsequent numpy.default_rng.uniform(-1,1,6), translation (.25,.25,.15)m, RPY offsets (8,6,12)deg; prefix-stable across B",
+    "first_position_m": [
+      0.00400000019,
+      -17.60400009,
+      1.5
+    ],
+    "first_rpy_deg": [
+      0.0,
+      0.0,
+      78.6839981
+    ],
+    "target_position_m": [
+      0.5926600253515211,
+      -14.662320404042191,
+      1.5
+    ],
+    "target_distance_from_first_origin_m": 3.0,
+    "target_policy": "center lies on first view forward axis; geometry still participates in normal background occlusion",
+    "historical_target_position_m": [
+      0.7369999886,
+      -13.31799984,
+      1.5
+    ],
+    "historical_case_note": "historical target center is about 4.348m away, radius .3m; its nearest surface exceeds the new 4m ToF range and is deliberately not used as the default performance target",
+    "float32_pose_sha256": "0227952f6ef5a00a7f116f0e869b0e66b1dc85a9ee2a78e79ae4b245dde1e0a9",
+    "pose_shape": [
+      64,
+      4,
+      4
+    ],
+    "pose_device": "cuda:0"
+  },
+  "scene_bvh_setup_ms": 5.3763180039823055,
+  "scene_bvh_setup_scope": "CPU geometry assembly, scene tensor upload and native Warp BVH construction; excludes prior explicit Warp init; not exclusive BVH-kernel timing",
+  "scene_memory": {
+    "torch_before": {
+      "allocated_bytes": 4096,
+      "reserved_bytes": 2097152,
+      "peak_allocated_bytes": 4096,
+      "peak_reserved_bytes": 2097152
+    },
+    "torch_after": {
+      "allocated_bytes": 12800,
+      "reserved_bytes": 2097152,
+      "peak_allocated_bytes": 12800,
+      "peak_reserved_bytes": 2097152
+    },
+    "global_before": {
+      "free_bytes": 14604763136,
+      "total_bytes": 16608133120,
+      "used_bytes": 2003369984,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "global_after": {
+      "free_bytes": 14569111552,
+      "total_bytes": 16608133120,
+      "used_bytes": 2039021568,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "global_used_delta_bytes": 35651584,
+    "global_delta_scope": "shared device approximate delta, includes allocator reservations and other processes; not exact Warp BVH size",
+    "explicit": {
+      "scene_geometry_buffer_bytes": 6832,
+      "scene_mesh_buffer_bytes": 6808,
+      "object_transform_buffer_bytes": 12,
+      "tracked_total_bytes": 6832,
+      "tracked_total_scope": "owned scene tensor storage; excludes Warp BVH/allocator/driver and query outputs",
+      "warp_bvh_bytes": null,
+      "last_output_bytes": 0,
+      "image_cpu_transfer_bytes_per_trace": 0
+    },
+    "warp_bvh_bytes": null
+  },
+  "geometry": {
+    "backend": "warp_mesh_bvh_analytic_spheres",
+    "warp_version": "1.15.0",
+    "device": "cuda:0",
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/pillar_12",
+      "map/pillar_13",
+      "map/pillar_14",
+      "map/pillar_15",
+      "map/pillar_16",
+      "map/pillar_17",
+      "map/pillar_18",
+      "map/pillar_19",
+      "map/ground",
+      "target"
+    ],
+    "vertex_count": 164,
+    "triangle_count": 242,
+    "analytic_sphere_count": 1,
+    "mesh_bvh_builds": 1,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 12,
+    "scene_version": 0,
+    "object_triangle_ranges": {
+      "map/pillar_0": [
+        0,
+        12
+      ],
+      "map/pillar_1": [
+        12,
+        12
+      ],
+      "map/pillar_2": [
+        24,
+        12
+      ],
+      "map/pillar_3": [
+        36,
+        12
+      ],
+      "map/pillar_4": [
+        48,
+        12
+      ],
+      "map/pillar_5": [
+        60,
+        12
+      ],
+      "map/pillar_6": [
+        72,
+        12
+      ],
+      "map/pillar_7": [
+        84,
+        12
+      ],
+      "map/pillar_8": [
+        96,
+        12
+      ],
+      "map/pillar_9": [
+        108,
+        12
+      ],
+      "map/pillar_10": [
+        120,
+        12
+      ],
+      "map/pillar_11": [
+        132,
+        12
+      ],
+      "map/pillar_12": [
+        144,
+        12
+      ],
+      "map/pillar_13": [
+        156,
+        12
+      ],
+      "map/pillar_14": [
+        168,
+        12
+      ],
+      "map/pillar_15": [
+        180,
+        12
+      ],
+      "map/pillar_16": [
+        192,
+        12
+      ],
+      "map/pillar_17": [
+        204,
+        12
+      ],
+      "map/pillar_18": [
+        216,
+        12
+      ],
+      "map/pillar_19": [
+        228,
+        12
+      ],
+      "map/ground": [
+        240,
+        2
+      ]
+    },
+    "batch_geometry_policy": "one static mesh BVH and shared analytic spheres; independent of ray count",
+    "trace_calls": 0,
+    "rays_traced": 0,
+    "cpu_image_readbacks": 0,
+    "per_ray_python_calls": 0,
+    "input": "world origins/directions float32 CUDA N3; radial max distance scalar or CUDA N",
+    "output": "owned CUDA radial distance, object/triangle index and world hit point",
+    "near_clip_policy": "none; nearest nonnegative surface before measurement validity",
+    "selection_policy": "full scene or one analytic sphere; static mesh selection unsupported"
+  },
+  "expected_traces_per_action": 2,
+  "queried_rays_per_action": 9830400,
+  "first_forward_ms": 133.82933000684716,
+  "first_forward_scope": "first formal API call; includes any uncached Warp JIT/module load, lazy sensor constants and PyTorch initialization",
+  "first_forward_memory": {
+    "allocated_bytes": 365711360,
+    "reserved_bytes": 1012924416,
+    "peak_allocated_bytes": 968967168,
+    "peak_reserved_bytes": 1012924416
+  },
+  "output_tensors": {
+    "depth.range_m": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 4915200
+    },
+    "depth.object_index": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 9830400
+    },
+    "depth.hit_point_sensor_m": {
+      "shape": [
+        64,
+        120,
+        160,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 14745600
+    },
+    "depth.triangle_index": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 9830400
+    },
+    "depth.raw.distance_m": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 4915200
+    },
+    "depth.raw.object_index": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 9830400
+    },
+    "depth.raw.hit_point_sensor_m": {
+      "shape": [
+        64,
+        120,
+        160,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 14745600
+    },
+    "depth.raw.triangle_index": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 9830400
+    },
+    "depth.raw.subray_distance_m": {
+      "shape": [
+        64,
+        120,
+        160,
+        4
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 19660800
+    },
+    "depth.raw.subray_object_index": {
+      "shape": [
+        64,
+        120,
+        160,
+        4
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 39321600
+    },
+    "depth.raw.subray_hit_point_world_m": {
+      "shape": [
+        64,
+        120,
+        160,
+        4,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 58982400
+    },
+    "depth.raw.subray_triangle_index": {
+      "shape": [
+        64,
+        120,
+        160,
+        4
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 39321600
+    },
+    "depth.raw.ray_origins_world_m": {
+      "shape": [
+        64,
+        120,
+        160,
+        4,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 58982400
+    },
+    "depth.raw.ray_directions_world": {
+      "shape": [
+        64,
+        120,
+        160,
+        4,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 58982400
+    },
+    "depth.raw.selected_subray": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 9830400
+    },
+    "depth.subray_range_m": {
+      "shape": [
+        64,
+        120,
+        160,
+        4
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 19660800
+    },
+    "target_mask": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.bool",
+      "device": "cuda:0",
+      "bytes": 1228800
+    },
+    "target_hint": {
+      "shape": [
+        64,
+        5
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 1280
+    },
+    "visible_fraction": {
+      "shape": [
+        64
+      ],
+      "dtype": "torch.float64",
+      "device": "cuda:0",
+      "bytes": 512
+    },
+    "unoccluded_pixels": {
+      "shape": [
+        64
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 512
+    },
+    "target_coverage": {
+      "shape": [
+        64,
+        120,
+        160
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 4915200
+    },
+    "unoccluded_samples": {
+      "shape": [
+        64
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 512
+    }
+  },
+  "first_forward_contract": {
+    "trace_call_delta": 2,
+    "geometry_uploads": 1
+  },
+  "ray_generation": {
+    "wall_median_ms": 0.9530569950584322,
+    "wall_p95_ms": 0.9580210025887936,
+    "wall_min_ms": 0.9200570057146251,
+    "wall_samples_ms": [
+      0.9343260026071221,
+      0.9200570057146251,
+      0.954736999119632,
+      0.9586270025465637,
+      0.9864870080491528,
+      0.9517360012978315,
+      0.9539169986965135,
+      0.9529669914627448,
+      0.9549469978082925,
+      0.9508460061624646,
+      0.9506869973847643,
+      0.9521759930066764,
+      0.9530569950584322,
+      0.9536569996271282,
+      0.9530959941912442,
+      0.9530269890092313,
+      0.9533870033919811,
+      0.952537011471577,
+      0.9542359912302345,
+      0.9532869880786166,
+      0.9528770024189726,
+      0.9546670044073835,
+      0.9529070084681734,
+      0.9555970027577132,
+      0.9506859933026135
+    ],
+    "pilot_ms": 1.144198002293706,
+    "repeats": 25,
+    "warmup": 3,
+    "units_per_second": 67152.33226537112,
+    "queried_rays_per_second": null,
+    "cuda_event_span_ms": [
+      0.8961920142173767,
+      0.8954880237579346,
+      0.895583987236023
+    ],
+    "cuda_event_span_median_ms": 0.895583987236023,
+    "cuda_event_scope": "entire current-stream interval, including CPU submission gaps; not pure kernel time",
+    "torch_memory_before": {
+      "allocated_bytes": 9454592,
+      "reserved_bytes": 1012924416,
+      "peak_allocated_bytes": 9454592,
+      "peak_reserved_bytes": 1012924416
+    },
+    "torch_memory_after": {
+      "allocated_bytes": 9454592,
+      "reserved_bytes": 1012924416,
+      "peak_allocated_bytes": 127419392,
+      "peak_reserved_bytes": 1012924416
+    },
+    "torch_peak_increment_bytes": 117964800,
+    "global_device_memory_before": {
+      "free_bytes": 13499564032,
+      "total_bytes": 16608133120,
+      "used_bytes": 3108569088,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "global_device_memory_after": {
+      "free_bytes": 13499564032,
+      "total_bytes": 16608133120,
+      "used_bytes": 3108569088,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "scene_memory_after": {
+      "scene_geometry_buffer_bytes": 6832,
+      "scene_mesh_buffer_bytes": 6808,
+      "object_transform_buffer_bytes": 12,
+      "tracked_total_bytes": 6832,
+      "tracked_total_scope": "owned scene tensor storage; excludes Warp BVH/allocator/driver and query outputs",
+      "warp_bvh_bytes": null,
+      "last_output_bytes": 157286400,
+      "image_cpu_transfer_bytes_per_trace": 0
+    },
+    "batch_contract": {
+      "action_count": 32,
+      "expected_traces_per_action": 0,
+      "trace_call_delta": 0,
+      "rays_traced_delta": 0,
+      "geometry_uploads_before": 1,
+      "geometry_uploads_after": 1,
+      "passed": true
+    }
+  },
+  "fixed_ray_tensors": {
+    "0.0": {
+      "shape": [
+        4915200,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 58982400
+    },
+    "0.1": {
+      "shape": [
+        4915200,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 58982400
+    }
+  },
+  "trace": {
+    "wall_median_ms": 1.4996299869380891,
+    "wall_p95_ms": 1.6529177926713596,
+    "wall_min_ms": 1.4081010012887418,
+    "wall_samples_ms": [
+      1.4693600096506998,
+      1.4081010012887418,
+      1.4995999954408035,
+      1.6880110051715747,
+      1.5124710043892264,
+      1.4943809946998954,
+      1.4996299869380891,
+      1.4978109975345433,
+      1.5138210001168773,
+      1.511501002823934,
+      1.5006799949333072,
+      1.5047399938339368,
+      1.4991310017649084,
+      1.5543810004601255,
+      1.6775519907241687,
+      1.5084909973666072,
+      1.499900987255387,
+      1.497889999882318,
+      1.4960110129322857,
+      1.499980004155077,
+      1.4976209931774065,
+      1.4998910046415403,
+      1.4983309956733137,
+      1.494670010288246,
+      1.4982110005803406
+    ],
+    "pilot_ms": 1.661811998928897,
+    "repeats": 25,
+    "warmup": 3,
+    "units_per_second": 42677.19407950342,
+    "queried_rays_per_second": 6555217010.611725,
+    "cuda_event_span_ms": [
+      1.5556800365447998,
+      1.4468159675598145,
+      1.5932799577713013
+    ],
+    "cuda_event_span_median_ms": 1.5556800365447998,
+    "cuda_event_scope": "entire current-stream interval, including CPU submission gaps; not pure kernel time",
+    "torch_memory_before": {
+      "allocated_bytes": 127419392,
+      "reserved_bytes": 1012924416,
+      "peak_allocated_bytes": 127419392,
+      "peak_reserved_bytes": 1012924416
+    },
+    "torch_memory_after": {
+      "allocated_bytes": 127419392,
+      "reserved_bytes": 1012924416,
+      "peak_allocated_bytes": 443040768,
+      "peak_reserved_bytes": 1012924416
+    },
+    "torch_peak_increment_bytes": 315621376,
+    "global_device_memory_before": {
+      "free_bytes": 13499564032,
+      "total_bytes": 16608133120,
+      "used_bytes": 3108569088,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "global_device_memory_after": {
+      "free_bytes": 13499564032,
+      "total_bytes": 16608133120,
+      "used_bytes": 3108569088,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "scene_memory_after": {
+      "scene_geometry_buffer_bytes": 6832,
+      "scene_mesh_buffer_bytes": 6808,
+      "object_transform_buffer_bytes": 12,
+      "tracked_total_bytes": 6832,
+      "tracked_total_scope": "owned scene tensor storage; excludes Warp BVH/allocator/driver and query outputs",
+      "warp_bvh_bytes": null,
+      "last_output_bytes": 157286400,
+      "image_cpu_transfer_bytes_per_trace": 0
+    },
+    "batch_contract": {
+      "action_count": 32,
+      "expected_traces_per_action": 2,
+      "trace_call_delta": 64,
+      "rays_traced_delta": 314572800,
+      "geometry_uploads_before": 1,
+      "geometry_uploads_after": 1,
+      "passed": true
+    }
+  },
+  "fixed_raw_tensors": {
+    "0.distance_m": {
+      "shape": [
+        4915200
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 19660800
+    },
+    "0.object_index": {
+      "shape": [
+        4915200
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 39321600
+    },
+    "0.hit_point_world_m": {
+      "shape": [
+        4915200,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 58982400
+    },
+    "0.triangle_index": {
+      "shape": [
+        4915200
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 39321600
+    },
+    "1.distance_m": {
+      "shape": [
+        4915200
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 19660800
+    },
+    "1.object_index": {
+      "shape": [
+        4915200
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 39321600
+    },
+    "1.hit_point_world_m": {
+      "shape": [
+        4915200,
+        3
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "bytes": 58982400
+    },
+    "1.triangle_index": {
+      "shape": [
+        4915200
+      ],
+      "dtype": "torch.int64",
+      "device": "cuda:0",
+      "bytes": 39321600
+    }
+  },
+  "production_parity": {
+    "passed": true,
+    "comparison": "exact all tensor fields; matching NaN/Inf classes and scene metadata",
+    "host_reads": "verification only, outside every measured block",
+    "fields": {
+      "depth.range_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "depth.object_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "depth.hit_point_sensor_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "depth.triangle_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "depth.raw.distance_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "depth.raw.object_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "depth.raw.hit_point_sensor_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "depth.raw.triangle_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "depth.raw.subray_distance_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "depth.raw.subray_object_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "depth.raw.subray_hit_point_world_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "depth.raw.subray_triangle_index": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "depth.raw.ray_origins_world_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "depth.raw.ray_directions_world": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "depth.raw.selected_subray": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "depth.subray_range_m": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "target_mask": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "target_hint": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "visible_fraction": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "unoccluded_pixels": {
+        "passed": true,
+        "disagreements": 0
+      },
+      "target_coverage": {
+        "passed": true,
+        "finite_max_abs": 0.0,
+        "nonfinite_class_disagreements": 0
+      },
+      "unoccluded_samples": {
+        "passed": true,
+        "disagreements": 0
+      }
+    }
+  },
+  "postprocess": {
+    "wall_median_ms": 11.802963999798521,
+    "wall_p95_ms": 12.464999002986588,
+    "wall_min_ms": 11.667712999042124,
+    "wall_samples_ms": [
+      11.729774007108063,
+      12.090625998098403,
+      11.693873006151989,
+      11.838954000268131,
+      11.704703007126227,
+      11.667712999042124,
+      11.71724300365895,
+      11.824953995528631,
+      12.362148001557216,
+      12.464999002986588,
+      11.802963999798521,
+      11.81998400716111,
+      11.712163002812304,
+      11.713853004039265,
+      11.725103002390824,
+      11.726943994290195,
+      11.717692992533557,
+      11.82895401143469,
+      13.036363001447171,
+      11.93270500516519,
+      11.94238499738276
+    ],
+    "pilot_ms": 11.913634996744804,
+    "repeats": 21,
+    "warmup": 3,
+    "units_per_second": 5422.366788638217,
+    "queried_rays_per_second": null,
+    "cuda_event_span_ms": [
+      11.814720153808594,
+      11.860544204711914,
+      11.63871955871582
+    ],
+    "cuda_event_span_median_ms": 11.814720153808594,
+    "cuda_event_scope": "entire current-stream interval, including CPU submission gaps; not pure kernel time",
+    "torch_memory_before": {
+      "allocated_bytes": 443040768,
+      "reserved_bytes": 1610612736,
+      "peak_allocated_bytes": 443040768,
+      "peak_reserved_bytes": 1610612736
+    },
+    "torch_memory_after": {
+      "allocated_bytes": 443040768,
+      "reserved_bytes": 1610612736,
+      "peak_allocated_bytes": 968967168,
+      "peak_reserved_bytes": 1610612736
+    },
+    "torch_peak_increment_bytes": 525926400,
+    "global_device_memory_before": {
+      "free_bytes": 12903251968,
+      "total_bytes": 16608133120,
+      "used_bytes": 3704881152,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "global_device_memory_after": {
+      "free_bytes": 12903251968,
+      "total_bytes": 16608133120,
+      "used_bytes": 3704881152,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "scene_memory_after": {
+      "scene_geometry_buffer_bytes": 6832,
+      "scene_mesh_buffer_bytes": 6808,
+      "object_transform_buffer_bytes": 12,
+      "tracked_total_bytes": 6832,
+      "tracked_total_scope": "owned scene tensor storage; excludes Warp BVH/allocator/driver and query outputs",
+      "warp_bvh_bytes": null,
+      "last_output_bytes": 157286400,
+      "image_cpu_transfer_bytes_per_trace": 0
+    },
+    "batch_contract": {
+      "action_count": 28,
+      "expected_traces_per_action": 0,
+      "trace_call_delta": 0,
+      "rays_traced_delta": 0,
+      "geometry_uploads_before": 1,
+      "geometry_uploads_after": 1,
+      "passed": true
+    }
+  },
+  "pipeline": {
+    "wall_median_ms": 2.366697008255869,
+    "wall_p95_ms": 2.604846001486294,
+    "wall_min_ms": 2.2603959951084107,
+    "wall_samples_ms": [
+      2.2882860066602007,
+      2.2603959951084107,
+      2.366697008255869,
+      2.358557001571171,
+      2.620158003992401,
+      2.3950269969645888,
+      2.34579699463211,
+      2.3423569946317,
+      2.336096004000865,
+      2.330837000044994,
+      2.337126003112644,
+      2.349496993701905,
+      2.455917012412101,
+      2.4067769991233945,
+      2.3990570043679327,
+      2.3611770011484623,
+      2.3496170033467934,
+      2.350987007957883,
+      2.6689579972298816,
+      2.5435979914618656,
+      2.420306991552934,
+      2.4268869892694056,
+      2.384146995609626,
+      2.377046999754384,
+      2.3672469978919253
+    ],
+    "pilot_ms": 2.423407990136184,
+    "repeats": 25,
+    "warmup": 3,
+    "units_per_second": 27041.906833340116,
+    "queried_rays_per_second": 4153636889.601042,
+    "cuda_event_span_ms": [
+      2.2811520099639893,
+      2.3390400409698486,
+      2.3386240005493164
+    ],
+    "cuda_event_span_median_ms": 2.3386240005493164,
+    "cuda_event_scope": "entire current-stream interval, including CPU submission gaps; not pure kernel time",
+    "torch_memory_before": {
+      "allocated_bytes": 9454592,
+      "reserved_bytes": 1610612736,
+      "peak_allocated_bytes": 9454592,
+      "peak_reserved_bytes": 1610612736
+    },
+    "torch_memory_after": {
+      "allocated_bytes": 9454592,
+      "reserved_bytes": 1610612736,
+      "peak_allocated_bytes": 443040768,
+      "peak_reserved_bytes": 1610612736
+    },
+    "torch_peak_increment_bytes": 433586176,
+    "global_device_memory_before": {
+      "free_bytes": 12903251968,
+      "total_bytes": 16608133120,
+      "used_bytes": 3704881152,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "global_device_memory_after": {
+      "free_bytes": 12903251968,
+      "total_bytes": 16608133120,
+      "used_bytes": 3704881152,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "scene_memory_after": {
+      "scene_geometry_buffer_bytes": 6832,
+      "scene_mesh_buffer_bytes": 6808,
+      "object_transform_buffer_bytes": 12,
+      "tracked_total_bytes": 6832,
+      "tracked_total_scope": "owned scene tensor storage; excludes Warp BVH/allocator/driver and query outputs",
+      "warp_bvh_bytes": null,
+      "last_output_bytes": 157286400,
+      "image_cpu_transfer_bytes_per_trace": 0
+    },
+    "batch_contract": {
+      "action_count": 32,
+      "expected_traces_per_action": 2,
+      "trace_call_delta": 64,
+      "rays_traced_delta": 314572800,
+      "geometry_uploads_before": 1,
+      "geometry_uploads_after": 1,
+      "passed": true
+    }
+  },
+  "end_to_end": {
+    "wall_median_ms": 14.083069501793943,
+    "wall_p95_ms": 14.603488249122165,
+    "wall_min_ms": 14.055780004127882,
+    "wall_samples_ms": [
+      14.128601003903896,
+      14.292660998762585,
+      14.05817001068499,
+      14.055780004127882,
+      14.087750008911826,
+      14.700733998324722,
+      14.126890993793495,
+      14.076570005272515,
+      14.06004000455141,
+      14.058849003049545,
+      14.078388994676061,
+      14.073430997086689,
+      14.57107299938798,
+      14.144340995699167,
+      14.097639999818057,
+      14.075440005399287
+    ],
+    "pilot_ms": 15.938512995489873,
+    "repeats": 16,
+    "warmup": 3,
+    "units_per_second": 4544.463832394457,
+    "queried_rays_per_second": 698029644.6557885,
+    "cuda_event_span_ms": [
+      14.086496353149414,
+      14.076704025268555,
+      14.065983772277832
+    ],
+    "cuda_event_span_median_ms": 14.076704025268555,
+    "cuda_event_scope": "entire current-stream interval, including CPU submission gaps; not pure kernel time",
+    "torch_memory_before": {
+      "allocated_bytes": 9454592,
+      "reserved_bytes": 1610612736,
+      "peak_allocated_bytes": 9454592,
+      "peak_reserved_bytes": 1610612736
+    },
+    "torch_memory_after": {
+      "allocated_bytes": 9454592,
+      "reserved_bytes": 1610612736,
+      "peak_allocated_bytes": 968967168,
+      "peak_reserved_bytes": 1610612736
+    },
+    "torch_peak_increment_bytes": 959512576,
+    "global_device_memory_before": {
+      "free_bytes": 12858556416,
+      "total_bytes": 16608133120,
+      "used_bytes": 3749576704,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "global_device_memory_after": {
+      "free_bytes": 12849184768,
+      "total_bytes": 16608133120,
+      "used_bytes": 3758948352,
+      "scope": "whole CUDA device including desktop/other processes; shared-device approximation"
+    },
+    "scene_memory_after": {
+      "scene_geometry_buffer_bytes": 6832,
+      "scene_mesh_buffer_bytes": 6808,
+      "object_transform_buffer_bytes": 12,
+      "tracked_total_bytes": 6832,
+      "tracked_total_scope": "owned scene tensor storage; excludes Warp BVH/allocator/driver and query outputs",
+      "warp_bvh_bytes": null,
+      "last_output_bytes": 157286400,
+      "image_cpu_transfer_bytes_per_trace": 0
+    },
+    "batch_contract": {
+      "action_count": 23,
+      "expected_traces_per_action": 2,
+      "trace_call_delta": 46,
+      "rays_traced_delta": 226099200,
+      "geometry_uploads_before": 1,
+      "geometry_uploads_after": 1,
+      "passed": true
+    }
+  },
+  "geometry_after_warm": {
+    "backend": "warp_mesh_bvh_analytic_spheres",
+    "warp_version": "1.15.0",
+    "device": "cuda:0",
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/pillar_12",
+      "map/pillar_13",
+      "map/pillar_14",
+      "map/pillar_15",
+      "map/pillar_16",
+      "map/pillar_17",
+      "map/pillar_18",
+      "map/pillar_19",
+      "map/ground",
+      "target"
+    ],
+    "vertex_count": 164,
+    "triangle_count": 242,
+    "analytic_sphere_count": 1,
+    "mesh_bvh_builds": 1,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 12,
+    "scene_version": 0,
+    "object_triangle_ranges": {
+      "map/pillar_0": [
+        0,
+        12
+      ],
+      "map/pillar_1": [
+        12,
+        12
+      ],
+      "map/pillar_2": [
+        24,
+        12
+      ],
+      "map/pillar_3": [
+        36,
+        12
+      ],
+      "map/pillar_4": [
+        48,
+        12
+      ],
+      "map/pillar_5": [
+        60,
+        12
+      ],
+      "map/pillar_6": [
+        72,
+        12
+      ],
+      "map/pillar_7": [
+        84,
+        12
+      ],
+      "map/pillar_8": [
+        96,
+        12
+      ],
+      "map/pillar_9": [
+        108,
+        12
+      ],
+      "map/pillar_10": [
+        120,
+        12
+      ],
+      "map/pillar_11": [
+        132,
+        12
+      ],
+      "map/pillar_12": [
+        144,
+        12
+      ],
+      "map/pillar_13": [
+        156,
+        12
+      ],
+      "map/pillar_14": [
+        168,
+        12
+      ],
+      "map/pillar_15": [
+        180,
+        12
+      ],
+      "map/pillar_16": [
+        192,
+        12
+      ],
+      "map/pillar_17": [
+        204,
+        12
+      ],
+      "map/pillar_18": [
+        216,
+        12
+      ],
+      "map/pillar_19": [
+        228,
+        12
+      ],
+      "map/ground": [
+        240,
+        2
+      ]
+    },
+    "batch_geometry_policy": "one static mesh BVH and shared analytic spheres; independent of ray count",
+    "trace_calls": 180,
+    "rays_traced": 884736000,
+    "cpu_image_readbacks": 0,
+    "per_ray_python_calls": 0,
+    "input": "world origins/directions float32 CUDA N3; radial max distance scalar or CUDA N",
+    "output": "owned CUDA radial distance, object/triangle index and world hit point",
+    "near_clip_policy": "none; nearest nonnegative surface before measurement validity",
+    "selection_policy": "full scene or one analytic sphere; static mesh selection unsupported"
+  }
+}

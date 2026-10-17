@@ -1,0 +1,90 @@
+[
+  {
+    "name": "tof-b64",
+    "command": [
+      "/opt/venv/bin/python",
+      "experiments/warp_postprocess_profile/graph_diagnostic.py",
+      "--map",
+      "outputs/sensor_perf/maps/pillars-20.obj",
+      "--mode",
+      "tof",
+      "--batch",
+      "64",
+      "--output",
+      "/workspace/outputs/warp_postprocess_profile/graph-tof-b64.json",
+      "--warmup",
+      "5",
+      "--repeats",
+      "25",
+      "--event-repeats",
+      "5"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "tof-b10000",
+    "command": [
+      "/opt/venv/bin/python",
+      "experiments/warp_postprocess_profile/graph_diagnostic.py",
+      "--map",
+      "outputs/sensor_perf/maps/pillars-20.obj",
+      "--mode",
+      "tof",
+      "--batch",
+      "10000",
+      "--output",
+      "/workspace/outputs/warp_postprocess_profile/graph-tof-b10000.json",
+      "--warmup",
+      "5",
+      "--repeats",
+      "25",
+      "--event-repeats",
+      "5"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "camera-b1",
+    "command": [
+      "/opt/venv/bin/python",
+      "experiments/warp_postprocess_profile/graph_diagnostic.py",
+      "--map",
+      "outputs/sensor_perf/maps/pillars-20.obj",
+      "--mode",
+      "camera",
+      "--batch",
+      "1",
+      "--output",
+      "/workspace/outputs/warp_postprocess_profile/graph-camera-b1.json",
+      "--warmup",
+      "5",
+      "--repeats",
+      "25",
+      "--event-repeats",
+      "5"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "camera-b64",
+    "command": [
+      "/opt/venv/bin/python",
+      "experiments/warp_postprocess_profile/graph_diagnostic.py",
+      "--map",
+      "outputs/sensor_perf/maps/pillars-20.obj",
+      "--mode",
+      "camera",
+      "--batch",
+      "64",
+      "--output",
+      "/workspace/outputs/warp_postprocess_profile/graph-camera-b64.json",
+      "--warmup",
+      "5",
+      "--repeats",
+      "25",
+      "--event-repeats",
+      "5"
+    ],
+    "exit_code": 0
+  }
+]

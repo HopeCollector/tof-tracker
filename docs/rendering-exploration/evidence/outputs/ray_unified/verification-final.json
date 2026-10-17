@@ -1,0 +1,209 @@
+{
+  "status": "passed",
+  "device": "NVIDIA GeForce RTX 5070 Ti",
+  "checks": [
+    {
+      "name": "raw_mesh_sphere_oracle",
+      "status": "passed",
+      "detail": {
+        "rays": 300,
+        "hits": 84,
+        "max_abs_distance_m": 1.1776173609590046e-06
+      }
+    },
+    {
+      "name": "sphere_tangent_inside_and_limits",
+      "status": "passed",
+      "detail": {
+        "rays": 6,
+        "hits": 4,
+        "max_abs_distance_m": 0.0,
+        "tangent_range_m": 3.0,
+        "inside_exit_range_m": 0.5,
+        "inclusive_max_range_m": 2.5,
+        "empty_batch": "passed",
+        "scalar_limit_underflow_rejected": true,
+        "float32_guard_m": 4e-06,
+        "guard_boundary_cases": [
+          {
+            "ideal_surface_m": 4.0,
+            "raw_distance_m": 4.0,
+            "measurement": "finite_inclusive_4m"
+          },
+          {
+            "ideal_surface_m": 4.000002,
+            "raw_distance_m": 4.000001907348633,
+            "measurement": "guard_hit_out_of_range_NaN"
+          },
+          {
+            "ideal_surface_m": 4.000008,
+            "raw_distance_m": 0.0,
+            "measurement": "outside_guard_known_empty_inf"
+          }
+        ]
+      }
+    },
+    {
+      "name": "compact_origins_and_mixed_limits",
+      "status": "passed",
+      "detail": {
+        "compact_origins": 3,
+        "rays": 6,
+        "index_dtypes": [
+          "int32",
+          "int64"
+        ],
+        "broadcast_without_indices": "passed",
+        "invalid_indices": "safe miss",
+        "mixed_per_ray_maximum": [
+          4.0,
+          4.0,
+          4.0,
+          2.0,
+          0.4000000059604645,
+          0.4000000059604645
+        ]
+      }
+    },
+    {
+      "name": "world_geometry_updates_output_ownership",
+      "status": "passed",
+      "detail": {
+        "target_centres_A_B_A_m": [
+          3.0,
+          6.0,
+          3.0
+        ],
+        "saved_output_after_close": "passed",
+        "scene_versions": [
+          0,
+          1,
+          2
+        ],
+        "public_geometry_world_coordinates": "passed"
+      }
+    },
+    {
+      "name": "construction_and_query_streams",
+      "status": "passed",
+      "detail": {
+        "construction_A_trace_B_sync_A_trace_B": "passed",
+        "same_stream_consumption": "passed"
+      }
+    },
+    {
+      "name": "tof_weighted_quantile",
+      "status": "passed",
+      "detail": {
+        "one_near_return_of_16_m": 3.0,
+        "two_near_returns_of_16_m": 2.0,
+        "no_return_keeps_identity_minus_one": -1,
+        "nearest_is_separate_policy": "passed",
+        "mixed_miss_quantile_cases": 48,
+        "equal_depth_tie_order": "row-major stable"
+      }
+    },
+    {
+      "name": "camera_subray_coverage_and_visibility",
+      "status": "passed",
+      "detail": {
+        "visible_subrays": [
+          8,
+          8
+        ],
+        "target_only_subrays": [
+          12,
+          8
+        ],
+        "visible_fraction": [
+          0.6666666666666666,
+          1.0
+        ],
+        "partial_coverage_pixels": 8,
+        "mask_pixels_with_other_representative_id": 2
+      }
+    },
+    {
+      "name": "tof_new_range_small_and_old_target",
+      "status": "passed",
+      "detail": {
+        "tof_fov_deg": 45.0,
+        "tof_range_m": [
+          0.015,
+          4.0
+        ],
+        "small_target_cells_hit_by_samples": 4,
+        "small_target_subray_hits": 12,
+        "old_screenshot_nearest_sphere_surface_m": 4.048228046126042,
+        "old_screenshot_new_range_result": "no return; target outside 4 m"
+      }
+    },
+    {
+      "name": "known_domain_and_batch_rig",
+      "status": "passed",
+      "detail": {
+        "sampled_unknown_coverage": "NaN",
+        "known_first_hit_before_domain_exit": "passed",
+        "mixed_known_and_unknown_cell": {
+          "known_rays": 2,
+          "unknown_rays": 2,
+          "result": "NaN"
+        },
+        "missing_domain_miss": "NaN",
+        "invalid_zero_nan_directions": "NaN",
+        "rig_batch_vs_single": "passed",
+        "same_pass_diagnostics": "passed"
+      }
+    },
+    {
+      "name": "runtime_budget_and_retained_outputs",
+      "status": "passed",
+      "detail": {
+        "training_not_charged_twice": "passed",
+        "torch_cache_reuse_bytes": 1073741824,
+        "fraction_chunk_items": 4949,
+        "retained_output_early_rejection": "passed",
+        "already_live_outputs_not_subtracted_twice": "passed",
+        "tiny_budget_rejects_before_trace": "passed"
+      }
+    },
+    {
+      "name": "unified_chunk_and_perception_parity",
+      "status": "passed",
+      "detail": {
+        "body_poses": 5,
+        "forced_chunk_intervals": [
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "full_scene_queries_per_chunk": 1,
+        "rays_per_body": 4236,
+        "compact_origin_rows_per_body": 5,
+        "no_host_readback": "passed",
+        "compact_parity": {
+          "tensor_fields": 2,
+          "max_float_difference": 0.0
+        },
+        "raw_parity": {
+          "tensor_fields": 41,
+          "max_float_difference": 0.0
+        },
+        "measurement_parity": {
+          "tensor_fields": 8,
+          "max_float_difference": 0.0
+        }
+      }
+    }
+  ],
+  "oracle": "independent float64 ray-triangle and analytic sphere; independent subray pinhole and weighted CDF"
+}

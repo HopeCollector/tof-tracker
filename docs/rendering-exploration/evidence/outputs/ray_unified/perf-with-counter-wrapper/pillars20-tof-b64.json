@@ -1,0 +1,787 @@
+{
+  "status": "ok",
+  "mode": "tof",
+  "batch": 64,
+  "batch_unit": "sensor_views",
+  "scope": "warm formal API; CUDA Pose input to CUDA final observations, including budget planning/chunk assembly/rays/query/postprocessing; excludes scene setup, CPU Pose upload, GUI and host export",
+  "memory_scope": "Torch allocator peak includes fixed inputs/scene plus live final outputs and temporaries; excludes native Warp BVH/driver/other processes. Global free is a shared-device snapshot, not whole-run peak.",
+  "same_scene": "one renderer and static BVH reused for all chunks and calls",
+  "optimizations": "unified rays, shared origins, outer perception, conservative automatic chunks; no RGB, Graph or fused postprocess kernel",
+  "source_sha256": {
+    "devtools/ray_rendering.py": "909aee8f29d946ae125ed551a826ab380b745d4fee1a42202bb708f323acaa54",
+    "devtools/_ray_budget.py": "1746b3a31a9e2f2abf2914137df1fd139c210fe84b227d6ba3b3d10ea6d469ba",
+    "devtools/sensors.py": "1c5b162fa5a9aac5aebf64d3b069fc72718266655dbfd0853248e4a556d456e8",
+    "devtools/_ray_processing.py": "3cd3fb325a3048cf79397e083f00912d83915cbc32542a0aaff470db380032f2",
+    "devtools/perception.py": "fc12778b41841f138f8fc3d296a0d611241a26d90001c868717ca919fc572904",
+    "devtools/config.py": "e6995b751d6be7df57526b1d0cbb12dd7b7b6d2000188542a087c334a49e0d36",
+    "devtools/scene.py": "b20e525a868b6489997a37c7a095eefdce3bd9adeaec8fb26a62d3bf6b6d283e",
+    "devtools/mesh.py": "df58c2bb3eeb5faa36991da39cf4f2545c2b89ada1402877a3deb15dc765ed56",
+    "configs/devtools.json": "db10a9cef7ff010000ad773258a7bfbd5562e2c04d12976dfb45be5b839e051a",
+    "experiments/unified_ray_perf/benchmark.py": "8bee4c2c8ff185f6d87136bd04dcdc93fc8f8d7c03b85c9697329054fe8f2d95"
+  },
+  "source_snapshot": "outputs/ray_unified/perf/pillars20-tof-b64-source",
+  "map": {
+    "path": "outputs/sensor_perf/maps/pillars-20.obj",
+    "sha256": "3aa9a46c12ac10fa2df6b3c342b57b69d3621906baad461dc9b59f94649deab4"
+  },
+  "config": {
+    "vehicle_radius_m": 0.2,
+    "target_radius_m": 0.3,
+    "sensors": {
+      "tof": {
+        "width": 8,
+        "height": 8,
+        "hfov_deg": 45.0,
+        "vfov_deg": 45.0,
+        "min_range_m": 0.015,
+        "max_range_m": 4.0,
+        "samples_per_axis": 4
+      },
+      "camera": {
+        "width": 160,
+        "height": 120,
+        "hfov_deg": 80.0,
+        "vfov_deg": 60.0,
+        "min_range_m": 0.01,
+        "max_range_m": 30.0,
+        "samples_per_axis": 2
+      },
+      "tof_mounts": [
+        {
+          "position_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion_xyzw": [
+            0.0,
+            0.0,
+            -0.7071067811865475,
+            0.7071067811865476
+          ]
+        },
+        {
+          "position_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion_xyzw": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "position_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion_xyzw": [
+            0.0,
+            0.0,
+            0.7071067811865475,
+            0.7071067811865476
+          ]
+        },
+        {
+          "position_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion_xyzw": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "camera_mount": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "tof_depth_quantile": 0.2,
+      "tof_signal_floor": 0.08
+    },
+    "sampling_runtime": {
+      "max_gpu_memory_fraction": 0.5
+    },
+    "perception": {
+      "min_visible_fraction": 0.2
+    }
+  },
+  "sampling_runtime": {
+    "max_gpu_memory_fraction": 0.5
+  },
+  "environment": {
+    "torch": "2.9.1+cu128",
+    "warp": "1.15.0",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 5070 Ti",
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "cpu_threads": 4
+  },
+  "input": {
+    "seed": 20261016,
+    "pose_sha256": "0227952f6ef5a00a7f116f0e869b0e66b1dc85a9ee2a78e79ae4b245dde1e0a9",
+    "policy": "warp_ray_perf prefix-stable full RPY distribution",
+    "target_position_m": [
+      0.5926600253515211,
+      -14.662320404042191,
+      1.5
+    ]
+  },
+  "scene_setup_ms": 19.75837000645697,
+  "geometry_before": {
+    "backend": "warp_mesh_bvh_analytic_spheres",
+    "warp_version": "1.15.0",
+    "device": "cuda:0",
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/pillar_12",
+      "map/pillar_13",
+      "map/pillar_14",
+      "map/pillar_15",
+      "map/pillar_16",
+      "map/pillar_17",
+      "map/pillar_18",
+      "map/pillar_19",
+      "map/ground",
+      "target"
+    ],
+    "vertex_count": 164,
+    "triangle_count": 242,
+    "analytic_sphere_count": 1,
+    "mesh_bvh_builds": 1,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 12,
+    "scene_version": 0,
+    "object_triangle_ranges": {
+      "map/pillar_0": [
+        0,
+        12
+      ],
+      "map/pillar_1": [
+        12,
+        12
+      ],
+      "map/pillar_2": [
+        24,
+        12
+      ],
+      "map/pillar_3": [
+        36,
+        12
+      ],
+      "map/pillar_4": [
+        48,
+        12
+      ],
+      "map/pillar_5": [
+        60,
+        12
+      ],
+      "map/pillar_6": [
+        72,
+        12
+      ],
+      "map/pillar_7": [
+        84,
+        12
+      ],
+      "map/pillar_8": [
+        96,
+        12
+      ],
+      "map/pillar_9": [
+        108,
+        12
+      ],
+      "map/pillar_10": [
+        120,
+        12
+      ],
+      "map/pillar_11": [
+        132,
+        12
+      ],
+      "map/pillar_12": [
+        144,
+        12
+      ],
+      "map/pillar_13": [
+        156,
+        12
+      ],
+      "map/pillar_14": [
+        168,
+        12
+      ],
+      "map/pillar_15": [
+        180,
+        12
+      ],
+      "map/pillar_16": [
+        192,
+        12
+      ],
+      "map/pillar_17": [
+        204,
+        12
+      ],
+      "map/pillar_18": [
+        216,
+        12
+      ],
+      "map/pillar_19": [
+        228,
+        12
+      ],
+      "map/ground": [
+        240,
+        2
+      ]
+    },
+    "batch_geometry_policy": "one static mesh BVH and shared analytic spheres; independent of ray count",
+    "trace_calls": 0,
+    "rays_traced": 0,
+    "cpu_image_readbacks": 0,
+    "per_ray_python_calls": 0,
+    "input": "world directions CUDA N3; dense origins N3, one shared origin 13, or origins M3 plus int32/int64 origin_indices N; radial maximum scalar or CUDA N",
+    "last_origin_count": 0,
+    "last_origin_index_bytes": 0,
+    "output": "owned CUDA radial distance, object/triangle index and world hit point",
+    "near_clip_policy": "none; nearest nonnegative surface before measurement validity",
+    "selection_policy": "full scene or one analytic sphere; static mesh selection unsupported"
+  },
+  "first_forward_ms": 305.91440200805664,
+  "memory_before": {
+    "torch_allocated_bytes": 8545280,
+    "torch_reserved_bytes": 29360128,
+    "torch_peak_allocated_bytes": 8545280,
+    "torch_peak_reserved_bytes": 29360128,
+    "shared_device_free_bytes": 14494400512,
+    "shared_device_total_bytes": 16608133120
+  },
+  "memory_after": {
+    "torch_allocated_bytes": 8545280,
+    "torch_reserved_bytes": 29360128,
+    "torch_peak_allocated_bytes": 16247296,
+    "torch_peak_reserved_bytes": 29360128,
+    "shared_device_free_bytes": 14494400512,
+    "shared_device_total_bytes": 16608133120
+  },
+  "outputs": {
+    "range_m": {
+      "shape": [
+        64,
+        8,
+        8
+      ],
+      "dtype": "torch.float32",
+      "bytes": 16384
+    }
+  },
+  "execution_info": {
+    "chunks": 1,
+    "chunk_count": 1,
+    "chunk_items": 64,
+    "trace_calls": 1,
+    "rays_per_item": 1024,
+    "compact_origins": true,
+    "planner": {
+      "max_gpu_memory_fraction": 0.5,
+      "cuda_total_bytes": 16608133120,
+      "sampling_workset_limit_bytes": 8304066560,
+      "scene_tensor_bytes": 6832,
+      "native_bvh_estimated_bytes": 35072,
+      "native_bvh_measured_bytes": null,
+      "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+      "retained_output_bytes": 32768,
+      "retained_output_allocated_bytes": 0,
+      "future_retained_output_bytes": 32768,
+      "extra_fixed_bytes": 0,
+      "safety_margin_bytes": 67108864,
+      "cuda_free_bytes": 14494400512,
+      "torch_allocated_bytes": 8545280,
+      "torch_reserved_bytes": 29360128,
+      "torch_reusable_cache_bytes": 20814848,
+      "physical_available_estimated_bytes": 14515215360,
+      "fraction_workspace_bytes": 8236883024,
+      "physical_workspace_bytes": 14448073728,
+      "workspace_bytes_per_ray": 384,
+      "rays_per_item": 1024,
+      "workspace_bytes_per_item": 393216,
+      "requested_items": 64,
+      "chunk_items": 64,
+      "chunk_count": 1,
+      "limiting_factor": "sampling_workset_fraction",
+      "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+      "planned_chunk_workset_bytes": 92349360
+    },
+    "diagnostics": false
+  },
+  "wall_samples_ms": [
+    1.6507919935975224,
+    1.063107993104495,
+    1.0235469962935895,
+    1.0003669885918498,
+    1.374779996694997,
+    1.0243069991702214,
+    0.9687470010248944
+  ],
+  "wall_median_ms": 1.0243069991702214,
+  "wall_p95_ms": 1.5679883945267645,
+  "items_per_second": 62481.26787364103,
+  "trace_calls_per_action": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "execution_info_per_action": [
+    {
+      "chunks": 1,
+      "chunk_count": 1,
+      "chunk_items": 64,
+      "trace_calls": 1,
+      "rays_per_item": 1024,
+      "compact_origins": true,
+      "planner": {
+        "max_gpu_memory_fraction": 0.5,
+        "cuda_total_bytes": 16608133120,
+        "sampling_workset_limit_bytes": 8304066560,
+        "scene_tensor_bytes": 6832,
+        "native_bvh_estimated_bytes": 35072,
+        "native_bvh_measured_bytes": null,
+        "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+        "retained_output_bytes": 32768,
+        "retained_output_allocated_bytes": 0,
+        "future_retained_output_bytes": 32768,
+        "extra_fixed_bytes": 0,
+        "safety_margin_bytes": 67108864,
+        "cuda_free_bytes": 14494400512,
+        "torch_allocated_bytes": 8545280,
+        "torch_reserved_bytes": 29360128,
+        "torch_reusable_cache_bytes": 20814848,
+        "physical_available_estimated_bytes": 14515215360,
+        "fraction_workspace_bytes": 8236883024,
+        "physical_workspace_bytes": 14448073728,
+        "workspace_bytes_per_ray": 384,
+        "rays_per_item": 1024,
+        "workspace_bytes_per_item": 393216,
+        "requested_items": 64,
+        "chunk_items": 64,
+        "chunk_count": 1,
+        "limiting_factor": "sampling_workset_fraction",
+        "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+        "planned_chunk_workset_bytes": 92349360
+      },
+      "diagnostics": false
+    },
+    {
+      "chunks": 1,
+      "chunk_count": 1,
+      "chunk_items": 64,
+      "trace_calls": 1,
+      "rays_per_item": 1024,
+      "compact_origins": true,
+      "planner": {
+        "max_gpu_memory_fraction": 0.5,
+        "cuda_total_bytes": 16608133120,
+        "sampling_workset_limit_bytes": 8304066560,
+        "scene_tensor_bytes": 6832,
+        "native_bvh_estimated_bytes": 35072,
+        "native_bvh_measured_bytes": null,
+        "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+        "retained_output_bytes": 32768,
+        "retained_output_allocated_bytes": 0,
+        "future_retained_output_bytes": 32768,
+        "extra_fixed_bytes": 0,
+        "safety_margin_bytes": 67108864,
+        "cuda_free_bytes": 14494400512,
+        "torch_allocated_bytes": 8545280,
+        "torch_reserved_bytes": 29360128,
+        "torch_reusable_cache_bytes": 20814848,
+        "physical_available_estimated_bytes": 14515215360,
+        "fraction_workspace_bytes": 8236883024,
+        "physical_workspace_bytes": 14448073728,
+        "workspace_bytes_per_ray": 384,
+        "rays_per_item": 1024,
+        "workspace_bytes_per_item": 393216,
+        "requested_items": 64,
+        "chunk_items": 64,
+        "chunk_count": 1,
+        "limiting_factor": "sampling_workset_fraction",
+        "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+        "planned_chunk_workset_bytes": 92349360
+      },
+      "diagnostics": false
+    },
+    {
+      "chunks": 1,
+      "chunk_count": 1,
+      "chunk_items": 64,
+      "trace_calls": 1,
+      "rays_per_item": 1024,
+      "compact_origins": true,
+      "planner": {
+        "max_gpu_memory_fraction": 0.5,
+        "cuda_total_bytes": 16608133120,
+        "sampling_workset_limit_bytes": 8304066560,
+        "scene_tensor_bytes": 6832,
+        "native_bvh_estimated_bytes": 35072,
+        "native_bvh_measured_bytes": null,
+        "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+        "retained_output_bytes": 32768,
+        "retained_output_allocated_bytes": 0,
+        "future_retained_output_bytes": 32768,
+        "extra_fixed_bytes": 0,
+        "safety_margin_bytes": 67108864,
+        "cuda_free_bytes": 14494400512,
+        "torch_allocated_bytes": 8545280,
+        "torch_reserved_bytes": 29360128,
+        "torch_reusable_cache_bytes": 20814848,
+        "physical_available_estimated_bytes": 14515215360,
+        "fraction_workspace_bytes": 8236883024,
+        "physical_workspace_bytes": 14448073728,
+        "workspace_bytes_per_ray": 384,
+        "rays_per_item": 1024,
+        "workspace_bytes_per_item": 393216,
+        "requested_items": 64,
+        "chunk_items": 64,
+        "chunk_count": 1,
+        "limiting_factor": "sampling_workset_fraction",
+        "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+        "planned_chunk_workset_bytes": 92349360
+      },
+      "diagnostics": false
+    },
+    {
+      "chunks": 1,
+      "chunk_count": 1,
+      "chunk_items": 64,
+      "trace_calls": 1,
+      "rays_per_item": 1024,
+      "compact_origins": true,
+      "planner": {
+        "max_gpu_memory_fraction": 0.5,
+        "cuda_total_bytes": 16608133120,
+        "sampling_workset_limit_bytes": 8304066560,
+        "scene_tensor_bytes": 6832,
+        "native_bvh_estimated_bytes": 35072,
+        "native_bvh_measured_bytes": null,
+        "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+        "retained_output_bytes": 32768,
+        "retained_output_allocated_bytes": 0,
+        "future_retained_output_bytes": 32768,
+        "extra_fixed_bytes": 0,
+        "safety_margin_bytes": 67108864,
+        "cuda_free_bytes": 14494400512,
+        "torch_allocated_bytes": 8545280,
+        "torch_reserved_bytes": 29360128,
+        "torch_reusable_cache_bytes": 20814848,
+        "physical_available_estimated_bytes": 14515215360,
+        "fraction_workspace_bytes": 8236883024,
+        "physical_workspace_bytes": 14448073728,
+        "workspace_bytes_per_ray": 384,
+        "rays_per_item": 1024,
+        "workspace_bytes_per_item": 393216,
+        "requested_items": 64,
+        "chunk_items": 64,
+        "chunk_count": 1,
+        "limiting_factor": "sampling_workset_fraction",
+        "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+        "planned_chunk_workset_bytes": 92349360
+      },
+      "diagnostics": false
+    },
+    {
+      "chunks": 1,
+      "chunk_count": 1,
+      "chunk_items": 64,
+      "trace_calls": 1,
+      "rays_per_item": 1024,
+      "compact_origins": true,
+      "planner": {
+        "max_gpu_memory_fraction": 0.5,
+        "cuda_total_bytes": 16608133120,
+        "sampling_workset_limit_bytes": 8304066560,
+        "scene_tensor_bytes": 6832,
+        "native_bvh_estimated_bytes": 35072,
+        "native_bvh_measured_bytes": null,
+        "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+        "retained_output_bytes": 32768,
+        "retained_output_allocated_bytes": 0,
+        "future_retained_output_bytes": 32768,
+        "extra_fixed_bytes": 0,
+        "safety_margin_bytes": 67108864,
+        "cuda_free_bytes": 14494400512,
+        "torch_allocated_bytes": 8545280,
+        "torch_reserved_bytes": 29360128,
+        "torch_reusable_cache_bytes": 20814848,
+        "physical_available_estimated_bytes": 14515215360,
+        "fraction_workspace_bytes": 8236883024,
+        "physical_workspace_bytes": 14448073728,
+        "workspace_bytes_per_ray": 384,
+        "rays_per_item": 1024,
+        "workspace_bytes_per_item": 393216,
+        "requested_items": 64,
+        "chunk_items": 64,
+        "chunk_count": 1,
+        "limiting_factor": "sampling_workset_fraction",
+        "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+        "planned_chunk_workset_bytes": 92349360
+      },
+      "diagnostics": false
+    },
+    {
+      "chunks": 1,
+      "chunk_count": 1,
+      "chunk_items": 64,
+      "trace_calls": 1,
+      "rays_per_item": 1024,
+      "compact_origins": true,
+      "planner": {
+        "max_gpu_memory_fraction": 0.5,
+        "cuda_total_bytes": 16608133120,
+        "sampling_workset_limit_bytes": 8304066560,
+        "scene_tensor_bytes": 6832,
+        "native_bvh_estimated_bytes": 35072,
+        "native_bvh_measured_bytes": null,
+        "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+        "retained_output_bytes": 32768,
+        "retained_output_allocated_bytes": 0,
+        "future_retained_output_bytes": 32768,
+        "extra_fixed_bytes": 0,
+        "safety_margin_bytes": 67108864,
+        "cuda_free_bytes": 14494400512,
+        "torch_allocated_bytes": 8545280,
+        "torch_reserved_bytes": 29360128,
+        "torch_reusable_cache_bytes": 20814848,
+        "physical_available_estimated_bytes": 14515215360,
+        "fraction_workspace_bytes": 8236883024,
+        "physical_workspace_bytes": 14448073728,
+        "workspace_bytes_per_ray": 384,
+        "rays_per_item": 1024,
+        "workspace_bytes_per_item": 393216,
+        "requested_items": 64,
+        "chunk_items": 64,
+        "chunk_count": 1,
+        "limiting_factor": "sampling_workset_fraction",
+        "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+        "planned_chunk_workset_bytes": 92349360
+      },
+      "diagnostics": false
+    },
+    {
+      "chunks": 1,
+      "chunk_count": 1,
+      "chunk_items": 64,
+      "trace_calls": 1,
+      "rays_per_item": 1024,
+      "compact_origins": true,
+      "planner": {
+        "max_gpu_memory_fraction": 0.5,
+        "cuda_total_bytes": 16608133120,
+        "sampling_workset_limit_bytes": 8304066560,
+        "scene_tensor_bytes": 6832,
+        "native_bvh_estimated_bytes": 35072,
+        "native_bvh_measured_bytes": null,
+        "native_estimate_scope": "128 bytes/triangle plus 4 KiB allowance; not measured and not a hard upper bound",
+        "retained_output_bytes": 32768,
+        "retained_output_allocated_bytes": 0,
+        "future_retained_output_bytes": 32768,
+        "extra_fixed_bytes": 0,
+        "safety_margin_bytes": 67108864,
+        "cuda_free_bytes": 14494400512,
+        "torch_allocated_bytes": 8545280,
+        "torch_reserved_bytes": 29360128,
+        "torch_reusable_cache_bytes": 20814848,
+        "physical_available_estimated_bytes": 14515215360,
+        "fraction_workspace_bytes": 8236883024,
+        "physical_workspace_bytes": 14448073728,
+        "workspace_bytes_per_ray": 384,
+        "rays_per_item": 1024,
+        "workspace_bytes_per_item": 393216,
+        "requested_items": 64,
+        "chunk_items": 64,
+        "chunk_count": 1,
+        "limiting_factor": "sampling_workset_fraction",
+        "scope": "soft sampling workset cap, not a process-wide allocator limit or driver reservation; existing training allocations constrain free space only; cache reuse and native BVH size are estimates",
+        "planned_chunk_workset_bytes": 92349360
+      },
+      "diagnostics": false
+    }
+  ],
+  "cuda_event_span_ms": [
+    0.9396799802780151,
+    0.9460480213165283,
+    1.1107200384140015
+  ],
+  "event_scope": "complete stream interval including host submission gaps; not pure kernel time",
+  "geometry_after": {
+    "backend": "warp_mesh_bvh_analytic_spheres",
+    "warp_version": "1.15.0",
+    "device": "cuda:0",
+    "object_ids": [
+      "map/pillar_0",
+      "map/pillar_1",
+      "map/pillar_2",
+      "map/pillar_3",
+      "map/pillar_4",
+      "map/pillar_5",
+      "map/pillar_6",
+      "map/pillar_7",
+      "map/pillar_8",
+      "map/pillar_9",
+      "map/pillar_10",
+      "map/pillar_11",
+      "map/pillar_12",
+      "map/pillar_13",
+      "map/pillar_14",
+      "map/pillar_15",
+      "map/pillar_16",
+      "map/pillar_17",
+      "map/pillar_18",
+      "map/pillar_19",
+      "map/ground",
+      "target"
+    ],
+    "vertex_count": 164,
+    "triangle_count": 242,
+    "analytic_sphere_count": 1,
+    "mesh_bvh_builds": 1,
+    "geometry_uploads": 1,
+    "object_transform_uploads": 1,
+    "object_transform_updates": 0,
+    "object_transform_upload_bytes": 12,
+    "scene_version": 0,
+    "object_triangle_ranges": {
+      "map/pillar_0": [
+        0,
+        12
+      ],
+      "map/pillar_1": [
+        12,
+        12
+      ],
+      "map/pillar_2": [
+        24,
+        12
+      ],
+      "map/pillar_3": [
+        36,
+        12
+      ],
+      "map/pillar_4": [
+        48,
+        12
+      ],
+      "map/pillar_5": [
+        60,
+        12
+      ],
+      "map/pillar_6": [
+        72,
+        12
+      ],
+      "map/pillar_7": [
+        84,
+        12
+      ],
+      "map/pillar_8": [
+        96,
+        12
+      ],
+      "map/pillar_9": [
+        108,
+        12
+      ],
+      "map/pillar_10": [
+        120,
+        12
+      ],
+      "map/pillar_11": [
+        132,
+        12
+      ],
+      "map/pillar_12": [
+        144,
+        12
+      ],
+      "map/pillar_13": [
+        156,
+        12
+      ],
+      "map/pillar_14": [
+        168,
+        12
+      ],
+      "map/pillar_15": [
+        180,
+        12
+      ],
+      "map/pillar_16": [
+        192,
+        12
+      ],
+      "map/pillar_17": [
+        204,
+        12
+      ],
+      "map/pillar_18": [
+        216,
+        12
+      ],
+      "map/pillar_19": [
+        228,
+        12
+      ],
+      "map/ground": [
+        240,
+        2
+      ]
+    },
+    "batch_geometry_policy": "one static mesh BVH and shared analytic spheres; independent of ray count",
+    "trace_calls": 14,
+    "rays_traced": 917504,
+    "cpu_image_readbacks": 0,
+    "per_ray_python_calls": 0,
+    "input": "world directions CUDA N3; dense origins N3, one shared origin 13, or origins M3 plus int32/int64 origin_indices N; radial maximum scalar or CUDA N",
+    "last_origin_count": 64,
+    "last_origin_index_bytes": 262144,
+    "output": "owned CUDA radial distance, object/triangle index and world hit point",
+    "near_clip_policy": "none; nearest nonnegative surface before measurement validity",
+    "selection_policy": "full scene or one analytic sphere; static mesh selection unsupported"
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "status": "failed",
+  "device": "NVIDIA GeForce RTX 5070 Ti",
+  "checks": [
+    {
+      "name": "raw_mesh_sphere_oracle",
+      "status": "passed",
+      "detail": {
+        "rays": 300,
+        "hits": 84,
+        "max_abs_distance_m": 1.1776173609590046e-06
+      }
+    },
+    {
+      "name": "sphere_tangent_inside_and_limits",
+      "status": "passed",
+      "detail": {
+        "rays": 6,
+        "hits": 4,
+        "max_abs_distance_m": 0.0,
+        "tangent_range_m": 3.0,
+        "inside_exit_range_m": 0.5,
+        "inclusive_max_range_m": 2.5,
+        "empty_batch": "passed"
+      }
+    },
+    {
+      "name": "world_geometry_updates_output_ownership",
+      "status": "passed",
+      "detail": {
+        "target_centres_A_B_A_m": [
+          3.0,
+          6.0,
+          3.0
+        ],
+        "saved_output_after_close": "passed",
+        "scene_versions": [
+          0,
+          1,
+          2
+        ],
+        "public_geometry_world_coordinates": "passed"
+      }
+    },
+    {
+      "name": "construction_and_query_streams",
+      "status": "passed",
+      "detail": {
+        "construction_A_trace_B_sync_A_trace_B": "passed",
+        "same_stream_consumption": "passed"
+      }
+    },
+    {
+      "name": "tof_weighted_quantile",
+      "status": "passed",
+      "detail": {
+        "one_near_return_of_16_m": 3.0,
+        "two_near_returns_of_16_m": 2.0,
+        "no_return_keeps_identity_minus_one": -1,
+        "nearest_is_separate_policy": "passed",
+        "mixed_miss_quantile_cases": 48
+      }
+    },
+    {
+      "name": "camera_subray_coverage_and_visibility",
+      "status": "passed",
+      "detail": {
+        "visible_subrays": [
+          8,
+          8
+        ],
+        "target_only_subrays": [
+          12,
+          8
+        ],
+        "visible_fraction": [
+          0.6666666666666666,
+          1.0
+        ],
+        "partial_coverage_pixels": 8,
+        "mask_pixels_with_other_representative_id": 2
+      }
+    },
+    {
+      "name": "tof_new_range_small_and_old_target",
+      "status": "passed",
+      "detail": {
+        "tof_fov_deg": 45.0,
+        "tof_range_m": [
+          0.015,
+          4.0
+        ],
+        "small_target_cells_hit_by_samples": 4,
+        "small_target_subray_hits": 12,
+        "old_screenshot_nearest_sphere_surface_m": 4.048228046126042,
+        "old_screenshot_new_range_result": "no return; target outside 4 m"
+      }
+    },
+    {
+      "name": "known_domain_and_batch_rig",
+      "status": "failed",
+      "error_type": "ValueError",
+      "error": "origins must be contiguous float32 CUDA [N,3] on cuda:0",
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/tests/verify_ray_sensors.py\", line 552, in main\n    records.append({\"name\": name, \"status\": \"passed\", \"detail\": action()})\n                                                                ^^^^^^^^\n  File \"/workspace/tests/verify_ray_sensors.py\", line 490, in verify_known_domain_and_batch_rig\n    hits = renderer.trace(bad_origins, bad_directions, mixed_config.max_range_m)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/devtools/ray_rendering.py\", line 328, in trace\n    raise ValueError(f\"{name} must be contiguous float32 CUDA [N,3] on {self.device}\")\nValueError: origins must be contiguous float32 CUDA [N,3] on cuda:0\n"
+    }
+  ],
+  "oracle": "independent float64 ray-triangle and analytic sphere; independent subray pinhole and weighted CDF"
+}
