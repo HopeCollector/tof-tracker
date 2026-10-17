@@ -1,0 +1,3973 @@
+{
+  "measurement_date": "2026-10-17",
+  "units": "meters unless a key says otherwise",
+  "scope": "fixed small closed meshes; sampled numerical evidence, not a global error or continuity certificate",
+  "runs": {
+    "baseline-portable-20261017": {
+      "variant": "original",
+      "environment": {
+        "python": "3.12.3",
+        "torch": "2.9.1+cu128",
+        "numpy": "2.5.4",
+        "cuda_available": true,
+        "cuda": "12.8",
+        "image_id": "sha256:75b0980c4d866bc46627c4634bc7ff8f8c59ac01d9905ea43da215d8e02bcf57",
+        "source_revision": "99b9ead36651f85ffe9d9073726fef014cd80461",
+        "upstream_revision": "8db373ef71d65be24badf6ae10750a932bbc223b",
+        "python_packages": [
+          {
+            "name": "filelock",
+            "version": "3.32.3"
+          },
+          {
+            "name": "fsspec",
+            "version": "2026.7.0"
+          },
+          {
+            "name": "Jinja2",
+            "version": "3.1.6"
+          },
+          {
+            "name": "MarkupSafe",
+            "version": "3.0.3"
+          },
+          {
+            "name": "mpmath",
+            "version": "1.3.0"
+          },
+          {
+            "name": "networkx",
+            "version": "3.6.1"
+          },
+          {
+            "name": "numpy",
+            "version": "2.5.4"
+          },
+          {
+            "name": "nvidia-cublas-cu12",
+            "version": "12.8.4.1"
+          },
+          {
+            "name": "nvidia-cuda-cupti-cu12",
+            "version": "12.8.90"
+          },
+          {
+            "name": "nvidia-cuda-nvrtc-cu12",
+            "version": "12.8.93"
+          },
+          {
+            "name": "nvidia-cuda-runtime-cu12",
+            "version": "12.8.90"
+          },
+          {
+            "name": "nvidia-cudnn-cu12",
+            "version": "9.10.2.21"
+          },
+          {
+            "name": "nvidia-cufft-cu12",
+            "version": "11.3.3.83"
+          },
+          {
+            "name": "nvidia-cufile-cu12",
+            "version": "1.13.1.3"
+          },
+          {
+            "name": "nvidia-curand-cu12",
+            "version": "10.3.9.90"
+          },
+          {
+            "name": "nvidia-cusolver-cu12",
+            "version": "11.7.3.90"
+          },
+          {
+            "name": "nvidia-cusparse-cu12",
+            "version": "12.5.8.93"
+          },
+          {
+            "name": "nvidia-cusparselt-cu12",
+            "version": "0.7.1"
+          },
+          {
+            "name": "nvidia-nccl-cu12",
+            "version": "2.27.5"
+          },
+          {
+            "name": "nvidia-nvjitlink-cu12",
+            "version": "12.8.93"
+          },
+          {
+            "name": "nvidia-nvshmem-cu12",
+            "version": "3.3.20"
+          },
+          {
+            "name": "nvidia-nvtx-cu12",
+            "version": "12.8.90"
+          },
+          {
+            "name": "pip",
+            "version": "24.0"
+          },
+          {
+            "name": "setuptools",
+            "version": "78.1.0"
+          },
+          {
+            "name": "sympy",
+            "version": "1.14.0"
+          },
+          {
+            "name": "torch",
+            "version": "2.9.1+cu128"
+          },
+          {
+            "name": "triton",
+            "version": "3.5.1"
+          },
+          {
+            "name": "typing_extensions",
+            "version": "4.16.0"
+          }
+        ],
+        "system_dependencies": [
+          "cmake 3.28.3-1build7",
+          "g++ 4:13.2.0-7ubuntu1",
+          "libcereal-dev 1.3.2+dfsg-5",
+          "libglm-dev 0.9.9.8+ds-7",
+          "libspdlog-dev 1:1.12.0+ds-2build1"
+        ],
+        "gpu": "NVIDIA GeForce RTX 5070 Ti",
+        "gpu_memory_bytes": 16608133120
+      },
+      "assessment": {
+        "integration_passed": true,
+        "adaptive_seam_acceptance_passed": false,
+        "adaptive_observed_distance_10mm_passed": true,
+        "controlled_smoothing_policy_implemented": false
+      },
+      "source_hashes": {
+        "experiments/adaptive_distance_eval/CMakeLists.txt": "b98f165bc6249f7797484dc0475ff2451c8bafdd81c557cbffdc7c1aec87709a",
+        "experiments/adaptive_distance_eval/Dockerfile": "7761a28d25f43bbaad9f1aacf11f0fe7133fadc1400fa003b41cfc99e699d7ca",
+        "experiments/adaptive_distance_eval/README.md": "e24a7d8574e98574859beebdc868a90efba58874050511ab328adf8879b1baf8",
+        "experiments/adaptive_distance_eval/REUSE.md": "1652a8ad74ed2de18db5b8b65c6aab29c673e01099d084d8eb8203ae3c846fa1",
+        "experiments/adaptive_distance_eval/__init__.py": "88053b0de255aadb9bc0845d42eb26a80db7fc714c99cdc06cf7a78506193d5f",
+        "experiments/adaptive_distance_eval/evaluate.py": "3c5e02593a9c891581dcb1d8f477492ee2c4cdc1bd6a8a356738a23100a86fa1",
+        "experiments/adaptive_distance_eval/export_sdflib.cpp": "956165d1722ff48e187392b0dc1dcbd3679ef7c481ce1b08a443d9eb72a2e463",
+        "experiments/adaptive_distance_eval/field.py": "1e3c6731cb571a45dcfc683f148e3df98aa7818acc351b9651a7df66ca340611",
+        "experiments/adaptive_distance_eval/fixtures.py": "e53d59b33c1e77bed36d01732f8cd2b8768cac551ff40e9f2627dff2f1ffb8f4",
+        "experiments/adaptive_distance_eval/run.sh": "797ab0de76ff4e917211154a314a8def858414b21c48c1b43eed91041da5fe10",
+        "experiments/adaptive_distance_eval/seam_checks.py": "01668cc9b0bac684c8b68dcee1abbe9c8feaebbe65a1d18b49b1ab756c78064c",
+        "experiments/adaptive_distance_eval/trajectory_checks.py": "6ba587b11ad823960498ac9ab3c5c881834bc9a7633a2aa2ab0398a4dbb58e93",
+        "devtools/trajectory.py": "4b996a770f8919ef19a47e4e8eb11bdd56ff95846167ab2f7b96c040de6dae65"
+      },
+      "evidence_path": "outputs/adaptive_distance_eval/baseline-portable-20261017/results.json",
+      "evidence_sha256": "e413249846ad69fe99950166457d571478fb218439b6dae182af322ecb22afaa",
+      "cases": {
+        "box": {
+          "coarse": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 3,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 512
+            },
+            "leaf_payload_bytes": 143360,
+            "lookup_table_bytes": 4096,
+            "build_process_wall_ms": 2.755219000391662,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 7.841452624307577e-07,
+              "raw_world_gradient_max_error": 7.425481736527863e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.5881382971843855,
+                "p95_abs": 0.03289449703323578,
+                "rmse": 0.03769921206309927,
+                "mean": 0.0015179872809792435,
+                "min": -0.4963373492605251,
+                "max": 0.5881382971843855
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 3,
+              "threads": 1,
+              "build_seconds": 0.000952516,
+              "leaf_count": 512
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 2.220446049250313e-16,
+              "maximum_overestimate_m": 0.0367562086370975,
+              "interior_sign_misses": 176,
+              "sign_misses_beyond_5mm": 118,
+              "gradient_reference_count": 18365,
+              "distance_10mm_budget_observed_pass": false,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.053482343398580406,
+                "p95_abs": 0.013925637150029683,
+                "rmse": 0.005823384960189697
+              },
+              "interior_distance_error_m": {
+                "count": 2639,
+                "max_abs": 0.053482343398580406,
+                "p95_abs": 0.028896822552382375,
+                "rmse": 0.014423756488830621
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55095,
+                "max_abs": 1.265215727385789,
+                "p95_abs": 0.23233429902927663,
+                "rmse": 0.10443381586538455
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 1.1357806942169368e-07,
+                "gradient_component_error": 1.1410772537238933e-06
+              }
+            }
+          },
+          "adaptive": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 252,
+              "4": 1748,
+              "5": 1778,
+              "6": 7024
+            },
+            "leaf_payload_bytes": 3024560,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 25.26085799036082,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 3.953191876071571e-07,
+              "raw_world_gradient_max_error": 6.595326961844616e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4671566682774007,
+                "p95_abs": 0.0087544161603553,
+                "rmse": 0.014555757011257475,
+                "mean": -7.626527189706251e-05,
+                "min": -0.4671566682774007,
+                "max": 0.4493805081881197
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "cuda_query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "timing_cpu": {
+              "count": 65536,
+              "dtype": "float32",
+              "scope": "resident field/query; forward + mean(exp(-d)) + position backward, synchronized; lookup table construction excluded",
+              "samples_ms": [
+                12.156255994341336,
+                10.278501998982392,
+                11.670912004774436,
+                10.703205000027083,
+                13.10218300204724,
+                11.16151899623219,
+                11.875143987708725,
+                10.212912005954422,
+                11.961074007558636,
+                10.539705006522126
+              ],
+              "median_ms": 11.416215500503313,
+              "p95_ms": 12.676515848579582
+            },
+            "timing_cuda": {
+              "count": 65536,
+              "dtype": "float32",
+              "scope": "resident field/query; forward + mean(exp(-d)) + position backward, synchronized; lookup table construction excluded",
+              "samples_ms": [
+                0.5964739975752309,
+                0.5880840035388246,
+                0.7878760079620406,
+                0.6869939970783889,
+                0.7488260016543791,
+                0.658844001009129,
+                0.5940950068179518,
+                0.6566439988091588,
+                0.592034004512243,
+                0.6574550061486661
+              ],
+              "median_ms": 0.6570495024789125,
+              "p95_ms": 0.7703035051235929
+            },
+            "cpu_cuda_float64_parity": {
+              "distance_max_abs": 0.0,
+              "gradient_max_abs": 5.551115123125783e-16
+            },
+            "cuda_float32_vs_float64": {
+              "distance_max_abs": 9.65938519170706e-08,
+              "gradient_max_abs": 1.5190594980785121e-06,
+              "note": "includes float32 input quantization"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.020740526,
+              "leaf_count": 10802
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 2.220446049250313e-16,
+              "maximum_overestimate_m": 0.005695749190930854,
+              "interior_sign_misses": 4,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 18365,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.005796273334382027,
+                "p95_abs": 0.0008169370113294821,
+                "rmse": 0.00044056578400313885
+              },
+              "interior_distance_error_m": {
+                "count": 2639,
+                "max_abs": 0.005796273334382027,
+                "p95_abs": 0.0019917595548586044,
+                "rmse": 0.0008322335322877381
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55095,
+                "max_abs": 0.9210379605787267,
+                "p95_abs": 0.01825609160417964,
+                "rmse": 0.034593084892133814
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.28135271468966e-08,
+                "gradient_component_error": 3.7245250983364286e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 36195,
+                "same_level": 25467,
+                "coarse_fine": 10728,
+                "by_axis": {
+                  "x": 12034,
+                  "y": 12361,
+                  "z": 11800
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": false,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 36195,
+                "probe_count": 904875,
+                "value_jump_m": {
+                  "maximum": 0.0035156276499081623,
+                  "p95": 5.408384845584356e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 1.0000017136344705,
+                  "p95": 3.879955059190582e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 602,
+                "gradient_fail_faces": 8
+              },
+              "same_level": {
+                "face_count": 25467,
+                "probe_count": 636675,
+                "value_jump_m": {
+                  "maximum": 0.0035156276499081623,
+                  "p95": 5.295243252503848e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 1.0000017136344705,
+                  "p95": 4.039279914841104e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 492,
+                "gradient_fail_faces": 8
+              },
+              "coarse_fine": {
+                "face_count": 10728,
+                "probe_count": 268200,
+                "value_jump_m": {
+                  "maximum": 1.636879006949865e-05,
+                  "p95": 5.647615215167981e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0006621729892808977,
+                  "p95": 3.512723087962717e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 110,
+                "gradient_fail_faces": 0
+              }
+            },
+            "trajectory_cpu": {
+              "passed": true,
+              "checks": {
+                "float64_chain": true,
+                "finite_gradients_all_stages": true,
+                "all_parameter_groups_active": true,
+                "central_fd_all_ten_parameters_both_steps": true,
+                "central_fd_stable_between_steps": true,
+                "xyz_position_variation": true,
+                "valid_leaf_ids": true,
+                "trajectory_crosses_leaves": true,
+                "entire_curve_hulls_in_domain_for_all_accepted_evaluations": true,
+                "three_accepted_descent_steps": true,
+                "sampled_cost_decreased": true
+              },
+              "scope": "sampled cost gradient and descent only; no continuous clearance or integral claim",
+              "fixture": {
+                "initial_position": [
+                  -0.65,
+                  0.43,
+                  0.48
+                ],
+                "initial_velocity": [
+                  0.1,
+                  -0.06,
+                  -0.04
+                ],
+                "initial_acceleration": [
+                  0.03,
+                  0.02,
+                  -0.01
+                ],
+                "terminal_position": [
+                  0.65,
+                  0.4,
+                  0.45
+                ],
+                "terminal_velocity": [
+                  0.14,
+                  0.05,
+                  -0.02
+                ],
+                "terminal_acceleration": [
+                  -0.02,
+                  0.03,
+                  0.04
+                ],
+                "duration_s": 1.4,
+                "sample_count": 73,
+                "clearance_m": 0.1,
+                "cost_scale_m": 0.15
+              },
+              "gradients": {
+                "active_groups": {
+                  "terminal_position": true,
+                  "terminal_velocity": true,
+                  "terminal_acceleration": true,
+                  "duration": true
+                },
+                "fd_atol": 2e-06,
+                "fd_rtol": 0.001,
+                "maximum_absolute_error": 6.47586083231122e-05,
+                "rows": [
+                  {
+                    "parameter": "terminal_position_x",
+                    "autograd": -0.1652670931851532,
+                    "step": 2e-05,
+                    "fd": -0.1652670929733202,
+                    "fd_half_step": -0.165267093131527,
+                    "absolute_error": [
+                      2.1183299558913404e-10,
+                      5.3626214580049236e-11
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_position_y",
+                    "autograd": -0.5043424270974455,
+                    "step": 2e-05,
+                    "fd": -0.5043747442916302,
+                    "fd_half_step": -0.5044071857057686,
+                    "absolute_error": [
+                      3.231719418472778e-05,
+                      6.47586083231122e-05
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_position_z",
+                    "autograd": -0.24765075595909947,
+                    "step": 2e-05,
+                    "fd": -0.24765075524804667,
+                    "fd_half_step": -0.24765075578025983,
+                    "absolute_error": [
+                      7.110527999731886e-10,
+                      1.7883963754350418e-10
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_x",
+                    "autograd": 0.02347285796712015,
+                    "step": 2e-05,
+                    "fd": 0.023472857977463454,
+                    "fd_half_step": 0.023472857972606228,
+                    "absolute_error": [
+                      1.034330260329952e-11,
+                      5.48607687056446e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_y",
+                    "autograd": 0.16143134941310033,
+                    "step": 2e-05,
+                    "fd": 0.16143134940471704,
+                    "fd_half_step": 0.16143134941026815,
+                    "absolute_error": [
+                      8.383294058944557e-12,
+                      2.8321789358187743e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_z",
+                    "autograd": 0.08039008334993877,
+                    "step": 2e-05,
+                    "fd": 0.08039008332696995,
+                    "fd_half_step": 0.08039008334431719,
+                    "absolute_error": [
+                      2.2968821289381935e-11,
+                      5.6215865296138645e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_x",
+                    "autograd": -0.0012410912927694427,
+                    "step": 2e-05,
+                    "fd": -0.001241091294318375,
+                    "fd_half_step": -0.0012410912950122643,
+                    "absolute_error": [
+                      1.5489322064549116e-12,
+                      2.2428215968456344e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_y",
+                    "autograd": -0.01958887777063258,
+                    "step": 2e-05,
+                    "fd": -0.019588877771953284,
+                    "fd_half_step": -0.019588877769871615,
+                    "absolute_error": [
+                      1.3207039628593265e-12,
+                      7.609642083128421e-13
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_z",
+                    "autograd": -0.00977775946561724,
+                    "step": 2e-05,
+                    "fd": -0.009777759465284808,
+                    "fd_half_step": -0.00977775946320314,
+                    "absolute_error": [
+                      3.3243199859533945e-13,
+                      2.414100169767508e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "duration_s",
+                    "autograd": 0.015007342849286363,
+                    "step": 2.8e-05,
+                    "fd": 0.015007342853046961,
+                    "fd_half_step": 0.015007342858498949,
+                    "absolute_error": [
+                      3.7605977359911336e-12,
+                      9.212585555529174e-12
+                    ],
+                    "passed": true
+                  }
+                ]
+              },
+              "optimization": {
+                "cost_history": [
+                  0.1801140955058577,
+                  0.16919903804610945,
+                  0.15972239397095478,
+                  0.15142071452749195
+                ],
+                "initial_cost": 0.1801140955058577,
+                "final_cost": 0.15142071452749195
+              },
+              "trajectory": {
+                "unique_leaf_count": 13,
+                "leaf_transitions": 12,
+                "position_spans_xyz_m": [
+                  1.2999999999999994,
+                  0.0425562007592476,
+                  0.029999999999999916
+                ],
+                "minimum_sampled_distance_m": 0.2656072407912694,
+                "minimum_hull_domain_margin_all_evaluations_m": 0.13667200015838077
+              }
+            },
+            "trajectory_cuda": {
+              "passed": true,
+              "checks": {
+                "float64_chain": true,
+                "finite_gradients_all_stages": true,
+                "all_parameter_groups_active": true,
+                "central_fd_all_ten_parameters_both_steps": true,
+                "central_fd_stable_between_steps": true,
+                "xyz_position_variation": true,
+                "valid_leaf_ids": true,
+                "trajectory_crosses_leaves": true,
+                "entire_curve_hulls_in_domain_for_all_accepted_evaluations": true,
+                "three_accepted_descent_steps": true,
+                "sampled_cost_decreased": true
+              },
+              "scope": "sampled cost gradient and descent only; no continuous clearance or integral claim",
+              "fixture": {
+                "initial_position": [
+                  -0.65,
+                  0.43,
+                  0.48
+                ],
+                "initial_velocity": [
+                  0.1,
+                  -0.06,
+                  -0.04
+                ],
+                "initial_acceleration": [
+                  0.03,
+                  0.02,
+                  -0.01
+                ],
+                "terminal_position": [
+                  0.65,
+                  0.4,
+                  0.45
+                ],
+                "terminal_velocity": [
+                  0.14,
+                  0.05,
+                  -0.02
+                ],
+                "terminal_acceleration": [
+                  -0.02,
+                  0.03,
+                  0.04
+                ],
+                "duration_s": 1.4,
+                "sample_count": 73,
+                "clearance_m": 0.1,
+                "cost_scale_m": 0.15
+              },
+              "gradients": {
+                "active_groups": {
+                  "terminal_position": true,
+                  "terminal_velocity": true,
+                  "terminal_acceleration": true,
+                  "duration": true
+                },
+                "fd_atol": 2e-06,
+                "fd_rtol": 0.001,
+                "maximum_absolute_error": 6.475860832355629e-05,
+                "rows": [
+                  {
+                    "parameter": "terminal_position_x",
+                    "autograd": -0.16526709318515365,
+                    "step": 2e-05,
+                    "fd": -0.1652670929733202,
+                    "fd_half_step": -0.16526709313291477,
+                    "absolute_error": [
+                      2.118334396783439e-10,
+                      5.223887988847764e-11
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_position_y",
+                    "autograd": -0.504342427097445,
+                    "step": 2e-05,
+                    "fd": -0.5043747442923241,
+                    "fd_half_step": -0.5044071857057686,
+                    "absolute_error": [
+                      3.231719487906126e-05,
+                      6.475860832355629e-05
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_position_z",
+                    "autograd": -0.24765075595909947,
+                    "step": 2e-05,
+                    "fd": -0.24765075524735278,
+                    "fd_half_step": -0.2476507557816476,
+                    "absolute_error": [
+                      7.117466893635793e-10,
+                      1.7745185876272274e-10
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_x",
+                    "autograd": 0.023472857967120307,
+                    "step": 2e-05,
+                    "fd": 0.023472857977463454,
+                    "fd_half_step": 0.023472857972606228,
+                    "absolute_error": [
+                      1.0343146478186682e-11,
+                      5.485920745451622e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_y",
+                    "autograd": 0.1614313494130999,
+                    "step": 2e-05,
+                    "fd": 0.16143134940471704,
+                    "fd_half_step": 0.16143134941026815,
+                    "absolute_error": [
+                      8.382849969734707e-12,
+                      2.8317348466089243e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_z",
+                    "autograd": 0.08039008334993877,
+                    "step": 2e-05,
+                    "fd": 0.08039008332696995,
+                    "fd_half_step": 0.08039008334292941,
+                    "absolute_error": [
+                      2.2968821289381935e-11,
+                      7.00936531039531e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_x",
+                    "autograd": -0.0012410912927694698,
+                    "step": 2e-05,
+                    "fd": -0.0012410912950122643,
+                    "fd_half_step": -0.0012410912964000431,
+                    "absolute_error": [
+                      2.2427944917913223e-12,
+                      3.630573272572768e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_y",
+                    "autograd": -0.0195888777706325,
+                    "step": 2e-05,
+                    "fd": -0.019588877770565505,
+                    "fd_half_step": -0.019588877768483837,
+                    "absolute_error": [
+                      6.699502064222429e-14,
+                      2.148663191814393e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_z",
+                    "autograd": -0.00977775946561724,
+                    "step": 2e-05,
+                    "fd": -0.009777759465284808,
+                    "fd_half_step": -0.009777759464590918,
+                    "absolute_error": [
+                      3.3243199859533945e-13,
+                      1.0263213889860623e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "duration_s",
+                    "autograd": 0.01500734284928644,
+                    "step": 2.8e-05,
+                    "fd": 0.015007342853046961,
+                    "fd_half_step": 0.015007342858498949,
+                    "absolute_error": [
+                      3.7605214081581906e-12,
+                      9.21250922769623e-12
+                    ],
+                    "passed": true
+                  }
+                ]
+              },
+              "optimization": {
+                "cost_history": [
+                  0.1801140955058577,
+                  0.16919903804610945,
+                  0.15972239397095478,
+                  0.15142071452749195
+                ],
+                "initial_cost": 0.1801140955058577,
+                "final_cost": 0.15142071452749195
+              },
+              "trajectory": {
+                "unique_leaf_count": 13,
+                "leaf_transitions": 12,
+                "position_spans_xyz_m": [
+                  1.2999999999999994,
+                  0.0425562007592476,
+                  0.029999999999999916
+                ],
+                "minimum_sampled_distance_m": 0.2656072407912694,
+                "minimum_hull_domain_margin_all_evaluations_m": 0.13667200015838077
+              }
+            }
+          },
+          "tight": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.00025,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 151,
+              "4": 1589,
+              "5": 8880,
+              "6": 12096
+            },
+            "leaf_payload_bytes": 6360480,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 50.84981900290586,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 3.953191876071571e-07,
+              "raw_world_gradient_max_error": 6.595326961844616e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4671566682774007,
+                "p95_abs": 0.0067742665755370505,
+                "rmse": 0.014319466262757255,
+                "mean": -6.150898789686937e-05,
+                "min": -0.4671566682774007,
+                "max": 0.4493805081881197
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.044868187,
+              "leaf_count": 22716
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 2.220446049250313e-16,
+              "maximum_overestimate_m": 0.005695749190930854,
+              "interior_sign_misses": 4,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 18365,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.005796273334382027,
+                "p95_abs": 0.0004404220494633238,
+                "rmse": 0.00035552732235740337
+              },
+              "interior_distance_error_m": {
+                "count": 2639,
+                "max_abs": 0.005796273334382027,
+                "p95_abs": 0.0019917595548586044,
+                "rmse": 0.0008325619636469329
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55095,
+                "max_abs": 0.9210379605787267,
+                "p95_abs": 0.012471628575058194,
+                "rmse": 0.034244137713277806
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 7.71409972566417e-08,
+                "gradient_component_error": 3.7245250983364286e-07
+              }
+            }
+          },
+          "unconstrained": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": false
+            },
+            "leaf_depth_histogram": {
+              "3": 327,
+              "4": 1234,
+              "5": 1191,
+              "6": 6216
+            },
+            "leaf_payload_bytes": 2511040,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 16.15430400124751,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 3.933336925054931e-07,
+              "raw_world_gradient_max_error": 6.435928851633577e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4671566682774007,
+                "p95_abs": 0.007944506945758328,
+                "rmse": 0.01452347777825252,
+                "mean": -0.00010498105240936845,
+                "min": -0.4671566682774007,
+                "max": 0.449380482589691
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.012034115,
+              "leaf_count": 8968
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 2.220446049250313e-16,
+              "maximum_overestimate_m": 0.005695748884070567,
+              "interior_sign_misses": 4,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 18365,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.005796268714254968,
+                "p95_abs": 0.0009063848214262152,
+                "rmse": 0.0004521010766738436
+              },
+              "interior_distance_error_m": {
+                "count": 2639,
+                "max_abs": 0.005796268714254968,
+                "p95_abs": 0.0019278389545821595,
+                "rmse": 0.0008069906936172025
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55095,
+                "max_abs": 0.9080014618261276,
+                "p95_abs": 0.017992364579105875,
+                "rmse": 0.03422808818710752
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.874094037381042e-08,
+                "gradient_component_error": 7.529532051187005e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 30183,
+                "same_level": 21117,
+                "coarse_fine": 9066,
+                "by_axis": {
+                  "x": 10044,
+                  "y": 10290,
+                  "z": 9849
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": false,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 30183,
+                "probe_count": 754575,
+                "value_jump_m": {
+                  "maximum": 0.005117861525245607,
+                  "p95": 0.0003341724810311134,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 1.414217566336652,
+                  "p95": 0.030995291501930058,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 3552,
+                "gradient_fail_faces": 3378
+              },
+              "same_level": {
+                "face_count": 21117,
+                "probe_count": 527925,
+                "value_jump_m": {
+                  "maximum": 1.696934603323541e-05,
+                  "p95": 3.1619353865475197e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.00031188439766327266,
+                  "p95": 2.5801655482869347e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 174,
+                "gradient_fail_faces": 0
+              },
+              "coarse_fine": {
+                "face_count": 9066,
+                "probe_count": 226650,
+                "value_jump_m": {
+                  "maximum": 0.005117861525245607,
+                  "p95": 0.0011295599230746257,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 1.414217566336652,
+                  "p95": 0.0889254043996327,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 3378,
+                "gradient_fail_faces": 3378
+              }
+            }
+          }
+        },
+        "rotated_box": {
+          "coarse": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 3,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 512
+            },
+            "leaf_payload_bytes": 143360,
+            "lookup_table_bytes": 4096,
+            "build_process_wall_ms": 2.6658690039766952,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 4.1673103767791986e-07,
+              "raw_world_gradient_max_error": 4.5132992990692955e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4795463601982862,
+                "p95_abs": 0.03961181323378291,
+                "rmse": 0.03441403780804494,
+                "mean": 0.0005022395320113279,
+                "min": -0.4341940578376371,
+                "max": 0.4795463601982862
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 3,
+              "threads": 1,
+              "build_seconds": 0.000841326,
+              "leaf_count": 512
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 3.3306690738754696e-16,
+              "maximum_overestimate_m": 0.04867170866138257,
+              "interior_sign_misses": 127,
+              "sign_misses_beyond_5mm": 90,
+              "gradient_reference_count": 18359,
+              "distance_10mm_budget_observed_pass": false,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.05901058245565145,
+                "p95_abs": 0.013624269313895314,
+                "rmse": 0.006037914789196455
+              },
+              "interior_distance_error_m": {
+                "count": 2506,
+                "max_abs": 0.05901058245565145,
+                "p95_abs": 0.030701965608395478,
+                "rmse": 0.015143905784053143
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55077,
+                "max_abs": 1.4124031625315934,
+                "p95_abs": 0.23604325263908277,
+                "rmse": 0.10859010746183685
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 7.89323564287514e-08,
+                "gradient_component_error": 1.0627970142840226e-06
+              }
+            }
+          },
+          "adaptive": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 266,
+              "4": 1608,
+              "5": 2056,
+              "6": 6592
+            },
+            "leaf_payload_bytes": 2946160,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 24.102139999740757,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 4.1673103767791986e-07,
+              "raw_world_gradient_max_error": 4.912664198442052e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.7212070526743404,
+                "p95_abs": 0.01075633255503422,
+                "rmse": 0.014282646656619293,
+                "mean": -7.85655091786046e-05,
+                "min": -0.7212070526743404,
+                "max": 0.4481369736709136
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.019465697,
+              "leaf_count": 10522
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 3.3306690738754696e-16,
+              "maximum_overestimate_m": 0.004473037877972458,
+              "interior_sign_misses": 4,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 18359,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.005494115367569087,
+                "p95_abs": 0.0010586265391969447,
+                "rmse": 0.0005023424607565214
+              },
+              "interior_distance_error_m": {
+                "count": 2506,
+                "max_abs": 0.005494115367569087,
+                "p95_abs": 0.001716159322698598,
+                "rmse": 0.000695825581702356
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55077,
+                "max_abs": 0.8291057088380787,
+                "p95_abs": 0.02410060612754032,
+                "rmse": 0.03251073448168962
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 7.89323564287514e-08,
+                "gradient_component_error": 6.587049992679006e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 35379,
+                "same_level": 24689,
+                "coarse_fine": 10690,
+                "by_axis": {
+                  "x": 11721,
+                  "y": 11859,
+                  "z": 11799
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": true,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 35379,
+                "probe_count": 884475,
+                "value_jump_m": {
+                  "maximum": 1.828858482666451e-05,
+                  "p95": 7.131139252103398e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0007411832220609084,
+                  "p95": 5.3363769162603106e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 808,
+                "gradient_fail_faces": 0
+              },
+              "same_level": {
+                "face_count": 24689,
+                "probe_count": 617225,
+                "value_jump_m": {
+                  "maximum": 1.828858482666451e-05,
+                  "p95": 7.152432889734285e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0007411832220609084,
+                  "p95": 5.7445591068500015e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 636,
+                "gradient_fail_faces": 0
+              },
+              "coarse_fine": {
+                "face_count": 10690,
+                "probe_count": 267250,
+                "value_jump_m": {
+                  "maximum": 1.2950146647039418e-05,
+                  "p95": 7.097791600949029e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0005437285368693633,
+                  "p95": 4.412283253476249e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 172,
+                "gradient_fail_faces": 0
+              }
+            }
+          }
+        },
+        "thin_box": {
+          "coarse": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 3,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 512
+            },
+            "leaf_payload_bytes": 143360,
+            "lookup_table_bytes": 4096,
+            "build_process_wall_ms": 2.474048000294715,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 3.7889843884642005e-07,
+              "raw_world_gradient_max_error": 2.8539818528461325e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.994469028170136,
+                "p95_abs": 0.015393435365286867,
+                "rmse": 0.03723928524935844,
+                "mean": 0.0005814003916020928,
+                "min": -0.994469028170136,
+                "max": 0.831711515895698
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 3,
+              "threads": 1,
+              "build_seconds": 0.000885086,
+              "leaf_count": 512
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 1.6653345369377348e-16,
+              "maximum_overestimate_m": 0.04232805758190622,
+              "interior_sign_misses": 1863,
+              "sign_misses_beyond_5mm": 800,
+              "gradient_reference_count": 17965,
+              "distance_10mm_budget_observed_pass": false,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.04232805758190622,
+                "p95_abs": 0.011917152981697446,
+                "rmse": 0.004894806276584208
+              },
+              "interior_distance_error_m": {
+                "count": 2078,
+                "max_abs": 0.04232805758190622,
+                "p95_abs": 0.026137142193713183,
+                "rmse": 0.013325008362672225
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 53895,
+                "max_abs": 1.0990140401121022,
+                "p95_abs": 0.1333991712475901,
+                "rmse": 0.15878416839598522
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.889538749556891e-08,
+                "gradient_component_error": 7.768433161192689e-07
+              }
+            }
+          },
+          "adaptive": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 340,
+              "4": 1142,
+              "5": 1538,
+              "6": 2672
+            },
+            "leaf_payload_bytes": 1593760,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 15.295286997570656,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 3.7889843884642005e-07,
+              "raw_world_gradient_max_error": 2.83974007964094e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.43564864141150117,
+                "p95_abs": 0.008737257848513948,
+                "rmse": 0.009227668413102635,
+                "mean": -0.00010724608062025476,
+                "min": -0.43564864141150117,
+                "max": 0.185538381455
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.012130736,
+              "leaf_count": 5692
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 1.6653345369377348e-16,
+              "maximum_overestimate_m": 0.004492391830378537,
+              "interior_sign_misses": 21,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 17965,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.004492391830378537,
+                "p95_abs": 0.0010829604195131102,
+                "rmse": 0.0005589660172060319
+              },
+              "interior_distance_error_m": {
+                "count": 2078,
+                "max_abs": 0.004492391830378537,
+                "p95_abs": 0.0029053339163593976,
+                "rmse": 0.001318952309276712
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 53895,
+                "max_abs": 0.9589723164848669,
+                "p95_abs": 0.0209523399875157,
+                "rmse": 0.0637806837109435
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.889538749556891e-08,
+                "gradient_component_error": 4.4668635856837113e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 19164,
+                "same_level": 13087,
+                "coarse_fine": 6077,
+                "by_axis": {
+                  "x": 6849,
+                  "y": 6159,
+                  "z": 6156
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": true,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 19164,
+                "probe_count": 479100,
+                "value_jump_m": {
+                  "maximum": 1.8258898464851292e-05,
+                  "p95": 8.106386198941659e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0006040034299025234,
+                  "p95": 4.1317044984501913e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 622,
+                "gradient_fail_faces": 0
+              },
+              "same_level": {
+                "face_count": 13087,
+                "probe_count": 327175,
+                "value_jump_m": {
+                  "maximum": 1.5162025453041572e-05,
+                  "p95": 7.790578770275333e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0005470317414750346,
+                  "p95": 4.1646389248956514e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 468,
+                "gradient_fail_faces": 0
+              },
+              "coarse_fine": {
+                "face_count": 6077,
+                "probe_count": 151925,
+                "value_jump_m": {
+                  "maximum": 1.8258898464851292e-05,
+                  "p95": 8.72630273252017e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0006040034299025234,
+                  "p95": 4.071928005620377e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 154,
+                "gradient_fail_faces": 0
+              }
+            }
+          }
+        },
+        "ridge": {
+          "coarse": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 3,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 512
+            },
+            "leaf_payload_bytes": 143360,
+            "lookup_table_bytes": 4096,
+            "build_process_wall_ms": 2.769138998701237,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 9.149626491455898e-07,
+              "raw_world_gradient_max_error": 1.2963368429256238e-05,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.9965267854638951,
+                "p95_abs": 0.3565679430549197,
+                "rmse": 0.1440837545094611,
+                "mean": 0.0044725119514279635,
+                "min": -0.9965267854638951,
+                "max": 0.9831173817361047
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 3,
+              "threads": 1,
+              "build_seconds": 0.000884396,
+              "leaf_count": 512
+            },
+            "geometry": {
+              "point_count": 20480,
+              "oracle_triangle_abs_distance_max_error_m": 1.1102230246251565e-16,
+              "maximum_overestimate_m": 0.05925929514293088,
+              "interior_sign_misses": 164,
+              "sign_misses_beyond_5mm": 362,
+              "gradient_reference_count": 20268,
+              "distance_10mm_budget_observed_pass": false,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 20480,
+                "max_abs": 0.05925929514293088,
+                "p95_abs": 0.03173739203662167,
+                "rmse": 0.015516752550467907
+              },
+              "interior_distance_error_m": {
+                "count": 6556,
+                "max_abs": 0.039144152628170906,
+                "p95_abs": 0.03157866918170684,
+                "rmse": 0.01682390184516023
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 60804,
+                "max_abs": 1.9518576890923933,
+                "p95_abs": 0.4697584627588438,
+                "rmse": 0.2133058116564878
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 3.554456663446004e-07,
+                "gradient_component_error": 4.6660937132875224e-06
+              }
+            }
+          },
+          "adaptive": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 173,
+              "4": 1256,
+              "5": 7272,
+              "6": 35008
+            },
+            "leaf_payload_bytes": 12238520,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 100.15903699968476,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 2.7767197641193064e-07,
+              "raw_world_gradient_max_error": 1.14765378908116e-05,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.9274106279953962,
+                "p95_abs": 0.006812278685355413,
+                "rmse": 0.05014636346546236,
+                "mean": 0.0008302547859936324,
+                "min": -0.9274106279953962,
+                "max": 0.9006944474193529
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "ridge_section": {
+              "raw_mesh_error_m": {
+                "count": 2001,
+                "max_abs": 0.007407413512604877,
+                "p95_abs": 0.00548044731878905,
+                "rmse": 0.0017247600842579057,
+                "mean": 0.000520594739840015,
+                "min": -3.0553969188051866e-08,
+                "max": 0.007407413512604877
+              },
+              "controlled_reference_error_m": {
+                "count": 2001,
+                "max_abs": 0.012059112334140809,
+                "p95_abs": 0.009801021457627401,
+                "rmse": 0.0031975929855243726,
+                "mean": 0.0011869365689254736,
+                "min": -3.0553969188051866e-08,
+                "max": 0.012059112334140809
+              },
+              "field_gradient_x_range": [
+                -1.0000002793967633,
+                1.666658818669848
+              ],
+              "center": {
+                "raw_distance_m": 0.54,
+                "field_distance_m": 0.5400000214576721,
+                "field_gradient": [
+                  -1.0,
+                  -1.1037896654299949e-07,
+                  1.1037896654299949e-07
+                ]
+              },
+              "controlled_reference_half_width_m": 0.02,
+              "controlled_reference_max_bias_m": 0.01,
+              "controlled_smoothing_implemented_by_library": false
+            },
+            "build": {
+              "interpolation_source_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.087195006,
+              "leaf_count": 43709
+            },
+            "geometry": {
+              "point_count": 20480,
+              "oracle_triangle_abs_distance_max_error_m": 1.1102230246251565e-16,
+              "maximum_overestimate_m": 0.007407090158635721,
+              "interior_sign_misses": 12,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 20268,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 20480,
+                "max_abs": 0.007407090158635721,
+                "p95_abs": 0.0007962925696860138,
+                "rmse": 0.0006320296454665317
+              },
+              "interior_distance_error_m": {
+                "count": 6556,
+                "max_abs": 0.005862000290454035,
+                "p95_abs": 0.0013074246189217903,
+                "rmse": 0.0005714719751502681
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 60804,
+                "max_abs": 1.6574356620085267,
+                "p95_abs": 0.02044062852861271,
+                "rmse": 0.05888496976621283
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 6.606555169597073e-08,
+                "gradient_component_error": 7.943319486916579e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 145725,
+                "same_level": 103962,
+                "coarse_fine": 41763,
+                "by_axis": {
+                  "x": 55225,
+                  "y": 45247,
+                  "z": 45253
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": false,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 145725,
+                "probe_count": 3643125,
+                "value_jump_m": {
+                  "maximum": 0.007035092094349604,
+                  "p95": 5.438300773596971e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 2.0002790196663005,
+                  "p95": 7.609693060445793e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 2439,
+                "gradient_fail_faces": 618
+              },
+              "same_level": {
+                "face_count": 103962,
+                "probe_count": 2599050,
+                "value_jump_m": {
+                  "maximum": 0.007035092094349604,
+                  "p95": 5.010377614161883e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 2.0002790196663005,
+                  "p95": 7.617442807009876e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 1883,
+                "gradient_fail_faces": 153
+              },
+              "coarse_fine": {
+                "face_count": 41763,
+                "probe_count": 1044075,
+                "value_jump_m": {
+                  "maximum": 0.0008948989748149942,
+                  "p95": 6.372573908008938e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 2.000199677547518,
+                  "p95": 7.594779617916407e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 556,
+                "gradient_fail_faces": 465
+              }
+            }
+          }
+        }
+      }
+    },
+    "shared-nodes-portable-20261017": {
+      "variant": "shared-nodes",
+      "environment": {
+        "python": "3.12.3",
+        "torch": "2.9.1+cu128",
+        "numpy": "2.5.4",
+        "cuda_available": true,
+        "cuda": "12.8",
+        "image_id": "sha256:6aeba87dedfeba35e88082be94e310a68fd984fd95424b2e04dcd149b6798a20",
+        "source_revision": "99b9ead36651f85ffe9d9073726fef014cd80461",
+        "upstream_revision": "8db373ef71d65be24badf6ae10750a932bbc223b",
+        "python_packages": [
+          {
+            "name": "filelock",
+            "version": "3.32.3"
+          },
+          {
+            "name": "fsspec",
+            "version": "2026.7.0"
+          },
+          {
+            "name": "Jinja2",
+            "version": "3.1.6"
+          },
+          {
+            "name": "MarkupSafe",
+            "version": "3.0.3"
+          },
+          {
+            "name": "mpmath",
+            "version": "1.3.0"
+          },
+          {
+            "name": "networkx",
+            "version": "3.6.1"
+          },
+          {
+            "name": "numpy",
+            "version": "2.5.4"
+          },
+          {
+            "name": "nvidia-cublas-cu12",
+            "version": "12.8.4.1"
+          },
+          {
+            "name": "nvidia-cuda-cupti-cu12",
+            "version": "12.8.90"
+          },
+          {
+            "name": "nvidia-cuda-nvrtc-cu12",
+            "version": "12.8.93"
+          },
+          {
+            "name": "nvidia-cuda-runtime-cu12",
+            "version": "12.8.90"
+          },
+          {
+            "name": "nvidia-cudnn-cu12",
+            "version": "9.10.2.21"
+          },
+          {
+            "name": "nvidia-cufft-cu12",
+            "version": "11.3.3.83"
+          },
+          {
+            "name": "nvidia-cufile-cu12",
+            "version": "1.13.1.3"
+          },
+          {
+            "name": "nvidia-curand-cu12",
+            "version": "10.3.9.90"
+          },
+          {
+            "name": "nvidia-cusolver-cu12",
+            "version": "11.7.3.90"
+          },
+          {
+            "name": "nvidia-cusparse-cu12",
+            "version": "12.5.8.93"
+          },
+          {
+            "name": "nvidia-cusparselt-cu12",
+            "version": "0.7.1"
+          },
+          {
+            "name": "nvidia-nccl-cu12",
+            "version": "2.27.5"
+          },
+          {
+            "name": "nvidia-nvjitlink-cu12",
+            "version": "12.8.93"
+          },
+          {
+            "name": "nvidia-nvshmem-cu12",
+            "version": "3.3.20"
+          },
+          {
+            "name": "nvidia-nvtx-cu12",
+            "version": "12.8.90"
+          },
+          {
+            "name": "pip",
+            "version": "24.0"
+          },
+          {
+            "name": "setuptools",
+            "version": "78.1.0"
+          },
+          {
+            "name": "sympy",
+            "version": "1.14.0"
+          },
+          {
+            "name": "torch",
+            "version": "2.9.1+cu128"
+          },
+          {
+            "name": "triton",
+            "version": "3.5.1"
+          },
+          {
+            "name": "typing_extensions",
+            "version": "4.16.0"
+          }
+        ],
+        "system_dependencies": [
+          "cmake 3.28.3-1build7",
+          "g++ 4:13.2.0-7ubuntu1",
+          "libcereal-dev 1.3.2+dfsg-5",
+          "libglm-dev 0.9.9.8+ds-7",
+          "libspdlog-dev 1:1.12.0+ds-2build1"
+        ],
+        "gpu": "NVIDIA GeForce RTX 5070 Ti",
+        "gpu_memory_bytes": 16608133120
+      },
+      "assessment": {
+        "integration_passed": true,
+        "adaptive_seam_acceptance_passed": false,
+        "adaptive_observed_distance_10mm_passed": true,
+        "controlled_smoothing_policy_implemented": false
+      },
+      "source_hashes": {
+        "experiments/adaptive_distance_eval/CMakeLists.txt": "b98f165bc6249f7797484dc0475ff2451c8bafdd81c557cbffdc7c1aec87709a",
+        "experiments/adaptive_distance_eval/Dockerfile": "7761a28d25f43bbaad9f1aacf11f0fe7133fadc1400fa003b41cfc99e699d7ca",
+        "experiments/adaptive_distance_eval/NODAL_PATCH.md": "f35020977f161d566b08c0c94cbc8f65b352aae69a7735cec69d0958888fe3e8",
+        "experiments/adaptive_distance_eval/README.md": "e24a7d8574e98574859beebdc868a90efba58874050511ab328adf8879b1baf8",
+        "experiments/adaptive_distance_eval/REUSE.md": "1652a8ad74ed2de18db5b8b65c6aab29c673e01099d084d8eb8203ae3c846fa1",
+        "experiments/adaptive_distance_eval/__init__.py": "88053b0de255aadb9bc0845d42eb26a80db7fc714c99cdc06cf7a78506193d5f",
+        "experiments/adaptive_distance_eval/evaluate.py": "3c5e02593a9c891581dcb1d8f477492ee2c4cdc1bd6a8a356738a23100a86fa1",
+        "experiments/adaptive_distance_eval/export_sdflib.cpp": "956165d1722ff48e187392b0dc1dcbd3679ef7c481ce1b08a443d9eb72a2e463",
+        "experiments/adaptive_distance_eval/field.py": "1e3c6731cb571a45dcfc683f148e3df98aa7818acc351b9651a7df66ca340611",
+        "experiments/adaptive_distance_eval/fixtures.py": "e53d59b33c1e77bed36d01732f8cd2b8768cac551ff40e9f2627dff2f1ffb8f4",
+        "experiments/adaptive_distance_eval/nodal_patch.py": "dbd105cca746a53a9284a2190490972dd224e2cf4d2d30fc7e7df290b0549bae",
+        "experiments/adaptive_distance_eval/run.sh": "797ab0de76ff4e917211154a314a8def858414b21c48c1b43eed91041da5fe10",
+        "experiments/adaptive_distance_eval/seam_checks.py": "01668cc9b0bac684c8b68dcee1abbe9c8feaebbe65a1d18b49b1ab756c78064c",
+        "experiments/adaptive_distance_eval/trajectory_checks.py": "6ba587b11ad823960498ac9ab3c5c881834bc9a7633a2aa2ab0398a4dbb58e93",
+        "devtools/trajectory.py": "4b996a770f8919ef19a47e4e8eb11bdd56ff95846167ab2f7b96c040de6dae65"
+      },
+      "evidence_path": "outputs/adaptive_distance_eval/shared-nodes-portable-20261017/results.json",
+      "evidence_sha256": "8556897f62ffcad01475e1f2421eed33f6ec92dc4d0b0babd28b32641f621cc5",
+      "cases": {
+        "box": {
+          "coarse": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 3,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 512
+            },
+            "leaf_payload_bytes": 143360,
+            "lookup_table_bytes": 4096,
+            "build_process_wall_ms": 2.6232180098304525,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 7.841452624307577e-07,
+              "raw_world_gradient_max_error": 7.425481736527863e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.5881382971843855,
+                "p95_abs": 0.032894324740184396,
+                "rmse": 0.037699206074236,
+                "mean": 0.0015180160073983856,
+                "min": -0.4963373492605251,
+                "max": 0.5881382971843855
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 3,
+              "threads": 1,
+              "build_seconds": 0.000916317,
+              "leaf_count": 512
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 2.220446049250313e-16,
+              "maximum_overestimate_m": 0.0367562086370975,
+              "interior_sign_misses": 176,
+              "sign_misses_beyond_5mm": 118,
+              "gradient_reference_count": 18365,
+              "distance_10mm_budget_observed_pass": false,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.053482343398580406,
+                "p95_abs": 0.013925670121885813,
+                "rmse": 0.005823386825785442
+              },
+              "interior_distance_error_m": {
+                "count": 2639,
+                "max_abs": 0.053482343398580406,
+                "p95_abs": 0.028896822552382375,
+                "rmse": 0.014423757981033748
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55095,
+                "max_abs": 1.265215727385789,
+                "p95_abs": 0.23233429902927663,
+                "rmse": 0.10443380600309679
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 1.1357806942169368e-07,
+                "gradient_component_error": 1.1410772537238933e-06
+              }
+            }
+          },
+          "adaptive": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 252,
+              "4": 1749,
+              "5": 1775,
+              "6": 6984
+            },
+            "leaf_payload_bytes": 3012800,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 34.6323950070655,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 3.953191876071571e-07,
+              "raw_world_gradient_max_error": 6.626869213155473e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4671566682774007,
+                "p95_abs": 0.008758620208806564,
+                "rmse": 0.01455575207912987,
+                "mean": -7.62277322552482e-05,
+                "min": -0.4671566682774007,
+                "max": 0.4493805081881197
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "cuda_query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "timing_cpu": {
+              "count": 65536,
+              "dtype": "float32",
+              "scope": "resident field/query; forward + mean(exp(-d)) + position backward, synchronized; lookup table construction excluded",
+              "samples_ms": [
+                11.0547479998786,
+                9.36743599595502,
+                11.372590000974014,
+                9.683038995717652,
+                11.032628011889756,
+                10.076350998133421,
+                11.29350000701379,
+                9.78868899983354,
+                11.594572002650239,
+                9.757928986800835
+              ],
+              "median_ms": 10.554489505011588,
+              "p95_ms": 11.494680101895938
+            },
+            "timing_cuda": {
+              "count": 65536,
+              "dtype": "float32",
+              "scope": "resident field/query; forward + mean(exp(-d)) + position backward, synchronized; lookup table construction excluded",
+              "samples_ms": [
+                0.6126540101831779,
+                0.6257539935177192,
+                0.6577150052180514,
+                0.6586050003534183,
+                0.6537940062116832,
+                0.5945839948253706,
+                0.5926839949097484,
+                0.7215749938040972,
+                0.6544839998241514,
+                0.659684999845922
+              ],
+              "median_ms": 0.6541390030179173,
+              "p95_ms": 0.6937244965229182
+            },
+            "cpu_cuda_float64_parity": {
+              "distance_max_abs": 0.0,
+              "gradient_max_abs": 5.551115123125783e-16
+            },
+            "cuda_float32_vs_float64": {
+              "distance_max_abs": 1.0392088334310046e-07,
+              "gradient_max_abs": 1.5190594980785121e-06,
+              "note": "includes float32 input quantization"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.02836427,
+              "leaf_count": 10760
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 2.220446049250313e-16,
+              "maximum_overestimate_m": 0.005695749190930854,
+              "interior_sign_misses": 4,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 18365,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.005796273334382027,
+                "p95_abs": 0.0008169290827166192,
+                "rmse": 0.00044051691740809004
+              },
+              "interior_distance_error_m": {
+                "count": 2639,
+                "max_abs": 0.005796273334382027,
+                "p95_abs": 0.0019917595425420777,
+                "rmse": 0.0008320504389915908
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55095,
+                "max_abs": 0.9210378802704174,
+                "p95_abs": 0.01823748307172922,
+                "rmse": 0.03458877533312201
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 7.43401287195411e-08,
+                "gradient_component_error": 4.2082906126506003e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 36069,
+                "same_level": 25341,
+                "coarse_fine": 10728,
+                "by_axis": {
+                  "x": 11992,
+                  "y": 12319,
+                  "z": 11758
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": false,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 36069,
+                "probe_count": 901725,
+                "value_jump_m": {
+                  "maximum": 0.0009994329486357756,
+                  "p95": 5.447770085875696e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.06752533970516215,
+                  "p95": 3.937153202092398e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 607,
+                "gradient_fail_faces": 4
+              },
+              "same_level": {
+                "face_count": 25341,
+                "probe_count": 633525,
+                "value_jump_m": {
+                  "maximum": 0.0009994329486357756,
+                  "p95": 5.368093430213601e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.06329333214682044,
+                  "p95": 4.135446074800767e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 500,
+                "gradient_fail_faces": 2
+              },
+              "coarse_fine": {
+                "face_count": 10728,
+                "probe_count": 268200,
+                "value_jump_m": {
+                  "maximum": 0.0009993587419848682,
+                  "p95": 5.607256328352125e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.06752533970516215,
+                  "p95": 3.508874086925716e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 107,
+                "gradient_fail_faces": 2
+              }
+            },
+            "trajectory_cpu": {
+              "passed": true,
+              "checks": {
+                "float64_chain": true,
+                "finite_gradients_all_stages": true,
+                "all_parameter_groups_active": true,
+                "central_fd_all_ten_parameters_both_steps": true,
+                "central_fd_stable_between_steps": true,
+                "xyz_position_variation": true,
+                "valid_leaf_ids": true,
+                "trajectory_crosses_leaves": true,
+                "entire_curve_hulls_in_domain_for_all_accepted_evaluations": true,
+                "three_accepted_descent_steps": true,
+                "sampled_cost_decreased": true
+              },
+              "scope": "sampled cost gradient and descent only; no continuous clearance or integral claim",
+              "fixture": {
+                "initial_position": [
+                  -0.65,
+                  0.43,
+                  0.48
+                ],
+                "initial_velocity": [
+                  0.1,
+                  -0.06,
+                  -0.04
+                ],
+                "initial_acceleration": [
+                  0.03,
+                  0.02,
+                  -0.01
+                ],
+                "terminal_position": [
+                  0.65,
+                  0.4,
+                  0.45
+                ],
+                "terminal_velocity": [
+                  0.14,
+                  0.05,
+                  -0.02
+                ],
+                "terminal_acceleration": [
+                  -0.02,
+                  0.03,
+                  0.04
+                ],
+                "duration_s": 1.4,
+                "sample_count": 73,
+                "clearance_m": 0.1,
+                "cost_scale_m": 0.15
+              },
+              "gradients": {
+                "active_groups": {
+                  "terminal_position": true,
+                  "terminal_velocity": true,
+                  "terminal_acceleration": true,
+                  "duration": true
+                },
+                "fd_atol": 2e-06,
+                "fd_rtol": 0.001,
+                "maximum_absolute_error": 3.745068183169664e-05,
+                "rows": [
+                  {
+                    "parameter": "terminal_position_x",
+                    "autograd": -0.1652683372761019,
+                    "step": 2e-05,
+                    "fd": -0.16526833706495547,
+                    "fd_half_step": -0.16526833722246836,
+                    "absolute_error": [
+                      2.1114643367070585e-10,
+                      5.363354205201176e-11
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_position_y",
+                    "autograd": -0.5043430858133209,
+                    "step": 2e-05,
+                    "fd": -0.5043617493323549,
+                    "fd_half_step": -0.5043805364951526,
+                    "absolute_error": [
+                      1.866351903401231e-05,
+                      3.745068183169664e-05
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_position_z",
+                    "autograd": -0.2476523141317808,
+                    "step": 2e-05,
+                    "fd": -0.2476523134210817,
+                    "fd_half_step": -0.24765231395329487,
+                    "absolute_error": [
+                      7.10699082917543e-10,
+                      1.784859204878586e-10
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_x",
+                    "autograd": 0.02347312363930538,
+                    "step": 2e-05,
+                    "fd": 0.02347312365105769,
+                    "fd_half_step": 0.023473123642037127,
+                    "absolute_error": [
+                      1.1752307460533018e-11,
+                      2.731745385453621e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_y",
+                    "autograd": 0.16143147030231034,
+                    "step": 2e-05,
+                    "fd": 0.16143147029412663,
+                    "fd_half_step": 0.16143147029967775,
+                    "absolute_error": [
+                      8.18370371469257e-12,
+                      2.632588591566787e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_z",
+                    "autograd": 0.08039049114550656,
+                    "step": 2e-05,
+                    "fd": 0.08039049112229524,
+                    "fd_half_step": 0.0803904911375608,
+                    "absolute_error": [
+                      2.3211321753535685e-11,
+                      7.945755164939783e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_x",
+                    "autograd": -0.0012411110669559413,
+                    "step": 2e-05,
+                    "fd": -0.0012411110687782223,
+                    "fd_half_step": -0.001241111068084333,
+                    "absolute_error": [
+                      1.8222810413415225e-12,
+                      1.1283916509507996e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_y",
+                    "autograd": -0.019588884157118194,
+                    "step": 2e-05,
+                    "fd": -0.019588884157123454,
+                    "fd_half_step": -0.019588884156429565,
+                    "absolute_error": [
+                      5.259681579161679e-15,
+                      6.886297088115612e-13
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_z",
+                    "autograd": -0.009777800087893827,
+                    "step": 2e-05,
+                    "fd": -0.00977780008765139,
+                    "fd_half_step": -0.00977780008765139,
+                    "absolute_error": [
+                      2.4243801410861465e-13,
+                      2.4243801410861465e-13
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "duration_s",
+                    "autograd": 0.015007368270052154,
+                    "step": 2.8e-05,
+                    "fd": 0.015007368273684778,
+                    "fd_half_step": 0.015007368279632402,
+                    "absolute_error": [
+                      3.6326237157213725e-12,
+                      9.580248053198126e-12
+                    ],
+                    "passed": true
+                  }
+                ]
+              },
+              "optimization": {
+                "cost_history": [
+                  0.18011407383079656,
+                  0.16919905062229315,
+                  0.15972241064419573,
+                  0.15142073345956628
+                ],
+                "initial_cost": 0.18011407383079656,
+                "final_cost": 0.15142073345956628
+              },
+              "trajectory": {
+                "unique_leaf_count": 13,
+                "leaf_transitions": 12,
+                "position_spans_xyz_m": [
+                  1.2999999999999994,
+                  0.0425562007592476,
+                  0.029999999999999916
+                ],
+                "minimum_sampled_distance_m": 0.2656072521890715,
+                "minimum_hull_domain_margin_all_evaluations_m": 0.13667196734422937
+              }
+            },
+            "trajectory_cuda": {
+              "passed": true,
+              "checks": {
+                "float64_chain": true,
+                "finite_gradients_all_stages": true,
+                "all_parameter_groups_active": true,
+                "central_fd_all_ten_parameters_both_steps": true,
+                "central_fd_stable_between_steps": true,
+                "xyz_position_variation": true,
+                "valid_leaf_ids": true,
+                "trajectory_crosses_leaves": true,
+                "entire_curve_hulls_in_domain_for_all_accepted_evaluations": true,
+                "three_accepted_descent_steps": true,
+                "sampled_cost_decreased": true
+              },
+              "scope": "sampled cost gradient and descent only; no continuous clearance or integral claim",
+              "fixture": {
+                "initial_position": [
+                  -0.65,
+                  0.43,
+                  0.48
+                ],
+                "initial_velocity": [
+                  0.1,
+                  -0.06,
+                  -0.04
+                ],
+                "initial_acceleration": [
+                  0.03,
+                  0.02,
+                  -0.01
+                ],
+                "terminal_position": [
+                  0.65,
+                  0.4,
+                  0.45
+                ],
+                "terminal_velocity": [
+                  0.14,
+                  0.05,
+                  -0.02
+                ],
+                "terminal_acceleration": [
+                  -0.02,
+                  0.03,
+                  0.04
+                ],
+                "duration_s": 1.4,
+                "sample_count": 73,
+                "clearance_m": 0.1,
+                "cost_scale_m": 0.15
+              },
+              "gradients": {
+                "active_groups": {
+                  "terminal_position": true,
+                  "terminal_velocity": true,
+                  "terminal_acceleration": true,
+                  "duration": true
+                },
+                "fd_atol": 2e-06,
+                "fd_rtol": 0.001,
+                "maximum_absolute_error": 3.745068183169664e-05,
+                "rows": [
+                  {
+                    "parameter": "terminal_position_x",
+                    "autograd": -0.16526833727610124,
+                    "step": 2e-05,
+                    "fd": -0.16526833706495547,
+                    "fd_half_step": -0.16526833722108059,
+                    "absolute_error": [
+                      2.1114576753689107e-10,
+                      5.502065469897843e-11
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_position_y",
+                    "autograd": -0.5043430858133209,
+                    "step": 2e-05,
+                    "fd": -0.5043617493330488,
+                    "fd_half_step": -0.5043805364951526,
+                    "absolute_error": [
+                      1.86635197279017e-05,
+                      3.745068183169664e-05
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_position_z",
+                    "autograd": -0.24765231413178102,
+                    "step": 2e-05,
+                    "fd": -0.24765231341969393,
+                    "fd_half_step": -0.24765231395468265,
+                    "absolute_error": [
+                      7.120870837429294e-10,
+                      1.7709836375168209e-10
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_x",
+                    "autograd": 0.02347312363930515,
+                    "step": 2e-05,
+                    "fd": 0.02347312364966991,
+                    "fd_half_step": 0.023473123643424906,
+                    "absolute_error": [
+                      1.0364761132697353e-11,
+                      4.119756619180848e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_y",
+                    "autograd": 0.1614314703023102,
+                    "step": 2e-05,
+                    "fd": 0.16143147029273885,
+                    "fd_half_step": 0.16143147029967775,
+                    "absolute_error": [
+                      9.571343717595937e-12,
+                      2.6324498136887087e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_velocity_z",
+                    "autograd": 0.08039049114550671,
+                    "step": 2e-05,
+                    "fd": 0.08039049112229524,
+                    "fd_half_step": 0.08039049114033636,
+                    "absolute_error": [
+                      2.321147440920157e-11,
+                      5.1703502590427775e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_x",
+                    "autograd": -0.0012411110669559005,
+                    "step": 2e-05,
+                    "fd": -0.0012411110687782223,
+                    "fd_half_step": -0.001241111068084333,
+                    "absolute_error": [
+                      1.822321807343208e-12,
+                      1.128432416952485e-12
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_y",
+                    "autograd": -0.019588884157118194,
+                    "step": 2e-05,
+                    "fd": -0.019588884156429565,
+                    "fd_half_step": -0.019588884157817343,
+                    "absolute_error": [
+                      6.886297088115612e-13,
+                      6.991490719698845e-13
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "terminal_acceleration_z",
+                    "autograd": -0.009777800087893855,
+                    "step": 2e-05,
+                    "fd": -0.00977780008765139,
+                    "fd_half_step": -0.00977780008765139,
+                    "absolute_error": [
+                      2.424657696842303e-13,
+                      2.424657696842303e-13
+                    ],
+                    "passed": true
+                  },
+                  {
+                    "parameter": "duration_s",
+                    "autograd": 0.015007368270052071,
+                    "step": 2.8e-05,
+                    "fd": 0.015007368273684778,
+                    "fd_half_step": 0.015007368279632402,
+                    "absolute_error": [
+                      3.6327069824482194e-12,
+                      9.580331319924973e-12
+                    ],
+                    "passed": true
+                  }
+                ]
+              },
+              "optimization": {
+                "cost_history": [
+                  0.18011407383079656,
+                  0.16919905062229312,
+                  0.1597224106441954,
+                  0.15142073345956636
+                ],
+                "initial_cost": 0.18011407383079656,
+                "final_cost": 0.15142073345956636
+              },
+              "trajectory": {
+                "unique_leaf_count": 13,
+                "leaf_transitions": 12,
+                "position_spans_xyz_m": [
+                  1.2999999999999994,
+                  0.0425562007592476,
+                  0.029999999999999916
+                ],
+                "minimum_sampled_distance_m": 0.2656072521890715,
+                "minimum_hull_domain_margin_all_evaluations_m": 0.13667196734422937
+              }
+            }
+          },
+          "tight": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.00025,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 151,
+              "4": 1590,
+              "5": 8877,
+              "6": 12056
+            },
+            "leaf_payload_bytes": 6348720,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 66.96582300355658,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 3.953191876071571e-07,
+              "raw_world_gradient_max_error": 6.626869213155473e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4671566682774007,
+                "p95_abs": 0.006773666605288344,
+                "rmse": 0.014319453135733254,
+                "mean": -6.148214444013667e-05,
+                "min": -0.4671566682774007,
+                "max": 0.4493805081881197
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.057836938,
+              "leaf_count": 22674
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 2.220446049250313e-16,
+              "maximum_overestimate_m": 0.005695749190930854,
+              "interior_sign_misses": 4,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 18365,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.005796273334382027,
+                "p95_abs": 0.0004401761662046866,
+                "rmse": 0.00035547120051882116
+              },
+              "interior_distance_error_m": {
+                "count": 2639,
+                "max_abs": 0.005796273334382027,
+                "p95_abs": 0.0019917595425420777,
+                "rmse": 0.0008323789341769559
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55095,
+                "max_abs": 0.9210378802704174,
+                "p95_abs": 0.012450815133835775,
+                "rmse": 0.03423978181097259
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 7.416514780089756e-08,
+                "gradient_component_error": 4.0296608194712036e-07
+              }
+            }
+          },
+          "unconstrained": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": false
+            },
+            "leaf_depth_histogram": {
+              "3": 327,
+              "4": 1234,
+              "5": 1191,
+              "6": 6216
+            },
+            "leaf_payload_bytes": 2511040,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 23.972439012140967,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 3.9329640899588014e-07,
+              "raw_world_gradient_max_error": 6.435928851633577e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4671566682774007,
+                "p95_abs": 0.007944497967455093,
+                "rmse": 0.014523470733974258,
+                "mean": -0.00010499915455417854,
+                "min": -0.4671566682774007,
+                "max": 0.449380482589691
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.018353399,
+              "leaf_count": 8968
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 2.220446049250313e-16,
+              "maximum_overestimate_m": 0.005695738113653481,
+              "interior_sign_misses": 4,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 18365,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.0057962686884307085,
+                "p95_abs": 0.0009063847288747487,
+                "rmse": 0.0004521010424425163
+              },
+              "interior_distance_error_m": {
+                "count": 2639,
+                "max_abs": 0.0057962686884307085,
+                "p95_abs": 0.0019278389545821595,
+                "rmse": 0.0008069904985078075
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55095,
+                "max_abs": 0.9080014618261276,
+                "p95_abs": 0.01799486908763506,
+                "rmse": 0.03422809894192427
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.874094037381042e-08,
+                "gradient_component_error": 7.529532051187005e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 30183,
+                "same_level": 21117,
+                "coarse_fine": 9066,
+                "by_axis": {
+                  "x": 10044,
+                  "y": 10290,
+                  "z": 9849
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": false,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 30183,
+                "probe_count": 754575,
+                "value_jump_m": {
+                  "maximum": 0.005117859000167382,
+                  "p95": 0.0003341710185298198,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 1.414217566336652,
+                  "p95": 0.03099495387100838,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 3557,
+                "gradient_fail_faces": 3378
+              },
+              "same_level": {
+                "face_count": 21117,
+                "probe_count": 527925,
+                "value_jump_m": {
+                  "maximum": 1.83700552581767e-05,
+                  "p95": 3.129243385940894e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0003327918333453183,
+                  "p95": 2.530885126531928e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 179,
+                "gradient_fail_faces": 0
+              },
+              "coarse_fine": {
+                "face_count": 9066,
+                "probe_count": 226650,
+                "value_jump_m": {
+                  "maximum": 0.005117859000167382,
+                  "p95": 0.0011295259022372792,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 1.414217566336652,
+                  "p95": 0.08892582508538632,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 3378,
+                "gradient_fail_faces": 3378
+              }
+            }
+          }
+        },
+        "rotated_box": {
+          "coarse": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 3,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 512
+            },
+            "leaf_payload_bytes": 143360,
+            "lookup_table_bytes": 4096,
+            "build_process_wall_ms": 2.8198500076541677,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 4.4007531896372853e-07,
+              "raw_world_gradient_max_error": 4.5132992990692955e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4795463601982862,
+                "p95_abs": 0.03961182816653424,
+                "rmse": 0.03441404589101386,
+                "mean": 0.0005022568431973895,
+                "min": -0.4341940578376371,
+                "max": 0.4795463601982862
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 3,
+              "threads": 1,
+              "build_seconds": 0.000947427,
+              "leaf_count": 512
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 3.3306690738754696e-16,
+              "maximum_overestimate_m": 0.04867170866138257,
+              "interior_sign_misses": 127,
+              "sign_misses_beyond_5mm": 90,
+              "gradient_reference_count": 18359,
+              "distance_10mm_budget_observed_pass": false,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.05901058245565145,
+                "p95_abs": 0.013624269313895314,
+                "rmse": 0.006037914153263832
+              },
+              "interior_distance_error_m": {
+                "count": 2506,
+                "max_abs": 0.05901058245565145,
+                "p95_abs": 0.03070195543972879,
+                "rmse": 0.015143903798342937
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55077,
+                "max_abs": 1.4124031625315934,
+                "p95_abs": 0.23604325263908277,
+                "rmse": 0.10859010809451088
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.030485565413414e-08,
+                "gradient_component_error": 1.0627970142840226e-06
+              }
+            }
+          },
+          "adaptive": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 266,
+              "4": 1608,
+              "5": 2056,
+              "6": 6592
+            },
+            "leaf_payload_bytes": 2946160,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 31.272491003619507,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 4.4007531896372853e-07,
+              "raw_world_gradient_max_error": 4.555378089798889e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.7212070526743404,
+                "p95_abs": 0.010756341393707297,
+                "rmse": 0.014282604675691441,
+                "mean": -7.853432243459339e-05,
+                "min": -0.7212070526743404,
+                "max": 0.4481369736709136
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.026022533,
+              "leaf_count": 10522
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 3.3306690738754696e-16,
+              "maximum_overestimate_m": 0.004473037877972458,
+              "interior_sign_misses": 4,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 18359,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.005494115367569087,
+                "p95_abs": 0.0010586265391969447,
+                "rmse": 0.0005023440068158463
+              },
+              "interior_distance_error_m": {
+                "count": 2506,
+                "max_abs": 0.005494115367569087,
+                "p95_abs": 0.0017161615305481513,
+                "rmse": 0.0006958256920281447
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 55077,
+                "max_abs": 0.8291057088380787,
+                "p95_abs": 0.024100333960715384,
+                "rmse": 0.032510729162016264
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.030485565413414e-08,
+                "gradient_component_error": 3.4852645136584925e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 35379,
+                "same_level": 24689,
+                "coarse_fine": 10690,
+                "by_axis": {
+                  "x": 11721,
+                  "y": 11859,
+                  "z": 11799
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": true,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 35379,
+                "probe_count": 884475,
+                "value_jump_m": {
+                  "maximum": 1.8154474263787357e-05,
+                  "p95": 7.025404441141074e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0006777595182482278,
+                  "p95": 5.2584023905949896e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 733,
+                "gradient_fail_faces": 0
+              },
+              "same_level": {
+                "face_count": 24689,
+                "probe_count": 617225,
+                "value_jump_m": {
+                  "maximum": 1.8154474263787357e-05,
+                  "p95": 7.049288590743597e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0006777595182482278,
+                  "p95": 5.659271732008578e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 586,
+                "gradient_fail_faces": 0
+              },
+              "coarse_fine": {
+                "face_count": 10690,
+                "probe_count": 267250,
+                "value_jump_m": {
+                  "maximum": 1.5015711212984506e-05,
+                  "p95": 6.973697833548283e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0005357806121618569,
+                  "p95": 4.3593369492182857e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 147,
+                "gradient_fail_faces": 0
+              }
+            }
+          }
+        },
+        "thin_box": {
+          "coarse": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 3,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 512
+            },
+            "leaf_payload_bytes": 143360,
+            "lookup_table_bytes": 4096,
+            "build_process_wall_ms": 2.5107080000452697,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 4.233746357940049e-07,
+              "raw_world_gradient_max_error": 3.053602446567716e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.994469028170136,
+                "p95_abs": 0.015393804857479952,
+                "rmse": 0.03723929604223516,
+                "mean": 0.0005814051522565005,
+                "min": -0.994469028170136,
+                "max": 0.8317114976753719
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 3,
+              "threads": 1,
+              "build_seconds": 0.000895266,
+              "leaf_count": 512
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 1.6653345369377348e-16,
+              "maximum_overestimate_m": 0.042328061912907576,
+              "interior_sign_misses": 1863,
+              "sign_misses_beyond_5mm": 800,
+              "gradient_reference_count": 17965,
+              "distance_10mm_budget_observed_pass": false,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.042328061912907576,
+                "p95_abs": 0.011917152981697446,
+                "rmse": 0.004894806209684015
+              },
+              "interior_distance_error_m": {
+                "count": 2078,
+                "max_abs": 0.042328061912907576,
+                "p95_abs": 0.026137151548042806,
+                "rmse": 0.013325010358260163
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 53895,
+                "max_abs": 1.0990140401121022,
+                "p95_abs": 0.1333991712475901,
+                "rmse": 0.15878417289779312
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.889538749556891e-08,
+                "gradient_component_error": 5.50433274071338e-07
+              }
+            }
+          },
+          "adaptive": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 340,
+              "4": 1142,
+              "5": 1538,
+              "6": 2672
+            },
+            "leaf_payload_bytes": 1593760,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 18.70139199309051,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 4.233746357940049e-07,
+              "raw_world_gradient_max_error": 2.7937895907825805e-06,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.4356488065712796,
+                "p95_abs": 0.008739219273321492,
+                "rmse": 0.009227688727645665,
+                "mean": -0.00010724578848498765,
+                "min": -0.4356488065712796,
+                "max": 0.185538381455
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.015311019,
+              "leaf_count": 5692
+            },
+            "geometry": {
+              "point_count": 18432,
+              "oracle_triangle_abs_distance_max_error_m": 1.6653345369377348e-16,
+              "maximum_overestimate_m": 0.004492390603043253,
+              "interior_sign_misses": 21,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 17965,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 18432,
+                "max_abs": 0.004492390603043253,
+                "p95_abs": 0.0010828721962155318,
+                "rmse": 0.0005589664067751567
+              },
+              "interior_distance_error_m": {
+                "count": 2078,
+                "max_abs": 0.004492390603043253,
+                "p95_abs": 0.0029053339163593976,
+                "rmse": 0.0013189521759193565
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 53895,
+                "max_abs": 0.9589719062590998,
+                "p95_abs": 0.02095006886119746,
+                "rmse": 0.06378069023638543
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 8.889538749556891e-08,
+                "gradient_component_error": 4.4668635856837113e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 19164,
+                "same_level": 13087,
+                "coarse_fine": 6077,
+                "by_axis": {
+                  "x": 6849,
+                  "y": 6159,
+                  "z": 6156
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": true,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 19164,
+                "probe_count": 479100,
+                "value_jump_m": {
+                  "maximum": 1.6933484867975857e-05,
+                  "p95": 8.288237666746047e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0005120441990361968,
+                  "p95": 4.269670443876131e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 605,
+                "gradient_fail_faces": 0
+              },
+              "same_level": {
+                "face_count": 13087,
+                "probe_count": 327175,
+                "value_jump_m": {
+                  "maximum": 1.6933484867975857e-05,
+                  "p95": 8.017941257765224e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0005120441990361968,
+                  "p95": 4.299470814240277e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 438,
+                "gradient_fail_faces": 0
+              },
+              "coarse_fine": {
+                "face_count": 6077,
+                "probe_count": 151925,
+                "value_jump_m": {
+                  "maximum": 1.2867669365590473e-05,
+                  "p95": 8.866485423753012e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0004936938670502761,
+                  "p95": 4.209032495635532e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 167,
+                "gradient_fail_faces": 0
+              }
+            }
+          }
+        },
+        "ridge": {
+          "coarse": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 3,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 512
+            },
+            "leaf_payload_bytes": 143360,
+            "lookup_table_bytes": 4096,
+            "build_process_wall_ms": 2.6548189925961196,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 9.149626491455898e-07,
+              "raw_world_gradient_max_error": 1.2963368429256238e-05,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.9965267854638951,
+                "p95_abs": 0.3565679430549197,
+                "rmse": 0.14408375005736831,
+                "mean": 0.0044725189342573754,
+                "min": -0.9965267854638951,
+                "max": 0.9831173817361047
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 3,
+              "threads": 1,
+              "build_seconds": 0.000972997,
+              "leaf_count": 512
+            },
+            "geometry": {
+              "point_count": 20480,
+              "oracle_triangle_abs_distance_max_error_m": 1.1102230246251565e-16,
+              "maximum_overestimate_m": 0.05925929514293088,
+              "interior_sign_misses": 164,
+              "sign_misses_beyond_5mm": 362,
+              "gradient_reference_count": 20268,
+              "distance_10mm_budget_observed_pass": false,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 20480,
+                "max_abs": 0.05925929514293088,
+                "p95_abs": 0.03173739203662167,
+                "rmse": 0.01551675318074398
+              },
+              "interior_distance_error_m": {
+                "count": 6556,
+                "max_abs": 0.03914417836229846,
+                "p95_abs": 0.03157866918170684,
+                "rmse": 0.016823902127620242
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 60804,
+                "max_abs": 1.9518576890923933,
+                "p95_abs": 0.4697584627588438,
+                "rmse": 0.21330580461380882
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 3.554456663446004e-07,
+                "gradient_component_error": 4.6660937132875224e-06
+              }
+            }
+          },
+          "adaptive": {
+            "configuration": {
+              "start_cell_m": 0.2,
+              "max_depth": 6,
+              "expected_rmse_m": 0.001,
+              "continuity": true
+            },
+            "leaf_depth_histogram": {
+              "3": 162,
+              "4": 1323,
+              "5": 7384,
+              "6": 35456
+            },
+            "leaf_payload_bytes": 12411000,
+            "lookup_table_bytes": 2097152,
+            "build_process_wall_ms": 124.83137099479791,
+            "native_parity": {
+              "count": 2048,
+              "value_max_error_m": 2.7767197641193064e-07,
+              "raw_world_gradient_max_error": 1.1122727746018524e-05,
+              "native_unit_gradient_nonfinite_count": 0,
+              "true_derivative_minus_native_unit_gradient": {
+                "count": 6144,
+                "max_abs": 0.9274106279953962,
+                "p95_abs": 0.006788723050118813,
+                "rmse": 0.049387154918514815,
+                "mean": 0.0009836374611237534,
+                "min": -0.9274106279953962,
+                "max": 0.9047529314998332
+              },
+              "native_lookup_mismatch_count": 0,
+              "passed": true,
+              "note": "native normalized gradient is diagnostic, never used as the training VJP"
+            },
+            "query_contract": {
+              "passed": true,
+              "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+            },
+            "ridge_section": {
+              "raw_mesh_error_m": {
+                "count": 2001,
+                "max_abs": 0.007407413512604877,
+                "p95_abs": 0.00548044731878905,
+                "rmse": 0.0017247600842579057,
+                "mean": 0.000520594739840015,
+                "min": -3.0553969188051866e-08,
+                "max": 0.007407413512604877
+              },
+              "controlled_reference_error_m": {
+                "count": 2001,
+                "max_abs": 0.012059112334140809,
+                "p95_abs": 0.009801021457627401,
+                "rmse": 0.0031975929855243726,
+                "mean": 0.0011869365689254736,
+                "min": -3.0553969188051866e-08,
+                "max": 0.012059112334140809
+              },
+              "field_gradient_x_range": [
+                -1.0000002793967633,
+                1.666658818669848
+              ],
+              "center": {
+                "raw_distance_m": 0.54,
+                "field_distance_m": 0.5400000214576721,
+                "field_gradient": [
+                  -1.0,
+                  -1.1037896654299949e-07,
+                  1.1037896654299949e-07
+                ]
+              },
+              "controlled_reference_half_width_m": 0.02,
+              "controlled_reference_max_bias_m": 0.01,
+              "controlled_smoothing_implemented_by_library": false
+            },
+            "build": {
+              "interpolation_source_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+              "bounds": [
+                [
+                  -0.800000011920929,
+                  -0.800000011920929,
+                  -0.800000011920929
+                ],
+                [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              ],
+              "start_depth": 3,
+              "max_depth": 6,
+              "threads": 1,
+              "build_seconds": 0.107530579,
+              "leaf_count": 44325
+            },
+            "geometry": {
+              "point_count": 20480,
+              "oracle_triangle_abs_distance_max_error_m": 1.1102230246251565e-16,
+              "maximum_overestimate_m": 0.007407090158635721,
+              "interior_sign_misses": 13,
+              "sign_misses_beyond_5mm": 0,
+              "gradient_reference_count": 20268,
+              "distance_10mm_budget_observed_pass": true,
+              "finite": true,
+              "strict_global_error_certificate": false,
+              "distance_error_m": {
+                "count": 20480,
+                "max_abs": 0.007407090158635721,
+                "p95_abs": 0.0007988856805392505,
+                "rmse": 0.0006451865993433913
+              },
+              "interior_distance_error_m": {
+                "count": 6556,
+                "max_abs": 0.005862000290454035,
+                "p95_abs": 0.0013073658261840357,
+                "rmse": 0.0005702486848243237
+              },
+              "gradient_component_error_unique_reference": {
+                "count": 60804,
+                "max_abs": 1.6574356620085267,
+                "p95_abs": 0.020303937383350595,
+                "rmse": 0.059563323477073445
+              },
+              "float32_vs_float64": {
+                "distance_error_m": 7.825849668297025e-08,
+                "gradient_component_error": 7.943319486916579e-07
+              }
+            },
+            "seams": {
+              "passed": false,
+              "coverage_complete": true,
+              "checked_faces": {
+                "total": 147708,
+                "same_level": 105475,
+                "coarse_fine": 42233,
+                "by_axis": {
+                  "x": 55865,
+                  "y": 45905,
+                  "z": 45938
+                }
+              },
+              "samples_per_face": 25,
+              "thresholds": {
+                "value_m": 5e-06,
+                "gradient_l2": 0.002
+              },
+              "checks": {
+                "has_shared_faces": true,
+                "finite_values_and_world_gradients": true,
+                "value_jump_within_5e_6_m": false,
+                "gradient_l2_jump_within_2e_3": false,
+                "offset_lookup_matches_both_sides": true,
+                "exact_face_lookup_selects_an_adjacent_leaf": true,
+                "query_matches_selected_polynomial_value": true,
+                "query_matches_selected_polynomial_world_gradient": true
+              },
+              "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+              "all": {
+                "face_count": 147708,
+                "probe_count": 3692700,
+                "value_jump_m": {
+                  "maximum": 1.4849007371586787e-05,
+                  "p95": 5.596607425904784e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.002230907495952907,
+                  "p95": 7.492388816250373e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 2526,
+                "gradient_fail_faces": 6
+              },
+              "same_level": {
+                "face_count": 105475,
+                "probe_count": 2636875,
+                "value_jump_m": {
+                  "maximum": 1.4849007371586787e-05,
+                  "p95": 5.162958826354639e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.002230907495952907,
+                  "p95": 7.834071117670208e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 1925,
+                "gradient_fail_faces": 5
+              },
+              "coarse_fine": {
+                "face_count": 42233,
+                "probe_count": 1055825,
+                "value_jump_m": {
+                  "maximum": 1.4159307371919283e-05,
+                  "p95": 6.508328699306175e-07,
+                  "nonfinite_count": 0
+                },
+                "gradient_jump_l2": {
+                  "maximum": 0.0020679702105812015,
+                  "p95": 6.796618635185866e-05,
+                  "nonfinite_count": 0
+                },
+                "value_fail_faces": 601,
+                "gradient_fail_faces": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "runner_replay": {
+    "evidence_path": "outputs/adaptive_distance_eval/runner-shared-box-20261017/results.json",
+    "evidence_sha256": "1e6c551f5f78a902b6f9de106096e8e9a207bd05143584f9d261ef47edc1d109",
+    "source_hashes": {
+      "experiments/adaptive_distance_eval/CMakeLists.txt": "b98f165bc6249f7797484dc0475ff2451c8bafdd81c557cbffdc7c1aec87709a",
+      "experiments/adaptive_distance_eval/Dockerfile": "7761a28d25f43bbaad9f1aacf11f0fe7133fadc1400fa003b41cfc99e699d7ca",
+      "experiments/adaptive_distance_eval/NODAL_PATCH.md": "f35020977f161d566b08c0c94cbc8f65b352aae69a7735cec69d0958888fe3e8",
+      "experiments/adaptive_distance_eval/README.md": "60759c5ea39e4fb7f4ded0c76f19a7c79f4e68c38017d6fffbab022a935b67de",
+      "experiments/adaptive_distance_eval/REUSE.md": "1652a8ad74ed2de18db5b8b65c6aab29c673e01099d084d8eb8203ae3c846fa1",
+      "experiments/adaptive_distance_eval/__init__.py": "88053b0de255aadb9bc0845d42eb26a80db7fc714c99cdc06cf7a78506193d5f",
+      "experiments/adaptive_distance_eval/evaluate.py": "5ae6d2c73c24a8385cd1fd53135ced7792b5757cd9c4048c5a34da42871cd569",
+      "experiments/adaptive_distance_eval/export_sdflib.cpp": "956165d1722ff48e187392b0dc1dcbd3679ef7c481ce1b08a443d9eb72a2e463",
+      "experiments/adaptive_distance_eval/field.py": "1e3c6731cb571a45dcfc683f148e3df98aa7818acc351b9651a7df66ca340611",
+      "experiments/adaptive_distance_eval/fixtures.py": "e53d59b33c1e77bed36d01732f8cd2b8768cac551ff40e9f2627dff2f1ffb8f4",
+      "experiments/adaptive_distance_eval/nodal_patch.py": "dbd105cca746a53a9284a2190490972dd224e2cf4d2d30fc7e7df290b0549bae",
+      "experiments/adaptive_distance_eval/run.sh": "3a85ee2c4caf4c454a2731f2c33e313bfd5dcc684ca37e6241ad78697951874f",
+      "experiments/adaptive_distance_eval/seam_checks.py": "01668cc9b0bac684c8b68dcee1abbe9c8feaebbe65a1d18b49b1ab756c78064c",
+      "experiments/adaptive_distance_eval/trajectory_checks.py": "6ba587b11ad823960498ac9ab3c5c881834bc9a7633a2aa2ab0398a4dbb58e93",
+      "devtools/trajectory.py": "4b996a770f8919ef19a47e4e8eb11bdd56ff95846167ab2f7b96c040de6dae65"
+    },
+    "assessment": {
+      "integration_passed": true,
+      "adaptive_seam_acceptance_passed": false,
+      "adaptive_observed_distance_10mm_passed": true,
+      "controlled_smoothing_policy_implemented": false
+    },
+    "box_geometry_and_seam_all_equal_to_shared_full_run": true
+  }
+}

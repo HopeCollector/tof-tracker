@@ -16,3 +16,7 @@ OBJ 实体、地面平面、CLI、校验和文件保存为本仓实现，未采�
 场景、球体、完整位姿与点变换为本仓实现。配置机制参考 `C5-lidar-yopo` 提交 `ab9cbfaef8216b8a47a952b40d199fd7e5cef134` 的 `configuration/omni.py`（根许可 MIT，TJU 2024），采用“JSON 显式物理参数 → 入口校验 → 传给消费者”的流程，未复制其函数、全局配置、旧阈值或默认物理尺寸。
 
 当前接口见[开发辅助模块说明](../devtools/README.md#统一配置与场景)，验证入口见 [verify_scene.py](../tests/verify_scene.py)。
+
+## 自适应距离场实验
+
+`experiments/adaptive_distance_eval/` 在 Docker 中调用 SdfLib 固定提交 `8db373ef71d65be24badf6ae10750a932bbc223b`（MIT，Copyright 2023 Eduard Pujol）的公开八叉树构建、三次 Hermite 插值和粗细格连续构造。Torch 查询为本仓按公开系数布局编写，轨迹直接使用主分支 `devtools/trajectory.py`，不复制旧工程。复用范围、原生梯度语义和必要适配见 [REUSE.md](../experiments/adaptive_distance_eval/REUSE.md)，验证入口见[实验说明](../experiments/adaptive_distance_eval/README.md)。完整依赖源码及许可保留在实验镜像，未加入在线算法依赖。

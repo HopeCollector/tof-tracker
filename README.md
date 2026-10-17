@@ -18,6 +18,7 @@
 | `tools/map_viewer/` | 地图与场景查看器；[查看参数与显示约定](tools/map_viewer/README.md) |
 | `docker/` | 全项目容器环境与通用运行入口；[构建、依赖与挂载](docker/README.md) |
 | `tests/` | 地图、场景和查看器检查，由 `just check` 运行 |
+| `experiments/adaptive_distance_eval/` | 独立 [SdfLib 自适应距离场实验](experiments/adaptive_distance_eval/README.md)，不作为正式 ESDF 后端 |
 | `examples/` | 观测例子；`one_frame.py` 当前为占位 |
 | `docs/origins.md` | [当前采用代码的来源、适配与许可](docs/origins.md) |
 | `outputs/` | 本地产物，不纳入 Git |
