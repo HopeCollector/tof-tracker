@@ -324,9 +324,9 @@ def build_esdf_from_mesh(source, *, library_path, bounds_m=None,
     No compilation, cache lookup, scheduling or training integration occurs.
     """
     # Keep mesh preparation dependencies out of saved-grid loading/querying.
-    from .mesh import MeshMap
+    from ..mesh import MeshMap
     from .mesh_distance import MeshDistanceQuery, PreparedMesh
-    from .scene import GeometrySnapshot, SceneObject
+    from ..scene import GeometrySnapshot, SceneObject
 
     spacing = _positive(voxel_size_m, "voxel_size_m")
     if type(chunk_size) is not int or chunk_size <= 0:

@@ -606,7 +606,8 @@ def main():
               "torch_version": torch.__version__, "elapsed_correctness_seconds": time.perf_counter()-started,
               "scope": "fixed-node trilinear C0 interpolation, selected-cell position AD, sampled-trajectory parameter AD and serialization; not geometric gradient, clearance or performance validation",
               "source_sha256": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
-                                for path in (Path(__file__), Path("devtools/esdf.py"))}, "groups": groups}
+                                for path in (Path(__file__), Path("devtools/esdf/__init__.py"),
+                                             Path("devtools/esdf/grid.py"))}, "groups": groups}
     args.results.parent.mkdir(parents=True, exist_ok=True)
     args.results.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
     print(f"esdf ({device}): {result['status']}; {len(groups)} groups; result: {args.results}")

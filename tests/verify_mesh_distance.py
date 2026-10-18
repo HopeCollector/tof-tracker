@@ -18,7 +18,7 @@ import numpy as np
 
 from devtools.config import load_config
 from devtools.mesh import MeshObject
-from devtools.mesh_distance import MeshDistanceQuery, PreparedMesh
+from devtools.esdf.mesh_distance import MeshDistanceQuery, PreparedMesh
 from devtools.scene import GeometrySnapshot, Pose, Scene, SceneObject, Sphere
 
 

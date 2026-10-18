@@ -21,9 +21,9 @@ def main():
         [sys.executable, "tests/verify_geometry.py", "--results", "outputs/geometry/verification.json"],
         [sys.executable, "tests/verify_scene.py", "--results", "outputs/scene/verification.json"],
         [sys.executable, "tests/verify_trajectory.py", "--results", "outputs/trajectory/verification.json"],
-        ["cmake", "-S", "devtools", "-B", "outputs/mesh-distance-build", "-DCMAKE_BUILD_TYPE=Release"],
-        ["cmake", "--build", "outputs/mesh-distance-build", "--parallel", "2"],
-        [sys.executable, "tests/verify_mesh_distance.py", "--library", "outputs/mesh-distance-build/libmesh_distance.so"],
+        ["cmake", "-S", "devtools/esdf", "-B", "outputs/esdf/build", "-DCMAKE_BUILD_TYPE=Release"],
+        ["cmake", "--build", "outputs/esdf/build", "--parallel", "2"],
+        [sys.executable, "tests/verify_mesh_distance.py", "--library", "outputs/esdf/build/libmesh_distance.so"],
         [sys.executable, "tests/verify_esdf.py", "--results", "outputs/esdf/verification.json"],
         [sys.executable, "tests/verify_map_viewer.py", "--results", "outputs/map_viewer/verification.json"],
     ]

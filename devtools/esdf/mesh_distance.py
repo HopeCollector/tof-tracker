@@ -18,8 +18,8 @@ import weakref
 
 import numpy as np
 
-from .mesh import MeshObject
-from .scene import GeometrySnapshot
+from ..mesh import MeshObject
+from ..scene import GeometrySnapshot
 
 
 def _bounds(value):

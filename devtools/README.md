@@ -9,8 +9,7 @@
 | [`scene.py`](scene.py) | 已实现：场景加载、按对象 ID 读取几何、球体状态替换 |
 | [`trajectory.py`](trajectory.py) | 已实现：三维五次 / 航向三次边界解析与 Torch 可微采样 |
 | [`sensors.py`](sensors.py) | 占位：指定机体位姿下的四路 ToF 与前向相机观测 |
-| [`mesh_distance.py`](mesh_distance.py) | 已实现：公开静态柱盒 / 地面并集准备与 CPU mesh 距离查询，服务离线建图 |
-| [`esdf.py`](esdf.py) | 已实现：共享 float32 距离节点的构建、保存、加载及三线性批量位置查询 |
+| [`esdf/`](esdf/) | 已实现：离线 mesh 建图、共享 float32 距离节点的保存/加载及三线性批量位置查询 |
 
 ## 统一配置与场景
 
@@ -80,8 +79,8 @@ ESDF 是本模块的静态地图组件：离线查询 mesh，在固定、均匀�
 先在项目 Docker 容器内显式编译建图所需的 CPU 距离库：
 
 ```sh
-cmake -S devtools -B outputs/mesh-distance-build -DCMAKE_BUILD_TYPE=Release
-cmake --build outputs/mesh-distance-build -j2
+cmake -S devtools/esdf -B outputs/esdf/build -DCMAKE_BUILD_TYPE=Release
+cmake --build outputs/esdf/build -j2
 ```
 
 在同一容器中调用；输入 OBJ 应已由调用方准备：
@@ -92,7 +91,7 @@ from devtools.esdf import ESDFGrid, build_esdf_from_mesh
 
 field = build_esdf_from_mesh(
     "outputs/mapgen/pillars-3.obj",
-    library_path="outputs/mesh-distance-build/libmesh_distance.so",
+    library_path="outputs/esdf/build/libmesh_distance.so",
     voxel_size_m=0.2,
 )
 field.save("outputs/esdf/pillars-3")  # 新目录；保存与加载由调用方决定
