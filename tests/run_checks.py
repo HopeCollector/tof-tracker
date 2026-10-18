@@ -1,7 +1,8 @@
 """Run the project's checks in the development container, stopping on failure.
 
-The map generator must already be built; ``just check`` prepares it. Each
-verification script documents its own scope and writes its results to outputs/.
+The map generator must already be built; ``just check`` prepares it. This runner
+builds the mesh-distance library before the formal ESDF checks. Verification
+scripts document their scopes and report their results.
 """
 
 from pathlib import Path
@@ -20,10 +21,14 @@ def main():
         [sys.executable, "tests/verify_geometry.py", "--results", "outputs/geometry/verification.json"],
         [sys.executable, "tests/verify_scene.py", "--results", "outputs/scene/verification.json"],
         [sys.executable, "tests/verify_trajectory.py", "--results", "outputs/trajectory/verification.json"],
+        ["cmake", "-S", "devtools/esdf", "-B", "outputs/esdf/build", "-DCMAKE_BUILD_TYPE=Release"],
+        ["cmake", "--build", "outputs/esdf/build", "--parallel", "2"],
+        [sys.executable, "tests/verify_mesh_distance.py", "--library", "outputs/esdf/build/libmesh_distance.so"],
+        [sys.executable, "tests/verify_esdf.py", "--results", "outputs/esdf/verification.json"],
         [sys.executable, "tests/verify_map_viewer.py", "--results", "outputs/map_viewer/verification.json"],
     ]
     for command in checks:
-        print(f"check: {command[1]}", flush=True)
+        print("check:", " ".join(command), flush=True)
         try:
             subprocess.run(command, cwd=ROOT, check=True)
         except subprocess.CalledProcessError as error:
