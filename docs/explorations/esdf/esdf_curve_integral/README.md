@@ -1,5 +1,7 @@
 # 五次轨迹分格指数积分实验
 
+这是历史 C1 实验，复跑固定使用归档的 [Catmull–Rom 实现](../esdf_grid_eval/code/c1_esdf.py)。正式 ESDF 已改为三线性，下面的结果和积分语义仍按原实验保留。
+
 本实验比较同一张 C1 距离场、同一批五次曲线的积分值、梯度和计算开销：先求曲线穿过网格面的时间，再对每段做 Gauss–Legendre（GL）数值求积。独立参考在整个时间区间均匀分段，不读取这些穿格时间。正式距离场和轨迹模块不变。
 
 共同目标是归一化时间平均
@@ -17,7 +19,7 @@ J(c)=\int_0^1 \exp\!\left[-\frac{F(p(u;c))-1.2}{0.6}\right]\,du,
 
 默认复用既有产物，不重建地图或重新挑选曲线：
 
-- 地图：[规则场模块](../../../../devtools/README.md)生成的 `docs/explorations/esdf/artifacts/outputs/esdf/full-0p2-20261018`，对应 60×60×15 m、500 柱实际地图，格距 0.2 m。这里积分的是保存的 C1 场；其节点几何、重叠并集和地面约定沿用该产物。
+- 地图：原 C1 实现生成的 `docs/explorations/esdf/artifacts/outputs/esdf/full-0p2-20261018`，对应 60×60×15 m、500 柱实际地图，格距 0.2 m。这里积分的是保存的 C1 场；其节点几何、重叠并集和地面约定沿用该产物。
 - 曲线：`docs/explorations/esdf/artifacts/outputs/esdf_reference_eval/integrated-20261018-v2/comparison/raw.npz` 中的 `initial`、`terminal`、`coefficients`。来源是[固定几何 fixtures](../esdf_reference_eval/code/fixtures.py)，原 `[8,15]` 批次按原顺序展平为 120 条。系数按归一化时间的升幂排列，形状为 `[120,6,3]`，不能直接换成参考项目按秒时间排列的系数。
 - 上轮 mesh 数值积分只作空间误差辅助对照。它和同 C1 场的时间积分参考是两个对象；原来的 tie、未收敛 mask 和完整行序必须保留。
 
@@ -42,7 +44,7 @@ J(c)=\int_0^1 \exp\!\left[-\frac{F(p(u;c))-1.2}{0.6}\right]\,du,
 ```python
 import numpy as np
 import torch
-from devtools.esdf import ESDFGrid
+from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import ESDFGrid
 from docs.explorations.esdf.esdf_curve_integral.code.integrate import integrate_curves
 
 field = ESDFGrid.load("docs/explorations/esdf/artifacts/outputs/esdf/full-0p2-20261018", device="cuda")

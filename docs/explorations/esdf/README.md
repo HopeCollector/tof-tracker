@@ -2,6 +2,8 @@
 
 正式 ESDF 组件的职责和调用方法见[devtools README](../../../devtools/README.md)。这里保存历史探索的代码、结果、失败和研究依据，不是正式地图或训练依赖。
 
+正式组件已改为三线性插值，不再承诺 C1。下面的 C1 结果仍对应原 Catmull–Rom 场，数值和结果文件不变；复跑使用冻结的 [C1 实现](esdf_grid_eval/code/c1_esdf.py)与[合同检查](esdf_grid_eval/code/verify_c1_esdf.py)，不会改用正式三线性查询。来源提交及原件、归档件哈希见源码归档清单的 `c1_snapshot`。
+
 | 内容 | 报告与代码入口 | 边界 |
 |---|---|---|
 | 固定栅格 float32 节点、C1 查询 | [规则场报告](GRID_REPORT.md)、[审查](C1_REVIEW.md)、[评估代码](esdf_grid_eval/code/evaluate_map.py) | 完整 60×60×15 m 地图证据；连续性不等于几何精确 |
@@ -12,7 +14,7 @@
 | SdfLib 八叉树 | [小场报告](adaptive_distance_eval/REPORT.md)、[实际地图](adaptive_distance_eval/REAL_MAP_REPORT.md)、[复跑说明](adaptive_distance_eval/README.md) | 局部链路跑通；C1 验收未过，两次全图 OOM |
 | 直接 mesh 查询 | [报告](mesh_distance_eval/REPORT.md)、[代码与复跑](mesh_distance_eval/README.md) | 历史 PR #3 的固定几何与版本条件 |
 
-各主题的 `code/` 保存实验源码与运行脚本；实验专用检查也在其中，不挂入常规测试。运行必须在 Docker 中进行，从仓库根以 `python -m docs.explorations.esdf.<主题>.code.<模块>` 调用。可运行路径只做搬迁适配，没有新增正式能力或改写历史测量。
+各主题的 `code/` 保存实验源码与运行脚本；实验专用检查也在其中，不挂入常规测试。运行必须在 Docker 中进行，从仓库根以 `python -m docs.explorations.esdf.<主题>.code.<模块>` 调用。可运行路径只做搬迁及 C1 快照适配，没有新增正式能力或改写历史测量。
 
 历史大产物实际存放在 [artifacts/outputs](artifacts/outputs/)；历史记录中的根 `outputs/<主题>/...` 对应现在的 `docs/explorations/esdf/artifacts/outputs/<主题>/...`。节点、NPZ、日志、源码副本、编译产物和失败记录保留，生成缓存不属于归档源码。这个目录仍受原 `outputs/` 忽略规则保护，数 GB 大文件没有加入 Git。各主题 `results/` 另保存可追踪的关键结果与原始数组；其路径及 SHA-256 见[证据清单](evidence-manifest.json)。
 

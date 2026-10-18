@@ -9,7 +9,7 @@ import time
 import numpy as np
 import torch
 
-from devtools.esdf import ESDFGrid
+from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import ESDFGrid
 from docs.explorations.esdf.esdf_reference_eval.code.evaluate import fit, errors, vector_stats as _vector_stats
 from docs.explorations.esdf.esdf_reference_eval.code.reference import SOURCE_COMMIT, SOURCE_SHA256
 from .integrate import split_batch, prepare_quadrature, integrate_segments, integrate_curves
@@ -215,7 +215,7 @@ def main():
             "grid_sha256":{p.name:sha(p) for p in (Path(args.grid)/"metadata.json",Path(args.grid)/"samples.npy")},
             "environment":{"python":platform.python_version(),"torch":torch.__version__,
                            "numpy":np.__version__,"gpu":torch.cuda.get_device_name() if coefficients.is_cuda else None},
-            "code_sha256":{p:sha(p) for p in ("devtools/esdf.py","devtools/trajectory.py",
+            "code_sha256":{p:sha(p) for p in ("docs/explorations/esdf/esdf_grid_eval/code/c1_esdf.py","devtools/trajectory.py",
                   "docs/explorations/esdf/esdf_grid_eval/code/path_integrals.py","docs/explorations/esdf/esdf_reference_eval/code/evaluate.py",__file__,
                   "docs/explorations/esdf/esdf_curve_integral/code/integrate.py","docs/explorations/esdf/esdf_curve_integral/code/reference.py")}}
     def checkpoint():

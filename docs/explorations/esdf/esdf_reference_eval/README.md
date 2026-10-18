@@ -1,5 +1,7 @@
 # 参考 ESDF 与 C1 场的轨迹损失对照
 
+这是历史 C1 实验，复跑固定使用归档的 [Catmull–Rom 实现](../esdf_grid_eval/code/c1_esdf.py)，不会使用正式组件现有的三线性查询。旧地图格式与历史结果仍由冻结版读取，结果数值保持原样。
+
 比较同一张 60×60×15 m / 500 柱地图、同一批 120 条五次曲线的距离、safety loss、终端 p/v/a 梯度与耗时。正式地图、轨迹和训练模块不变。结果见[对比报告](../REFERENCE_COMPARISON.md)，独立审查见 [REVIEW.md](REVIEW.md)。
 
 ## 比较对象和目标
@@ -12,7 +14,7 @@
 
 1. 受控 PLY → 原双 EDT → 原 crop / clamp / 三线性 query。
 2. 我们的精确 mesh 距离节点 → 相同原 crop / 三线性 query，隔离节点构图与插值的影响。
-3. 同一份 mesh 节点 → 正式 `ESDFGrid.query`，C1 Catmull–Rom。
+3. 同一份 mesh 节点 → 冻结版 `ESDFGrid.query`，C1 Catmull–Rom。
 
 共同目标为 `mean(k=1..30) exp(-(F(p(T*k/30))-1.2)/0.6)`，`T=10/6 s`，每场景 15 条候选。8 个固定锚点的初态在组内共享，包含疏密柱、重叠、地面和柱顶；`fixtures.py` 只按几何选择，不按任一场/损失挑样。所有 Bernstein 控制点都在**两个场各自真实节点支撑的交集**内。
 
@@ -31,7 +33,7 @@
 
 所有项目运行在 Docker。默认复用本机已有的 CPU 构图镜像 `tof-tracker-esdf-eval:nvblox-24eee49-cu128`（SciPy 1.15.3 / NumPy 2.2.6 / Open3D 0.19.0 / Python 3.10.18）和 GPU 镜像 `tof-tracker-main-sync-d9fc:torch291`（Torch 2.9.1+cu128 / NumPy 2.5.4 / Python 3.12.3）。不会安装依赖或改写镜像标签；可通过 `REFERENCE_BUILD_IMAGE`、`REFERENCE_GPU_IMAGE` 指定已准备的等价容器。已有标签不等于其他机器可下载的发布镜像，精确 ID 记入实验记录。
 
-先准备固定 OBJ 与正式节点场；本机历史输入已随实验归入 `docs/explorations/esdf/artifacts/outputs/`。其他机器可按[开发辅助模块](../../../../devtools/README.md)的公开建图调用准备节点场，再显式传入地图和网格路径。归档不提供正式命令入口。
+先准备固定 OBJ 与原 C1 节点场；本机历史输入已随实验归入 `docs/explorations/esdf/artifacts/outputs/`。其他机器可在 Docker 中使用冻结版的 `build_esdf_from_mesh`、`save` 准备相同格式的节点场，再显式传入地图和网格路径。原构建 CLI 也仅保存在[归档代码](../esdf_grid_eval/code/legacy_build_map.py)中，不属于正式组件入口。
 
 原 OBJ hash 为 `da25463989072ef10ceaa5c6cbddd55697c9c16a8d9c2e3c5df3cb5f523ba6e5`。用 `REFERENCE_MAP`、`REFERENCE_GRID` 指定对应新路径。然后从仓库根目录运行：
 

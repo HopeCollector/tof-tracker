@@ -1,5 +1,7 @@
 # 规则距离栅格的路径积分小实验
 
+这是历史 C1 实验。代码固定使用本目录的 [c1_esdf.py](code/c1_esdf.py)，不随正式三线性 ESDF 改变；来源和哈希见[归档清单](../archive-manifest.json)。原 C1 合同检查可在 Docker 中运行 `python -m docs.explorations.esdf.esdf_grid_eval.code.verify_c1_esdf --results outputs/esdf_grid_eval/c1-contract.json`。
+
 这里验证一件事：规则 Catmull–Rom 场与五次曲线复合后，可以按穿格区间构造多项式，对一个特定多项式代价积分，并将梯度传回曲线系数和边界参数。它不提供正式 cost/integrate API，不是最终避障损失、规划器或连续碰撞检测器。
 
 ## 调用关系与输入输出
@@ -12,7 +14,7 @@ cell_distance_bernstein → 单格 degree≤45 的距离
 polynomial_integral → degree≤90 平方代价积分 → Torch 参数梯度
 ```
 
-只读取 `samples`、`shape`、`sample_origin_m`、`spacing_m`、`bounds_m`，对照调用公开 `query`；不读取 ESDFGrid 的内部存储。公共节点快照每个场取一次。正式模块仍只负责建图、查询、保存和加载。
+只读取 `samples`、`shape`、`sample_origin_m`、`spacing_m`、`bounds_m`，对照调用冻结版的公开 `query`；不读取 ESDFGrid 的内部存储。公共节点快照每个场取一次。正式模块的职责另见 [devtools README](../../../../devtools/README.md)。
 
 实验固定 CPU float64 计算、float32 节点、3 m 立方域和 0.25 m 网格。两种标量场分别为可独立闭式积分的二次函数（明确不是 SDF），以及解析球 SDF 的栅格样本。三条确定性曲线覆盖三轴穿格、同一格面反复穿越和一个坐标恒定；初末 p/v/a 从已知曲线得到，再使用正式 `fit_trajectory` 拟合。
 

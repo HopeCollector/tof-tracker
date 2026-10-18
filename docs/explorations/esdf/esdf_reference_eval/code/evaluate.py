@@ -14,7 +14,7 @@ import time
 import numpy as np
 import torch
 
-from devtools.esdf import ESDFGrid
+from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import ESDFGrid
 from devtools.trajectory import TrajectoryState, fit_trajectory
 from docs.explorations.esdf.adaptive_distance_eval.code.real_map_geometry import load_real_map
 from .fixtures import make_fixtures
@@ -366,7 +366,7 @@ def main():
                                   "gradient":"L2(delta)<=1e-3+1e-2*L2(gradient)",
                                   "policy":"all rows retained, including unconverged; finite last-level results are numerical references, not exact continuous integrals"},
         "map_builder":ref_metadata,"limits":"Same-OBJ controlled surface PLY, not original absent dataset; reference original shell EDT/crop/clamp preserved. Double common-chain accuracy and literal float32 forward distinct. Finite quadrature convergence is not a continuous collision guarantee. No trajectory optimizer or formal training API added.",
-        "source_sha256":{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(__file__).with_name("oracle.py"),Path(__file__).with_name("fixtures.py"),Path(__file__).with_name("reference.py"),Path("devtools/esdf.py"),Path("devtools/trajectory.py")]}}
+        "source_sha256":{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(__file__).with_name("oracle.py"),Path(__file__).with_name("fixtures.py"),Path(__file__).with_name("reference.py"),Path("docs/explorations/esdf/esdf_grid_eval/code/c1_esdf.py"),Path("devtools/trajectory.py")]}}
     np.savez_compressed(args.output/"raw.npz",**raw)
     result["raw_sha256"]=hashlib.sha256((args.output/"raw.npz").read_bytes()).hexdigest()
     (args.output/"results.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n")

@@ -15,7 +15,7 @@ import time
 import numpy as np
 import torch
 
-from devtools.esdf import ESDFGrid
+from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import ESDFGrid
 from docs.explorations.esdf.adaptive_distance_eval.code.real_map_geometry import load_real_map
 
 
@@ -101,7 +101,7 @@ def seam_check(field):
     assert value_jump < 1e-8 and gradient_jump < 1e-6
     return {"face_points": len(p), "float64_linear_extrapolated_value_jump_m": value_jump,
             "float64_linear_extrapolated_gradient_component_jump": gradient_jump,
-            "scope": "sampled actual-map internal faces; independent same-point Hermite limits and exhaustive fixture faces are checked by tests/verify_esdf.py"}
+            "scope": "sampled actual-map internal faces; independent same-point Hermite limits and exhaustive fixture faces are checked by docs/explorations/esdf/esdf_grid_eval/code/verify_c1_esdf.py"}
 
 
 def timings(field):

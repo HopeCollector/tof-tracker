@@ -17,7 +17,7 @@ import traceback
 import numpy as np
 import torch
 
-from devtools.esdf import build_esdf
+from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import build_esdf
 from devtools.trajectory import TrajectoryState, fit_trajectory
 from docs.explorations.esdf.esdf_curve_integral.code.integrate import (
     CurveSplitError, integrate_curves, integrate_segments, prepare_quadrature, split_batch,
@@ -244,7 +244,7 @@ def main():
     except Exception:
         error = traceback.format_exc()
     source_paths = ["docs/explorations/esdf/esdf_curve_integral/code/integrate.py", "docs/explorations/esdf/esdf_curve_integral/code/verify_esdf_curve_integral.py",
-                    "docs/explorations/esdf/esdf_grid_eval/code/path_integrals.py", "devtools/esdf.py", "devtools/trajectory.py"]
+                    "docs/explorations/esdf/esdf_grid_eval/code/path_integrals.py", "docs/explorations/esdf/esdf_grid_eval/code/c1_esdf.py", "devtools/trajectory.py"]
     report = {"passed": error is None, "device": "cpu", "python": platform.python_version(),
               "torch": torch.__version__, "numpy": np.__version__, "wall_seconds": time.perf_counter()-started,
               "checks": records, "failure": error,

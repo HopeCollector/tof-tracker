@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from devtools.esdf import ESDFGrid
+from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import ESDFGrid
 from docs.explorations.esdf.adaptive_distance_eval.code.real_map_geometry import load_real_map
 from .evaluate import K, errors, fit, positions
 from .fixtures import make_fixtures

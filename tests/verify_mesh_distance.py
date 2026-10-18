@@ -1,8 +1,10 @@
 """Independent analytic checks for offline mesh distances; run inside Docker.
 
 No SdfLib, Torch, trimesh proximity, or production rectangle-distance helper is
-used as the geometry reference. The public ESDF builder also gets a small
-end-to-end plane check. Optional --map exercises the complete public map input.
+used as the geometry reference. The public ESDF builder also gets analytic node,
+query and sign checks on resolved box fixtures, plus a small end-to-end plane
+check. Optional --map exercises the complete public map input, including a
+free-space ESDF accuracy check.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -126,7 +128,82 @@ def builder_check(library_path):
             "explicit_native_library":True,"shape":field.shape}
 
 
-def run(library_path, map_path=None):
+def esdf_map_accuracy(library_path):
+    """Compare built grids with analytic distances on resolved box fixtures.
+
+    These checks use a single box and two boxes separated by two voxels: every
+    node must match the analytic distance, and trilinear query values must stay
+    within their eight corner values. The half-voxel distance and sign
+    thresholds below are regression checks for these fixtures, not a general
+    geometric error guarantee. Thin features can remain unresolved.
+    """
+    import torch
+    from devtools.esdf import build_esdf_from_mesh
+
+    def bounded(objects, bounds):
+        return GeometrySnapshot(tuple(SceneObject(o.name,o.kind,o) for o in objects),None,bounds)
+
+    def measure(name, objects, bounds, spacing):
+        field = build_esdf_from_mesh(bounded(objects,bounds),library_path=library_path,
+            voxel_size_m=spacing)
+        indices = np.stack(np.meshgrid(*(np.arange(n) for n in field.shape),indexing="ij"),axis=-1)
+        grid = np.asarray(field.sample_origin_m)+indices.reshape(-1,3)*spacing
+        extents = [(np.min(o.vertices_m,axis=0),np.max(o.vertices_m,axis=0)) for o in objects]
+        node_expected = np.minimum.reduce([box_distance(grid,*b) for b in extents])
+        node_error = float(np.max(np.abs(field.samples.numpy().ravel()-node_expected),initial=0))
+        assert node_error <= 2e-6, (name,"node",node_error)
+
+        rng = np.random.default_rng(20261018)
+        lower, upper = np.asarray(bounds)[:,0],np.asarray(bounds)[:,1]
+        points = [rng.uniform(lower,upper,(50000,3))]
+        for lo, hi in extents:
+            near = rng.uniform(lo-spacing,hi+spacing,(10000,3))
+            for axis in range(3):
+                near[:,axis] = np.where(rng.random(len(near)) < .5,
+                    np.where(rng.random(len(near)) < .5,lo[axis],hi[axis]),near[:,axis])
+            points.append(near)
+        points = np.vstack(points)
+        points = points[np.all((points >= lower) & (points <= upper),axis=1)]
+        expected = np.minimum.reduce([box_distance(points,*b) for b in extents])
+        actual, valid = field.query(torch.tensor(points,dtype=torch.float64),return_valid=True)
+        actual, valid = actual.numpy(), valid.numpy()
+        assert valid.all()
+        error = np.abs(actual-expected)
+        maximum = float(error.max())
+        assert maximum <= .5*spacing+2e-6, (name,"query",maximum,spacing)
+        mismatch = (np.sign(actual) != np.sign(expected)) & (np.abs(expected) > .5*spacing)
+        assert not mismatch.any(), (name,"sign",int(mismatch.sum()))
+        samples = field.samples.numpy()
+        coordinate = (points-np.asarray(field.sample_origin_m))/spacing
+        base = np.maximum(1,np.minimum(np.floor(coordinate).astype(int),
+            np.asarray(samples.shape)-3))
+        nearby = np.stack([samples[base[:,0]+dx,base[:,1]+dy,base[:,2]+dz]
+            for dx,dy,dz in product(range(2),repeat=3)],axis=1)
+        # The eight nonnegative trilinear weights preserve the corner range.
+        tolerance = 64*np.finfo(actual.dtype).eps*np.maximum(1,np.abs(nearby).max(axis=1))
+        assert np.all(actual >= nearby.min(axis=1)-tolerance)
+        assert np.all(actual <= nearby.max(axis=1)+tolerance)
+        all_positive, all_negative = nearby.min(axis=1) > 0, nearby.max(axis=1) < 0
+        negative_overshoot = int(((actual < -tolerance) & all_positive).sum())
+        positive_overshoot = int(((actual > tolerance) & all_negative).sum())
+        assert not negative_overshoot and not positive_overshoot, \
+            (name,"overshoot",negative_overshoot,positive_overshoot)
+        return {"spacing_m":spacing,"node_count":len(grid),"query_points":len(points),
+            "node_max_abs_error_m":node_error,"query_max_abs_error_m":maximum,
+            "query_max_error_in_voxels":maximum/spacing,
+            "sign_mismatches_outside_half_voxel":int(mismatch.sum()),
+            "near_surface_sign_mismatches":int(((np.sign(actual) != np.sign(expected))
+                & (np.abs(expected) <= .5*spacing)).sum()),
+            "all_positive_node_negative_values":negative_overshoot,
+            "all_negative_node_positive_values":positive_overshoot}
+
+    unit = box("unit",(0.,0.,0.),(1.,1.,1.))
+    gap = box("gap",(1.4,0.,0.),(2.4,1.,1.))
+    return {"single_box":measure("single_box",(unit,),((-2.,3.),(-2.,3.),(-2.,3.)),.2),
+            "two_box_gap":measure("two_box_gap",(unit,gap),((-2.,4.),(-2.,3.),(-2.,3.)),.2)}
+
+
+def run(library_path, map_path=None, esdf_voxel=.5):
     rng = np.random.default_rng(1843)
     results = {}
     bounds = np.array([[-2.,-2.,-.5],[2.,2.,2.]])
@@ -242,7 +319,61 @@ def run(library_path, map_path=None):
         checked("complete_map_free_space_vs_analytic_boxes_and_ground",mesh,p[free],expected[free],2e-10)
         results["complete_map_geometry"] = {key:mesh.metadata[key] for key in
             ("obstacle_count","overlap_pair_count","rectangle_count","vertex_count","triangle_count","closed_oriented_edge_check")}
+
+        import torch
+        from devtools.esdf import build_esdf_from_mesh
+
+        def union_distance(points):
+            expected = np.asarray(points)[:,2].copy()
+            for box_bounds in boxes:
+                np.minimum(expected,box_distance(points,*box_bounds),out=expected)
+            return expected
+
+        esdf = build_esdf_from_mesh(snap,library_path=library_path,voxel_size_m=esdf_voxel)
+        indices = np.stack(np.meshgrid(*(np.arange(n) for n in esdf.shape),indexing="ij"),axis=-1)
+        grid = np.asarray(esdf.sample_origin_m)+indices.reshape(-1,3)*esdf.spacing_m
+        node_expected = union_distance(grid)
+        node_free = node_expected > 0
+        node_error = float(np.max(np.abs(esdf.samples.numpy().ravel()[node_free]
+            -node_expected[node_free]),initial=0))
+        assert node_error <= 2e-6, ("map node",node_error)
+        q = rng.uniform(logical[0],logical[1],(20000,3))
+        query_expected = union_distance(q)
+        query_free = query_expected > .5*esdf.spacing_m
+        actual, valid = esdf.query(torch.tensor(q[query_free],dtype=torch.float64),return_valid=True)
+        actual, valid = actual.numpy(), valid.numpy()
+        assert valid.all()
+        error = np.abs(actual-query_expected[query_free])
+        maximum = float(error.max())
+        # This map-specific threshold does not bound every ESDF geometry.
+        assert maximum <= .5*esdf.spacing_m+2e-6, ("map query",maximum,esdf.spacing_m)
+        mismatch = np.sign(actual) != np.sign(query_expected[query_free])
+        assert not mismatch.any(), ("map sign",int(mismatch.sum()))
+        samples = esdf.samples.numpy()
+        coordinate = (q[query_free]-np.asarray(esdf.sample_origin_m))/esdf.spacing_m
+        base = np.maximum(1,np.minimum(np.floor(coordinate).astype(int),
+            np.asarray(samples.shape)-3))
+        nearby = np.stack([samples[base[:,0]+dx,base[:,1]+dy,base[:,2]+dz]
+            for dx,dy,dz in product(range(2),repeat=3)],axis=1)
+        # The eight nonnegative trilinear weights preserve the corner range.
+        tolerance = 64*np.finfo(actual.dtype).eps*np.maximum(1,np.abs(nearby).max(axis=1))
+        assert np.all(actual >= nearby.min(axis=1)-tolerance)
+        assert np.all(actual <= nearby.max(axis=1)+tolerance)
+        all_positive, all_negative = nearby.min(axis=1) > 0, nearby.max(axis=1) < 0
+        negative_overshoot = int(((actual < -tolerance) & all_positive).sum())
+        positive_overshoot = int(((actual > tolerance) & all_negative).sum())
+        assert not negative_overshoot and not positive_overshoot, \
+            ("map overshoot",negative_overshoot,positive_overshoot)
+        results["complete_map_esdf_accuracy"] = {"voxel_size_m":esdf.spacing_m,
+            "shape":list(esdf.shape),"free_nodes":int(node_free.sum()),
+            "free_node_max_abs_error_m":node_error,"query_points":len(actual),
+            "query_max_abs_error_m":maximum,
+            "query_max_error_in_voxels":maximum/esdf.spacing_m,
+            "sign_mismatches_outside_half_voxel":int(mismatch.sum()),
+            "all_positive_node_negative_values":negative_overshoot,
+            "all_negative_node_positive_values":positive_overshoot}
     results["public_esdf_builder"] = builder_check(library_path)
+    results["esdf_map_accuracy"] = esdf_map_accuracy(library_path)
     return results
 
 
@@ -250,5 +381,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--library",type=Path,required=True)
     parser.add_argument("--map",type=Path)
+    parser.add_argument("--esdf-voxel",type=float,default=.5)
     args = parser.parse_args()
-    print(json.dumps({"checks":run(args.library,args.map)},indent=2,allow_nan=False))
+    print(json.dumps({"checks":run(args.library,args.map,args.esdf_voxel)},indent=2,allow_nan=False))

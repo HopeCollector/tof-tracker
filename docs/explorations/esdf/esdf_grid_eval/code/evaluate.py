@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from devtools.esdf import build_esdf
+from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import build_esdf
 from devtools.trajectory import TrajectoryState, fit_trajectory
 from .path_integrals import (cell_distance_bernstein, gauss_integral,
                              polynomial_integral, split_curve)
@@ -185,7 +185,7 @@ def main():
         except ValueError as error:
             rejected[name] = str(error)
     source_paths = [Path(__file__), Path(__file__).with_name("path_integrals.py"),
-                    Path("devtools/esdf.py"), Path("devtools/trajectory.py")]
+                    Path("docs/explorations/esdf/esdf_grid_eval/code/c1_esdf.py"), Path("devtools/trajectory.py")]
     result = {"schema": "esdf-grid-path-integral-experiment-v1", "device": "cpu", "dtype": "float64",
         "samples_dtype": "float32", "spacing_m": .25, "bounds_m": [[-1.5]*3, [1.5]*3],
         "integral": "T * integral_0^1 0.5*(F(p(u))-0.1)^2 du",

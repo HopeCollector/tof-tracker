@@ -1,12 +1,15 @@
-"""Offline uniform distance grids and C1 Catmull--Rom position queries.
+"""Offline uniform distance grids and trilinear position queries.
 
 One float32 signed distance is stored per shared node, including one halo node
 on each side. Arrays use XYZ order. Distances are metres, positive outside the
 supplied solid and negative inside. The builder samples a caller-owned geometry
 query; task penalties, trajectories and optimization do not belong here.
 
-The reconstructed field approximates distance. Catmull--Rom is C1 between cells,
-but can overshoot and does not preserve the exact zero set or unit gradient.
+The reconstructed field is C0: values are continuous across cells, but position
+gradients can jump. Within each cell, nonnegative weights keep the value within
+its eight corner values, up to floating-point rounding. This distance
+approximation does not preserve the exact zero set or unit gradient and is not
+a conservative clearance bound.
 """
 
 from collections.abc import Mapping
@@ -22,8 +25,8 @@ from torch import Tensor
 
 
 _FORMAT = "tof-tracker-esdf"
-_VERSION = 1
-_INTERPOLATION = "uniform-catmull-rom-a=-0.5"
+_VERSION = 2
+_INTERPOLATION = "trilinear"
 
 
 def _positive(value, name):
@@ -72,15 +75,7 @@ def _digest(path):
 
 
 def _weights(t):
-    # Cubic convolution, a=-0.5: R. G. Keys, "Cubic Convolution Interpolation
-    # for Digital Image Processing", IEEE TASSP 29(6), 1981, pp.1153-1160.
-    # Paper: https://ncorr.com/download/publications/keysbicubic.pdf
-    # This repository implements the formula; no accompanying code was copied.
-    t2, t3 = t * t, t * t * t
-    return torch.stack((-.5 * t + t2 - .5 * t3,
-                        1. - 2.5 * t2 + 1.5 * t3,
-                        .5 * t + 2. * t2 - 1.5 * t3,
-                        -.5 * t2 + .5 * t3), dim=-1)
+    return torch.stack((1. - t, t), dim=-1)
 
 
 class ESDFGrid:
@@ -96,10 +91,13 @@ class ESDFGrid:
     Representable endpoints in the query dtype snap to declared coordinates
     without clamping the normal gradient.
 
-    Each query uses shared 4x4x4 nodes in a tensor-product Catmull--Rom cubic
-    (a=-0.5). The common face values and first derivatives give C1 continuity
-    at internal cell boundaries. At the closed domain boundary the derivative
-    is one-sided; no outside extension or collision guarantee is implied.
+    Each query linearly blends the cell's eight shared corner values. Shared
+    face values give C0 continuity; normal derivatives generally jump. At an
+    internal grid face, autograd follows the selected cell (floor of the
+    computed grid coordinate); at the outermost node it uses the last interior
+    cell. Neither a unique derivative on grid faces nor collision guarantees
+    are implied. The builder's one-node storage halo is retained, but query
+    weights use only the enclosing cell's corners.
     """
 
     def __init__(self, samples, *, sample_origin_m, spacing_m, bounds_m,
@@ -124,7 +122,7 @@ class ESDFGrid:
         self._spacing = spacing
         self._bounds = tuple(tuple(float(x) for x in row) for row in bounds)
         self._metadata = _metadata(metadata)
-        self._offsets = torch.arange(-1, 3, dtype=torch.int64, device=self.device)
+        self._offsets = torch.arange(2, dtype=torch.int64, device=self.device)
         self._origin_tensor = torch.tensor(self._origin, dtype=torch.float64, device=self.device)
         self._bounds_tensor = torch.tensor(self._bounds, dtype=torch.float64, device=self.device)
 
@@ -235,6 +233,8 @@ class ESDFGrid:
 
         Loading/querying a saved grid does not require the native mesh library.
         The caller chooses when to load or rebuild and which device to use.
+        Legacy C1 maps are rejected rather than silently changing their
+        interpolation semantics; their implementation lives in docs archives.
         """
         path = Path(path)
         record = json.loads((path / "metadata.json").read_text(encoding="utf-8"))
@@ -301,7 +301,7 @@ def build_esdf(distance_query, *, bounds_m, voxel_size_m=.2, chunk_size=65536,
 
 def build_esdf_from_mesh(source, *, library_path, bounds_m=None,
                          voxel_size_m=.2, chunk_size=65536):
-    """Build one fixed-spacing C1 distance approximation from static geometry.
+    """Build one fixed-spacing trilinear distance approximation from static geometry.
 
     ``source`` is an OBJ path accepted by MeshMap, or a public GeometrySnapshot
     from ``scene.get_geometry(exclude_ids={"vehicle", "target"})``. An OBJ path

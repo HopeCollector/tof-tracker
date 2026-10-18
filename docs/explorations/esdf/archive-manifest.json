@@ -1,6 +1,6 @@
 {
   "schema": "esdf-exploration-archive-v2",
-  "changes": "Original result JSON bytes and source provenance are retained. Markdown links and executable source paths are relocated; no historical measurements are rerun or revised.",
+  "changes": "Original result JSON bytes and source provenance are retained. Markdown links and executable source paths are relocated; no historical measurements are rerun or revised. C1 experiment imports and provenance paths are frozen before switching the formal component to trilinear; historical results remain unchanged.",
   "files": [
     {
       "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
@@ -321,7 +321,7 @@
         "source_path": "experiments/esdf_curve_integral/README.md",
         "original_sha256": "28e7f872186b001e7747a7628dca7ce99f0c875db5885636895ad68f3e1567df",
         "archive_path": "docs/explorations/esdf/esdf_curve_integral/README.md",
-        "archived_sha256": "f4518f23261d6a103f5aa0ac44260f0353dc96daf43245d393f80795ab213f69",
+        "archived_sha256": "9841720b77dfd5d4b6d17f289747de4da252ade2f9bbf9efff0a3a28fb9a8c07",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -345,7 +345,7 @@
         "source_path": "experiments/esdf_curve_integral/evaluate.py",
         "original_sha256": "a2b0d56c70fabbf8678606e28f3369d77e789be770c92a59400f88dd5007e827",
         "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/evaluate.py",
-        "archived_sha256": "02c8c42773d4b83f5dd0b67dfb5ffbc41aa31c67ec9d09a215fd5799134f757f",
+        "archived_sha256": "c6f05cc13c98172b716e8fb51e9bbe3cb72656214947ba29741d2091e5bf86b2",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -361,7 +361,7 @@
         "source_path": "experiments/esdf_curve_integral/reference.py",
         "original_sha256": "aca527a108adf6e6bc6b3ff85f85878c13fb82c62fa1a680d4f57eeb129da30d",
         "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/reference.py",
-        "archived_sha256": "aca527a108adf6e6bc6b3ff85f85878c13fb82c62fa1a680d4f57eeb129da30d",
+        "archived_sha256": "7046c492b2ab8fdbc9c9869a229dd5548d33b7870440e86eceb9eb99cf016177",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -385,7 +385,7 @@
         "source_path": "experiments/esdf_grid_eval/README.md",
         "original_sha256": "7ec732a243b9f04fd5dbbb44bad002363fd4e6be0239a2b5dcfdfcf6096fb96f",
         "archive_path": "docs/explorations/esdf/esdf_grid_eval/README.md",
-        "archived_sha256": "c43be59388ff87a296af7f952c361d79c07a239dd74fb4cf499afc227650ae85",
+        "archived_sha256": "9d233264ad1a9ace9f73156cb87f98275a9dfb94fea3dfc68b6082d9e83939e2",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -401,7 +401,7 @@
         "source_path": "experiments/esdf_grid_eval/evaluate.py",
         "original_sha256": "356d4dcf194322db4892bdfe7ee0743759aafd82d565218b7c9502b56fbbf1a3",
         "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/evaluate.py",
-        "archived_sha256": "356d4dcf194322db4892bdfe7ee0743759aafd82d565218b7c9502b56fbbf1a3",
+        "archived_sha256": "3cc4bed5b70753d9b1ce2e23495e4aa1168449fed54f18ee579bdb44718361b7",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -409,7 +409,7 @@
         "source_path": "experiments/esdf_grid_eval/evaluate_map.py",
         "original_sha256": "6fad31e409da2cc460611099471eb7ce1cc579f4d3f7df2057765515d2dae852",
         "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/evaluate_map.py",
-        "archived_sha256": "fa3ced890aa328629104c10c26dd4b5a95b4bc430ca8ad8002eb015028cbf01c",
+        "archived_sha256": "4cb66f92b59b620ca2db17e8165ff6a1b8a21d0aca4ef4df597b5e5c552281f7",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -441,7 +441,7 @@
         "source_path": "experiments/esdf_reference_eval/README.md",
         "original_sha256": "56b6ae728d4c94e2ccac1d51c1c4aeed9b31924cb43fc9972c1505bd0ae84958",
         "archive_path": "docs/explorations/esdf/esdf_reference_eval/README.md",
-        "archived_sha256": "5bdef059c454380f2d9c74ebc20d3c004a457f5403bc035c702d2bc956c555c3",
+        "archived_sha256": "b13baae2daee6bbdc3b5b21d162d35fb3140a902493b135ffbcd658a6f0e9bf0",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -481,7 +481,7 @@
         "source_path": "experiments/esdf_reference_eval/evaluate.py",
         "original_sha256": "56dbd10d10c3d68a37a152d0aad5150606991a3176f370745765273a00e35e1d",
         "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/evaluate.py",
-        "archived_sha256": "5158150ddc72bc89407eb852b2d143263bcf8cbd1bfa0f708c6abfa67153c7f3",
+        "archived_sha256": "7d76d9c901baa522ec8451dbf3c5660e0510849ff9be024b2eb5d9659c6a3956",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -529,7 +529,7 @@
         "source_path": "experiments/esdf_reference_eval/verify_float32.py",
         "original_sha256": "967b83774b81d7a96dd5e2804661470965a45cdc01a1d4330ac64c3be28c08b5",
         "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/verify_float32.py",
-        "archived_sha256": "c049ceecde324248a5f01b710f7d638433a4a235965d21277715370ace520023",
+        "archived_sha256": "fafeae446960cf29a3dbebc5f1e3e7cf30d32c589b0c1efddbaceff939cfd9e2",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -537,7 +537,7 @@
         "source_path": "tests/verify_esdf_curve_integral.py",
         "original_sha256": "eda30e8350bff5c125cc57763102d9d172bb8629c6a420da36eb497a9b7d766f",
         "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/verify_esdf_curve_integral.py",
-        "archived_sha256": "185dbacc893e4e5ca1a87fd99ec5bcacf98d13b73646e7d54ff640ec832d93bc",
+        "archived_sha256": "30545100a438c7d0e5f0d0bacc72ed8b0e529674c0f9ed8a222a258e40f88222",
         "change": "relocated; executable paths/imports/relative links adjusted"
       },
       {
@@ -625,8 +625,110 @@
         "source_path": "tools/esdf/build_map.py",
         "original_sha256": "6cac1f2b82ddfbf3ab4f39683e433d3eda641b556c864f10c94388ec9e3e9b86",
         "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/legacy_build_map.py",
-        "archived_sha256": "6a1f890587c2bc5b791bff9e67df250e91c89f38dd448813e6da96b27746eb85",
+        "archived_sha256": "9a81f328d6479fc0c1d33b8c4f79df6a22d996a7565ea31409d0d35b691914c8",
         "change": "historical CLI archived outside formal interface; notice and archived-library path only"
+      }
+    ]
+  },
+  "c1_snapshot": {
+    "source_commit": "d7073fbe4501289b944cedd5ab8a824542c74859",
+    "scope": "Frozen Catmull-Rom implementation and independent C1 contract checks; formal devtools.esdf is now trilinear. No historical result JSON or array bytes were changed.",
+    "files": [
+      {
+        "source_path": "devtools/esdf.py",
+        "source_git_blob": "03a9aa7272f7044e752fb8a07196725ac6726ce9",
+        "original_sha256": "bf94d51e5a826d77e24f84dc9495cce8abf5387160a647b00abfdcc22bff23b2",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/c1_esdf.py",
+        "archived_sha256": "4e7c7c94d2aed0b6952f3c8167d5a209facc5c7569ce4bc6486530ff5e4ade21",
+        "change": "archive notice and absolute imports for devtools geometry only; C1 interpolation and map format unchanged"
+      },
+      {
+        "source_path": "tests/verify_esdf.py",
+        "source_git_blob": "359d196399d4800cea4e48acebbc4c7ed19a5604",
+        "original_sha256": "59a67820caf21c1f89ce2adffa3f7620d022eb6135064cb2c0624c5554697a8f",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/verify_c1_esdf.py",
+        "archived_sha256": "2a4c7abd7ca1e867b476e8225aad27ec5d913b5b02ab3d559400c57c1789c18f",
+        "change": "archive notice and frozen implementation import/provenance paths only; test assertions unchanged"
+      }
+    ],
+    "adaptations": [
+      {
+        "archive_path": "docs/explorations/esdf/C1_REVIEW.md",
+        "previous_sha256": "54937ef7d9a980451ee388cb2df2754212727e4f87f5f85d2a4bee29a7bf6742",
+        "archived_sha256": "375c2e09ea5d6e1eb0dd3500f8374b93c97dd017798900d77e7dccc083836e84",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/README.md",
+        "previous_sha256": "9e945b69814378066e1076137989e108de2615b82d21f073ed28e1c1a656597c",
+        "archived_sha256": "7abb2c4c81681d732ffa6aaaabf905902700766c322b2f7ce870b182f28593f0",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/README.md",
+        "previous_sha256": "f4518f23261d6a103f5aa0ac44260f0353dc96daf43245d393f80795ab213f69",
+        "archived_sha256": "9841720b77dfd5d4b6d17f289747de4da252ade2f9bbf9efff0a3a28fb9a8c07",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/evaluate.py",
+        "previous_sha256": "02c8c42773d4b83f5dd0b67dfb5ffbc41aa31c67ec9d09a215fd5799134f757f",
+        "archived_sha256": "c6f05cc13c98172b716e8fb51e9bbe3cb72656214947ba29741d2091e5bf86b2",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/reference.py",
+        "previous_sha256": "aca527a108adf6e6bc6b3ff85f85878c13fb82c62fa1a680d4f57eeb129da30d",
+        "archived_sha256": "7046c492b2ab8fdbc9c9869a229dd5548d33b7870440e86eceb9eb99cf016177",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/verify_esdf_curve_integral.py",
+        "previous_sha256": "185dbacc893e4e5ca1a87fd99ec5bcacf98d13b73646e7d54ff640ec832d93bc",
+        "archived_sha256": "30545100a438c7d0e5f0d0bacc72ed8b0e529674c0f9ed8a222a258e40f88222",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/README.md",
+        "previous_sha256": "c43be59388ff87a296af7f952c361d79c07a239dd74fb4cf499afc227650ae85",
+        "archived_sha256": "9d233264ad1a9ace9f73156cb87f98275a9dfb94fea3dfc68b6082d9e83939e2",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/evaluate.py",
+        "previous_sha256": "356d4dcf194322db4892bdfe7ee0743759aafd82d565218b7c9502b56fbbf1a3",
+        "archived_sha256": "3cc4bed5b70753d9b1ce2e23495e4aa1168449fed54f18ee579bdb44718361b7",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/evaluate_map.py",
+        "previous_sha256": "fa3ced890aa328629104c10c26dd4b5a95b4bc430ca8ad8002eb015028cbf01c",
+        "archived_sha256": "4cb66f92b59b620ca2db17e8165ff6a1b8a21d0aca4ef4df597b5e5c552281f7",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/legacy_build_map.py",
+        "previous_sha256": "6a1f890587c2bc5b791bff9e67df250e91c89f38dd448813e6da96b27746eb85",
+        "archived_sha256": "9a81f328d6479fc0c1d33b8c4f79df6a22d996a7565ea31409d0d35b691914c8",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/README.md",
+        "previous_sha256": "5bdef059c454380f2d9c74ebc20d3c004a457f5403bc035c702d2bc956c555c3",
+        "archived_sha256": "b13baae2daee6bbdc3b5b21d162d35fb3140a902493b135ffbcd658a6f0e9bf0",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/evaluate.py",
+        "previous_sha256": "5158150ddc72bc89407eb852b2d143263bcf8cbd1bfa0f708c6abfa67153c7f3",
+        "archived_sha256": "7d76d9c901baa522ec8451dbf3c5660e0510849ff9be024b2eb5d9659c6a3956",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
+      },
+      {
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/verify_float32.py",
+        "previous_sha256": "c049ceecde324248a5f01b710f7d638433a4a235965d21277715370ace520023",
+        "archived_sha256": "fafeae446960cf29a3dbebc5f1e3e7cf30d32c589b0c1efddbaceff939cfd9e2",
+        "change": "freeze C1 experiments independently of the formal trilinear component; paths, imports and archive notices only"
       }
     ]
   }

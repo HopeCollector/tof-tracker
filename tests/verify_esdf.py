@@ -1,9 +1,9 @@
-"""Independent interpolation, C1, AD and storage-contract checks, in Docker.
+"""Independent trilinear, position-AD and storage-contract checks, in Docker.
 
-The random-node oracle builds tensor-product Hermite cubics from nodal values
-and centred-difference jets. It does not import the implementation's weights or
-cell selection. These checks establish an interpolant contract, not geometric
-SDF accuracy, unit gradient, conservative clearance, or continuous collision.
+The scalar NumPy oracle sums eight corner values and computes gradients from
+four edge differences per axis. It does not import implementation weights.
+These checks establish an interpolant contract, not geometric SDF accuracy,
+unit gradient, conservative clearance, continuous collision, or C1 continuity.
 """
 
 import argparse
@@ -20,6 +20,7 @@ import numpy as np
 import torch
 
 from devtools.esdf import ESDFGrid, build_esdf
+from devtools.trajectory import PolynomialTrajectory, TrajectoryState, fit_trajectory
 
 
 BITS = tuple(itertools.product((0, 1), repeat=3))
@@ -62,23 +63,12 @@ def value_gradient(field, points, device, dtype=torch.float64):
     return distance.detach().cpu().numpy(), gradient.detach().cpu().numpy(), valid.detach().cpu().numpy()
 
 
-class HermiteOracle:
-    """Endpoint values/slopes, including mixed central-difference nodal jets."""
+class TrilinearOracle:
+    """Independent scalar eight-corner sum and bilinear edge differences."""
 
     def __init__(self, samples, origin, spacing):
         self.samples = np.asarray(samples, dtype=np.float64)
         self.origin, self.spacing = np.asarray(origin), spacing
-        self.jets = {}
-
-    def jet(self, index, derivatives):
-        key = (*index, *derivatives)
-        if key not in self.jets:
-            choices = [((-1, -.5), (1, .5)) if derivative else ((0, 1.),)
-                       for derivative in derivatives]
-            self.jets[key] = sum(np.prod([item[1] for item in combination]) *
-                                 self.samples[tuple(i + item[0] for i, item in zip(index, combination))]
-                                 for combination in itertools.product(*choices))
-        return self.jets[key]
 
     def evaluate(self, point, cell=None):
         coordinate = (np.asarray(point) - self.origin) / self.spacing
@@ -86,22 +76,19 @@ class HermiteOracle:
             cell = np.clip(np.floor(coordinate).astype(int), 1, np.asarray(self.samples.shape)-3)
         cell = np.asarray(cell, dtype=int)
         u = coordinate - cell
-        # Indexed as [axis, endpoint, value-or-slope].
-        basis = np.stack((np.stack((2*u**3-3*u**2+1, u**3-2*u**2+u), axis=-1),
-                          np.stack((-2*u**3+3*u**2, u**3-u**2), axis=-1)), axis=1)
-        derivative = np.stack((np.stack((6*u**2-6*u, 3*u**2-4*u+1), axis=-1),
-                               np.stack((-6*u**2+6*u, 3*u**2-2*u), axis=-1)), axis=1)
         value, gradient = 0., np.zeros(3)
         for corner in BITS:
-            index = tuple(cell + corner)
-            for orders in BITS:
-                coefficient = self.jet(index, orders)
-                weights = [basis[axis, corner[axis], orders[axis]] for axis in range(3)]
-                value += coefficient * np.prod(weights)
-                for axis in range(3):
-                    factors = weights.copy()
-                    factors[axis] = derivative[axis, corner[axis], orders[axis]] / self.spacing
-                    gradient[axis] += coefficient * np.prod(factors)
+            weight = np.prod([u[a] if corner[a] else 1-u[a] for a in range(3)])
+            value += self.samples[tuple(cell + corner)] * weight
+        for axis in range(3):
+            other = [a for a in range(3) if a != axis]
+            for endpoints in itertools.product((0, 1), repeat=2):
+                lower = cell.copy()
+                lower[other] += endpoints
+                upper = lower.copy()
+                upper[axis] += 1
+                weight = np.prod([u[a] if bit else 1-u[a] for a, bit in zip(other, endpoints)])
+                gradient[axis] += (self.samples[tuple(upper)]-self.samples[tuple(lower)])*weight/self.spacing
         return value, gradient
 
     def batch(self, points):
@@ -116,16 +103,16 @@ def analytic_reproduction(device):
     points = np.random.default_rng(721).uniform(bounds[0], bounds[1], (127, 3))
     points = np.concatenate((points, np.array(list(itertools.product(*zip(*bounds))))))
 
-    def quadratic(p):
+    def multiaffine(p):
         x, y, z = np.moveaxis(p, -1, 0)
-        value = .25*x*x - .5*y*y + .125*z*z + .25*x*y - .125*x*z + .375*y*z + .5*x - .25*y + .125*z + .75
-        gradient = np.stack((.5*x+.25*y-.125*z+.5, -y+.25*x+.375*z-.25,
-                             .25*z-.125*x+.375*y+.125), axis=-1)
+        value = .125*x*y*z + .25*x*y - .125*x*z + .375*y*z + .5*x - .25*y + .125*z + .75
+        gradient = np.stack((.125*y*z+.25*y-.125*z+.5, .125*x*z+.25*x+.375*z-.25,
+                             .125*x*y-.125*x+.375*y+.125), axis=-1)
         return value, gradient
 
     measurements = {}
     for name, function in (("plane", lambda p: (p[..., 2]-.125, np.broadcast_to([0., 0., 1.], p.shape))),
-                           ("quadratic_with_cross_terms", quadratic)):
+                           ("multiaffine_with_xyz_cross_term", multiaffine)):
         values, _ = function(grid_points)
         samples = values.astype(np.float32)
         assert np.array_equal(samples.astype(np.float64), values), "analytic fixture nodes must be exactly representable"
@@ -142,7 +129,7 @@ def analytic_reproduction(device):
 
 def all_internal_faces(device):
     field, samples, origin, spacing, _ = fixture(device)
-    oracle = HermiteOracle(samples, origin, spacing)
+    oracle = TrilinearOracle(samples, origin, spacing)
     points, left_cells, right_cells, axes = [], [], [], []
     face_counts = []
     for axis in range(3):
@@ -168,11 +155,16 @@ def all_internal_faces(device):
     vl, vr = np.array([item[0] for item in left]), np.array([item[0] for item in right])
     gl, gr = np.array([item[1] for item in left]), np.array([item[1] for item in right])
     close(vl, vr, atol=3e-13, rtol=0)
-    close(gl, gr, atol=3e-12, rtol=0)
+    tangential = np.arange(3)[None, :] != axes[:, None]
+    close(gl[tangential], gr[tangential], atol=3e-12, rtol=0)
+    normal_jump = abs(gl-gr)[np.arange(len(points)), axes]
+    assert normal_jump.max() > 1., "fixture must expose the permitted normal-gradient jump"
     actual, gradient, valid = value_gradient(field, points, device)
     assert valid.all()
     close(actual, vl)
-    close(gradient, gl, atol=3e-10, rtol=2e-11)
+    # An exact internal face selects its right cell. There is no promise of a
+    # unique derivative across a face; only the selected one-sided derivative.
+    close(gradient, gr, atol=3e-10, rtol=2e-11)
     offset = np.zeros_like(points)
     offset[np.arange(len(points)), axes] = spacing*1e-6
     limits = []
@@ -187,22 +179,24 @@ def all_internal_faces(device):
         oracle_errors.append(float(abs(g1-expected_gradient).max()))
     value_jump = float(abs(limits[0][0]-limits[1][0]).max())
     gradient_jump = float(abs(limits[0][1]-limits[1][1]).max())
-    assert value_jump < 1e-10 and gradient_jump < 1e-8
+    assert value_jump < 1e-10
+    close(limits[0][1], gl, atol=1e-8, rtol=2e-11)
+    close(limits[1][1], gr, atol=1e-8, rtol=2e-11)
     return {"fixture_shape": list(samples.shape), "faces_by_axis": face_counts,
             "all_internal_faces": sum(face_counts), "face_points": len(points),
             "independent_same_point_value_jump": float(abs(vl-vr).max()),
             "independent_same_point_world_gradient_jump": float(abs(gl-gr).max()),
             "query_face_value_error": float(abs(actual-vl).max()),
-            "query_face_world_gradient_error": float(abs(gradient-gl).max()),
+            "query_face_selected_right_gradient_error": float(abs(gradient-gr).max()),
             "query_two_sided_linear_limit_value_jump": value_jump,
             "query_two_sided_linear_limit_gradient_jump": gradient_jump,
             "query_one_sided_oracle_gradient_errors": oracle_errors,
-            "scope": "every internal face of a fixed random fixture, 3x3 interior points; numerical evidence plus shared Hermite jets, not geometric-SDF C1"}
+            "scope": "every internal face of a fixed random fixture, 3x3 interior points; values and tangential gradients agree, normal-gradient jumps are permitted"}
 
 
 def float32_and_finite_differences(device):
     field, samples, origin, spacing, bounds = fixture(device)
-    oracle = HermiteOracle(samples, origin, spacing)
+    oracle = TrilinearOracle(samples, origin, spacing)
     rng = np.random.default_rng(992)
     cells = np.column_stack([rng.integers(1, size-2, 47) for size in samples.shape])
     points = origin + (cells+rng.uniform(.2, .8, (47, 3)))*spacing
@@ -227,6 +221,119 @@ def float32_and_finite_differences(device):
     return {"float32_value_error": float(abs(actual32-expected32).max()),
             "float32_world_gradient_error": float(abs(gradient32-expected_gradient32).max()),
             "float64_central_differences": fd_errors, "points_away_from_seams": len(points)}
+
+
+def corner_range_and_locality(device):
+    field, samples, origin, spacing, _ = fixture(device)
+    rng = np.random.default_rng(2107)
+    cells = np.array(list(itertools.product(*(range(1, n-2) for n in samples.shape))))
+    cells = np.repeat(cells, 7, axis=0)
+    points = origin + (cells+rng.uniform(.001, .999, cells.shape))*spacing
+    corners = np.array([[samples[tuple(cell+corner)] for corner in BITS] for cell in cells])
+    measurements = {}
+    for dtype in (torch.float64, torch.float32):
+        actual, gradient, valid = value_gradient(field, points, device, dtype)
+        assert valid.all()
+        # Float32 arithmetic can round slightly outside the mathematical convex
+        # hull. This tolerance covers rounding, without adding output clipping.
+        tolerance = 2e-6 if dtype == torch.float32 else 2e-12
+        assert bool((actual >= corners.min(axis=1)-tolerance).all())
+        assert bool((actual <= corners.max(axis=1)+tolerance).all())
+        represented = points.astype(np.float32).astype(np.float64) if dtype == torch.float32 else points
+        reference, reference_gradient = TrilinearOracle(samples, origin, spacing).batch(represented)
+        close(actual, reference, atol=tolerance, rtol=3e-6)
+        close(gradient, reference_gradient, atol=3e-5 if dtype == torch.float32 else 3e-11, rtol=3e-6)
+        measurements[str(dtype)] = {"value_max_abs": float(abs(actual-reference).max()),
+                                    "gradient_max_abs": float(abs(gradient-reference_gradient).max()),
+                                    "rounding_tolerance": tolerance}
+    # Only the eight corners may influence an interior query. In particular,
+    # the retained storage halo does not change its value or derivative.
+    chosen_cell = np.array([2, 2, 1])
+    changed = samples.copy()
+    changed.fill(1000.)
+    for corner in BITS:
+        index = tuple(chosen_cell+corner)
+        changed[index] = samples[index]
+    local_field = ESDFGrid(changed, sample_origin_m=origin, spacing_m=spacing,
+                          bounds_m=field.bounds_m, device=device)
+    local_points = origin + (chosen_cell+rng.uniform(.1, .9, (13, 3)))*spacing
+    first = value_gradient(field, local_points, device)
+    second = value_gradient(local_field, local_points, device)
+    close(first[0], second[0], atol=0, rtol=0)
+    close(first[1], second[1], atol=0, rtol=0)
+    # A four-node [2,0,0,2] profile produces negative Catmull--Rom values
+    # between its middle nodes. The formal interpolant must stay exactly zero.
+    shape = (4, 4, 4)
+    profile = np.broadcast_to(np.array([2, 0, 0, 2], dtype=np.float32)[:, None, None], shape).copy()
+    flat = ESDFGrid(profile, sample_origin_m=[0, 0, 0], spacing_m=1.,
+                    bounds_m=[[1, 1, 1], [2, 2, 2]], device=device)
+    flat_points = np.stack((np.linspace(1, 2, 17), np.full(17, 1.3), np.full(17, 1.7)), axis=-1)
+    values, gradients, valid = value_gradient(flat, flat_points, device)
+    assert valid.all()
+    close(values, np.zeros(17), atol=0, rtol=0)
+    close(gradients, np.zeros((17, 3)), atol=0, rtol=0)
+    return {"random_points": len(points), "independent_eight_corner_oracle": measurements,
+            "only_eight_corners_influence_query": True, "old_cubic_overshoot_profile_stays_zero": True,
+            "scope": "interpolation-node range only; no geometric or collision conservatism guarantee"}
+
+
+def trajectory_parameter_gradients(device):
+    field, samples, origin, spacing, _ = fixture(device)
+    oracle = TrilinearOracle(samples, origin, spacing)
+    duration = torch.tensor([1.3, 1.7], dtype=torch.float64, device=device)
+    unit_times = torch.tensor([.13, .31, .57, .82], dtype=torch.float64, device=device)
+    coefficients = torch.zeros((2, 6, 3), dtype=torch.float64, device=device)
+    centres = origin + (np.array([[1, 1, 1], [3, 2, 1]])+.35)*spacing
+    coefficients[:, 0] = torch.tensor(centres, dtype=torch.float64, device=device)
+    coefficients[:, 1] = torch.tensor([.05, .03, .04], dtype=torch.float64, device=device)*spacing
+    coefficients[:, 2:] = .005*spacing
+    coefficients.requires_grad_()
+    trajectory = PolynomialTrajectory(coefficients, torch.zeros((2, 4), dtype=torch.float64, device=device), duration)
+    positions = trajectory.sample(duration[:, None]*unit_times).position
+    distances, valid = field.query(positions, return_valid=True)
+    assert bool(valid.all())
+    loss = distances.square().mean()
+    gradient, = torch.autograd.grad(loss, coefficients)
+    positions_np = array(positions)
+    expected, positional_gradient = oracle.batch(positions_np.reshape(-1, 3))
+    expected = expected.reshape(2, -1)
+    positional_gradient = positional_gradient.reshape(*expected.shape, 3)
+    expected_coefficient_gradient = np.einsum(
+        "bs,bsc,sp->bpc", 2*expected/expected.size, positional_gradient,
+        array(unit_times)[:, None]**np.arange(6)[None, :])
+    close(gradient, expected_coefficient_gradient, atol=3e-11, rtol=3e-11)
+    assert bool(torch.isfinite(gradient).all()) and bool((gradient != 0).any())
+
+    # Also exercise the public boundary decoder: ESDF query -> sampled quintic
+    # -> fitted terminal position. Keep this fixture away from grid faces so a
+    # finite-difference check has a unique derivative on both perturbed paths.
+    zero_vector = torch.zeros((2, 3), dtype=torch.float64, device=device)
+    zero_scalar = torch.zeros(2, dtype=torch.float64, device=device)
+    initial_position = torch.tensor(centres, dtype=torch.float64, device=device)
+    terminal_position = (initial_position + .08*spacing).requires_grad_()
+    initial = TrajectoryState(initial_position, zero_vector, zero_vector, zero_scalar, zero_scalar)
+
+    def boundary_loss(terminal):
+        end = TrajectoryState(terminal, zero_vector, zero_vector, zero_scalar, zero_scalar)
+        curve = fit_trajectory(initial, end, duration)
+        position = curve.sample(duration[:, None]*unit_times).position
+        return field.query(position).square().mean()
+
+    boundary_gradient, = torch.autograd.grad(boundary_loss(terminal_position), terminal_position)
+    step = 1e-6
+    finite_difference = torch.empty_like(terminal_position)
+    for batch, axis in itertools.product(range(2), range(3)):
+        delta = torch.zeros_like(terminal_position)
+        delta[batch, axis] = step
+        finite_difference[batch, axis] = (boundary_loss(terminal_position.detach()+delta)
+                                          - boundary_loss(terminal_position.detach()-delta))/(2*step)
+    close(boundary_gradient, finite_difference, atol=2e-8, rtol=2e-7)
+    assert bool(torch.isfinite(boundary_gradient).all()) and bool((boundary_gradient != 0).any())
+    return {"batch_size": 2, "samples_per_trajectory": len(unit_times),
+            "coefficient_gradient_max_abs": float(abs(array(gradient)-expected_coefficient_gradient).max()),
+            "fitted_terminal_position_fd_step_m": step,
+            "fitted_terminal_position_gradient_max_abs": float(abs(array(boundary_gradient-finite_difference)).max()),
+            "scope": "sampled squared-distance test loss; no formal trajectory loss or integration interface added"}
 
 
 def batch_shape_and_ownership(device):
@@ -272,7 +379,7 @@ def closed_bounds_and_invalid_queries(device):
     samples = (coordinates[..., 0] + 2*coordinates[..., 1] - .5*coordinates[..., 2]).astype(np.float32)
     bounds = np.array([[-.37, -.28, -.19], [.43, .51, .59]])
     field = ESDFGrid(samples, sample_origin_m=origin, spacing_m=spacing, bounds_m=bounds, device=device)
-    oracle = HermiteOracle(samples, origin, spacing)
+    oracle = TrilinearOracle(samples, origin, spacing)
     centre = bounds.mean(axis=0)
     results = {}
     for dtype in (torch.float64, torch.float32):
@@ -310,6 +417,14 @@ def closed_bounds_and_invalid_queries(device):
     assert valid.all()
     close(value, edge_bounds[:, 2]-.125)
     close(gradient, np.broadcast_to([0., 0., 1.], gradient.shape))
+    random_field, random_samples, random_origin, random_spacing, random_bounds = fixture(device)
+    random_oracle = TrilinearOracle(random_samples, random_origin, random_spacing)
+    expected, expected_gradient = random_oracle.batch(random_bounds)
+    actual, actual_gradient, valid = value_gradient(random_field, random_bounds, device)
+    assert valid.all()
+    close(actual, expected)
+    close(actual_gradient, expected_gradient)
+    results["closed_grid_nodes"] = {"lower_uses_right_cell": True, "upper_uses_left_cell": True}
     return results
 
 
@@ -418,6 +533,7 @@ def storage_roundtrip_and_corruption(device):
         field.save(saved)
         manifest = json.loads((saved / "metadata.json").read_text())
         stored = np.load(saved / "samples.npy", allow_pickle=False)
+        assert manifest["version"] == 2 and manifest["interpolation"] == "trilinear"
         assert stored.dtype == np.float32 and np.array_equal(stored, samples)
         assert manifest["samples_sha256"] == hashlib.sha256((saved / "samples.npy").read_bytes()).hexdigest()
         loaded = ESDFGrid.load(saved, device=device)
@@ -429,7 +545,7 @@ def storage_roundtrip_and_corruption(device):
         close(actual, expected, atol=0, rtol=0)
         close(gradient, expected_gradient, atol=0, rtol=0)
         for key, invalid in (("format", "other"), ("version", 999), ("axis_order", "zyx"),
-                             ("dtype", "float64"), ("halo", 0), ("interpolation", "trilinear"),
+                             ("dtype", "float64"), ("halo", 0), ("interpolation", "uniform-catmull-rom-a=-0.5"),
                              ("shape", [7, 6, 6]), ("spacing_m", -spacing),
                              ("bounds_m", [[0, 0, 0], [100, 100, 100]]),
                              ("samples_sha256", "0"*64), ("metadata", [])):
@@ -440,6 +556,15 @@ def storage_roundtrip_and_corruption(device):
             (bad_dir / "metadata.json").write_text(json.dumps(altered))
             rejected(lambda bad_dir=bad_dir: ESDFGrid.load(bad_dir, device=device))
             corruptions += 1
+        # Equal node bytes do not make old C1 maps equivalent to trilinear
+        # maps. Never silently reinterpret a saved v1 Catmull--Rom field.
+        bad_dir = root / "legacy-c1"
+        shutil.copytree(saved, bad_dir)
+        altered = dict(manifest)
+        altered.update(version=1, interpolation="uniform-catmull-rom-a=-0.5")
+        (bad_dir / "metadata.json").write_text(json.dumps(altered))
+        rejected(lambda: ESDFGrid.load(bad_dir, device=device))
+        corruptions += 1
         # Even a matching hash cannot relabel a float64 sample file as float32.
         bad_dir = root / "bad-array-dtype"
         shutil.copytree(saved, bad_dir)
@@ -450,7 +575,8 @@ def storage_roundtrip_and_corruption(device):
         rejected(lambda: ESDFGrid.load(bad_dir, device=device))
         corruptions += 1
     return {"sample_dtype": "float32", "metadata_deep_copy": True,
-            "value_and_gradient_bitwise_roundtrip": True, "rejected_corruptions": corruptions}
+            "value_and_gradient_bitwise_roundtrip": True, "legacy_c1_format_rejected": True,
+            "rejected_corruptions": corruptions}
 
 
 def main():
@@ -464,6 +590,7 @@ def main():
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA explicitly requested but unavailable")
     verifiers = (analytic_reproduction, all_internal_faces, float32_and_finite_differences,
+                 corner_range_and_locality, trajectory_parameter_gradients,
                  batch_shape_and_ownership, closed_bounds_and_invalid_queries,
                  construction_and_query_rejections, builder_resolution_and_padding,
                  storage_roundtrip_and_corruption)
@@ -477,7 +604,7 @@ def main():
     passed = all(group["status"] == "passed" for group in groups.values())
     result = {"status": "passed" if passed else "failed", "device": str(device),
               "torch_version": torch.__version__, "elapsed_correctness_seconds": time.perf_counter()-started,
-              "scope": "fixed-node interpolation C1, position AD and serialization contract; not geometric gradient, clearance or performance validation",
+              "scope": "fixed-node trilinear C0 interpolation, selected-cell position AD, sampled-trajectory parameter AD and serialization; not geometric gradient, clearance or performance validation",
               "source_sha256": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
                                 for path in (Path(__file__), Path("devtools/esdf.py"))}, "groups": groups}
     args.results.parent.mkdir(parents=True, exist_ok=True)

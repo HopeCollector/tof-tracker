@@ -10,7 +10,7 @@
 | [`trajectory.py`](trajectory.py) | 已实现：三维五次 / 航向三次边界解析与 Torch 可微采样 |
 | [`sensors.py`](sensors.py) | 占位：指定机体位姿下的四路 ToF 与前向相机观测 |
 | [`mesh_distance.py`](mesh_distance.py) | 已实现：公开静态柱盒 / 地面并集准备与 CPU mesh 距离查询，服务离线建图 |
-| [`esdf.py`](esdf.py) | 已实现：共享 float32 距离节点的构建、保存、加载及 C1 批量位置查询 |
+| [`esdf.py`](esdf.py) | 已实现：共享 float32 距离节点的构建、保存、加载及三线性批量位置查询 |
 
 ## 统一配置与场景
 
@@ -75,7 +75,7 @@ print(next_scene.get_geometry().get_object("vehicle").pose.body_to_world((1, 0, 
 
 ## ESDF 建图与查询
 
-ESDF 是本模块的静态地图组件：离线查询 mesh，在固定、均匀栅格的共享节点存一个 float32 距离值；间距可配置。CPU / CUDA 查询采用 Catmull–Rom 三次插值，有效域内部的距离和位置梯度跨格 C1 连续，并保留对输入位置的 Torch 计算图。它是距离近似，可能过冲，不保证准确零面、单位梯度或保守净空。
+ESDF 是本模块的静态地图组件：离线查询 mesh，在固定、均匀栅格的共享节点存一个 float32 距离值；间距可配置。CPU / CUDA 查询对所在格子的八个角点做三线性插值，并保留对输入位置的 Torch 计算图。距离值跨格连续（C0），梯度可以在格面跳变；格面上的反传采用选中格子的单侧导数。格内结果在八角点距离范围内（浮点舍入除外），但仍是几何近似，不保证准确零面、单位梯度或保守净空；粗网格仍可能漏掉薄障碍。
 
 先在项目 Docker 容器内显式编译建图所需的 CPU 距离库：
 
@@ -106,7 +106,7 @@ print(distance.shape, gradient.shape)  # (2,), (2, 3)
 
 建图也可接收 `scene.get_geometry(exclude_ids={"vehicle", "target"})` 的公开几何快照。默认范围取源的声明范围，没有声明时显式传 `bounds_m=[[x0,y0,z0],[x1,y1,z1]]`。范围不裁剪障碍，不添加围墙；当前适配支持轴对齐柱盒并集与 Z=0 地面，地面采用 `z<=0` 占据约定。单个已准备好的闭合外露边界也受支持；多个任意 mesh 的布尔并集和球体混入会拒绝。
 
-查询距离以米为单位，外正内负。位置为与场同 device 的 `(...,3)` float32 / float64 Tensor；越界及非有限输入返回 NaN、false mask 和零位置梯度。调用方须处理 invalid。已存地图加载和查询不需要原生库；`field.to("cuda")` 可迁移固定节点。建图、查询、存储格式和几何限制详见对应源码 docstring；缓存、训练预热、损失和轨迹积分由调用方负责。
+查询距离以米为单位，外正内负。位置为与场同 device 的 `(...,3)` float32 / float64 Tensor；越界及非有限输入返回 NaN、false mask 和零位置梯度。调用方须处理 invalid。已存地图加载和查询不需要原生库；`field.to("cuda")` 可迁移固定节点。地图格式使用 v2 / `trilinear` 标识，拒绝旧 C1 格式，避免同一份地图被静默换成另一种插值。建图、查询、存储格式和几何限制详见对应源码 docstring。
 
 正式 mesh 距离与 ESDF 检查已接入统一流程。在仓库根运行，编译和检查均在 Docker 中执行：
 
@@ -114,9 +114,9 @@ print(distance.shape, gradient.shape)  # (2,), (2, 3)
 just check
 ```
 
-`tests/run_checks.py` 先显式编译上述原生库，再检查 mesh 建图、C1 接缝、位置梯度和保存加载；任一步失败都会终止流程并返回非零状态。不需要额外的 ESDF 检查命令。
+`tests/run_checks.py` 先显式编译上述原生库，再检查 mesh 建图、三线性独立参考、格面距离连续性、八角点范围、位置及轨迹参数反传和保存加载。单盒与间隔两个体素的双盒解析用例另检查节点精度、半体素误差阈值与符号；这些用例不构成任意几何的误差保证。任一步失败都会终止流程并返回非零状态。`verify_mesh_distance.py --map MAP.obj --esdf-voxel 0.5` 可在真实地图的自由空间重复精度检查。
 
-探索代码与实验结果统一保存在[ESDF 归档](../docs/explorations/esdf/README.md)，不作为正式组件依赖。
+原 C1 实现、探索代码与实验结果统一保存在[ESDF 归档](../docs/explorations/esdf/README.md)，不作为正式组件依赖；历史 C1 指标不代表当前三线性查询的结果。
 
 ## 开发用轨迹解析
 

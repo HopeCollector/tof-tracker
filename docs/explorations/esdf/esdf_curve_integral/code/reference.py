@@ -244,7 +244,7 @@ def previous_mesh_reference(raw_path, *, expected_coefficients=None):
 
 def verify_cpu():
     """Small reproducible plane/nonlinear-field and nine-parameter CPU checks."""
-    from devtools.esdf import ESDFGrid
+    from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import ESDFGrid
     from devtools.trajectory import TrajectoryState, fit_trajectory
 
     torch.set_num_threads(1)

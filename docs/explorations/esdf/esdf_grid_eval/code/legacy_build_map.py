@@ -13,7 +13,7 @@ import time
 
 import numpy as np
 
-from devtools.esdf import build_esdf
+from docs.explorations.esdf.esdf_grid_eval.code.c1_esdf import build_esdf
 from devtools.mesh import MeshMap
 from devtools.mesh_distance import MeshDistanceQuery, PreparedMesh
 from devtools.scene import GeometrySnapshot, SceneObject
