@@ -108,13 +108,13 @@ print(distance.shape, gradient.shape)  # (2,), (2, 3)
 
 查询距离以米为单位，外正内负。位置为与场同 device 的 `(...,3)` float32 / float64 Tensor；越界及非有限输入返回 NaN、false mask 和零位置梯度。调用方须处理 invalid。已存地图加载和查询不需要原生库；`field.to("cuda")` 可迁移固定节点。建图、查询、存储格式和几何限制详见对应源码 docstring；缓存、训练预热、损失和轨迹积分由调用方负责。
 
-正式检查在 Docker 中独立运行：
+正式 mesh 距离与 ESDF 检查已接入统一流程。在仓库根运行，编译和检查均在 Docker 中执行：
 
 ```sh
-PYTHONPATH=.:src python tests/verify_mesh_distance.py \
-  --library outputs/mesh-distance-build/libmesh_distance.so
-PYTHONPATH=.:src python tests/verify_esdf.py --results outputs/esdf-check.json
+just check
 ```
+
+`tests/run_checks.py` 先显式编译上述原生库，再检查 mesh 建图、C1 接缝、位置梯度和保存加载；任一步失败都会终止流程并返回非零状态。不需要额外的 ESDF 检查命令。
 
 探索代码与实验结果统一保存在[ESDF 归档](../docs/explorations/esdf/README.md)，不作为正式组件依赖。
 
