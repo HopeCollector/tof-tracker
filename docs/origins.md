@@ -25,6 +25,8 @@ OBJ 实体、地面平面、CLI、校验和文件保存为本仓实现，未采�
 
 当前几何范围、符号和插值语义见 [mesh 后端](../devtools/mesh_distance.md)与[规则场接口](../devtools/esdf.md)，验证入口为 [verify_mesh_distance.py](../tests/verify_mesh_distance.py)和[verify_esdf.py](../tests/verify_esdf.py)。损失、轨迹积分和优化不属于正式地图 API。
 
+独立[参考损失对照](../experiments/esdf_reference_eval/README.md)提取同一 YOPO-tracker 固定版本的七个 `SafetyLoss` 方法，保留原裁剪、查询、系数求值和平均损失；仅构造器改为接受显式数组。许可沿用已保存的 YOPO-tracker MIT 全文。原 PLY 不可用时的新表面采样明示为受控输入，不称原 generator / 数据集复现。源码行号、配置、哈希和适配边界见[固定来源审计](../experiments/esdf_reference_eval/REFERENCE.md)，不成为正式地图或训练模块依赖。
+
 ## 已归档的自适应距离场实验
 
 `experiments/adaptive_distance_eval/` 曾在 Docker 中调用同一固定 SdfLib 版本的公开八叉树构建、三次 Hermite 插值和粗细格连续构造，轨迹使用主分支 `devtools/trajectory.py`。原始节点共享、稳定三角形样本适配、实际地图的盒并集准备和独立矩形 oracle 均保留出处与失败证据。完整说明集中到 [docs 探索归档](explorations/esdf/README.md)，代码仍在原实验目录，不作为正式地图的运行依赖。
