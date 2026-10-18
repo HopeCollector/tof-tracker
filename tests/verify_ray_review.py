@@ -39,6 +39,9 @@ def views(sample):
     assert execution["chunks"] == execution["trace_calls"] == 1
     assert execution["compact_origins"] is True
     assert execution["full_scene_queries_per_chunk"] == 1
+    assert execution["request_count"] == 2  # four mounted ToF views + one camera request
+    assert execution["view_count"] == 5
+    assert execution["postprocess_calls"] == 2
     budget = execution["planner"]
     assert budget["max_gpu_memory_fraction"] == .5
     assert budget["planned_chunk_workset_bytes"] <= budget["sampling_workset_limit_bytes"]

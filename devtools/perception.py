@@ -11,11 +11,12 @@ import math
 
 import torch
 
-from .config import DepthConfig, PerceptionConfig, SamplingRuntimeConfig, SensorConfig, _finite_number
+from .config import DepthConfig, PerceptionConfig, RigConfig, _finite_number
 from .scene import GeometrySnapshot, Sphere
-from .sensors import (DepthBatch, SampleBatch, compact_depth, concat_depth, concat_samples,
-                      gather_subray, iter_rig_samples, rig_output_bytes, sample_ray_origins,
-                      select_subray)
+from .sensors import DepthBatch, SensorSampler
+from .rig import _submit_rig
+from ._sensor_ops import (SampleBatch, compact_depth, concat_samples, gather_subray,
+                          sample_ray_origins, select_subray)
 from ._ray_processing import _check_samples, range_by_sample
 
 
@@ -188,17 +189,16 @@ def process_camera_perception(depth: DepthBatch, camera_raw: SampleBatch, poses:
 
 
 def measurement_output_bytes(sensors, count, *, diagnostics=False):
+    """Reserve only outer perception outputs; sensor handles budget their own."""
     camera_cells = count * sensors.camera.height * sensors.camera.width
-    compact = rig_output_bytes(sensors, count, diagnostics=diagnostics)
-    compact += 2 * (5 * camera_cells + count * (20 + 8 + 16))
+    retained = 2 * (5 * camera_cells + count * (20 + 8 + 16))
     if diagnostics:
         rays = camera_cells * sensors.camera.samples_per_axis ** 2
-        compact += 2 * (64 * rays + 64 * camera_cells)
-    return compact
+        retained += 2 * (64 * rays + 64 * camera_cells)
+    return retained
 
 
-def _concat_cameras(cameras, info, *, diagnostics=False):
-    depth = concat_depth([camera.depth for camera in cameras], diagnostics=diagnostics, execution_info=info)
+def _concat_cameras(cameras, depth):
     def cat(name):
         values = [getattr(camera, name) for camera in cameras]
         return values[0] if len(values) == 1 else torch.cat(values)
@@ -206,50 +206,54 @@ def _concat_cameras(cameras, info, *, diagnostics=False):
                                 cat("unoccluded_pixels"), cat("target_coverage"), cat("unoccluded_samples"))
 
 
-def _sample(renderer, sensors, body_poses, snapshot, config, runtime, target_id, diagnostics):
-    if not isinstance(sensors, SensorConfig) or not isinstance(config, PerceptionConfig):
-        raise TypeError("expected SensorConfig and PerceptionConfig")
-    retained = measurement_output_bytes(sensors, len(body_poses), diagnostics=diagnostics)
-    tofs, cameras, tof_raws, target_raws, tof_poses, camera_poses = [], [], [], [], [], []
-    version, t_ref, info = None, None, None
-    for chunk in iter_rig_samples(renderer, sensors, body_poses, runtime=runtime, retained_output_bytes=retained):
-        if version is not None and (version != chunk.rig.scene_version or t_ref != chunk.rig.t_ref):
-            raise RuntimeError("scene changed between measurement chunks")
+def _sample(sampler, sensors, body_poses, snapshot, config, target_id, diagnostics):
+    if not isinstance(sampler, SensorSampler) or not isinstance(sensors, RigConfig):
+        raise TypeError("expected SensorSampler and outer RigConfig")
+    if not isinstance(config, PerceptionConfig):
+        raise TypeError("config must be PerceptionConfig")
+    cameras, target_raws = [], []
+
+    def consume_camera(depth, raw, poses, start, stop):
         perceived, target_raw = process_camera_perception(
-            chunk.rig.camera, chunk.camera_raw, chunk.camera_poses, sensors.camera, snapshot,
-            config, target_id=target_id, diagnostics=diagnostics)
-        info = {**chunk.rig.execution_info, "analytic_perception": "sphere_torch",
-                "perception_scene_queries": 0, "diagnostics": diagnostics}
-        version, t_ref = chunk.rig.scene_version, chunk.rig.t_ref
-        tofs.append(chunk.rig.tof_m)
-        cameras.append(perceived if diagnostics else replace(perceived, depth=compact_depth(perceived.depth)))
-        if diagnostics:
-            tof_raws.append(chunk.tof_raw)
-            if target_raw is not None:
-                target_raws.append(target_raw)
-            tof_poses.append(chunk.tof_poses)
-            camera_poses.append(chunk.camera_poses)
-        del perceived, target_raw, chunk
-    camera = _concat_cameras(cameras, info, diagnostics=diagnostics)
-    result = MeasurementBatch(tofs[0] if len(tofs) == 1 else torch.cat(tofs), camera, version, t_ref, info)
+            depth, raw, poses, sensors.camera, snapshot, config,
+            target_id=target_id, diagnostics=diagnostics)
+        # Keep only compact physical output and recognition fields. All
+        # full-scene raw stays chunk-local unless diagnostics was explicit.
+        cameras.append(replace(perceived, depth=compact_depth(depth)))
+        if target_raw is not None:
+            target_raws.append(target_raw)
+
+    batch, tof, camera, tof_poses, camera_poses = _submit_rig(
+        sampler, sensors, body_poses, diagnostics=diagnostics,
+        camera_consumer=consume_camera,
+        retained_output_bytes=measurement_output_bytes(sensors, len(body_poses), diagnostics=diagnostics))
+    batch.execute()
+    td, cd = tof.result(), camera.result()
+    if td.scene_version != cd.scene_version or td.t_ref != cd.t_ref or td.object_ids != cd.object_ids:
+        raise RuntimeError("scene changed between measurement requests")
+    info = {**batch.execution_info, "analytic_perception": "sphere_torch",
+            "perception_scene_queries": 0, "diagnostics": diagnostics}
+    cd = replace(cd, execution_info=info)
+    perceived = _concat_cameras(cameras, cd)
+    result = MeasurementBatch(td.range_m.reshape(len(body_poses), 4, *td.range_m.shape[-2:]),
+                              perceived, td.scene_version, td.t_ref, info)
     if not diagnostics:
         return result
-    return MeasurementDiagnostics(result, concat_samples(tof_raws), camera.depth.raw,
+    return MeasurementDiagnostics(result, td.raw, cd.raw,
                                   concat_samples(target_raws) if target_raws else None,
-                                  torch.cat(tof_poses), torch.cat(camera_poses))
+                                  tof_poses, camera_poses)
 
 
-def sample_measurements(renderer, sensors: SensorConfig, body_poses: torch.Tensor,
+def sample_measurements(sampler: SensorSampler, sensors: RigConfig, body_poses: torch.Tensor,
                         snapshot: GeometrySnapshot, config: PerceptionConfig, *,
-                        runtime: SamplingRuntimeConfig | None = None,
                         target_id: str | None = "target") -> MeasurementBatch:
-    """Stream physical ray chunks into compact outer simulated measurements."""
-    return _sample(renderer, sensors, body_poses, snapshot, config, runtime, target_id, False)
+    """One shared sensor batch, streaming camera raw into outer recognition."""
+    return _sample(sampler, sensors, body_poses, snapshot, config, target_id, False)
 
 
-def sample_measurement_diagnostics(renderer, sensors: SensorConfig, body_poses: torch.Tensor,
-                                  snapshot: GeometrySnapshot, config: PerceptionConfig, *,
-                                  runtime: SamplingRuntimeConfig | None = None,
+def sample_measurement_diagnostics(sampler: SensorSampler, sensors: RigConfig,
+                                  body_poses: torch.Tensor, snapshot: GeometrySnapshot,
+                                  config: PerceptionConfig, *,
                                   target_id: str | None = "target") -> MeasurementDiagnostics:
-    """Keep same-pass raw for review, reserving all retained buffers up front."""
-    return _sample(renderer, sensors, body_poses, snapshot, config, runtime, target_id, True)
+    """Explicit same-pass raw retention, budgeted before any query starts."""
+    return _sample(sampler, sensors, body_poses, snapshot, config, target_id, True)

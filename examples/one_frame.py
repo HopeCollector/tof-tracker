@@ -18,7 +18,8 @@ import torch
 from devtools.config import load_config
 from devtools.scene import Pose, Scene
 from devtools.ray_rendering import RayRenderer
-from devtools.sensors import TOF_ORDER, mounted_pose, poses_to_tensor, sample_depth
+from devtools.sensors import SensorSampler, ToFSensor
+from devtools.rig import TOF_ORDER, mounted_pose, poses_to_tensor
 from devtools.perception import sample_measurement_diagnostics
 from tof_tracker.geometry import quaternion_from_rpy_degrees
 
@@ -171,20 +172,22 @@ def main():
     sensor_poses = tuple(mounted_pose(pose, front_mount) for pose in body_samples)
     begin = time.perf_counter()
     with RayRenderer(scene.get_geometry(exclude_ids={"vehicle"})) as renderer:
+        sampler = SensorSampler(renderer, runtime=config.sampling_runtime)
         body_tensor = poses_to_tensor([body_pose], device=renderer.device)
         sensor_tensor = poses_to_tensor(sensor_poses, device=renderer.device)
         torch.cuda.synchronize(renderer.device)
         prepared = time.perf_counter()
         diagnostic = sample_measurement_diagnostics(
-            renderer, sensor_config, body_tensor, scene.get_geometry(exclude_ids={"vehicle"}),
-            config.perception, runtime=config.sampling_runtime)
+            sampler, sensor_config, body_tensor, scene.get_geometry(exclude_ids={"vehicle"}),
+            config.perception)
         rig = diagnostic.rig
         torch.cuda.synchronize(renderer.device)
         sampled = time.perf_counter()
-        many = sample_depth(renderer, sensor_config.tof, sensor_tensor,
-                            reduction="weighted_quantile", quantile=sensor_config.tof_depth_quantile,
-                            signal_floor=sensor_config.tof_signal_floor,
-                            runtime=config.sampling_runtime)
+        # A physical sensor receives only its own configuration and world poses.
+        front_tof = ToFSensor(sampler, sensor_config.tof,
+                              quantile=sensor_config.tof_depth_quantile,
+                              signal_floor=sensor_config.tof_signal_floor)
+        many = front_tof.sample(sensor_tensor)
         torch.cuda.synchronize(renderer.device)
         finished = time.perf_counter()
         backend = renderer.geometry_info

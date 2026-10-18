@@ -113,8 +113,12 @@ class MountConfig:
 
 
 @dataclass(frozen=True)
-class SensorConfig:
-    """Physical depth sampling and mounts, without target recognition policy."""
+class RigConfig:
+    """Outer development recipe: device settings and a separate mount layout.
+
+    Only rig orchestration consumes mounts. Sensor instances receive their own
+    DepthConfig and reduction parameters, never this aggregate recipe.
+    """
 
     tof: DepthConfig
     camera: DepthConfig
@@ -175,19 +179,19 @@ class PerceptionConfig:
 
 @dataclass(frozen=True)
 class SceneConfig:
-    """Physical sphere radii and optional explicit development sensor facts."""
+    """Physical scene facts and an optional outer development rig recipe."""
 
     vehicle_radius_m: float
     target_radius_m: float
-    sensors: SensorConfig | None = None
+    sensors: RigConfig | None = None
     sampling_runtime: SamplingRuntimeConfig = field(default_factory=SamplingRuntimeConfig)
     perception: PerceptionConfig = field(default_factory=PerceptionConfig)
 
     def __post_init__(self):
         for name in ("vehicle_radius_m", "target_radius_m"):
             object.__setattr__(self, name, _positive_number(getattr(self, name), name))
-        if self.sensors is not None and not isinstance(self.sensors, SensorConfig):
-            raise ValueError("sensors must be SensorConfig or None")
+        if self.sensors is not None and not isinstance(self.sensors, RigConfig):
+            raise ValueError("sensors must be RigConfig or None")
         if not isinstance(self.sampling_runtime, SamplingRuntimeConfig):
             raise ValueError("sampling_runtime must be SamplingRuntimeConfig")
         if not isinstance(self.perception, PerceptionConfig):
@@ -229,7 +233,7 @@ def _load_sensors(value):
         _exact_keys(mount, _MOUNT_FIELDS, f"sensors.tof_mounts.{name}")
         mounts.append(MountConfig(**mount))
     _exact_keys(value["camera_mount"], _MOUNT_FIELDS, "sensors.camera_mount")
-    return SensorConfig(depths["tof"], depths["camera"], tuple(mounts),
+    return RigConfig(depths["tof"], depths["camera"], tuple(mounts),
                         MountConfig(**value["camera_mount"]),
                         value.get("tof_depth_quantile", 0.2), value.get("tof_signal_floor", 0.08))
 

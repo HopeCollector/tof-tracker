@@ -1,4 +1,4 @@
-"""A conservative, per-request workset budget for batched ray sampling.
+"""A conservative workset budget for explicitly collected ray requests.
 
 The configured fraction limits sampling's own scene, retained result and chunk
 workset. Existing training tensors constrain physical free space, but are not

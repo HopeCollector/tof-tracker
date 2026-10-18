@@ -149,6 +149,7 @@ class RayRenderer:
         self.device = device
         self._owner_thread = threading.get_ident()
         self._closed = False
+        self._sampling_active = False
         self._snapshot = snapshot
         self.object_ids = tuple(obj.object_id for obj in snapshot.objects)
         self._scene_version = 0
@@ -238,6 +239,18 @@ class RayRenderer:
     def scene_version(self):
         return self._scene_version
 
+    def _begin_sampling(self, scene_version):
+        """Lease one scene epoch while a sampler submits all of its chunks."""
+        self._require_open()
+        if self._sampling_active:
+            raise RuntimeError("a sensor batch is already executing on this renderer")
+        if self._scene_version != scene_version:
+            raise RuntimeError("scene changed after batch creation; collect a new sensor batch")
+        self._sampling_active = True
+
+    def _end_sampling(self):
+        self._sampling_active = False
+
     @property
     def geometry_info(self):
         return {
@@ -288,6 +301,8 @@ class RayRenderer:
         rebuild or geometry copy when rigid spheres move.
         """
         self._require_open()
+        if self._sampling_active:
+            raise RuntimeError("cannot update the scene while a sensor batch is executing")
         if not isinstance(snapshot, GeometrySnapshot):
             raise TypeError("snapshot must be a GeometrySnapshot")
         if len(snapshot.objects) != len(self._snapshot.objects):
@@ -428,6 +443,8 @@ class RayRenderer:
             raise RuntimeError("RayRenderer must be used and closed on its creating thread")
         if self._closed:
             return
+        if self._sampling_active:
+            raise RuntimeError("cannot close the renderer while a sensor batch is executing")
         if self._last_event is not None:
             self._last_event.synchronize()
         self._mesh = None

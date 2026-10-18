@@ -30,7 +30,8 @@ sys.path.insert(0, str(ROOT / 'src'))
 from devtools.config import SamplingRuntimeConfig, load_config
 from devtools.scene import Pose, Scene
 from devtools.ray_rendering import RayRenderer
-from devtools.sensors import poses_to_tensor, sample_depth, sample_rig
+from devtools.sensors import SensorSampler, ToFSensor
+from devtools.rig import poses_to_tensor, sample_rig
 from devtools.perception import sample_measurements
 
 SEED = 20261016
@@ -110,6 +111,7 @@ def main():
               'optimizations': 'unified rays, shared origins, outer perception, conservative automatic chunks; no RGB, Graph or fused postprocess kernel'}
     try:
         source_paths = ['devtools/ray_rendering.py', 'devtools/_ray_budget.py', 'devtools/sensors.py',
+                        'devtools/_sensor_ops.py', 'devtools/rig.py',
                         'devtools/_ray_processing.py', 'devtools/perception.py', 'devtools/config.py',
                         'devtools/scene.py', 'devtools/mesh.py', 'configs/devtools.json',
                         'experiments/unified_ray_perf/benchmark.py']
@@ -139,20 +141,22 @@ def main():
         torch.cuda.synchronize()
         started = time.perf_counter()
         renderer = RayRenderer(snapshot)
+        sampler = SensorSampler(renderer, runtime=runtime)
         torch.cuda.synchronize()
         record['scene_setup_ms'] = (time.perf_counter() - started) * 1000
         record['geometry_before'] = renderer.geometry_info
         if args.mode == 'tof':
-            action = lambda: sample_depth(renderer, config.sensors.tof, poses, runtime=runtime,
-                reduction='weighted_quantile', quantile=config.sensors.tof_depth_quantile,
-                signal_floor=config.sensors.tof_signal_floor)
+            sensor = ToFSensor(sampler, config.sensors.tof,
+                               quantile=config.sensors.tof_depth_quantile,
+                               signal_floor=config.sensors.tof_signal_floor)
+            action = lambda: sensor.sample(poses)
             rays_per_item = 1024
         elif args.mode == 'rig':
-            action = lambda: sample_rig(renderer, config.sensors, poses, runtime=runtime)
+            action = lambda: sample_rig(sampler, config.sensors, poses)
             rays_per_item = 4 * 1024 + 160 * 120 * 4
         else:
-            action = lambda: sample_measurements(renderer, config.sensors, poses, snapshot,
-                                                 config.perception, runtime=runtime)
+            action = lambda: sample_measurements(sampler, config.sensors, poses, snapshot,
+                                                 config.perception)
             rays_per_item = 4 * 1024 + 160 * 120 * 4
         def check_contract(before):
             after = renderer.geometry_info

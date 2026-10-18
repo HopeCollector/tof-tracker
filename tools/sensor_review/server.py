@@ -37,7 +37,8 @@ from devtools.config import load_config
 from devtools.mesh import MeshMap
 from devtools.ray_rendering import RayRenderer
 from devtools.scene import Pose, Scene, Sphere
-from devtools.sensors import TOF_ORDER, mounted_pose, poses_to_tensor
+from devtools.sensors import SensorSampler
+from devtools.rig import TOF_ORDER, mounted_pose, poses_to_tensor
 from devtools.perception import sample_measurement_diagnostics
 from devtools.trajectory import TrajectoryState, fit_trajectory
 
@@ -132,6 +133,7 @@ class ReviewState:
         self.scene = None
         self.target_present = False
         self.renderer = None
+        self.sampler = None
         self.scene_revision = 0
         self.sample_id = 0
 
@@ -251,6 +253,7 @@ class ReviewState:
         if self.renderer is None or present != self.target_present:
             self._close_renderer()
             self.renderer = RayRenderer(snapshot)
+            self.sampler = SensorSampler(self.renderer, runtime=self.config.sampling_runtime)
         else:
             self.renderer.sync(snapshot)
         if (body != self.scene.vehicle.pose or present != self.target_present
@@ -260,8 +263,8 @@ class ReviewState:
         sensors = self.config.sensors
         with torch.no_grad():
             diagnostic = sample_measurement_diagnostics(
-                self.renderer, sensors, poses_to_tensor((body,)), snapshot,
-                self.config.perception, runtime=self.config.sampling_runtime,
+                self.sampler, sensors, poses_to_tensor((body,)), snapshot,
+                self.config.perception,
                 target_id="target" if present else None)
             # Only these UI exports cross the device boundary. No GPU frame is
             # retained in session state after this response has been serialized.
@@ -353,6 +356,7 @@ class ReviewState:
                 "accelerations_m_s2": sampled.acceleration.tolist()}
 
     def _close_renderer(self):
+        self.sampler = None
         renderer, self.renderer = self.renderer, None
         if renderer is not None:
             renderer.close()
