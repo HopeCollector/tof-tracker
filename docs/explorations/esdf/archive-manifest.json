@@ -1,0 +1,97 @@
+{
+  "schema": "esdf-exploration-archive-v1",
+  "changes": "Markdown adds snapshot notice and relocates links; JSON is unchanged. Original source is fixed Git blob.",
+  "files": [
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/README.md",
+      "original_sha256": "7d4272a7b447c284a5e32d1b90e69d10cc30ceaf38d9f75fa3a6ef1470c7372d",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/README.md",
+      "archived_sha256": "5f83bed249d29878c5a82759fafbebfe258a93dd77873e9320769ba7d27c1523"
+    },
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/REPORT.md",
+      "original_sha256": "13f8a63118fd2b29af8b91fde16729abb601520372dce3d8367f47fa09e33085",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REPORT.md",
+      "archived_sha256": "d1079f98bb86170766e2476e2557869f5d754402a53816579a02358403e29fee"
+    },
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/REVIEW.md",
+      "original_sha256": "c55f809da45b63ad27157ac23cc6fe417f72ca5c71ab5c9594a2b47ef57c01f3",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REVIEW.md",
+      "archived_sha256": "21f1414afce53bc26ba7a94b1e656148d0f7ab4c18866868f2945bcd31e45cfa"
+    },
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/REAL_MAP_REPORT.md",
+      "original_sha256": "d4a17001371673502264b031977f7af8009b9e04b0a377c9e081d5bdf557a0e9",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REAL_MAP_REPORT.md",
+      "archived_sha256": "684073e87714901dbad57580c3e38b89dd486229b525b037ce2a6170d6d445e1"
+    },
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/REAL_MAP_REVIEW.md",
+      "original_sha256": "e8bdc34b32093c7bf6619a7ff4dc675e7fbb1e959b24e321227311d82dc68e70",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REAL_MAP_REVIEW.md",
+      "archived_sha256": "4feb750928e88508ac35f4961308c2c242d4a202a2c22cae648dcc7f53f12c0c"
+    },
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/REUSE.md",
+      "original_sha256": "f661794fa5b6b55f77849bc0562cc0124a24c1f12a94252acea3bab081837bd4",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REUSE.md",
+      "archived_sha256": "4df185c2e4188fb69acd36a25bc034bc69c65b7597577fecba9b6531700d7c8a"
+    },
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/NODAL_PATCH.md",
+      "original_sha256": "3bf571b93f9042bd65adbd50eb817bc948b764ead83dbd9a3b1c110b2a93c087",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/NODAL_PATCH.md",
+      "archived_sha256": "0c4d4aac8f915159654c1ecb6668b3b70b00fa0c50ddbb416995e2d8afd106d9"
+    },
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/results-summary.json",
+      "original_sha256": "ab276baa222da774b1e6ea27cd01cd65f5c9af11907bbb9e51dc5bd9121f562c",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/results-summary.json",
+      "archived_sha256": "ab276baa222da774b1e6ea27cd01cd65f5c9af11907bbb9e51dc5bd9121f562c"
+    },
+    {
+      "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
+      "source_path": "experiments/adaptive_distance_eval/real-map-results-summary.json",
+      "original_sha256": "8e8544d1c8bd0b8ac9828477fd8a0e57a9c06bffb858c0826d60a2880d25027c",
+      "archive_path": "docs/explorations/esdf/adaptive_distance_eval/real-map-results-summary.json",
+      "archived_sha256": "8e8544d1c8bd0b8ac9828477fd8a0e57a9c06bffb858c0826d60a2880d25027c"
+    },
+    {
+      "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+      "source_path": "experiments/mesh_distance_eval/REPORT.md",
+      "original_sha256": "7f5cd69e64fde3a3d154d72e7e9f5a119c7532c04229028787365d5ecc0d949c",
+      "archive_path": "docs/explorations/esdf/mesh_distance_eval/REPORT.md",
+      "archived_sha256": "ca3370f467b329cf0f23f1ad7119ce2af1c55ff59185382511658de4540da467"
+    },
+    {
+      "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+      "source_path": "experiments/mesh_distance_eval/RESEARCH.md",
+      "original_sha256": "2baa4cc310f66bbcae6023947b028c1beee5baae87bf59122da941f295bd517b",
+      "archive_path": "docs/explorations/esdf/mesh_distance_eval/RESEARCH.md",
+      "archived_sha256": "a43b9c11504d88b12bb9a62792fc9ab351267346d3b9893ef1ac2d22827ebb3f"
+    },
+    {
+      "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+      "source_path": "experiments/mesh_distance_eval/REVIEW.md",
+      "original_sha256": "6fea2d5a512ecd3ecb7d8de777232c9283dee4731f2eb6da76de66c8178ffa15",
+      "archive_path": "docs/explorations/esdf/mesh_distance_eval/REVIEW.md",
+      "archived_sha256": "5868ca041b20cf4ef980ccf9e30619d9c499fe6de00eb348306ba4d208a242f8"
+    },
+    {
+      "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+      "source_path": "experiments/mesh_distance_eval/results-summary.json",
+      "original_sha256": "bb6d19b1f4bef10e57ca3446f48da8649eb475f8a89b02c1327eedd2c504b360",
+      "archive_path": "docs/explorations/esdf/mesh_distance_eval/results-summary.json",
+      "archived_sha256": "bb6d19b1f4bef10e57ca3446f48da8649eb475f8a89b02c1327eedd2c504b360"
+    }
+  ]
+}

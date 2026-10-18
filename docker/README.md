@@ -53,4 +53,4 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 just run bash docker/check-env.sh
 ```
 
-`just check` 自动构建地图工具并运行现有检查，覆盖范围见各模块说明；环境检查不覆盖算法、训练、CUDA 或部署路径。
+`just check` 自动构建地图工具及离线 mesh 距离库，再运行现有 CPU 检查，包括距离场的独立 Hermite 接缝、位置梯度和保存格式验证。正式 ESDF 不新增依赖：建图使用 C++17 单头文件 BVH，查询使用现有 NumPy / Torch；不需要 SdfLib 或 SciPy。CUDA 检查须显式在有 GPU 的实验容器运行，环境检查不覆盖算法、训练、CUDA 或部署路径。
