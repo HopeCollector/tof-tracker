@@ -6,6 +6,7 @@
 |---|---|---|
 | 规则共享 float32 节点、C1 查询 | [规则场报告](GRID_REPORT.md)、[独立审查](C1_REVIEW.md) | 当前实现与本轮地图证据 |
 | 参考 ESDF 的轨迹损失精度 / 性能 | [同地图对比](REFERENCE_COMPARISON.md)、[实验入口](../../../experiments/esdf_reference_eval/README.md) | 120 条定向曲线、同 30 点及数值时间平均参考 |
+| 实际地图曲线分格指数积分 | [精度与耗时](CURVE_INTEGRAL_REPORT.md)、[实验入口](../../../experiments/esdf_curve_integral/README.md) | 同 C1 场数值求积；更新曲线须计入 CPU 分格，不是闭式或碰撞认证 |
 | 分格多项式路径积分 | [小实验报告](PATH_INTEGRAL_REPORT.md)、[可运行入口](../../../experiments/esdf_grid_eval/README.md) | CPU 小场；平方代价示范，非正式规划损失 |
 | 曲线到环境、VJP 与积分研究 | [研究说明](CURVE_RESEARCH.md) | 论文/源码依据；未实现的能力明确分开 |
 | SdfLib 八叉树 | [小场](adaptive_distance_eval/REPORT.md)、[实际地图](adaptive_distance_eval/REAL_MAP_REPORT.md)、[复用与适配](adaptive_distance_eval/REUSE.md) | C1 验收未过；局部链跑通，两次全图 OOM |
