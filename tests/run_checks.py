@@ -21,6 +21,9 @@ def main():
         [sys.executable, "tests/verify_scene.py", "--results", "outputs/scene/verification.json"],
         [sys.executable, "tests/verify_trajectory.py", "--results", "outputs/trajectory/verification.json"],
         [sys.executable, "tests/verify_map_viewer.py", "--results", "outputs/map_viewer/verification.json"],
+        [sys.executable, "tests/verify_ray_sensors.py", "--results", "outputs/sensors/ray-verification.json"],
+        [sys.executable, "tests/verify_sensor_batch.py", "--results", "outputs/sensors/batch-verification.json"],
+        [sys.executable, "tests/verify_ray_review.py", "--results", "outputs/sensor_review/ray-verification.json"],
     ]
     for command in checks:
         print(f"check: {command[1]}", flush=True)

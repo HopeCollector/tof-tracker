@@ -1,4 +1,4 @@
-# Common CPU development base for Python and C++ project work.
+# Project development environment.
 FROM ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
 
 RUN apt-get update \
@@ -21,11 +21,18 @@ ENV PATH="/opt/venv/bin:${PATH}" \
     PYTHONPYCACHEPREFIX=/tmp/python-cache \
     PIP_CACHE_DIR=/tmp/pip-cache
 
+# Browser modules for the review tool.
+COPY docker/fetch_review_assets.py /tmp/fetch_review_assets.py
+RUN python /tmp/fetch_review_assets.py
+
 WORKDIR /workspace
 COPY pyproject.toml README.md ./
 COPY src ./src
 COPY devtools ./devtools
 COPY training ./training
-RUN python -m pip install --no-build-isolation --no-cache-dir -e '.[viewer]'
+# Python requirements come from pyproject.toml; use the CUDA 12.8 wheel index.
+RUN python -m pip install --no-build-isolation --no-cache-dir \
+    --extra-index-url https://download.pytorch.org/whl/cu128 -e '.[viewer,gpu]'
+ENV PYTHONPYCACHEPREFIX=/tmp/runtime-python-cache
 
 CMD ["bash"]

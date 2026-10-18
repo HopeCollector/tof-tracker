@@ -12,9 +12,13 @@ build:
 vscode:
     bash docker/export-vscode.sh
 
-# 运行项目检查
+# 在容器内运行全部项目检查，包含真实 GPU 与 HTTP 联调
 check: map-build
-    ./docker/dev.sh run python tests/run_checks.py
+    ./docker/dev.sh run --gpu python tests/run_checks.py
+
+# 在线窗口化 sensor 审查，浏览器打开终端给出的地址
+review *args:
+    ./docker/dev.sh run --web --gpu python tools/sensor_review/server.py --host 0.0.0.0 --port 8080 "$@"
 
 # 在容器内执行命令；无参数进入 Bash
 run *args:

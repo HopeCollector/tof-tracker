@@ -4,8 +4,6 @@
 
 最终交付模型及其输入适配、末状态选取和判断逻辑，部署运行路径使用 C++。Python 用于研发与训练；场景、传感器、轨迹解析、几何查询和实验工具服务算法开发。
 
-当前可用的是 Docker 开发环境、离线地图生成器、地图与场景查看器，以及包含背景和两个球体的最小场景。算法、训练、传感器和 ESDF 尚未实现。
-
 ## 目录布局
 
 | 位置 | 职责与阅读入口 |
@@ -13,18 +11,23 @@
 | `src/tof_tracker/` | 算法；[输入输出约定](src/tof_tracker/README.md) |
 | `training/` | 采样配方、组批和优化更新；[训练职责与流程](training/README.md) |
 | `devtools/` | 场景、传感器、真值和几何查询；[场景接口与开发工具](devtools/README.md) |
-| `configs/` | 统一物理配置，当前包含飞机与目标半径；[配置用法](devtools/README.md#统一配置与场景) |
+| `configs/` | 统一物理配置 |
 | `tools/mapgen/` | 独立离线地图生成器；[参数与地图格式](tools/mapgen/README.md) |
 | `tools/map_viewer/` | 地图与场景查看器；[查看参数与显示约定](tools/map_viewer/README.md) |
+| `tools/sensor_review/` | 在线窗口化审查；[交互布置、正式 GPU 采样与投影检查](tools/sensor_review/README.md) |
 | `docker/` | 全项目容器环境与通用运行入口；[构建、依赖与挂载](docker/README.md) |
-| `tests/` | 地图、场景和查看器检查，由 `just check` 运行 |
-| `examples/` | 观测例子；`one_frame.py` 当前为占位 |
 | `docs/origins.md` | [当前采用代码的来源、适配与许可](docs/origins.md) |
 | `outputs/` | 本地产物，不纳入 Git |
 | `justfile` | 常用命令入口 |
 | `AGENTS.md` | [项目协作约束](AGENTS.md) |
 
 ## 使用方法
+
+Python 依赖与版本见 [pyproject.toml](pyproject.toml)。另需准备：
+
+- Python 3.12、C++17 编译器、CMake 和 Git；容器入口使用 Docker 与 `just`。
+- GPU 采样和完整检查需要 NVIDIA GPU 与兼容所装 PyTorch / Warp 的驱动；Docker GPU 运行还需要 NVIDIA Container Toolkit。当前 PyTorch 使用 CUDA 12.8 运行时，随 wheel 安装，无需单独安装完整 CUDA Toolkit。
+- 审查工具的 Three.js 模块由 Docker 构建时的脚本下载，无需安装 Node.js。
 
 整个项目在 Docker 中执行，依赖只安装在容器内。宿主使用已有 Docker、`just` 和浏览器；环境细节见 [docker/README.md](docker/README.md)。在仓库根目录运行：
 
@@ -35,6 +38,7 @@ just view outputs/mapgen/demo.obj               # 查看地图
 just view outputs/mapgen/demo.obj \
   --vehicle-position -1 0 1 --target-position 1 0.6 1.2  # 查看场景
 just check                                      # 运行现有检查
+just review                                     # 在线审查：布置场景、采样、浮窗与透明叠图
 just run                                        # 进入容器 Bash
 just run cmake --version                         # 在容器内执行命令
 ```
@@ -43,8 +47,7 @@ just run cmake --version                         # 在容器内执行命令
 
 ## 接下来
 
-- 明确传感器规格，从同一场景生成四路 ToF、前向目标 mask 和提示；从 [devtools 的传感器职责](devtools/README.md#传感器与几何查询) 与 `devtools/sensors.py` 开始。
-- 实现[开发用轨迹解析](devtools/README.md#开发用轨迹解析)、公开几何查询和训练代价，检查所需梯度；分别归入 `devtools/` 和 `training/`。
+- 将已有[开发用轨迹解析](devtools/README.md#开发用轨迹解析)对接公开几何查询和训练代价，逐条检查所需梯度；分别归入 `devtools/` 和 `training/`。
 - 完成少量样本的训练、保存和重载；入口为 [training/train.py](training/train.py)，职责见 [训练说明](training/README.md)。
 
 其他移动物体和闭环评价在需要时展开，闭环执行与批量训练分别组织。

@@ -1,14 +1,17 @@
 # 场景、观测与几何查询
 
-`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿与可微轨迹解析；传感器与 ESDF 仍为占位。
+`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿、GPU 射线传感器与可微轨迹解析；ESDF 仍为占位。
 
 | 文件 | 当前职责 |
 |---|---|
-| [`config.py`](config.py) | 已实现：读取、校验不可变物理配置 |
+| [`config.py`](config.py) | 已实现：读取、校验物理参数、采样预算与外层识别配置 |
 | [`mesh.py`](mesh.py) | 已实现：读取独立闭合障碍和地面平面的 OBJ 资产 |
 | [`scene.py`](scene.py) | 已实现：场景加载、按对象 ID 读取几何、球体状态替换 |
+| [`ray_rendering.py`](ray_rendering.py) | 已实现：一份静态 mesh BVH 与解析球、一批射线、CUDA 命中结果；移动球体只更新中心 |
+| [`sensors.py`](sensors.py) | 已实现：ToF / camera 世界位姿采样、请求收集与混合射线分块 |
+| [`rig.py`](rig.py) | 已实现：外层设备安装、四路 ToF 与相机的采样配方和结果打包 |
+| [`perception.py`](perception.py) | 已实现：利用物理采样结果生成模拟目标 mask、可见比例与框提示 |
 | [`trajectory.py`](trajectory.py) | 已实现：三维五次 / 航向三次边界解析与 Torch 可微采样 |
-| [`sensors.py`](sensors.py) | 占位：指定机体位姿下的四路 ToF 与前向相机观测 |
 | [`esdf.py`](esdf.py) | 占位：距离场构建、加载及批量可微几何查询 |
 
 ## 统一配置与场景
@@ -17,7 +20,7 @@
 
 `MeshMap.from_obj()` 保留完整对象，每个 `MeshObject` 包含名称、米制顶点和局部三角面索引。障碍分别闭合，可以重叠；地面为 Z=0 的开放平面。`Scene.from_obj()` 加载背景并添加飞机、目标。加载时不采样、不构建占据或 ESDF。
 
-[统一配置](../configs/devtools.json) 当前仅接受 `vehicle.radius_m` 和 `target.radius_m`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给场景；半径须有限且为正，布尔值、缺项、未知字段和重复 JSON 键会被拒绝。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。后续传感器参数也归此配置，但当前加载器尚不接受这些字段。
+[统一配置](../configs/devtools.json) 包含 `vehicle.radius_m`、`target.radius_m` 与可选的 `sensors`、`sampling_runtime`、`perception`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给消费者；半径须有限且为正，布尔值、缺项、未知字段和重复 JSON 键会被拒绝。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。`sensors` 为外层 `RigConfig` 配方，包含各设备参数和安装外参；后两项分别控制采样软显存预算和模拟识别阈值。旧的仅半径 JSON 仍有效，但没有设备配方。
 
 `Pose` 使用米制三维位置和机体 FLU 到世界的单位 `quaternion_xyzw`：X 向前、Y 向左、Z 向上。四元数只允许 `1e-6` 内的范数舍入误差并归一化；完整横滚、俯仰和 Z 分量均保留，不作水平回正。`body_to_world()` 与 `world_to_body()` 变换点的位置，包含平移。
 
@@ -57,18 +60,27 @@ print(next_scene.get_geometry().get_object("vehicle").pose.body_to_world((1, 0, 
 
 ## 传感器与几何查询
 
-传感器尚未生成观测。基础接口计划使用配置、完整采样位姿和场景，通过 GPU 投影、光栅化与深度测试生成一幅米制深度数据。同一场景和配置可供多个位姿共享，四路 ToF 由外部四次采样组装。闭环评价由执行端提供当前位姿。命中与真值只用于解释和监督，算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
+`ToFSensor` 和 `CameraSensor` 只接传感器自身的世界位姿；安装和设备组装见 `rig.py`，目标提示见 `perception.py`。即时和集中采样共用 GPU 管线。接上面的场景例子调用：
 
-噪声计划通过 hooks 扩展，可插在 sensor 各阶段及输出后处理。已考虑采样位置扰动（可能偏入相邻格子）、深度 / 距离数值扰动，以及回波丢失；ToF 与前向 RGB / mask 相机各自配置 hooks，机制代码可以共用。具体扰动模型、参数和插入位置待定，当前不实现。
+```python
+from devtools.ray_rendering import RayRenderer
+from devtools.sensors import CameraSensor, SensorSampler, ToFSensor
 
-目标识别按 hook 处理后实际可见目标面积与同位姿无遮挡目标面积的比例判断，低于配置阈值即未检出；无遮挡目标面积为零时也未检出。
+with RayRenderer(sensor_geometry) as renderer:
+    sampler = SensorSampler(renderer, runtime=config.sampling_runtime)
+    tof = ToFSensor(sampler, config.sensors.tof)
+    camera = CameraSensor(sampler, config.sensors.camera)
+    pose = Pose((-1, 0, 1))  # 已是传感器世界位姿
+    depth = tof.sample(pose)  # 即时返回 CUDA DepthBatch
+    batch = sampler.batch()
+    ranges = tof.sample([pose, pose], batch=batch)
+    image = camera.sample(pose, batch=batch)
+    batch.execute()
+    print(ranges.result().range_m.shape)  # [2,8,8]
+    print(image.result().range_m.shape)   # [1,120,160]
+```
 
-实现前仍需明确：
-
-- ToF 和相机的安装姿态、视场及相机成像参数。
-- ToF 像素或分区的深度聚合、距离指视线长度还是光轴深度，以及量程和无返回编码；最大填充值不代表已知空闲，旧 C5 的距离阈值不是本项目规格。
-- 背景 mesh 与目标球的最近有效命中规则，以及边界 / 越界如何处理。
-- 目标 mask 到紧凑框的规则；投影矩形不能直接当成可见目标 mask。
+输入支持 `Pose`、非空 `Pose` 序列或 CUDA float32 `[4,4]` / `[B,4,4]` 刚体矩阵。返回 CUDA `[B,H,W]` 径向米制距离，已知无返回为 `+inf`，无可信测量为 `NaN`；其余合同见源码 docstring。算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
 
 ESDF 尚未构建或查询距离场。它负责回答批量轨迹采样点到物体表面的距离，并保留训练所需的计算图或提供明确导数；任务代价、惩罚权重、反传与参数更新属于训练。距离和边界语义须与场景物理事实一致，查询位置所需的梯度逐条验证，具体后端在实现时选择。
 

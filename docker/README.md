@@ -28,9 +28,11 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 ./docker/dev.sh run python -c 'import tof_tracker, devtools, training; print("imports OK")'
 ```
 
-`run` 保留各个参数的边界，含空格的参数照常加引号。管道、重定向等语法需显式交给容器内 shell，例如 `just run bash -c 'python --version && cmake --version'`。通用入口的可选参数为 `run [--web] [--] [命令及参数]`；`--web` 只发布 `127.0.0.1:8080:8080`，可用 `--` 结束入口选项。
+`run` 保留各个参数的边界，含空格的参数照常加引号。管道、重定向等语法需显式交给容器内 shell，例如 `just run bash -c 'python --version && cmake --version'`。通用入口的可选参数为 `run [--web] [--gpu] [--] [命令及参数]`；`--web` 只发布 `127.0.0.1:8080:8080`，`--gpu` 启用 GPU，可用 `--` 结束入口选项。
 
 源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。不要在宿主创建项目 Python 环境，也不要在 `run` 中用 root 临时补装依赖。
+
+`fetch_review_assets.py` 在构建时下载并校验审查页面使用的 Three.js 模块及许可文件。
 
 宿主 VS Code 的依赖提示缓存用 `just vscode` 导出到 `.vscode/pylance-site-packages/`，目录自动创建；分析版本与依赖路径写入 `.vscode/pyrightconfig.json`。镜像重建后重新运行即可刷新。导出入口见 [export-vscode.sh](export-vscode.sh)。
 
