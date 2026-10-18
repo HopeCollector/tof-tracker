@@ -2,7 +2,7 @@
 
 **分格求积显著提高了同 C1 场上的时间积分精度，但当前实现的 CPU 分格开销太大，不能据此宣称优化更新更快。** 在本轮 120 条曲线上，float32 的 loss 相对误差 P95 从固定 30 点的 1.284% 降至分格 GL8 的约 0.0000228%；不过每次更新曲线后重新分格，整批耗时约 0.75 秒。约 1.4 ms 的查询反传只适用于曲线完全未变、可以复用原分格计划的情况。
 
-本报告使用完成标志为 `completed: true` 的 [v3 结果](../../../outputs/esdf_curve_integral/real-map-20261018-v3/comparison/results.json)和[原始数组](../../../outputs/esdf_curve_integral/real-map-20261018-v3/comparison/raw.npz)。这是实验实现，没有修改或新增正式距离场、轨迹或训练接口。入口见[实验 README](../../../experiments/esdf_curve_integral/README.md)，审查见 [REVIEW](../../../experiments/esdf_curve_integral/REVIEW.md)，便于长期保留的指标与哈希见 [summary.json](../../../experiments/esdf_curve_integral/summary.json)。大输出位于忽略目录；缺失时应按实验入口重跑，不能用本文替代原始证据。
+本报告使用完成标志为 `completed: true` 的 [v3 结果](esdf_curve_integral/results/esdf_curve_integral/real-map-20261018-v3/comparison/results.json)和[原始数组](esdf_curve_integral/results/esdf_curve_integral/real-map-20261018-v3/comparison/raw.npz)。这是实验实现，没有修改或新增正式距离场、轨迹或训练接口。入口见[实验 README](esdf_curve_integral/README.md)，审查见 [REVIEW](esdf_curve_integral/REVIEW.md)，便于长期保留的指标与哈希见 [summary.json](esdf_curve_integral/summary.json)。大输出位于忽略目录；缺失时应按实验入口重跑，不能用本文替代原始证据。
 
 ## 比较的对象
 
@@ -18,7 +18,7 @@
 
 ## 同 C1 场的精度
 
-独立参考 [reference.py](../../../experiments/esdf_curve_integral/reference.py) 不读取穿格时间，在整个时间区间均匀分段，以 GL8 逐倍加密：原 float64 曲线使用每条 2048/4096/8192/16384 点，float32 表示曲线使用 4096/8192/16384 点。它使用公开场的位置梯度，再以独立解析 basis 累计末端 p/v/a 的 9 参数梯度，以及归一化多项式的 18 系数梯度。
+独立参考 [reference.py](esdf_curve_integral/code/reference.py) 不读取穿格时间，在整个时间区间均匀分段，以 GL8 逐倍加密：原 float64 曲线使用每条 2048/4096/8192/16384 点，float32 表示曲线使用 4096/8192/16384 点。它使用公开场的位置梯度，再以独立解析 basis 累计末端 p/v/a 的 9 参数梯度，以及归一化多项式的 18 系数梯度。
 
 两组参考——原 float64 曲线、实际 float32 系数提升为 double 后的曲线——均保留全部行，代价、9 参数梯度和 18 系数梯度的连续两轮收敛 mask 均为 120/120。判据为代价变化不超过 `1e-8+1e-6|J|`，梯度 L2 变化不超过 `1e-7+1e-5||g||`。最后一次加密的最大变化约为：代价 `3.00e-10`，9 参数梯度 L2 `1.15e-6`，18 系数梯度 L2 `2.38e-6`。
 
@@ -69,7 +69,7 @@ GL8/16 的梯度最大分量差分别为 `2.70e-6` / `2.47e-6`。这一表核对
 
 所以“把同 C1 场的时间平均算得更准”不等于“把 mesh 几何也算得同样准”。在固定这份 0.2 m 场和本批曲线的条件下，约 0.662% 是当前观察到的空间近似残差水平；它不是所有地图的误差下界，也不应与时间误差的绝对值直接相加。
 
-[独立原数组复算](../../../outputs/esdf_curve_integral/review-raw-v3-20261018.json)确认：GL8 在全部 120 条曲线的 loss 和末端 9 参数梯度上都更接近同 C1 场参考，但只有 95 条的 loss 更接近 mesh，另 25 条反而变远，因为原先时间与空间误差的部分抵消消失了。例如原序号 112 的 loss 从固定 30 点的 `5.6500689` 变为 GL8 的 `5.7063186`，同 C1 场稠密参考也是 `5.7063186`，而 mesh 数值参考仍为 `5.7339412`。因此不能把整体 P95 改善写成每条曲线的几何代价都更准。
+[独立原数组复算](esdf_curve_integral/results/esdf_curve_integral/review-raw-v3-20261018.json)确认：GL8 在全部 120 条曲线的 loss 和末端 9 参数梯度上都更接近同 C1 场参考，但只有 95 条的 loss 更接近 mesh，另 25 条反而变远，因为原先时间与空间误差的部分抵消消失了。例如原序号 112 的 loss 从固定 30 点的 `5.6500689` 变为 GL8 的 `5.7063186`，同 C1 场稠密参考也是 `5.7063186`，而 mesh 数值参考仍为 `5.7339412`。因此不能把整体 P95 改善写成每条曲线的几何代价都更准。
 
 旧 mesh 的代价收敛为 120/120，梯度收敛为 116/120，并有 866 个采样点被标为多最近特征 tie。未收敛位置为原 `[组,候选]` 的 `[2,3]`、`[2,4]`、`[2,5]`、`[6,6]`；完整 mask 与 tie 保留，不能将全部 mesh 梯度称为唯一且精确的参考。上表只列代价，不用这些未收敛梯度支撑主结论。
 
@@ -109,10 +109,10 @@ GL8/16 的梯度最大分量差分别为 `2.70e-6` / `2.47e-6`。这一表核对
 
 ## 保留的失败与适配边界
 
-[v1 日志](../../../outputs/esdf_curve_integral/real-map-20261018-v1/evaluate.log)保留了原 splitter 在 curve 1 因近切触判定停止的失败，没有跳过该曲线。进一步诊断发现端点驻点与端点二重根的数值碎片；[只做端点分类的中间尝试](../../../outputs/esdf_curve_integral/split-endpoint-first-attempt-20261018.json)仍有失败，不能当作成功版本。
+[v1 日志](esdf_curve_integral/results/esdf_curve_integral/real-map-20261018-v1/evaluate.log)保留了原 splitter 在 curve 1 因近切触判定停止的失败，没有跳过该曲线。进一步诊断发现端点驻点与端点二重根的数值碎片；[只做端点分类的中间尝试](esdf_curve_integral/results/esdf_curve_integral/split-endpoint-first-attempt-20261018.json)仍有失败，不能当作成功版本。
 
-最终改动仅在本实验 [integrate.py](../../../experiments/esdf_curve_integral/integrate.py)：用数值导数根划分单调区间，再以二分法求普通格面交点；距 `u=0/1` 不超过 `1e-10` 的驻点分类为端点；端点方程值仅在 `32*eps64*max(1,Σ|系数|)` 的 roundoff 范围内归零，并记录原值与容差。旧 `path_integrals.py` 未改，真正内部的近切触仍拒绝。
+最终改动仅在本实验 [integrate.py](esdf_curve_integral/code/integrate.py)：用数值导数根划分单调区间，再以二分法求普通格面交点；距 `u=0/1` 不超过 `1e-10` 的驻点分类为端点；端点方程值仅在 `32*eps64*max(1,Σ|系数|)` 的 roundoff 范围内归零，并记录原值与容差。旧 `path_integrals.py` 未改，真正内部的近切触仍拒绝。
 
-[适配检查](../../../outputs/esdf_curve_integral/split-monotone-adaptation-20261018.json)保留了 float64/float32 各 120 条曲线均成功分格、72 个正负参数扰动分格均成功的记录；没有接受内部切触。[最终 CPU 检查](../../../outputs/esdf_curve_integral/cpu-check-monotone-20261018/results.json)还覆盖解析平面、非线性场、重分格 FD 和拒绝路径。区间极值检查与单调划分仍共享数值导数根，这不是独立根完整性证明；没有实现严格实根隔离、精确最小净空或连续碰撞认证。
+[适配检查](esdf_curve_integral/results/esdf_curve_integral/split-monotone-adaptation-20261018.json)保留了 float64/float32 各 120 条曲线均成功分格、72 个正负参数扰动分格均成功的记录；没有接受内部切触。[最终 CPU 检查](esdf_curve_integral/results/esdf_curve_integral/cpu-check-monotone-20261018/results.json)还覆盖解析平面、非线性场、重分格 FD 和拒绝路径。区间极值检查与单调划分仍共享数值导数根，这不是独立根完整性证明；没有实现严格实根隔离、精确最小净空或连续碰撞认证。
 
-复现使用[运行脚本](../../../experiments/esdf_curve_integral/run.sh)与[评估驱动](../../../experiments/esdf_curve_integral/evaluate.py)。本轮镜像及完整 ID 在 [images.txt](../../../outputs/esdf_curve_integral/real-map-20261018-v3/images.txt)，节点、输入 raw 和源码 SHA-256 在结果 JSON 与紧凑摘要中；最终 integrator 为 `c58e20265b058e258529801ad25daa5a75d38165c2c02f80d3ebaf2efe27ab8f`。这些版本信息限定本报告证据，不代表其他镜像、地图或曲线批次具有相同性能与误差。
+复现使用[运行脚本](esdf_curve_integral/code/run.sh)与[评估驱动](esdf_curve_integral/code/evaluate.py)。本轮镜像及完整 ID 在 [images.txt](esdf_curve_integral/results/esdf_curve_integral/real-map-20261018-v3/images.txt)，节点、输入 raw 和源码 SHA-256 在结果 JSON 与紧凑摘要中；最终 integrator 为 `c58e20265b058e258529801ad25daa5a75d38165c2c02f80d3ebaf2efe27ab8f`。这些版本信息限定本报告证据，不代表其他镜像、地图或曲线批次具有相同性能与误差。

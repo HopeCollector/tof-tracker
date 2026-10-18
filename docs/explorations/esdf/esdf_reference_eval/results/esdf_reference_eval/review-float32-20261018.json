@@ -1,0 +1,115 @@
+{
+  "source_hashes_match": {
+    "/workspace/experiments/esdf_reference_eval/verify_float32.py": true,
+    "/workspace/experiments/esdf_reference_eval/evaluate.py": true
+  },
+  "raw_sha256": "40427a8d69b09cdc7165bcf2fea516810878d0c6c5f512781bb3008df602a3fc",
+  "result_sha256": "54f05dd86c74b4beae1d8846cdd469e46fbcbdead79b7ff6f231852eb788b708",
+  "all_arrays_float32_finite": true,
+  "comparison": {
+    "reference_edt": {
+      "count": 120,
+      "cost_abs_mean": 0.30869707465171814,
+      "cost_relative_median": 0.07067733258008957,
+      "cost_relative_p95": 0.20124900341033936,
+      "cost_relative_max": 0.22330784797668457,
+      "terminal_position_gradient": {
+        "max_component_abs": 7.936820983886719,
+        "relative_l2_median": 0.6792160272598267,
+        "relative_l2_p95": 2.326906681060791,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 13.813616752624512,
+        "angle_degrees_p95": 105.84650421142578,
+        "opposite_descent_count": 15
+      },
+      "terminal_velocity_gradient": {
+        "max_component_abs": 2.421987771987915,
+        "relative_l2_median": 0.8791719675064087,
+        "relative_l2_p95": 3.047950506210327,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 23.282100677490234,
+        "angle_degrees_p95": 141.77420043945312,
+        "opposite_descent_count": 21
+      },
+      "terminal_acceleration_gradient": {
+        "max_component_abs": 0.3265354335308075,
+        "relative_l2_median": 1.080176591873169,
+        "relative_l2_p95": 3.1966681480407715,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 26.26303482055664,
+        "angle_degrees_p95": 155.89842224121094,
+        "opposite_descent_count": 25
+      }
+    },
+    "same_mesh_nodes_trilinear": {
+      "count": 120,
+      "cost_abs_mean": 0.033640578389167786,
+      "cost_relative_median": 0.01075002271682024,
+      "cost_relative_p95": 0.021334324032068253,
+      "cost_relative_max": 0.03645402565598488,
+      "terminal_position_gradient": {
+        "max_component_abs": 0.776268720626831,
+        "relative_l2_median": 0.12338849902153015,
+        "relative_l2_p95": 0.5812332630157471,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 4.156521797180176,
+        "angle_degrees_p95": 26.9847412109375,
+        "opposite_descent_count": 1
+      },
+      "terminal_velocity_gradient": {
+        "max_component_abs": 0.3652244508266449,
+        "relative_l2_median": 0.18662506341934204,
+        "relative_l2_p95": 1.2328935861587524,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 5.305724143981934,
+        "angle_degrees_p95": 73.8241958618164,
+        "opposite_descent_count": 3
+      },
+      "terminal_acceleration_gradient": {
+        "max_component_abs": 0.05657871067523956,
+        "relative_l2_median": 0.16424579918384552,
+        "relative_l2_p95": 1.492215871810913,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 4.405367851257324,
+        "angle_degrees_p95": 88.98959350585938,
+        "opposite_descent_count": 6
+      }
+    },
+    "c1": {
+      "count": 120,
+      "cost_abs_mean": 0.008877698332071304,
+      "cost_relative_median": 0.0014865163248032331,
+      "cost_relative_p95": 0.009069043211638927,
+      "cost_relative_max": 0.015786753967404366,
+      "terminal_position_gradient": {
+        "max_component_abs": 0.664216935634613,
+        "relative_l2_median": 0.07994502782821655,
+        "relative_l2_p95": 0.6041989922523499,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 1.72617769241333,
+        "angle_degrees_p95": 15.996928215026855,
+        "opposite_descent_count": 0
+      },
+      "terminal_velocity_gradient": {
+        "max_component_abs": 0.32034778594970703,
+        "relative_l2_median": 0.10961297154426575,
+        "relative_l2_p95": 0.8794685006141663,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 3.088447332382202,
+        "angle_degrees_p95": 36.48151397705078,
+        "opposite_descent_count": 0
+      },
+      "terminal_acceleration_gradient": {
+        "max_component_abs": 0.05055207386612892,
+        "relative_l2_median": 0.11275950074195862,
+        "relative_l2_p95": 1.015554666519165,
+        "angle_valid_count": 120,
+        "angle_degrees_median": 4.210141181945801,
+        "angle_degrees_p95": 54.34226608276367,
+        "opposite_descent_count": 3
+      }
+    }
+  },
+  "metric_check_max_abs_difference": 0.0,
+  "passed": true
+}

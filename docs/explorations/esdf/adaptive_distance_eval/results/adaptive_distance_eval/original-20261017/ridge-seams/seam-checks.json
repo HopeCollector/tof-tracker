@@ -1,0 +1,241 @@
+{
+  "passed": false,
+  "sampled_passed": false,
+  "checks": {
+    "has_shared_faces": true,
+    "finite_values_and_world_gradients": true,
+    "value_jump_within_5e_6_m": false,
+    "gradient_l2_jump_within_2e_3": false,
+    "offset_lookup_matches_both_sides": true,
+    "exact_face_lookup_selects_an_adjacent_leaf": true,
+    "query_matches_selected_polynomial_value": true,
+    "query_matches_selected_polynomial_world_gradient": true
+  },
+  "coverage_complete": false,
+  "maximum_faces": 50000,
+  "selection": "deterministic proportional same-level/coarse-fine subsample",
+  "enumerated_faces": {
+    "total": 145665,
+    "same_level": 103892,
+    "coarse_fine": 41773,
+    "by_axis": {
+      "x": 55204,
+      "y": 45226,
+      "z": 45235
+    }
+  },
+  "checked_faces": {
+    "total": 50000,
+    "same_level": 35661,
+    "coarse_fine": 14339,
+    "by_axis": {
+      "x": 18949,
+      "y": 15524,
+      "z": 15527
+    }
+  },
+  "samples_per_face": 25,
+  "samples_per_axis": 5,
+  "dtype": "torch.float64",
+  "device": "cpu",
+  "thresholds": {
+    "value_m": 5e-06,
+    "gradient_l2": 0.002
+  },
+  "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+  "all": {
+    "face_count": 50000,
+    "probe_count": 1250000,
+    "value_jump_m": {
+      "maximum": 0.00703276316405832,
+      "p95": 5.438932908496952e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 2.0000528065012784,
+      "p95": 7.619468207479108e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 2.0000528059652463,
+      "p95": 5.7108736770195014e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 820,
+    "gradient_fail_faces": 213,
+    "worst_value_face": {
+      "selected_face_index": 30619,
+      "enumerated_face_index": 89202,
+      "left_leaf": 32651,
+      "right_leaf": 33052,
+      "axis": "y",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 19,
+      "point": [
+        -0.0062500000931322575,
+        -0.4000000059604645,
+        0.6000000089406967
+      ],
+      "value_jump_m": 0.00703276316405832,
+      "gradient_jump_l2": 0.37481672047503795
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 15119,
+      "enumerated_face_index": 44045,
+      "left_leaf": 34396,
+      "right_leaf": 34541,
+      "axis": "x",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 20,
+      "point": [
+        0.0,
+        0.2500000037252903,
+        0.4000000059604645
+      ],
+      "value_jump_m": 5.662438665732239e-07,
+      "gradient_jump_l2": 2.0000528065012784
+    }
+  },
+  "same_level": {
+    "face_count": 35661,
+    "probe_count": 891525,
+    "value_jump_m": {
+      "maximum": 0.00703276316405832,
+      "p95": 4.991888418848234e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 2.0000528065012784,
+      "p95": 7.594694047279629e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 2.0000528059652463,
+      "p95": 5.713853085020884e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 639,
+    "gradient_fail_faces": 51,
+    "worst_value_face": {
+      "selected_face_index": 30619,
+      "enumerated_face_index": 89202,
+      "left_leaf": 32651,
+      "right_leaf": 33052,
+      "axis": "y",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 19,
+      "point": [
+        -0.0062500000931322575,
+        -0.4000000059604645,
+        0.6000000089406967
+      ],
+      "value_jump_m": 0.00703276316405832,
+      "gradient_jump_l2": 0.37481672047503795
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 15119,
+      "enumerated_face_index": 44045,
+      "left_leaf": 34396,
+      "right_leaf": 34541,
+      "axis": "x",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 20,
+      "point": [
+        0.0,
+        0.2500000037252903,
+        0.4000000059604645
+      ],
+      "value_jump_m": 5.662438665732239e-07,
+      "gradient_jump_l2": 2.0000528065012784
+    }
+  },
+  "coarse_fine": {
+    "face_count": 14339,
+    "probe_count": 358475,
+    "value_jump_m": {
+      "maximum": 0.0008861419188855267,
+      "p95": 6.405290541855454e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 1.9999987334013174,
+      "p95": 7.697844894202145e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 1.9999987334013174,
+      "p95": 5.6851002997109236e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 181,
+    "gradient_fail_faces": 162,
+    "worst_value_face": {
+      "selected_face_index": 25735,
+      "enumerated_face_index": 74974,
+      "left_leaf": 19122,
+      "right_leaf": 19565,
+      "axis": "y",
+      "depths": [
+        5,
+        6
+      ],
+      "probe_index": 2,
+      "point": [
+        -0.7250000108033419,
+        0.20000000298023224,
+        -0.1625000024214387
+      ],
+      "value_jump_m": 0.0008861419188855267,
+      "gradient_jump_l2": 0.23401877434262744
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 10942,
+      "enumerated_face_index": 31875,
+      "left_leaf": 24953,
+      "right_leaf": 25092,
+      "axis": "x",
+      "depths": [
+        5,
+        6
+      ],
+      "probe_index": 0,
+      "point": [
+        0.0,
+        0.4000000059604645,
+        0.05000000074505806
+      ],
+      "value_jump_m": 7.078051567077637e-08,
+      "gradient_jump_l2": 1.9999987334013174
+    }
+  },
+  "lookup": {
+    "offset_failure_faces": 0,
+    "exact_failure_faces": 0,
+    "selected_query_value_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    },
+    "selected_query_gradient_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    }
+  },
+  "artifacts": {
+    "raw": "outputs/adaptive_distance_eval/original-20261017/ridge-seams/seam-checks-raw.npz",
+    "summary": "outputs/adaptive_distance_eval/original-20261017/ridge-seams/seam-checks.json"
+  }
+}

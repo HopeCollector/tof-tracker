@@ -1,0 +1,94 @@
+{
+  "checks": {
+    "analytic_box_faces_edges_vertices": {
+      "count": 1030,
+      "max_abs_error_m": 0.0
+    },
+    "single_arbitrary_closed_mesh": {
+      "count": 1030,
+      "max_abs_error_m": 4.440892098500626e-16
+    },
+    "overlap_union_extruded_cross": {
+      "count": 1539,
+      "max_abs_error_m": 4.440892098500626e-16
+    },
+    "touching_face_union": {
+      "count": 1539,
+      "max_abs_error_m": 0.0
+    },
+    "duplicate_nested_union": {
+      "count": 1539,
+      "max_abs_error_m": 0.0
+    },
+    "ground_halfspace_including_near_zero": {
+      "count": 1524,
+      "max_abs_error_m": 0.0
+    },
+    "ground_union_removes_internal_bottom": {
+      "count": 7,
+      "max_abs_error_m": 0.0
+    },
+    "obtuse_fans_near_ground_regression": {
+      "count": 5,
+      "max_abs_error_m": 0.0
+    },
+    "reject_open_mesh": {
+      "rejected": true
+    },
+    "reject_inward_mesh": {
+      "rejected": true
+    },
+    "reject_degenerate_mesh": {
+      "rejected": true
+    },
+    "reject_out_of_range_index": {
+      "rejected": true
+    },
+    "reject_float_indices": {
+      "rejected": true
+    },
+    "reject_nonfinite_mesh": {
+      "rejected": true
+    },
+    "reject_duplicate_face": {
+      "rejected": true
+    },
+    "reject_arbitrary_mesh_mixture": {
+      "rejected": true
+    },
+    "reject_sphere_snapshot": {
+      "rejected": true
+    },
+    "reject_nonfinite_query": {
+      "rejected": true
+    },
+    "reject_finite_overflow_query": {
+      "rejected": true
+    },
+    "native_nonfinite_error_contained": {
+      "passed": true
+    },
+    "serialized_thread_queries": {
+      "passed": true
+    },
+    "reject_closed_query": {
+      "rejected": true
+    },
+    "lifetime_empty_multiple_meshes": {
+      "passed": true
+    },
+    "public_esdf_builder": {
+      "passed": true,
+      "obj_snapshot_nodes_identical": true,
+      "all_halo_nodes_analytic": true,
+      "nonaligned_bounds_and_configurable_spacing": true,
+      "save_load_position_gradient": true,
+      "explicit_native_library": true,
+      "shape": [
+        15,
+        15,
+        7
+      ]
+    }
+  }
+}

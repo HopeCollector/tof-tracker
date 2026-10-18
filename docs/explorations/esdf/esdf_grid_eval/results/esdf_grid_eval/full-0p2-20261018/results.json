@@ -1,0 +1,232 @@
+{
+  "completed": true,
+  "grid": "outputs/esdf/full-0p2-20261018",
+  "source_map_sha256": "da25463989072ef10ceaa5c6cbddd55697c9c16a8d9c2e3c5df3cb5f523ba6e5",
+  "samples_sha256": "6702b52dd8584658ff608c964a0c8a8858f19c59ed115b1e194c91e678b5ac12",
+  "device": "cuda:0",
+  "torch_version": "2.9.1+cu128",
+  "numpy_version": "2.5.4",
+  "python_version": "3.12.3",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "load_and_transfer_seconds": 0.12237416798598133,
+  "node_bytes": 28644408,
+  "bounds_m": [
+    [
+      -30.0,
+      -30.0,
+      0.0
+    ],
+    [
+      30.0,
+      30.0,
+      15.0
+    ]
+  ],
+  "shape_xyz_with_halo": [
+    303,
+    303,
+    78
+  ],
+  "accuracy_query_dtype": "float64 (float32 stored nodes)",
+  "error_groups": {
+    "uniform": {
+      "count": 8192,
+      "mean_abs_m": 0.003458263209867418,
+      "p95_abs_m": 0.017997175281680898,
+      "max_abs_m": 0.07288113557844955,
+      "max_overestimate_m": 0.05616082226744541,
+      "max_underestimate_m": 0.07288113557844955,
+      "sign_disagreement_outside_1mm": 14,
+      "sign_disagreement_outside_1cm": 5
+    },
+    "near_original_box_faces": {
+      "count": 10981,
+      "mean_abs_m": 0.010530701341832966,
+      "p95_abs_m": 0.031647589359202755,
+      "max_abs_m": 0.07792631250717787,
+      "max_overestimate_m": 0.07792631250717787,
+      "max_underestimate_m": 0.07307887812632158,
+      "sign_disagreement_outside_1mm": 1658,
+      "sign_disagreement_outside_1cm": 144
+    },
+    "pillar_interiors": {
+      "count": 1000,
+      "mean_abs_m": 0.033585288088005025,
+      "p95_abs_m": 0.07238662660644456,
+      "max_abs_m": 0.08271748511240858,
+      "max_overestimate_m": 0.08271748511240858,
+      "max_underestimate_m": 0.031049620822486357,
+      "sign_disagreement_outside_1mm": 19,
+      "sign_disagreement_outside_1cm": 10
+    },
+    "overlap_interiors": {
+      "count": 156,
+      "mean_abs_m": 0.02096511698020353,
+      "p95_abs_m": 0.05242665173392212,
+      "max_abs_m": 0.0849755278163912,
+      "max_overestimate_m": 0.0849755278163912,
+      "max_underestimate_m": 0.04563677935218764,
+      "sign_disagreement_outside_1mm": 0,
+      "sign_disagreement_outside_1cm": 0
+    },
+    "ground_near_surface": {
+      "count": 1024,
+      "mean_abs_m": 0.0017037171018695102,
+      "p95_abs_m": 0.011353285939384275,
+      "max_abs_m": 0.04725099509141151,
+      "max_overestimate_m": 0.04725099509141151,
+      "max_underestimate_m": 0.04454896219030819,
+      "sign_disagreement_outside_1mm": 9,
+      "sign_disagreement_outside_1cm": 2
+    },
+    "shared_nodes": {
+      "count": 2005,
+      "mean_abs_m": 3.0037139660865046e-08,
+      "p95_abs_m": 9.838814021279062e-08,
+      "max_abs_m": 2.2613693317907746e-07,
+      "max_overestimate_m": 2.2613693317907746e-07,
+      "max_underestimate_m": 2.2486408646216205e-07,
+      "sign_disagreement_outside_1mm": 0,
+      "sign_disagreement_outside_1cm": 0
+    }
+  },
+  "all_points": {
+    "count": 23358,
+    "mean_abs_m": 0.007816090269868904,
+    "p95_abs_m": 0.03151523431863229,
+    "max_abs_m": 0.0849755278163912,
+    "max_overestimate_m": 0.0849755278163912,
+    "max_underestimate_m": 0.07307887812632158,
+    "sign_disagreement_outside_1mm": 1700,
+    "sign_disagreement_outside_1cm": 161
+  },
+  "float32_error_groups_at_represented_positions": {
+    "uniform": {
+      "count": 8192,
+      "mean_abs_m": 0.00345826771819147,
+      "p95_abs_m": 0.0179973196090061,
+      "max_abs_m": 0.07288129209053196,
+      "max_overestimate_m": 0.05616032222065925,
+      "max_underestimate_m": 0.07288129209053196,
+      "sign_disagreement_outside_1mm": 14,
+      "sign_disagreement_outside_1cm": 5
+    },
+    "near_original_box_faces": {
+      "count": 10981,
+      "mean_abs_m": 0.010530702331897863,
+      "p95_abs_m": 0.03164760157300073,
+      "max_abs_m": 0.07792640394968586,
+      "max_overestimate_m": 0.07792640394968586,
+      "max_underestimate_m": 0.07307949392573221,
+      "sign_disagreement_outside_1mm": 1658,
+      "sign_disagreement_outside_1cm": 144
+    },
+    "pillar_interiors": {
+      "count": 1000,
+      "mean_abs_m": 0.03358507457365733,
+      "p95_abs_m": 0.07238602197313089,
+      "max_abs_m": 0.08271682251970702,
+      "max_overestimate_m": 0.08271682251970702,
+      "max_underestimate_m": 0.031049713642291366,
+      "sign_disagreement_outside_1mm": 19,
+      "sign_disagreement_outside_1cm": 10
+    },
+    "overlap_interiors": {
+      "count": 156,
+      "mean_abs_m": 0.02096506449596029,
+      "p95_abs_m": 0.05242659843431809,
+      "max_abs_m": 0.0849755342347697,
+      "max_overestimate_m": 0.0849755342347697,
+      "max_underestimate_m": 0.045636614789905744,
+      "sign_disagreement_outside_1mm": 0,
+      "sign_disagreement_outside_1cm": 0
+    },
+    "ground_near_surface": {
+      "count": 1024,
+      "mean_abs_m": 0.0017037169291639117,
+      "p95_abs_m": 0.01135365417748044,
+      "max_abs_m": 0.047250746885738104,
+      "max_overestimate_m": 0.047250746885738104,
+      "max_underestimate_m": 0.044548904331726646,
+      "sign_disagreement_outside_1mm": 19,
+      "sign_disagreement_outside_1cm": 2
+    },
+    "shared_nodes": {
+      "count": 2005,
+      "mean_abs_m": 8.32768572540282e-08,
+      "p95_abs_m": 2.827866579124815e-07,
+      "max_abs_m": 8.288092332442432e-07,
+      "max_overestimate_m": 8.288092332442432e-07,
+      "max_underestimate_m": 7.592393405086995e-07,
+      "sign_disagreement_outside_1mm": 0,
+      "sign_disagreement_outside_1cm": 0
+    }
+  },
+  "seams": {
+    "face_points": 384,
+    "float64_linear_extrapolated_value_jump_m": 3.566036355096003e-13,
+    "float64_linear_extrapolated_gradient_component_jump": 1.0517656190422997e-11,
+    "scope": "sampled actual-map internal faces; independent same-point Hermite limits and exhaustive fixture faces are checked by tests/verify_esdf.py"
+  },
+  "float64_position_gradient_fd_max_abs": 2.18968594645208e-09,
+  "timing": {
+    "rows": [
+      {
+        "points": 1,
+        "operation": "query_no_grad",
+        "median_wall_ms": 0.38267250056378543,
+        "p95_wall_ms": 0.46817093389108777,
+        "repeats": 10,
+        "peak_allocated_bytes": 29373440,
+        "extra_peak_over_resident_bytes": 11264
+      },
+      {
+        "points": 1,
+        "operation": "query_and_position_backward",
+        "median_wall_ms": 0.9242215019185096,
+        "p95_wall_ms": 1.0266514931572601,
+        "repeats": 10,
+        "peak_allocated_bytes": 29377536,
+        "extra_peak_over_resident_bytes": 14848
+      },
+      {
+        "points": 100000,
+        "operation": "query_no_grad",
+        "median_wall_ms": 0.7992155151441693,
+        "p95_wall_ms": 0.9155505584203638,
+        "repeats": 10,
+        "peak_allocated_bytes": 168048128,
+        "extra_peak_over_resident_bytes": 137485312
+      },
+      {
+        "points": 100000,
+        "operation": "query_and_position_backward",
+        "median_wall_ms": 1.168692993815057,
+        "p95_wall_ms": 1.336059105233289,
+        "repeats": 10,
+        "peak_allocated_bytes": 170649088,
+        "extra_peak_over_resident_bytes": 139686400
+      },
+      {
+        "points": 262144,
+        "operation": "query_no_grad",
+        "median_wall_ms": 1.7181919974973425,
+        "p95_wall_ms": 2.004251042671967,
+        "repeats": 10,
+        "peak_allocated_bytes": 389893120,
+        "extra_peak_over_resident_bytes": 355785216
+      },
+      {
+        "points": 262144,
+        "operation": "query_and_position_backward",
+        "median_wall_ms": 2.401906007435173,
+        "p95_wall_ms": 2.4453495352645405,
+        "repeats": 10,
+        "peak_allocated_bytes": 397151232,
+        "extra_peak_over_resident_bytes": 362395136
+      }
+    ],
+    "scope": "float32 resident map and positions, synchronized Python wall clock; excludes disk load, transfer, mesh and trajectory decoding"
+  },
+  "limits": "Distance errors are sampled, not a global bound. Cubic overshoot/sign changes are measured, not excluded. C1 describes the interpolated field; no unit-gradient or exact-mesh-clearance claim. This does not measure trajectory optimization."
+}

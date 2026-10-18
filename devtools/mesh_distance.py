@@ -194,6 +194,9 @@ class PreparedMesh:
     Shape/index checks run here; complete topology/orientation checks also run
     in MeshDistanceQuery before the BVH is constructed. Direct boundary callers
     must supply non-self-intersecting exposed surfaces without nested components.
+    Arrays are read-only float64 vertices / int32 triangles; metadata is JSON
+    compatible and records geometry hashes, object IDs, bounds and conventions.
+    query_bounds_m bounds the ground extension guarantee, not mesh cropping.
     """
     vertices_m: np.ndarray
     triangles: np.ndarray
@@ -227,6 +230,12 @@ class PreparedMesh:
         mixed with ground or other objects require a caller-prepared Boolean.
         Ground becomes occupied z<=0 over the complete query bounds (including
         any requested halo); this explicitly extends the finite source sheet.
+        A closed slab covers all objects and query bounds, with side/bottom
+        faces farther away than a known exposed-ground witness. Internal box
+        and ground faces are removed by rectangle subtraction, followed by
+        shared T-junction splits and centre-fan triangulation. This computes
+        the exposed union boundary without voxelization or min-of-SDF errors.
+        Edge/point contacts producing nonmanifold boundaries are rejected.
         """
         if not isinstance(snapshot, GeometrySnapshot):
             raise TypeError("snapshot must be the public GeometrySnapshot")
@@ -291,6 +300,16 @@ class MeshDistanceQuery:
     fans and outward positive-volume components. It does not detect all triangle
     intersections or resolve overlapping/nested components. Queries and close
     are serialized; no gradients are built here. Use an explicit library path.
+    Each instance copies its input, owns one BVH and runs a single-threaded
+    double-precision batch loop. Noncontiguous/float32 positions are converted
+    to contiguous float64; empty batches are allowed, nonfinite input rejected.
+    C ABI exceptions become Python errors without partially returned results.
+    Use a context manager or close(); closing twice is harmless.
+
+    The native wrapper uses the third-party BVH's selected triangle, then
+    recomputes projection/edge residuals in double precision. Strict face
+    interiors use the oriented-plane sign; edges/vertices use pseudonormals.
+    This is numerical mesh distance, not an exact-arithmetic certificate.
     """
     def __init__(self, vertices, triangles, *, library_path):
         vertices, triangles = _mesh_arrays(vertices, triangles)

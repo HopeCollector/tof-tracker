@@ -1,0 +1,92 @@
+{
+  "legacy_hash_unchanged": true,
+  "legacy": {
+    "adaptation": "raw-hermite-first-sample-1um-v1",
+    "upstream_revision": "8db373ef71d65be24badf6ae10750a932bbc223b",
+    "source_directory": "/opt/SdfLib",
+    "patched_file": "include/SdfLib/InterpolationMethods.h",
+    "original_header_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+    "patched_header_sha256": "5cef4745a46ed0a44b47c3a85fc93fdf4e0e4b558a433fcc7227905e67641396",
+    "change": "Cache all eight raw calculatePointValues Hermite entries by a quantized spatial key; return the first sample for repeated keys.",
+    "key": "llround(double(point_axis) / 1e-6), independently for x,y,z",
+    "quantization_m": 1e-06,
+    "intended_bounds_m": [
+      [
+        -0.8,
+        -0.8,
+        -0.8
+      ],
+      [
+        0.8,
+        0.8,
+        0.8
+      ]
+    ],
+    "intended_start_depth": 3,
+    "intended_max_depth": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "smallest_intended_cell_m": 0.025,
+    "process_contract": "Exactly one immutable mesh and one octree construction per exporter process; run with --threads 1.",
+    "mutex": "Cache access and raw sample creation are protected; more than one thread can still change which sample wins, and this does not repair upstream statistics races.",
+    "preserved": [
+      "upstream mesh-distance oracle and triangle selection",
+      "octree refinement and topology algorithm",
+      "coarse-to-fine interpolateVertexValues constraints",
+      "tricubic coefficient construction and query evaluation"
+    ],
+    "limits": [
+      "The representative gradient at a medial tie remains arbitrary.",
+      "This is not a prescribed smoothing width, a conservative SDF, or a global error guarantee.",
+      "The 1um key is justified only for the inspected dyadic fixture grids; distinct geometry sampling nodes closer than that can be merged.",
+      "Sharing raw Hermite inputs does not prove all adaptive coarse/fine interfaces continuous; rerun full seam checks."
+    ]
+  },
+  "scaled": {
+    "adaptation": "raw-hermite-first-sample-dyadic-step-v2",
+    "upstream_revision": "8db373ef71d65be24badf6ae10750a932bbc223b",
+    "source_directory": "/opt/SdfLib",
+    "patched_file": "include/SdfLib/InterpolationMethods.h",
+    "original_header_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+    "patched_header_sha256": "41cae0029bd695a64cca8ed49d3e8bfb582ff6cd3de6add54092792ec33015b1",
+    "change": "Cache all eight raw calculatePointValues Hermite entries by a quantized spatial key; return the first sample for repeated keys.",
+    "key": "llround(double(point_axis) / 0.012500000000000001), independently for x,y,z",
+    "quantization_m": 0.0125,
+    "intended_bounds_m": null,
+    "intended_start_depth": null,
+    "intended_max_depth": null,
+    "smallest_intended_cell_m": 0.025,
+    "process_contract": "Exactly one immutable mesh and one octree construction per exporter process; run with --threads 1.",
+    "mutex": "Cache access and raw sample creation are protected; more than one thread can still change which sample wins, and this does not repair upstream statistics races.",
+    "preserved": [
+      "upstream mesh-distance oracle and triangle selection",
+      "octree refinement and topology algorithm",
+      "coarse-to-fine interpolateVertexValues constraints",
+      "tricubic coefficient construction and query evaluation"
+    ],
+    "limits": [
+      "The representative gradient at a medial tie remains arbitrary.",
+      "This is not a prescribed smoothing width, a conservative SDF, or a global error guarantee.",
+      "Repeated logical nodes near a key rounding boundary can still receive different keys; use an aligned dyadic grid and check seams at the actual world-coordinate scale.",
+      "The collision guard prevents merging adjacent logical nodes only under the declared sampling lattice spacing; it cannot infer a wrong maxDepth or step.",
+      "Sharing raw Hermite inputs does not prove all adaptive coarse/fine interfaces continuous; rerun full seam checks."
+    ],
+    "coordinate_scope": "World-coordinate full-map or ROI dyadic grids; actual bounds and depths are recorded by each exporter JSON, not fixed by this patch.",
+    "grid_contract": "Set step to the finest raw sampling lattice spacing (half the finest cell). Distinct logical sampling nodes must be at least one step apart on some axis. Same-key points differing by step/4 or more on any axis throw instead of merging.",
+    "example_configurations": [
+      {
+        "cube_side_m": 102.4,
+        "start_depth": 3,
+        "max_depth": 12
+      },
+      {
+        "cube_side_m": 6.4,
+        "start_depth": 5,
+        "max_depth": 8
+      }
+    ]
+  }
+}

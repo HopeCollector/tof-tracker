@@ -11,11 +11,11 @@
 在仓库根目录执行，依赖、编译、测试都在 Docker 内：
 
 ```bash
-bash experiments/adaptive_distance_eval/run.sh outputs/adaptive_distance_eval/reproduce
+bash docs/explorations/esdf/adaptive_distance_eval/code/run.sh outputs/adaptive_distance_eval/reproduce
 # 原版结果保留后，单独验证共享节点适配，仍使用同样的精度/接缝阈值
-ADAPTIVE_SDF_VARIANT=shared-nodes bash experiments/adaptive_distance_eval/run.sh outputs/adaptive_distance_eval/reproduce-shared
+ADAPTIVE_SDF_VARIANT=shared-nodes bash docs/explorations/esdf/adaptive_distance_eval/code/run.sh outputs/adaptive_distance_eval/reproduce-shared
 # 先验证一个盒子，保留粗场、细分场、更紧阈值和无连续约束对照
-bash experiments/adaptive_distance_eval/run.sh outputs/adaptive_distance_eval/box --cases box
+bash docs/explorations/esdf/adaptive_distance_eval/code/run.sh outputs/adaptive_distance_eval/box --cases box
 ```
 
 输出目录必须不存在。Dockerfile 默认从固定官方 Ubuntu base 构建，固定 SdfLib 提交 `8db373ef71d65be24badf6ae10750a932bbc223b`、Torch `2.9.1+cu128`、NumPy `2.5.4`；C++ 库依赖取构建时 Ubuntu 源，确切版本和镜像 ID 随结果保存。可用 `ADAPTIVE_SDF_BASE_IMAGE=<已有项目镜像>` 加速，仍在独立镜像中安装依赖，不改变共享镜像或宿主。
@@ -42,7 +42,7 @@ fit_trajectory(initial, terminal, T) → sample(u*T).position
 
 ```python
 import torch
-from experiments.adaptive_distance_eval.field import AdaptiveField
+from docs.explorations.esdf.adaptive_distance_eval.code.field import AdaptiveField
 
 field = AdaptiveField("outputs/adaptive_distance_eval/reproduce/box-adaptive", "cuda")
 point = torch.tensor([[.5, .3, .45]], device="cuda", requires_grad=True)
@@ -74,11 +74,11 @@ GPU 叶子定位使用最细层整型索引表，只保存叶子编号，不保�
 本轮已按用户要求停止测试：局部建场、精度/接缝及批量查询反传已完成；两次最细允许 0.025 m 的全图构建 OOM，较浅全图在导出前主动停止。64×50 实际地图优化、全图吞吐及下列完整 runner 端到端重放未完成。已有证据和适用边界见 [REAL_MAP_REPORT.md](REAL_MAP_REPORT.md)。
 
 ```bash
-bash experiments/adaptive_distance_eval/run_real_map.sh outputs/adaptive_distance_eval/real-map-reproduce
+bash docs/explorations/esdf/adaptive_distance_eval/code/run_real_map.sh outputs/adaptive_distance_eval/real-map-reproduce
 # 可指定已有的完整 pillar OBJ；默认会先离线生成 seed23、500柱、60×60×15m 的资产
-bash experiments/adaptive_distance_eval/run_real_map.sh outputs/adaptive_distance_eval/real-map-another path/to/map.obj
+bash docs/explorations/esdf/adaptive_distance_eval/code/run_real_map.sh outputs/adaptive_distance_eval/real-map-another path/to/map.obj
 # 重放全图最细0.025m、1mm判据；本机12GiB容器在此配置触发过OOM
-ADAPTIVE_SDF_FULL_MAX_DEPTH=12 ADAPTIVE_SDF_FULL_ERROR_M=.001 bash experiments/adaptive_distance_eval/run_real_map.sh outputs/adaptive_distance_eval/real-map-1mm
+ADAPTIVE_SDF_FULL_MAX_DEPTH=12 ADAPTIVE_SDF_FULL_ERROR_M=.001 bash docs/explorations/esdf/adaptive_distance_eval/code/run_real_map.sh outputs/adaptive_distance_eval/real-map-1mm
 ```
 
 当前实际地图适配只支持地图生成器的轴对齐闭合柱盒与矩形地面，默认要求完整 500 柱。它经公开场景几何接口读取，保留重叠，将实体并集的外露矩形三角化，并把开放地面明确适配为远处闭合的 slab；原始 OBJ 不修改。独立 float64 矩形距离与原始盒占据提供几何对照。
@@ -104,7 +104,7 @@ fit_trajectory → 96个训练时刻 → 距离代价/锚定/jerk → 十参数�
 import json
 from pathlib import Path
 import torch
-from experiments.adaptive_distance_eval.sparse_field import SparseAdaptiveField
+from docs.explorations.esdf.adaptive_distance_eval.code.sparse_field import SparseAdaptiveField
 
 output = Path("outputs/adaptive_distance_eval/real-map-reproduce")
 logical = json.loads((output / "manifest.json").read_text())["geometry"]["logical_bounds"]

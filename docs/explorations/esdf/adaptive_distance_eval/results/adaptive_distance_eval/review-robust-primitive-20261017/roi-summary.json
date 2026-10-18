@@ -1,0 +1,116 @@
+{
+  "roi-coarse": {
+    "count": 34986,
+    "leaf_count": 32768,
+    "build_seconds": 1.623409902,
+    "process_seconds": 1.6492363940051291,
+    "process_returncode": 0,
+    "distance_p95_mm": 14.864897032049955,
+    "distance_max_mm": 53.0130140917119,
+    "maximum_overestimate_mm": 52.9964419678714,
+    "sign_misses_beyond_1mm": 100,
+    "finite": true,
+    "seam_count": 7949,
+    "seam_value_max_um": 9.125793130948523,
+    "seam_value_p95_um": 1.0754285135972088,
+    "seam_gradient_l2_max": 0.0002118489581585932,
+    "seam_gradient_l2_p95": 2.2804695195622298e-05,
+    "seam_angle_max_deg": 0.05904729327032957,
+    "seam_angle_p95_deg": 0.001161257600208402,
+    "native_parity": {
+      "count": 4096,
+      "value_max_error_m": 9.236640081677905e-07,
+      "raw_gradient_max_error": 9.244893532295295e-06,
+      "leaf_id_mismatches": 0,
+      "tolerances": {
+        "value_m": 0.0001,
+        "raw_gradient_linf": 0.01,
+        "leaf_id_mismatches": 0
+      },
+      "passed": true
+    },
+    "header_sha256": "29aba8b4a8708be7a5e581d0d487a725f371dbf2e9664a0d45d6549b1677e4a7"
+  },
+  "roi-adaptive": {
+    "count": 34986,
+    "leaf_count": 1466564,
+    "build_seconds": 146.73770588,
+    "process_seconds": 147.8511039839941,
+    "process_returncode": 0,
+    "distance_p95_mm": 0.5328823686970019,
+    "distance_max_mm": 14.77797957017097,
+    "maximum_overestimate_mm": 7.148063566600582,
+    "sign_misses_beyond_1mm": 2,
+    "finite": true,
+    "seam_count": 8152,
+    "seam_value_max_um": 12.071626727561124,
+    "seam_value_p95_um": 1.790535407067415,
+    "seam_gradient_l2_max": 0.0019869442297925782,
+    "seam_gradient_l2_p95": 0.0002632462381093486,
+    "seam_angle_max_deg": 0.09827209222824575,
+    "seam_angle_p95_deg": 0.013661701431899476,
+    "native_parity": {
+      "count": 4096,
+      "value_max_error_m": 1.0243116359553994e-06,
+      "raw_gradient_max_error": 8.707905949106864e-05,
+      "leaf_id_mismatches": 0,
+      "tolerances": {
+        "value_m": 0.0001,
+        "raw_gradient_linf": 0.01,
+        "leaf_id_mismatches": 0
+      },
+      "passed": true
+    },
+    "header_sha256": "29aba8b4a8708be7a5e581d0d487a725f371dbf2e9664a0d45d6549b1677e4a7",
+    "worst_three_leafs": [
+      {
+        "point": [
+          2.9259210098446364,
+          -2.273754480403336,
+          1.6439646731735726
+        ],
+        "leaf_id": 459713,
+        "lo": [
+          2.9000000953674316,
+          -2.299999952316284,
+          1.600000023841858
+        ],
+        "size_m": 0.10000000149011612,
+        "depth": 6
+      },
+      {
+        "point": [
+          2.7286348934709186,
+          -2.2758020375050565,
+          2.589797518648072
+        ],
+        "leaf_id": 634269,
+        "lo": [
+          2.700000047683716,
+          -2.299999952316284,
+          2.5
+        ],
+        "size_m": 0.10000000149011612,
+        "depth": 6
+      },
+      {
+        "point": [
+          2.764046849713893,
+          -2.2760546496712166,
+          2.9641308104713877
+        ],
+        "leaf_id": 716229,
+        "lo": [
+          2.700000047683716,
+          -2.299999952316284,
+          2.9000000953674316
+        ],
+        "size_m": 0.10000000149011612,
+        "depth": 6
+      }
+    ]
+  },
+  "same_query_points": true,
+  "same_oracle_values": true,
+  "same_group_labels": true
+}

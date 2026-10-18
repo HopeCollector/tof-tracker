@@ -1,0 +1,54 @@
+[
+  {
+    "grad": false,
+    "trial": 0,
+    "distance_min": 0.20000004768371582,
+    "distance_max": 0.20000004768371582
+  },
+  {
+    "grad": false,
+    "trial": 1,
+    "distance_min": 0.20000004768371582,
+    "distance_max": 0.20000004768371582
+  },
+  {
+    "grad": false,
+    "trial": 2,
+    "distance_min": 0.20000004768371582,
+    "distance_max": 0.20000004768371582
+  },
+  {
+    "grad": false,
+    "trial": 3,
+    "distance_min": 0.20000004768371582,
+    "distance_max": 0.20000004768371582
+  },
+  {
+    "grad": true,
+    "trial": 0,
+    "distance_min": 0.20000004768371582,
+    "distance_max": 0.20000004768371582,
+    "gradient_max_error": 8.881784197001252e-16
+  },
+  {
+    "grad": true,
+    "trial": 1,
+    "distance_min": 0.20000004768371582,
+    "distance_max": 0.20000004768371582,
+    "gradient_max_error": 8.881784197001252e-16
+  },
+  {
+    "grad": true,
+    "trial": 2,
+    "distance_min": 0.20000004768371582,
+    "distance_max": 0.20000004768371582,
+    "gradient_max_error": 8.881784197001252e-16
+  },
+  {
+    "grad": true,
+    "trial": 3,
+    "distance_min": 0.20000004768371582,
+    "distance_max": 0.20000004768371582,
+    "gradient_max_error": 8.881784197001252e-16
+  }
+]

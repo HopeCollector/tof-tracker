@@ -1,0 +1,89 @@
+{
+  "scope": "JSON metric recalculation from all saved NPZ arrays; first 128 points of each group replayed on CPU against saved CUDA values/gradients; no new GPU run and no independent global geometry certification",
+  "all_summary_matches": true,
+  "sample_hash_match": true,
+  "cpu_replay_cases": [
+    {
+      "group": "uniform",
+      "count": 8192,
+      "cpu_readback_value_max_difference": 1.2656542480726785e-14,
+      "cpu_readback_gradient_max_difference": 5.773159728050814e-14,
+      "true_inside_count": 290,
+      "true_inside_false_positive_outside_1mm": 7,
+      "true_inside_false_positive_outside_1cm": 4
+    },
+    {
+      "group": "near_original_box_faces",
+      "count": 10981,
+      "cpu_readback_value_max_difference": 1.0005885009434223e-14,
+      "cpu_readback_gradient_max_difference": 1.0019762797242038e-13,
+      "true_inside_count": 6196,
+      "true_inside_false_positive_outside_1mm": 958,
+      "true_inside_false_positive_outside_1cm": 129
+    },
+    {
+      "group": "pillar_interiors",
+      "count": 1000,
+      "cpu_readback_value_max_difference": 9.076073226310655e-15,
+      "cpu_readback_gradient_max_difference": 7.704947790898586e-14,
+      "true_inside_count": 1000,
+      "true_inside_false_positive_outside_1mm": 19,
+      "true_inside_false_positive_outside_1cm": 10
+    },
+    {
+      "group": "overlap_interiors",
+      "count": 156,
+      "cpu_readback_value_max_difference": 1.1157741397482823e-14,
+      "cpu_readback_gradient_max_difference": 2.2414362033096324e-13,
+      "true_inside_count": 156,
+      "true_inside_false_positive_outside_1mm": 0,
+      "true_inside_false_positive_outside_1cm": 0
+    },
+    {
+      "group": "ground_near_surface",
+      "count": 1024,
+      "cpu_readback_value_max_difference": 1.1102230246251565e-14,
+      "cpu_readback_gradient_max_difference": 1.3344880755994382e-13,
+      "true_inside_count": 65,
+      "true_inside_false_positive_outside_1mm": 1,
+      "true_inside_false_positive_outside_1cm": 0
+    },
+    {
+      "group": "shared_nodes",
+      "count": 2005,
+      "cpu_readback_value_max_difference": 5.689893001203927e-15,
+      "cpu_readback_gradient_max_difference": 4.85722573273506e-14,
+      "true_inside_count": 76,
+      "true_inside_false_positive_outside_1mm": 0,
+      "true_inside_false_positive_outside_1cm": 0
+    }
+  ],
+  "inside": {
+    "count": 7783,
+    "mean_abs_m": 0.014986073506415818,
+    "p95_abs_m": 0.05249237480061607,
+    "max_abs_m": 0.0849755278163912,
+    "max_overestimate_m": 0.0849755278163912,
+    "max_underestimate_m": 0.05338575540123159,
+    "sign_disagreement_outside_1mm": 985,
+    "sign_disagreement_outside_1cm": 143
+  },
+  "free": {
+    "count": 15329,
+    "mean_abs_m": 0.004292295299545575,
+    "p95_abs_m": 0.020212191999532052,
+    "max_abs_m": 0.07307887812632158,
+    "max_overestimate_m": 0.058135302658602034,
+    "max_underestimate_m": 0.07307887812632158,
+    "sign_disagreement_outside_1mm": 715,
+    "sign_disagreement_outside_1cm": 18
+  },
+  "true_inside_false_positive_outside_1mm": 985,
+  "true_inside_false_positive_outside_1cm": 143,
+  "raw_sha256": "98fa2963cde085cb648c61db70a59b9078e03bbeb86b4fed01d7f51e0d6dc0f4",
+  "results_sha256": "8df0b43083adb97d6a55c8e65f8a9052973da8a369461804f86a8ee90efba3a8",
+  "source_sha256": {
+    "devtools/esdf.py": "0ba44fe2f18d91c366abbc45cb1083d0225da54b083d7228ed2f36bc65ce261c",
+    "experiments/esdf_grid_eval/evaluate_map.py": "6fad31e409da2cc460611099471eb7ce1cc579f4d3f7df2057765515d2dae852"
+  }
+}

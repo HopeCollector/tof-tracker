@@ -1,0 +1,11 @@
+{
+  "route": "B",
+  "case": "pillar_medium",
+  "context_baseline_free_bytes": 14056357888,
+  "post_prepare_global_used_delta_bytes": 127926272,
+  "post_backward_global_used_delta_bytes": 130023424,
+  "torch_resident_delta_bytes": 9134592,
+  "torch_peak_delta_bytes": 12346368,
+  "limitation": "Fresh process but global CUDA free deltas include other GPU activity; Warp peak not instrumented.",
+  "gpu_status": "Thu Oct 15 07:00:42 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 595.91.07              Driver Version: 595.91.07      CUDA Version: 13.2     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 5070 Ti     Off |   00000000:01:00.0  On |                  N/A |\n| 37%   43C    P1             58W /  300W |    2558MiB /  16303MiB |     10%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A               1      C   python                                  550MiB |\n|    0   N/A  N/A             286      C   /opt/venv/bin/python                    346MiB |\n+-----------------------------------------------------------------------------------------+\n"
+}

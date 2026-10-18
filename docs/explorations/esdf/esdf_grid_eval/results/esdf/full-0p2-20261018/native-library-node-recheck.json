@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "scope": "New native library only; 2048 existing grid nodes re-evaluated and cast to float32. No complete field resampling; not an independent geometry-accuracy proof.",
+  "field_directory": "outputs/esdf/full-0p2-20261018",
+  "sample_count": 2048,
+  "seed": 20261018,
+  "selection": "np.random.default_rng(seed).choice(samples.size,size=2048,replace=False); C-order np.unravel_index",
+  "numpy_version": "2.5.4",
+  "flat_indices_int64_sha256": "b08d6f4bc0ace791aee1b33e91ab6cfec9df9b963babb63c0f81dd0d85baa8bf",
+  "node_xyz_formula": "sample_origin_m + index_xyz.astype(float64) * spacing_m",
+  "source_sha256": "da25463989072ef10ceaa5c6cbddd55697c9c16a8d9c2e3c5df3cb5f523ba6e5",
+  "source_geometry_sha256": "59a27a0d83b109e3fc9075af65f265406ee4099666ccc5aa36bda7d8f01e5afa",
+  "prepared_geometry_metadata_exact_json_match": true,
+  "query_support_bounds_m": [
+    [
+      -30.2,
+      -30.2,
+      -0.2
+    ],
+    [
+      30.4,
+      30.4,
+      15.4
+    ]
+  ],
+  "sample_shape_xyz": [
+    303,
+    303,
+    78
+  ],
+  "halo_node_count": 67,
+  "halo_face_counts": {
+    "x_lower": 9,
+    "x_upper": 4,
+    "y_lower": 4,
+    "y_upper": 5,
+    "z_lower": 22,
+    "z_upper": 25
+  },
+  "original_library_sha256_from_build_report": "814c5b3b5b7ef7ba3ea4d2d4cdfe023a6f254b9c0918a61b868189646ad990d2",
+  "current_library_path": "outputs/esdf/build/libmesh_distance.so",
+  "current_library_sha256": "843d020c012e275d54b917e6883f453c9447bf588ec41bc39d797f955e285dd0",
+  "samples_file_sha256": "6702b52dd8584658ff608c964a0c8a8858f19c59ed115b1e194c91e678b5ac12",
+  "comparison": "uint32 bit patterns of float32 distances, including the zero sign bit",
+  "bit_mismatch_count": 0,
+  "max_abs_distance_difference_m": 0.0,
+  "all_recomputed_finite": true,
+  "saved_inside_count": 93,
+  "saved_zero_count": 25,
+  "saved_outside_count": 1930
+}

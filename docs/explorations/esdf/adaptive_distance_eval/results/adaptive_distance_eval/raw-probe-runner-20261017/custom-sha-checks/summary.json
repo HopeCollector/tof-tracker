@@ -1,0 +1,82 @@
+{
+  "binary": "outputs/adaptive_distance_eval/raw-probe-runner-20261017/build/mesh_value_probe",
+  "binary_sha256": "a3866fdcc9b93d5da2dc1691d7155d45b044ab4588aa84dce5d137c5853aca54",
+  "union_mesh_sha256": "499000a02e0e84604a5a94812de8191cfc3db156ac5826f7d603461f6ee629dc",
+  "source_map_sha256": "f4cc302706d36ac141e978271e648d08a7226702e1098e2d95b3d676c615b62c",
+  "validation_source_sha256": {
+    "raw_value_checks.py": "f4d661e8b034e1696241d76494fc394171a14b19684d11a15d4db3865e567608",
+    "mesh_value_probe.cpp": "8765f1b1e4e62e37dc346c7eea577092b36e53e9fc4a2d415fd6caa0f679119d"
+  },
+  "seed": 812,
+  "clear_ground_xy_count": 939,
+  "ground_levels": [
+    {
+      "z_m": 0.0,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": 1e-07,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": -1e-07,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": 1e-05,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": -1e-05,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": 0.0125,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": -0.0125,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    }
+  ],
+  "counterexamples": [],
+  "skipped_fixed_examples": "Source SHA256 differs from the pinned seed23 map; the fixed examples' geometry is not assumed. Clear-ground regressions still run.",
+  "scope": "Raw mesh values only; same float32 mesh/query representation as SdfLib. No octree, GPU, or global selection/continuity certificate.",
+  "interpolation_source_sha256": "29aba8b4a8708be7a5e581d0d487a725f371dbf2e9664a0d45d6549b1677e4a7",
+  "passed": true
+}

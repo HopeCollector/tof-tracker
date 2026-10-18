@@ -1,0 +1,63 @@
+{
+  "raw_surface_oracle": {
+    "max_abs": 2.4238238545137847e-06,
+    "mean_abs": 3.3028390669451863e-07,
+    "p95_abs": 8.590146723481615e-07,
+    "max_overestimate": 2.4238238545137847e-06,
+    "min_difference": -1.3506099172388986e-06
+  },
+  "A_torch_raw_surface_oracle": {
+    "max_abs": 9.897753212584348e-07,
+    "mean_abs": 2.964882096888609e-07,
+    "p95_abs": 8.189698231242382e-07,
+    "max_overestimate": 9.897753212584348e-07,
+    "min_difference": -9.086958225879016e-07
+  },
+  "A_torch_minus_A_tape_distance": {
+    "max_abs": 1.9371509552001953e-06,
+    "mean_abs": 4.687090893185086e-08,
+    "p95_abs": 2.384185791015625e-07,
+    "max_overestimate": 1.9371509552001953e-06,
+    "min_difference": -1.9222497940063477e-06
+  },
+  "B_minus_A": {
+    "max_abs": 0.10276064276695251,
+    "mean_abs": 0.005838985089212656,
+    "p95_abs": 0.029740184545516968,
+    "max_overestimate": 0.10276064276695251,
+    "min_difference": -0.09598135948181152
+  },
+  "B_minus_A_torch": {
+    "max_abs": 0.10276064276695251,
+    "mean_abs": 0.005838979501277208,
+    "p95_abs": 0.029740244150161743,
+    "max_overestimate": 0.10276064276695251,
+    "min_difference": -0.09598135948181152
+  },
+  "oracle_points": 256,
+  "all_finite": true,
+  "all_gradients_finite": true,
+  "A_torch_minus_tape_gradient": {
+    "max_abs": 0.013165116310119629,
+    "mean_abs": 9.910396414625211e-08,
+    "p95_abs": 5.960464477539063e-08,
+    "max_overestimate": 0.013165116310119629,
+    "min_difference": -0.0023421049118041992
+  },
+  "gradient_separated_distance_m": 0.05,
+  "gradient_near_surface_points": 1277,
+  "A_torch_minus_tape_gradient_separated": {
+    "max_abs": 5.22867776453495e-06,
+    "mean_abs": 7.776353783128798e-09,
+    "p95_abs": 5.960464477539063e-08,
+    "max_overestimate": 5.22867776453495e-06,
+    "min_difference": -3.3974647521972656e-06
+  },
+  "B_minus_A_gradient": {
+    "max_abs": 1.8742001056671143,
+    "mean_abs": 0.046722058206796646,
+    "p95_abs": 0.26346713304519653,
+    "max_overestimate": 1.8736207485198975,
+    "min_difference": -1.8742001056671143
+  }
+}

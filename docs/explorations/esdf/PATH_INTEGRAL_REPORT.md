@@ -2,7 +2,7 @@
 
 **在六组确定性 CPU 小场案例上，曲线穿格分段、逐段多项式积分，以及对曲线系数/终端状态/T 的梯度链路已经跑通。** 这证明特定多项式代价的计算路线可行，不表示任意避障损失可以无采样求积分，也没有把它加入正式 ESDF API。
 
-运行入口与完整算法边界见[实验说明](../../../experiments/esdf_grid_eval/README.md)。本轮原始输出是 `outputs/esdf_grid_eval/path-integrals-20261018-v2/`；[紧凑摘要](path-integral-summary.json)保存源文件、镜像、原始 JSON/NPZ 的 SHA-256。环境为 Python 3.12.3、NumPy 2.5.4、Torch 2.9.1+cu128，实际仅运行 CPU，Torch 单线程；没有测试积分吞吐。
+运行入口与完整算法边界见[实验说明](esdf_grid_eval/README.md)。本轮原始输出是 `outputs/esdf_grid_eval/path-integrals-20261018-v2/`；[紧凑摘要](path-integral-summary.json)保存源文件、镜像、原始 JSON/NPZ 的 SHA-256。环境为 Python 3.12.3、NumPy 2.5.4、Torch 2.9.1+cu128，实际仅运行 CPU，Torch 单线程；没有测试积分吞吐。
 
 ## 验证了什么
 

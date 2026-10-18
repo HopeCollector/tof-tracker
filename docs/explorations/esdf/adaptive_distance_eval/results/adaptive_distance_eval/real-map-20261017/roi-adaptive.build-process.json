@@ -1,0 +1,42 @@
+{
+  "command": [
+    "outputs/adaptive_distance_eval/cpu-sparse-20261017/build/export_sdflib",
+    "outputs/adaptive_distance_eval/real-map-20261017/union.obj",
+    "outputs/adaptive_distance_eval/real-map-20261017/roi-adaptive",
+    "5",
+    "8",
+    ".001",
+    "1",
+    "--bounds",
+    "-3.2",
+    "-3.2",
+    "0.0",
+    "3.2",
+    "3.2",
+    "6.4",
+    "--query-count",
+    "4096",
+    "--threads",
+    "1",
+    "--morton-index"
+  ],
+  "source_hashes": {
+    "experiments/adaptive_distance_eval/__init__.py": "88053b0de255aadb9bc0845d42eb26a80db7fc714c99cdc06cf7a78506193d5f",
+    "experiments/adaptive_distance_eval/batch_optimization.py": "3dba3eeb4e84575b10192df87565bcebdb59626feb8f8b5e2724c5a318724f2d",
+    "experiments/adaptive_distance_eval/evaluate.py": "5ae6d2c73c24a8385cd1fd53135ced7792b5757cd9c4048c5a34da42871cd569",
+    "experiments/adaptive_distance_eval/field.py": "1e3c6731cb571a45dcfc683f148e3df98aa7818acc351b9651a7df66ca340611",
+    "experiments/adaptive_distance_eval/fixtures.py": "e53d59b33c1e77bed36d01732f8cd2b8768cac551ff40e9f2627dff2f1ffb8f4",
+    "experiments/adaptive_distance_eval/nodal_patch.py": "88a7f14d2b0850ae6666adfb63641c4202602104ffe96c5e7ef35389be817e1e",
+    "experiments/adaptive_distance_eval/real_map_evaluate.py": "72b4c73bd5448a057e4feb7b59c4fee2a3b4d87df6474bd9a62dfa1300d31ddb",
+    "experiments/adaptive_distance_eval/real_map_geometry.py": "35e77f056c9150720aab070632fb356bf93d94d8e92c424a9a48a94fd52303a1",
+    "experiments/adaptive_distance_eval/real_map_plot.py": "0e80b4dc6ff678038ad083521c4cd13916ae1b91d65ef838b0290a99b07530cd",
+    "experiments/adaptive_distance_eval/seam_checks.py": "01668cc9b0bac684c8b68dcee1abbe9c8feaebbe65a1d18b49b1ab756c78064c",
+    "experiments/adaptive_distance_eval/sparse_field.py": "bce1a8c794afe84dcfba03ce56d834b54b02ad20f188327d1dd38abcf9585a16",
+    "experiments/adaptive_distance_eval/trajectory_checks.py": "6ba587b11ad823960498ac9ab3c5c881834bc9a7633a2aa2ab0398a4dbb58e93",
+    "experiments/adaptive_distance_eval/export_sdflib.cpp": "92c9faf9d19a3a6a89b7d3a4670ce6c214d35ce94886594dcf0c6c9ff5766a5f",
+    "experiments/adaptive_distance_eval/run_real_map.sh": "b65fb2f2c401a17e0547633df43f2c415491c74158f974d268508e8f613670fc",
+    "devtools/trajectory.py": "4b996a770f8919ef19a47e4e8eb11bdd56ff95846167ab2f7b96c040de6dae65"
+  },
+  "returncode": 0,
+  "process_wall_seconds": 67.0118503249978
+}

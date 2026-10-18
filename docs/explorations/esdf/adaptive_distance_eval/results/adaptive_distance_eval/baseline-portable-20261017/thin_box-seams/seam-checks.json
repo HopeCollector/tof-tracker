@@ -1,0 +1,241 @@
+{
+  "passed": false,
+  "sampled_passed": false,
+  "checks": {
+    "has_shared_faces": true,
+    "finite_values_and_world_gradients": true,
+    "value_jump_within_5e_6_m": false,
+    "gradient_l2_jump_within_2e_3": true,
+    "offset_lookup_matches_both_sides": true,
+    "exact_face_lookup_selects_an_adjacent_leaf": true,
+    "query_matches_selected_polynomial_value": true,
+    "query_matches_selected_polynomial_world_gradient": true
+  },
+  "coverage_complete": true,
+  "maximum_faces": null,
+  "selection": "all faces",
+  "enumerated_faces": {
+    "total": 19164,
+    "same_level": 13087,
+    "coarse_fine": 6077,
+    "by_axis": {
+      "x": 6849,
+      "y": 6159,
+      "z": 6156
+    }
+  },
+  "checked_faces": {
+    "total": 19164,
+    "same_level": 13087,
+    "coarse_fine": 6077,
+    "by_axis": {
+      "x": 6849,
+      "y": 6159,
+      "z": 6156
+    }
+  },
+  "samples_per_face": 25,
+  "samples_per_axis": 5,
+  "dtype": "torch.float64",
+  "device": "cpu",
+  "thresholds": {
+    "value_m": 5e-06,
+    "gradient_l2": 0.002
+  },
+  "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+  "all": {
+    "face_count": 19164,
+    "probe_count": 479100,
+    "value_jump_m": {
+      "maximum": 1.8258898464851292e-05,
+      "p95": 8.106386198941659e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.0006040034299025234,
+      "p95": 4.1317044984501913e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.0003708531940701393,
+      "p95": 2.964958431919684e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 622,
+    "gradient_fail_faces": 0,
+    "worst_value_face": {
+      "selected_face_index": 11040,
+      "enumerated_face_index": 11040,
+      "left_leaf": 3814,
+      "right_leaf": 4117,
+      "axis": "y",
+      "depths": [
+        4,
+        3
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.7000000104308128,
+        -0.20000000298023224,
+        0.4000000059604645
+      ],
+      "value_jump_m": 1.8258898464851292e-05,
+      "gradient_jump_l2": 0.0006040034299025234
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 11040,
+      "enumerated_face_index": 11040,
+      "left_leaf": 3814,
+      "right_leaf": 4117,
+      "axis": "y",
+      "depths": [
+        4,
+        3
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.7000000104308128,
+        -0.20000000298023224,
+        0.4000000059604645
+      ],
+      "value_jump_m": 1.8258898464851292e-05,
+      "gradient_jump_l2": 0.0006040034299025234
+    }
+  },
+  "same_level": {
+    "face_count": 13087,
+    "probe_count": 327175,
+    "value_jump_m": {
+      "maximum": 1.5162025453041572e-05,
+      "p95": 7.790578770275333e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.0005470317414750346,
+      "p95": 4.1646389248956514e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.0003410045627542137,
+      "p95": 2.982302237718232e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 468,
+    "gradient_fail_faces": 0,
+    "worst_value_face": {
+      "selected_face_index": 4615,
+      "enumerated_face_index": 4615,
+      "left_leaf": 3814,
+      "right_leaf": 3815,
+      "axis": "x",
+      "depths": [
+        4,
+        4
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.7000000104308128,
+        -0.20000000298023224,
+        0.4000000059604645
+      ],
+      "value_jump_m": 1.5162025453041572e-05,
+      "gradient_jump_l2": 0.0005470317414750346
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 4615,
+      "enumerated_face_index": 4615,
+      "left_leaf": 3814,
+      "right_leaf": 3815,
+      "axis": "x",
+      "depths": [
+        4,
+        4
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.7000000104308128,
+        -0.20000000298023224,
+        0.4000000059604645
+      ],
+      "value_jump_m": 1.5162025453041572e-05,
+      "gradient_jump_l2": 0.0005470317414750346
+    }
+  },
+  "coarse_fine": {
+    "face_count": 6077,
+    "probe_count": 151925,
+    "value_jump_m": {
+      "maximum": 1.8258898464851292e-05,
+      "p95": 8.72630273252017e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.0006040034299025234,
+      "p95": 4.071928005620377e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.0003708531940701393,
+      "p95": 2.9260254292182984e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 154,
+    "gradient_fail_faces": 0,
+    "worst_value_face": {
+      "selected_face_index": 11040,
+      "enumerated_face_index": 11040,
+      "left_leaf": 3814,
+      "right_leaf": 4117,
+      "axis": "y",
+      "depths": [
+        4,
+        3
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.7000000104308128,
+        -0.20000000298023224,
+        0.4000000059604645
+      ],
+      "value_jump_m": 1.8258898464851292e-05,
+      "gradient_jump_l2": 0.0006040034299025234
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 11040,
+      "enumerated_face_index": 11040,
+      "left_leaf": 3814,
+      "right_leaf": 4117,
+      "axis": "y",
+      "depths": [
+        4,
+        3
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.7000000104308128,
+        -0.20000000298023224,
+        0.4000000059604645
+      ],
+      "value_jump_m": 1.8258898464851292e-05,
+      "gradient_jump_l2": 0.0006040034299025234
+    }
+  },
+  "lookup": {
+    "offset_failure_faces": 0,
+    "exact_failure_faces": 0,
+    "selected_query_value_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    },
+    "selected_query_gradient_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    }
+  },
+  "artifacts": {
+    "raw": "outputs/adaptive_distance_eval/baseline-portable-20261017/thin_box-seams/seam-checks-raw.npz",
+    "summary": "outputs/adaptive_distance_eval/baseline-portable-20261017/thin_box-seams/seam-checks.json"
+  }
+}

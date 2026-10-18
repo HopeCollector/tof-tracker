@@ -1,0 +1,12 @@
+{
+  "reason": "Intentionally stopped after independent CPU review found tmd near-zero closest-point cancellation producing tangential ground gradients in robust v3 raw samples. No OOM; full field was not exported.",
+  "started_at_utc": "2026-10-17T09:10:30.744580447Z",
+  "stop_requested_before_utc": "2026-10-17T09:15:28Z",
+  "last_observed_memory": "1.779 GiB / 10 GiB",
+  "image_id": "sha256:2ee12e62ed1cdecba7c214d94cb86ac0bc2edd6654ebd6bf311ed53d9788ce85",
+  "patched_header_sha256": "b06f0743db114977fee81a678d771097e9ab39d08f18b6013b315d17106caac4",
+  "exit_code": 137,
+  "ground_counterexample": [-10.1875, 14.462499618530273, 0],
+  "counterexample_expected_gradient": [0, 0, 1],
+  "counterexample_wrong_gradient": [-0.0000264, 1.00623, 0]
+}

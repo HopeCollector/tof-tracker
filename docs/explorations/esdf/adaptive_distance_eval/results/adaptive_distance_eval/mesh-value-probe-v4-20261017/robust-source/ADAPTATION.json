@@ -1,0 +1,58 @@
+{
+  "adaptation": "raw-hermite-first-sample-robust-triangle-v4",
+  "upstream_revision": "8db373ef71d65be24badf6ae10750a932bbc223b",
+  "source_directory": "/opt/SdfLib",
+  "patched_file": "include/SdfLib/InterpolationMethods.h",
+  "original_header_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+  "patched_header_sha256": "29aba8b4a8708be7a5e581d0d487a725f371dbf2e9664a0d45d6549b1677e4a7",
+  "change": "Cache raw Hermite entries as before; on a cache miss query a separate persistent tmd BVH and stably recompute distance/gradient on its selected triangle instead of TriangleUtils region classification or tmd expanded quadratic residuals.",
+  "key": "llround(double(point_axis) / 0.012500000000000001), independently for x,y,z",
+  "quantization_m": 0.0125,
+  "intended_bounds_m": null,
+  "intended_start_depth": null,
+  "intended_max_depth": null,
+  "smallest_intended_cell_m": 0.025,
+  "process_contract": "Exactly one immutable mesh and one octree construction per exporter process; run with --threads 1.",
+  "mutex": "Cache access and raw sample creation are protected; more than one thread can still change which sample wins, and this does not repair upstream statistics races.",
+  "preserved": [
+    "same stored float32 mesh geometry",
+    "octree refinement and topology algorithm",
+    "coarse-to-fine interpolateVertexValues constraints",
+    "tricubic coefficient construction and query evaluation",
+    "raw-node sharing and zero mixed Hermite derivatives"
+  ],
+  "limits": [
+    "The representative gradient at a medial tie remains arbitrary.",
+    "This is not a prescribed smoothing width, a conservative SDF, or a global error guarantee.",
+    "Repeated logical nodes near a key rounding boundary can still receive different keys; use an aligned dyadic grid and check seams at the actual world-coordinate scale.",
+    "The collision guard prevents merging adjacent logical nodes only under the declared sampling lattice spacing; it cannot infer a wrong maxDepth or step.",
+    "Sharing raw Hermite inputs does not prove all adaptive coarse/fine interfaces continuous; rerun full seam checks.",
+    "Signed-distance semantics require the same closed consistently oriented mesh assumptions as tmd; this does not repair invalid geometry.",
+    "Zero-distance and medial-tie gradient representatives are not unique and do not prove global C1 continuity.",
+    "Double evaluation still queries float32-stored geometry and is not an exact arithmetic or global interpolation error certificate.",
+    "The global nearest face is still selected by the bundled tmd BVH and its distance routine. The stable selected-triangle recomputation cannot certify that selection globally; test near-zero and competing-face cases independently."
+  ],
+  "coordinate_scope": "World-coordinate full-map or ROI dyadic grids; actual bounds and depths are recorded by each exporter JSON, not fixed by this patch.",
+  "grid_contract": "Set step to the finest raw sampling lattice spacing (half the finest cell). Distinct logical sampling nodes must be at least one step apart on some axis. Same-key points differing by step/4 or more on any axis throw instead of merging.",
+  "example_configurations": [
+    {
+      "cube_side_m": 102.4,
+      "start_depth": 3,
+      "max_depth": 12
+    },
+    {
+      "cube_side_m": 6.4,
+      "start_depth": 5,
+      "max_depth": 8
+    }
+  ],
+  "robust_mesh_values": true,
+  "raw_value_method": "Full tmd BVH selects a face on the immutable float32 mesh promoted to double. Recompute that triangle's closest point from its inside-plane projection and three clamped edge segments, using direct squared residuals. Ignore tmd distance magnitude/nearest_point and the supplied nearestTriangleIndex.",
+  "raw_sign_method": "Strict selected-face interior: signbit(dot(point-a, oriented unit normal)). Edge/vertex projection: retain signbit(tmd signed distance), including negative zero.",
+  "raw_gradient_method": "For nonzero recomputed distance, (point-recomputed_closest_point)/signed_norm. Numerical zero uses the selected triangle's oriented unit normal as a shared representative. Mixed Hermite derivatives remain zero.",
+  "raw_zero_tolerance": "64 * double epsilon * max(norm(point), norm(each triangle vertex), each edge length); no float-scale or fixed-metre snapping.",
+  "raw_primitive_header": "libs/InteractiveComputerGraphics/InteractiveComputerGraphics/TriangleMeshDistance.h",
+  "raw_primitive_sha256": "c9a4fabb0e54a3b2d4ef4eb9deb941387d9916f8bd138d0ed5ff7c329175c58c",
+  "raw_primitive_license": "MIT, Copyright (c) 2021 Jose Antonio Fernandez Fernandez; original licensed header is retained in this source copy.",
+  "construction_cost": "An additional CPU BVH is built once per exporter process. Upstream nearest-face queries still run; this adaptation accepts duplicate search work to isolate raw-value correctness."
+}

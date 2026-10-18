@@ -6,7 +6,7 @@
 
 当前结论：发现的 Torch 重算 NaN、原生无命中被解释为零距离、完整训练链路缺少参数有限差分，以及总入口不传播验证失败的问题已经处理。原生 Tape 的近表面数值偏差仍然存在，应保留为选型限制。通过现有检查不意味着任意 mesh、精确并集 SDF 或近表面 Tape 梯度已经验收。
 
-正式容器运行的 `verification/verification.json` 为 **101/101**，独立回归为 **7/7**。本报告核对的 backend SHA-256 是 `5c772ac8a7de0affc7de9a5055e1bb6e15a676f942fd1448a4d62e4f36377013`，与正式回归记录一致；`comparison.json` 中全部六个 Python 源码哈希均与当前文件匹配。正式证据位于 [`outputs/mesh_distance_eval/reviewed-20261015/`](../../../../outputs/mesh_distance_eval/reviewed-20261015/)；测试条件和性能数值见 [REPORT.md](REPORT.md)。
+正式容器运行的 `verification/verification.json` 为 **101/101**，独立回归为 **7/7**。本报告核对的 backend SHA-256 是 `5c772ac8a7de0affc7de9a5055e1bb6e15a676f942fd1448a4d62e4f36377013`，与正式回归记录一致；`comparison.json` 中全部六个 Python 源码哈希均与当前文件匹配。正式证据位于 [`outputs/mesh_distance_eval/reviewed-20261015/`](../artifacts/outputs/mesh_distance_eval/reviewed-20261015)；测试条件和性能数值见 [REPORT.md](REPORT.md)。
 
 ## 已解决的问题与复核
 
@@ -18,7 +18,7 @@
 | 只有点梯度 FD 和优化下降，未覆盖完整参数链 | 原训练检查只观察 SGD 损失下降 | 现在直接对 `latent → 3D 变换 → query → exp(-d).mean()` 的所有初始参数做中心有限差分，三路均通过；另保留多步下降检查。 |
 | 完整运行可能在验证失败后正常退出 | `evaluate.main()` 导入 `run_verification()` 绕过独立 CLI 的退出码 | 保存所有证据后检查 correctness 和 review 的 `passed`，失败时非零退出。代码已复核。 |
 
-修复前原始数值保留于 [`review/cpu-probe-before-fixes.json`](../../../../outputs/mesh_distance_eval/review/cpu-probe-before-fixes.json)，没有用修复后结果覆盖第一失败证据。最终独立回归包含原始点、输出距离、梯度和解析值，见 [`review-regression-arrays.npz`](../../../../outputs/mesh_distance_eval/reviewed-20261015/review-regressions/review-regression-arrays.npz)。
+修复前原始数值保留于 [`review/cpu-probe-before-fixes.json`](results/mesh_distance_eval/review/cpu-probe-before-fixes.json)，没有用修复后结果覆盖第一失败证据。最终独立回归包含原始点、输出距离、梯度和解析值，见 [`review-regression-arrays.npz`](results/mesh_distance_eval/reviewed-20261015/review-regressions/review-regression-arrays.npz)。
 
 ## 仍成立的限制
 
@@ -43,7 +43,7 @@
 
 ## 生命周期、更新与计量审查
 
-独立基础探针检查了 NaN/Inf/越界的零梯度、同一 Tape 重复反传、更新后释放 backend 引用再反传，以及交替使用两个非默认 CUDA stream。另用延迟 stream 加 Warp 分配器复用，对有/无梯度各运行四轮；距离与预期一致，梯度最大误差 `8.89e-16`。这些有界探针未发现生命周期或 stream 错误，不覆盖任意并发调度。原始结果见 [`probe-before-fixes.json`](../../../../outputs/mesh_distance_eval/review/probe-before-fixes.json) 与 [`stream-probe.json`](../../../../outputs/mesh_distance_eval/review/stream-probe.json)。
+独立基础探针检查了 NaN/Inf/越界的零梯度、同一 Tape 重复反传、更新后释放 backend 引用再反传，以及交替使用两个非默认 CUDA stream。另用延迟 stream 加 Warp 分配器复用，对有/无梯度各运行四轮；距离与预期一致，梯度最大误差 `8.89e-16`。这些有界探针未发现生命周期或 stream 错误，不覆盖任意并发调度。原始结果见 [`probe-before-fixes.json`](results/mesh_distance_eval/review/probe-before-fixes.json) 与 [`stream-probe.json`](results/mesh_distance_eval/review/stream-probe.json)。
 
 动态验证通过公开 `get_geometry()` 快照替换目标；每次移动包括穿入、离开静态物体后，均与 fresh backend 和完整 fresh field 比较。查询点包含旧目标位置、全部目标中心及静态内部点；B 逐格比较，A 的静态 BVH handle 保持复用。这里验证的是完整重采样清除旧目标，不是增量体素更新。
 
@@ -54,7 +54,7 @@
 独立回归可在实验容器中单独执行：
 
 ```bash
-python -m experiments.mesh_distance_eval.review_regressions \
+python -m docs.explorations.esdf.mesh_distance_eval.code.review_regressions \
   --output outputs/mesh_distance_eval/review-reproduce
 ```
 

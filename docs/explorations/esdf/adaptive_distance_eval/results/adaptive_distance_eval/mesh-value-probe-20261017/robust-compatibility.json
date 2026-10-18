@@ -1,0 +1,59 @@
+{
+  "legacy_hash_unchanged": true,
+  "scaled_hash_unchanged": true,
+  "robust": {
+    "adaptation": "raw-hermite-first-sample-robust-tmd-v3",
+    "upstream_revision": "8db373ef71d65be24badf6ae10750a932bbc223b",
+    "source_directory": "/opt/SdfLib",
+    "patched_file": "include/SdfLib/InterpolationMethods.h",
+    "original_header_sha256": "c258cab51c35f96116dd98d43a946fb474fbcbee318111c3cfa43fb0d83df265",
+    "patched_header_sha256": "b06f0743db114977fee81a678d771097e9ab39d08f18b6013b315d17106caac4",
+    "change": "Cache raw Hermite entries as before; on a cache miss query a separate persistent tmd BVH for distance and closest point instead of TriangleUtils float region classification.",
+    "key": "llround(double(point_axis) / 0.012500000000000001), independently for x,y,z",
+    "quantization_m": 0.0125,
+    "intended_bounds_m": null,
+    "intended_start_depth": null,
+    "intended_max_depth": null,
+    "smallest_intended_cell_m": 0.025,
+    "process_contract": "Exactly one immutable mesh and one octree construction per exporter process; run with --threads 1.",
+    "mutex": "Cache access and raw sample creation are protected; more than one thread can still change which sample wins, and this does not repair upstream statistics races.",
+    "preserved": [
+      "same stored float32 mesh geometry",
+      "octree refinement and topology algorithm",
+      "coarse-to-fine interpolateVertexValues constraints",
+      "tricubic coefficient construction and query evaluation",
+      "raw-node sharing and zero mixed Hermite derivatives"
+    ],
+    "limits": [
+      "The representative gradient at a medial tie remains arbitrary.",
+      "This is not a prescribed smoothing width, a conservative SDF, or a global error guarantee.",
+      "Repeated logical nodes near a key rounding boundary can still receive different keys; use an aligned dyadic grid and check seams at the actual world-coordinate scale.",
+      "The collision guard prevents merging adjacent logical nodes only under the declared sampling lattice spacing; it cannot infer a wrong maxDepth or step.",
+      "Sharing raw Hermite inputs does not prove all adaptive coarse/fine interfaces continuous; rerun full seam checks.",
+      "Signed-distance semantics require the same closed consistently oriented mesh assumptions as tmd; this does not repair invalid geometry.",
+      "Zero-distance and medial-tie gradient representatives are not unique and do not prove global C1 continuity.",
+      "Double evaluation still queries float32-stored geometry and is not an exact arithmetic or global interpolation error certificate."
+    ],
+    "coordinate_scope": "World-coordinate full-map or ROI dyadic grids; actual bounds and depths are recorded by each exporter JSON, not fixed by this patch.",
+    "grid_contract": "Set step to the finest raw sampling lattice spacing (half the finest cell). Distinct logical sampling nodes must be at least one step apart on some axis. Same-key points differing by step/4 or more on any axis throw instead of merging.",
+    "example_configurations": [
+      {
+        "cube_side_m": 102.4,
+        "start_depth": 3,
+        "max_depth": 12
+      },
+      {
+        "cube_side_m": 6.4,
+        "start_depth": 5,
+        "max_depth": 8
+      }
+    ],
+    "robust_mesh_values": true,
+    "raw_value_method": "tmd::TriangleMeshDistance::signed_distance on the complete immutable float32 mesh promoted to double; bypass TriangleUtils region classification and ignore the supplied nearestTriangleIndex.",
+    "raw_gradient_method": "For nonzero signed distance, (point-nearest_point)/signed_distance. At zero distance, the selected triangle's oriented double cross-product unit normal is the shared representative. Mixed Hermite derivatives remain zero.",
+    "raw_primitive_header": "libs/InteractiveComputerGraphics/InteractiveComputerGraphics/TriangleMeshDistance.h",
+    "raw_primitive_sha256": "c9a4fabb0e54a3b2d4ef4eb9deb941387d9916f8bd138d0ed5ff7c329175c58c",
+    "raw_primitive_license": "MIT, Copyright (c) 2021 Jose Antonio Fernandez Fernandez; original licensed header is retained in this source copy.",
+    "construction_cost": "An additional CPU BVH is built once per exporter process. Upstream nearest-face queries still run; this adaptation accepts duplicate search work to isolate raw-value correctness."
+  }
+}

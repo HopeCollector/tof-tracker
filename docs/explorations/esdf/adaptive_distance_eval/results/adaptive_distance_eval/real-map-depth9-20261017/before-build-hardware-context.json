@@ -1,0 +1,24 @@
+{
+  "phase": "before-build",
+  "captured_at_utc": "2026-10-17T10:22:24.748449+00:00",
+  "runtime_image": "sha256:2ee12e62ed1cdecba7c214d94cb86ac0bc2edd6654ebd6bf311ed53d9788ce85",
+  "cgroup_scope": "This entire depth9-run container, from its creation; memory.peak is not exporter-only. memory.swap.max is additional swap, so memory.max plus memory.swap.max is the 20 GiB combined limit.",
+  "cgroup_v2": {
+    "memory.current": "37470208",
+    "memory.peak": "39833600",
+    "memory.max": "15032385536",
+    "memory.swap.current": "0",
+    "memory.swap.max": "6442450944",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+    "cpu.max": "200000 100000"
+  },
+  "children_maxrss_kib_so_far": 13132,
+  "children_maxrss_scope": "Linux RUSAGE_CHILDREN high-water metric from waited children of this wrapper; not a sum of concurrent RSS.",
+  "cpu_model": "AMD Ryzen 7 9700X 8-Core Processor",
+  "host_memory_kib": {
+    "MemTotal": "31405320 kB",
+    "MemAvailable": "19313272 kB",
+    "SwapTotal": "8388604 kB",
+    "SwapFree": "5700768 kB"
+  }
+}

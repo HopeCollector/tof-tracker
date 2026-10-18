@@ -1,13 +1,14 @@
 {
-  "schema": "esdf-exploration-archive-v1",
-  "changes": "Markdown adds snapshot notice and relocates links; JSON is unchanged. Original source is fixed Git blob.",
+  "schema": "esdf-exploration-archive-v2",
+  "changes": "Original result JSON bytes and source provenance are retained. Markdown links and executable source paths are relocated; no historical measurements are rerun or revised.",
   "files": [
     {
       "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
       "source_path": "experiments/adaptive_distance_eval/README.md",
       "original_sha256": "7d4272a7b447c284a5e32d1b90e69d10cc30ceaf38d9f75fa3a6ef1470c7372d",
       "archive_path": "docs/explorations/esdf/adaptive_distance_eval/README.md",
-      "archived_sha256": "5f83bed249d29878c5a82759fafbebfe258a93dd77873e9320769ba7d27c1523"
+      "archived_sha256": "b573dcd8887b277f3f3643635f40f990ae38b4f48208f827b268a2fbe455e836",
+      "previous_archive_sha256": "5f83bed249d29878c5a82759fafbebfe258a93dd77873e9320769ba7d27c1523"
     },
     {
       "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
@@ -49,7 +50,8 @@
       "source_path": "experiments/adaptive_distance_eval/NODAL_PATCH.md",
       "original_sha256": "3bf571b93f9042bd65adbd50eb817bc948b764ead83dbd9a3b1c110b2a93c087",
       "archive_path": "docs/explorations/esdf/adaptive_distance_eval/NODAL_PATCH.md",
-      "archived_sha256": "0c4d4aac8f915159654c1ecb6668b3b70b00fa0c50ddbb416995e2d8afd106d9"
+      "archived_sha256": "580a7b5621a1b867a253fea4b6d70add96aada17128ecd903c87b57141da9165",
+      "previous_archive_sha256": "0c4d4aac8f915159654c1ecb6668b3b70b00fa0c50ddbb416995e2d8afd106d9"
     },
     {
       "source_commit": "d4909aa2e0d87f60027a86b9856bdce534ca89e7",
@@ -84,7 +86,8 @@
       "source_path": "experiments/mesh_distance_eval/REVIEW.md",
       "original_sha256": "6fea2d5a512ecd3ecb7d8de777232c9283dee4731f2eb6da76de66c8178ffa15",
       "archive_path": "docs/explorations/esdf/mesh_distance_eval/REVIEW.md",
-      "archived_sha256": "5868ca041b20cf4ef980ccf9e30619d9c499fe6de00eb348306ba4d208a242f8"
+      "archived_sha256": "59ef990abb6d2d2f6dd0ce4fa1bde95f7cb44c733681d068e7ca8c2eb1b1c7a7",
+      "previous_archive_sha256": "5868ca041b20cf4ef980ccf9e30619d9c499fe6de00eb348306ba4d208a242f8"
     },
     {
       "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
@@ -93,5 +96,538 @@
       "archive_path": "docs/explorations/esdf/mesh_distance_eval/results-summary.json",
       "archived_sha256": "bb6d19b1f4bef10e57ca3446f48da8649eb475f8a89b02c1327eedd2c504b360"
     }
-  ]
+  ],
+  "source_relocation": {
+    "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+    "files": [
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/CMakeLists.txt",
+        "original_sha256": "26f2a2dc72a9d3e028a8198da806719ce7feba2f6f15ba361ab2f465e8801c9a",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/CMakeLists.txt",
+        "archived_sha256": "26f2a2dc72a9d3e028a8198da806719ce7feba2f6f15ba361ab2f465e8801c9a",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/Dockerfile",
+        "original_sha256": "7761a28d25f43bbaad9f1aacf11f0fe7133fadc1400fa003b41cfc99e699d7ca",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/Dockerfile",
+        "archived_sha256": "7761a28d25f43bbaad9f1aacf11f0fe7133fadc1400fa003b41cfc99e699d7ca",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/Dockerfile.real_map",
+        "original_sha256": "f6eaea4a5a656d5ecd486a32e1b629f5cfefbec7a80328c2d5e4c44b1aac4dce",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/Dockerfile.real_map",
+        "archived_sha256": "f6eaea4a5a656d5ecd486a32e1b629f5cfefbec7a80328c2d5e4c44b1aac4dce",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/NODAL_PATCH.md",
+        "original_sha256": "36d7016fc22c4f3a3e0ce488aae18f72f8bdd789261c6e62241b2577ec79a2a6",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/NODAL_PATCH.md",
+        "archived_sha256": "580a7b5621a1b867a253fea4b6d70add96aada17128ecd903c87b57141da9165",
+        "change": "duplicate redirect removed; fixed archived snapshot retained"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/README.md",
+        "original_sha256": "8b695fb7c46e94adff10bbeead68d61d8b9aca7427cc9ae0ff13f966240bd2df",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/README.md",
+        "archived_sha256": "b573dcd8887b277f3f3643635f40f990ae38b4f48208f827b268a2fbe455e836",
+        "change": "duplicate redirect removed; fixed archived snapshot retained"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/REAL_MAP_REPORT.md",
+        "original_sha256": "f196aa234ce1e1c999950a436e852399389a5b8bb5392e8fe74b502fce565618",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REAL_MAP_REPORT.md",
+        "archived_sha256": "684073e87714901dbad57580c3e38b89dd486229b525b037ce2a6170d6d445e1",
+        "change": "duplicate redirect removed; fixed archived snapshot retained"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/REAL_MAP_REVIEW.md",
+        "original_sha256": "07a937d5f3626205253586806d64933ac34324fe783d49c6103b3f79bee83401",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REAL_MAP_REVIEW.md",
+        "archived_sha256": "4feb750928e88508ac35f4961308c2c242d4a202a2c22cae648dcc7f53f12c0c",
+        "change": "duplicate redirect removed; fixed archived snapshot retained"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/REPORT.md",
+        "original_sha256": "7f3d187c4d28699b0229b696db5664575fbc764a7b58aae789d2ed53458942a7",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REPORT.md",
+        "archived_sha256": "d1079f98bb86170766e2476e2557869f5d754402a53816579a02358403e29fee",
+        "change": "duplicate redirect removed; fixed archived snapshot retained"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/REUSE.md",
+        "original_sha256": "9e4477f8ce2b8973d26798a60dc6562658c6fcbad2f3858c4ff28aac63e508fa",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REUSE.md",
+        "archived_sha256": "4df185c2e4188fb69acd36a25bc034bc69c65b7597577fecba9b6531700d7c8a",
+        "change": "duplicate redirect removed; fixed archived snapshot retained"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/REVIEW.md",
+        "original_sha256": "99ae54e9c9b23a1dea0c306ed40b4b2291f9444486b1642d2eb4c2648a3aebce",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/REVIEW.md",
+        "archived_sha256": "21f1414afce53bc26ba7a94b1e656148d0f7ab4c18866868f2945bcd31e45cfa",
+        "change": "duplicate redirect removed; fixed archived snapshot retained"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/__init__.py",
+        "original_sha256": "88053b0de255aadb9bc0845d42eb26a80db7fc714c99cdc06cf7a78506193d5f",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/__init__.py",
+        "archived_sha256": "88053b0de255aadb9bc0845d42eb26a80db7fc714c99cdc06cf7a78506193d5f",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/batch_optimization.py",
+        "original_sha256": "525b9f8260a039ebc84af80396af8e92b3f2ab007a580f3a53cec6f06abd0e9c",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/batch_optimization.py",
+        "archived_sha256": "525b9f8260a039ebc84af80396af8e92b3f2ab007a580f3a53cec6f06abd0e9c",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/evaluate.py",
+        "original_sha256": "5ae6d2c73c24a8385cd1fd53135ced7792b5757cd9c4048c5a34da42871cd569",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/evaluate.py",
+        "archived_sha256": "132063a7654dbc010cdea43f30fd02705cc85cefe14c83631d472a172858677b",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/export_sdflib.cpp",
+        "original_sha256": "92c9faf9d19a3a6a89b7d3a4670ce6c214d35ce94886594dcf0c6c9ff5766a5f",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/export_sdflib.cpp",
+        "archived_sha256": "92c9faf9d19a3a6a89b7d3a4670ce6c214d35ce94886594dcf0c6c9ff5766a5f",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/field.py",
+        "original_sha256": "1e3c6731cb571a45dcfc683f148e3df98aa7818acc351b9651a7df66ca340611",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/field.py",
+        "archived_sha256": "1e3c6731cb571a45dcfc683f148e3df98aa7818acc351b9651a7df66ca340611",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/fixtures.py",
+        "original_sha256": "e53d59b33c1e77bed36d01732f8cd2b8768cac551ff40e9f2627dff2f1ffb8f4",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/fixtures.py",
+        "archived_sha256": "e53d59b33c1e77bed36d01732f8cd2b8768cac551ff40e9f2627dff2f1ffb8f4",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/mesh_value_probe.cpp",
+        "original_sha256": "8765f1b1e4e62e37dc346c7eea577092b36e53e9fc4a2d415fd6caa0f679119d",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/mesh_value_probe.cpp",
+        "archived_sha256": "8765f1b1e4e62e37dc346c7eea577092b36e53e9fc4a2d415fd6caa0f679119d",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/nodal_patch.py",
+        "original_sha256": "06d4108830b5e618a30734fb3b0a9847d26fc9eee600dbc2c7dfbab102f8dadb",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/nodal_patch.py",
+        "archived_sha256": "06d4108830b5e618a30734fb3b0a9847d26fc9eee600dbc2c7dfbab102f8dadb",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/raw_value_checks.py",
+        "original_sha256": "f4d661e8b034e1696241d76494fc394171a14b19684d11a15d4db3865e567608",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/raw_value_checks.py",
+        "archived_sha256": "c62def7e7e4ceed7e24d3e96bb9c5444193ed807d20c05f4b9215bc863472896",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/real_map_evaluate.py",
+        "original_sha256": "64f890971563e7b7932c5b86afad655465e144a7d29d982b2e9a78681db2f73f",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/real_map_evaluate.py",
+        "archived_sha256": "ce9a9d99d1e265cdd63e7c5c99974ea9634e991e88b9dd2d4b5cb649e061e96e",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/real_map_geometry.py",
+        "original_sha256": "35e77f056c9150720aab070632fb356bf93d94d8e92c424a9a48a94fd52303a1",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/real_map_geometry.py",
+        "archived_sha256": "87250c517a1be211492edff12cf79c3c8da3496ff7f72dc0043c48fe48f8f60b",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/real_map_plot.py",
+        "original_sha256": "e98bbca5e7e9e87f2fb1a05d8ae2c8813777994f356a7e212da5c18bcc23219c",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/real_map_plot.py",
+        "archived_sha256": "e98bbca5e7e9e87f2fb1a05d8ae2c8813777994f356a7e212da5c18bcc23219c",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/run.sh",
+        "original_sha256": "3a85ee2c4caf4c454a2731f2c33e313bfd5dcc684ca37e6241ad78697951874f",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/run.sh",
+        "archived_sha256": "929b94d2e3368e5c638144da8b7bdc74e9eca8ffd5bea13aa39b79a42c2c5169",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/run_real_map.sh",
+        "original_sha256": "67b9f7ce0db3d0b12e13f5cab7811a2d5ab403befc550d7c679943b68a79fcaa",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/run_real_map.sh",
+        "archived_sha256": "4e0aea5f83f2cf40e32868ae61e4a92938ee8733325638b60e989084e053a4c3",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/seam_checks.py",
+        "original_sha256": "01668cc9b0bac684c8b68dcee1abbe9c8feaebbe65a1d18b49b1ab756c78064c",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/seam_checks.py",
+        "archived_sha256": "01668cc9b0bac684c8b68dcee1abbe9c8feaebbe65a1d18b49b1ab756c78064c",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/sparse_field.py",
+        "original_sha256": "bce1a8c794afe84dcfba03ce56d834b54b02ad20f188327d1dd38abcf9585a16",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/sparse_field.py",
+        "archived_sha256": "bce1a8c794afe84dcfba03ce56d834b54b02ad20f188327d1dd38abcf9585a16",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/adaptive_distance_eval/trajectory_checks.py",
+        "original_sha256": "6ba587b11ad823960498ac9ab3c5c881834bc9a7633a2aa2ab0398a4dbb58e93",
+        "archive_path": "docs/explorations/esdf/adaptive_distance_eval/code/trajectory_checks.py",
+        "archived_sha256": "6ba587b11ad823960498ac9ab3c5c881834bc9a7633a2aa2ab0398a4dbb58e93",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_curve_integral/README.md",
+        "original_sha256": "28e7f872186b001e7747a7628dca7ce99f0c875db5885636895ad68f3e1567df",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/README.md",
+        "archived_sha256": "f4518f23261d6a103f5aa0ac44260f0353dc96daf43245d393f80795ab213f69",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_curve_integral/REVIEW.md",
+        "original_sha256": "6354b77261a0687b654e2fd813ec400f17fd682f7ff896576fdabe02b2e65643",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/REVIEW.md",
+        "archived_sha256": "dc5f23e78eef538334ae4154702c78bf8249a31b280494dc8c81e2c1eb5c5767",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_curve_integral/__init__.py",
+        "original_sha256": "871545f33b85d4191b7cc7c31c4a49a24f996f9b11f5be7e9a14acc739cfceff",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/__init__.py",
+        "archived_sha256": "871545f33b85d4191b7cc7c31c4a49a24f996f9b11f5be7e9a14acc739cfceff",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_curve_integral/evaluate.py",
+        "original_sha256": "a2b0d56c70fabbf8678606e28f3369d77e789be770c92a59400f88dd5007e827",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/evaluate.py",
+        "archived_sha256": "02c8c42773d4b83f5dd0b67dfb5ffbc41aa31c67ec9d09a215fd5799134f757f",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_curve_integral/integrate.py",
+        "original_sha256": "c58e20265b058e258529801ad25daa5a75d38165c2c02f80d3ebaf2efe27ab8f",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/integrate.py",
+        "archived_sha256": "89505d1e3ea59900429dae314ca718b8995b7554e17538bf4d51c09870f20035",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_curve_integral/reference.py",
+        "original_sha256": "aca527a108adf6e6bc6b3ff85f85878c13fb82c62fa1a680d4f57eeb129da30d",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/reference.py",
+        "archived_sha256": "aca527a108adf6e6bc6b3ff85f85878c13fb82c62fa1a680d4f57eeb129da30d",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_curve_integral/run.sh",
+        "original_sha256": "c6b8d05f20e50b6aeb99c7a8a1b65335220e7f9fefcb7466302c4c1a34b453f8",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/run.sh",
+        "archived_sha256": "9803d9c9e4445505291462f2cb25195c27d6e40ce1b23e98fdba6e6e2f9a7c93",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_curve_integral/summary.json",
+        "original_sha256": "f23bd8d59adb266dfe96084243f1601d787c64ad4f70885a75df7fc6331e13d5",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/summary.json",
+        "archived_sha256": "f23bd8d59adb266dfe96084243f1601d787c64ad4f70885a75df7fc6331e13d5",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_grid_eval/README.md",
+        "original_sha256": "7ec732a243b9f04fd5dbbb44bad002363fd4e6be0239a2b5dcfdfcf6096fb96f",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/README.md",
+        "archived_sha256": "c43be59388ff87a296af7f952c361d79c07a239dd74fb4cf499afc227650ae85",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_grid_eval/__init__.py",
+        "original_sha256": "49b8fa09d365fa4b04fcfcc2f6c40a78c600ea9b827b40caa960176af14213fd",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/__init__.py",
+        "archived_sha256": "49b8fa09d365fa4b04fcfcc2f6c40a78c600ea9b827b40caa960176af14213fd",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_grid_eval/evaluate.py",
+        "original_sha256": "356d4dcf194322db4892bdfe7ee0743759aafd82d565218b7c9502b56fbbf1a3",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/evaluate.py",
+        "archived_sha256": "356d4dcf194322db4892bdfe7ee0743759aafd82d565218b7c9502b56fbbf1a3",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_grid_eval/evaluate_map.py",
+        "original_sha256": "6fad31e409da2cc460611099471eb7ce1cc579f4d3f7df2057765515d2dae852",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/evaluate_map.py",
+        "archived_sha256": "fa3ced890aa328629104c10c26dd4b5a95b4bc430ca8ad8002eb015028cbf01c",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_grid_eval/path_integrals.py",
+        "original_sha256": "cce6abf1566dc127b222a752ad35f7e2f8eb903f7e7370546eba9f21f95b07de",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/path_integrals.py",
+        "archived_sha256": "cce6abf1566dc127b222a752ad35f7e2f8eb903f7e7370546eba9f21f95b07de",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_grid_eval/real-map-summary.json",
+        "original_sha256": "4899bb0265266225869fe07b937e4456a2b5abdaa7bed671fcec33ab6114ad88",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/real-map-summary.json",
+        "archived_sha256": "4899bb0265266225869fe07b937e4456a2b5abdaa7bed671fcec33ab6114ad88",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_grid_eval/run.sh",
+        "original_sha256": "6d6235eea25bbdd3b00daa05a1ed84a78c1fa9f382052648499e21762d8a8882",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/run.sh",
+        "archived_sha256": "22966a25d26a6127d2e075a174b20681a56d0fce7ef36b718263d73d99966eda",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/README.md",
+        "original_sha256": "56b6ae728d4c94e2ccac1d51c1c4aeed9b31924cb43fc9972c1505bd0ae84958",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/README.md",
+        "archived_sha256": "5bdef059c454380f2d9c74ebc20d3c004a457f5403bc035c702d2bc956c555c3",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/REFERENCE.md",
+        "original_sha256": "1ac245b9aad643be0cee2fe670901c3792d22751cff0d81d97e22a97f768f4d2",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/REFERENCE.md",
+        "archived_sha256": "1ac245b9aad643be0cee2fe670901c3792d22751cff0d81d97e22a97f768f4d2",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/REVIEW.md",
+        "original_sha256": "d45311a7f9091050bfeefe5789801a1d955163d67890b1769c5dcbfb4c56f0a6",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/REVIEW.md",
+        "archived_sha256": "fbf50d2620ef3943c1cb72b69d04c8e9eab04a0617a71be3e2d90bc07c36b38b",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/__init__.py",
+        "original_sha256": "0657462a9666d5900f8b604c0507e300a60255ce4885b8a81cf10fcde3fe8997",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/__init__.py",
+        "archived_sha256": "0657462a9666d5900f8b604c0507e300a60255ce4885b8a81cf10fcde3fe8997",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/build_maps.py",
+        "original_sha256": "e26dca361faecef67ccb8a835625a4c0a917b50ed7a2003ba8f340e789259b72",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/build_maps.py",
+        "archived_sha256": "e26dca361faecef67ccb8a835625a4c0a917b50ed7a2003ba8f340e789259b72",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/evaluate.py",
+        "original_sha256": "56dbd10d10c3d68a37a152d0aad5150606991a3176f370745765273a00e35e1d",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/evaluate.py",
+        "archived_sha256": "5158150ddc72bc89407eb852b2d143263bcf8cbd1bfa0f708c6abfa67153c7f3",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/fixtures.py",
+        "original_sha256": "45fde844b07217a12d8272dc0a5a46b31038681375673ea949086fb2d3c5fbf1",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/fixtures.py",
+        "archived_sha256": "45fde844b07217a12d8272dc0a5a46b31038681375673ea949086fb2d3c5fbf1",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/oracle.py",
+        "original_sha256": "118b0cc453595dbcabea76844c596c06deb7adad7d7c18b087c71d4bad95270d",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/oracle.py",
+        "archived_sha256": "118b0cc453595dbcabea76844c596c06deb7adad7d7c18b087c71d4bad95270d",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/reference.py",
+        "original_sha256": "4079ab6d1326af2e7c3a1a99401c6e24768cb15402a0695835cd977dfbe824f9",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/reference.py",
+        "archived_sha256": "4079ab6d1326af2e7c3a1a99401c6e24768cb15402a0695835cd977dfbe824f9",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/run.sh",
+        "original_sha256": "1f92e0cbe92488f0eed82ca85f469532e62a774c3ec760964d07c357167d9972",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/run.sh",
+        "archived_sha256": "d36c3e4ac5590c4e53bdd0756d50857c9aa56060a1b4a0341dca48c36268249d",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/summary.json",
+        "original_sha256": "452d41e9f19e4a773e5b5b43395cf5ed6a3e3534747c0f875a12b348beedb2dd",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/summary.json",
+        "archived_sha256": "452d41e9f19e4a773e5b5b43395cf5ed6a3e3534747c0f875a12b348beedb2dd",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "experiments/esdf_reference_eval/verify_float32.py",
+        "original_sha256": "967b83774b81d7a96dd5e2804661470965a45cdc01a1d4330ac64c3be28c08b5",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/verify_float32.py",
+        "archived_sha256": "c049ceecde324248a5f01b710f7d638433a4a235965d21277715370ace520023",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "tests/verify_esdf_curve_integral.py",
+        "original_sha256": "eda30e8350bff5c125cc57763102d9d172bb8629c6a420da36eb497a9b7d766f",
+        "archive_path": "docs/explorations/esdf/esdf_curve_integral/code/verify_esdf_curve_integral.py",
+        "archived_sha256": "185dbacc893e4e5ca1a87fd99ec5bcacf98d13b73646e7d54ff640ec832d93bc",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "tests/verify_esdf_reference_oracle.py",
+        "original_sha256": "4ae6c7160bc6874344378a6730d8a236f4e172a255a35e37c1cb971e73a2da50",
+        "archive_path": "docs/explorations/esdf/esdf_reference_eval/code/verify_esdf_reference_oracle.py",
+        "archived_sha256": "d56676faf4796347d3b1f3f4413007ff2e4cbb4cd7cb86998c4409d204574611",
+        "change": "relocated; executable paths/imports/relative links adjusted"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/Dockerfile",
+        "original_sha256": "66772fc4a4afe9b030adb70d16312e21d5e2730d07b301b2644c63670d73d0e6",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/Dockerfile",
+        "archived_sha256": "66772fc4a4afe9b030adb70d16312e21d5e2730d07b301b2644c63670d73d0e6",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/Dockerfile.portable",
+        "original_sha256": "3e72ab998b71d220f12393ac8ae4af2fe4092525f3273561e9bab318b8d068cb",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/Dockerfile.portable",
+        "archived_sha256": "5ed61a9f62be0b1b044449342d8c17dd722703e20fda96dfb6f200b4609adea7",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/__init__.py",
+        "original_sha256": "00c20b807d423db995e727c654c676704aad2062e4dd3450b75ea28dc9ac84e5",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/__init__.py",
+        "archived_sha256": "00c20b807d423db995e727c654c676704aad2062e4dd3450b75ea28dc9ac84e5",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/backend.py",
+        "original_sha256": "5c772ac8a7de0affc7de9a5055e1bb6e15a676f942fd1448a4d62e4f36377013",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/backend.py",
+        "archived_sha256": "5c772ac8a7de0affc7de9a5055e1bb6e15a676f942fd1448a4d62e4f36377013",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/evaluate.py",
+        "original_sha256": "d8bb48baaff798c71fe9af5b189dee6e2dee0680ca19dee82be85eba2163883b",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/evaluate.py",
+        "archived_sha256": "1ece773e9dc8ec72ef151b2362adfd9544595eab4fed1904dbf67061022fcd9d",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/fixtures.py",
+        "original_sha256": "70b1e4c601453581045a557b0995ccddc5a3d44c886830a977cc33fb44633c2b",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/fixtures.py",
+        "archived_sha256": "70b1e4c601453581045a557b0995ccddc5a3d44c886830a977cc33fb44633c2b",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/review_regressions.py",
+        "original_sha256": "872e728ef61bbc5f7193d5d79a820a6b6796adf8d52955b5c4fc44222cdf278d",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/review_regressions.py",
+        "archived_sha256": "872e728ef61bbc5f7193d5d79a820a6b6796adf8d52955b5c4fc44222cdf278d",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/run.sh",
+        "original_sha256": "9130a2831ad6d8f11ae19c39719dc8e0afdeed69fd1e9691dffa989873f6fa52",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/run.sh",
+        "archived_sha256": "56c40ea77db63886d9601b63b098a329dbcd2f22133565e26788ba67fbbcc05e",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "9761e0bb1ac3286b7cab286857622e2b7148277e",
+        "source_path": "experiments/mesh_distance_eval/verify.py",
+        "original_sha256": "c98cb81626339a3e9b828ed8e5eef509e9936b46ed0b5574018baceb779267de",
+        "archive_path": "docs/explorations/esdf/mesh_distance_eval/code/verify.py",
+        "archived_sha256": "c98cb81626339a3e9b828ed8e5eef509e9936b46ed0b5574018baceb779267de",
+        "change": "historical experiment code restored from fixed commit; executable paths/imports relocated"
+      },
+      {
+        "source_commit": "2315c745fa02ef13a139f60d7d074923394bb96d",
+        "source_path": "tools/esdf/build_map.py",
+        "original_sha256": "6cac1f2b82ddfbf3ab4f39683e433d3eda641b556c864f10c94388ec9e3e9b86",
+        "archive_path": "docs/explorations/esdf/esdf_grid_eval/code/legacy_build_map.py",
+        "archived_sha256": "6a1f890587c2bc5b791bff9e67df250e91c89f38dd448813e6da96b27746eb85",
+        "change": "historical CLI archived outside formal interface; notice and archived-library path only"
+      }
+    ]
+  }
 }

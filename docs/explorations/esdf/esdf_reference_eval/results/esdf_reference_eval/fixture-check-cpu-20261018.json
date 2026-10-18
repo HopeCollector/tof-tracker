@@ -1,0 +1,2103 @@
+{
+  "passed": true,
+  "device": "cpu",
+  "python": "3.12.3",
+  "torch": "2.9.1+cu128",
+  "numpy": "2.5.4",
+  "trajectory_count": 120,
+  "initial_shape": [
+    8,
+    15,
+    3,
+    3
+  ],
+  "dtype": "float64",
+  "duration_s": 1.6666666666666667,
+  "boundary_max_abs_error": {
+    "position": 3.552713678800501e-15,
+    "velocity": 7.549516567451064e-15,
+    "acceleration": 1.9883400481646163e-14
+  },
+  "power_to_bernstein_vs_boundary_formula_max_abs_m": 3.552713678800501e-15,
+  "hull_bounds_m": [
+    [
+      -24.399188208299673,
+      -23.568037167941466,
+      0.060000000000000164
+    ],
+    [
+      20.06992442143834,
+      16.51418104849209,
+      5.064868108783499
+    ]
+  ],
+  "hull_min_logical_boundary_margin_m": 0.060000000000000164,
+  "all_x_bernstein_control_points_strictly_increasing": true,
+  "groups": [
+    {
+      "group": 0,
+      "name": "sparse_positive_y_side",
+      "pillar_index": 247,
+      "pillar_bounds_m": [
+        [
+          17.44894897094166,
+          -22.058267501890104,
+          0.0
+        ],
+        [
+          18.06992442143834,
+          -21.437292051393424,
+          13.032479530872127
+        ]
+      ],
+      "anchor_type": "side",
+      "anchor_side_y": 1,
+      "anchor_yz_m": [
+        -21.437292051393424,
+        3.0
+      ],
+      "xy_boundary_margin_m": [
+        11.93007557856166,
+        7.9417324981098965
+      ],
+      "nearest_pillar_index_by_xy_gap": 90,
+      "nearest_pillar_xy_gap_m": 3.456551836195724,
+      "xy_overlap_pillar_indices": [],
+      "candidates": [
+        {
+          "candidate": 0,
+          "y_offset_m": -1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 1,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 2,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 3,
+          "y_offset_m": -0.6,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 4,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 5,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 6,
+          "y_offset_m": 0.0,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 7,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 8,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 9,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 10,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 11,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 12,
+          "y_offset_m": 1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 13,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 14,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        }
+      ]
+    },
+    {
+      "group": 1,
+      "name": "sparse_negative_y_side",
+      "pillar_index": 329,
+      "pillar_bounds_m": [
+        [
+          -22.399188208299673,
+          8.751873172460554,
+          0.0
+        ],
+        [
+          -21.501783769153523,
+          9.649277611606701,
+          8.199430561664833
+        ]
+      ],
+      "anchor_type": "side",
+      "anchor_side_y": -1,
+      "anchor_yz_m": [
+        8.751873172460554,
+        3.0
+      ],
+      "xy_boundary_margin_m": [
+        7.600811791700327,
+        20.3507223883933
+      ],
+      "nearest_pillar_index_by_xy_gap": 495,
+      "nearest_pillar_xy_gap_m": 2.5850889786473226,
+      "xy_overlap_pillar_indices": [],
+      "candidates": [
+        {
+          "candidate": 0,
+          "y_offset_m": -1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 1,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 2,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 3,
+          "y_offset_m": -0.6,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 4,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 5,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 6,
+          "y_offset_m": 0.0,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 7,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 8,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 9,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 10,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 11,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 12,
+          "y_offset_m": 1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 13,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 14,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        }
+      ]
+    },
+    {
+      "group": 2,
+      "name": "overlapping_positive_y_side",
+      "pillar_index": 26,
+      "pillar_bounds_m": [
+        [
+          0.9348379451391261,
+          -20.763776670000937,
+          0.0
+        ],
+        [
+          1.7837755988345911,
+          -19.91483901630547,
+          7.706944946115967
+        ]
+      ],
+      "anchor_type": "side",
+      "anchor_side_y": 1,
+      "anchor_yz_m": [
+        -19.91483901630547,
+        3.0
+      ],
+      "xy_boundary_margin_m": [
+        28.21622440116541,
+        9.236223329999063
+      ],
+      "nearest_pillar_index_by_xy_gap": 39,
+      "nearest_pillar_xy_gap_m": 0.0,
+      "xy_overlap_pillar_indices": [
+        39
+      ],
+      "candidates": [
+        {
+          "candidate": 0,
+          "y_offset_m": -1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 1,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 2,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 3,
+          "y_offset_m": -0.6,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 4,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 5,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 6,
+          "y_offset_m": 0.0,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 7,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 8,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 9,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 10,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 11,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 12,
+          "y_offset_m": 1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 13,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 14,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        }
+      ]
+    },
+    {
+      "group": 3,
+      "name": "overlapping_negative_y_side",
+      "pillar_index": 43,
+      "pillar_bounds_m": [
+        [
+          13.402400752727797,
+          7.068610698385623,
+          0.0
+        ],
+        [
+          14.11539093774228,
+          7.781600883400106,
+          4.350881723582458
+        ]
+      ],
+      "anchor_type": "side",
+      "anchor_side_y": -1,
+      "anchor_yz_m": [
+        7.068610698385623,
+        1.9578967756121062
+      ],
+      "xy_boundary_margin_m": [
+        15.88460906225772,
+        22.218399116599894
+      ],
+      "nearest_pillar_index_by_xy_gap": 341,
+      "nearest_pillar_xy_gap_m": 0.0,
+      "xy_overlap_pillar_indices": [
+        341
+      ],
+      "candidates": [
+        {
+          "candidate": 0,
+          "y_offset_m": -1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 1,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 2,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 3,
+          "y_offset_m": -0.6,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 4,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 5,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 6,
+          "y_offset_m": 0.0,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 7,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 8,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 9,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 10,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 11,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 12,
+          "y_offset_m": 1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 13,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 14,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        }
+      ]
+    },
+    {
+      "group": 4,
+      "name": "low_ground_positive_y_side",
+      "pillar_index": 262,
+      "pillar_bounds_m": [
+        [
+          -13.7249321487023,
+          -22.935614839749366,
+          0.0
+        ],
+        [
+          -13.157354476894406,
+          -22.36803716794147,
+          3.347485797472136
+        ]
+      ],
+      "anchor_type": "ground",
+      "anchor_side_y": 1,
+      "anchor_yz_m": [
+        -22.36803716794147,
+        0.18
+      ],
+      "xy_boundary_margin_m": [
+        16.2750678512977,
+        7.064385160250634
+      ],
+      "nearest_pillar_index_by_xy_gap": 280,
+      "nearest_pillar_xy_gap_m": 2.380046142405817,
+      "xy_overlap_pillar_indices": [],
+      "candidates": [
+        {
+          "candidate": 0,
+          "y_offset_m": -1.2,
+          "z_offset_m": -0.12,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 1,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 2,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 3,
+          "y_offset_m": -0.6,
+          "z_offset_m": -0.12,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 4,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 5,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 6,
+          "y_offset_m": 0.0,
+          "z_offset_m": -0.12,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 7,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 8,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 9,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": -0.12,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 10,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 11,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 12,
+          "y_offset_m": 1.2,
+          "z_offset_m": -0.12,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 13,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 14,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        }
+      ]
+    },
+    {
+      "group": 5,
+      "name": "low_pillar_top",
+      "pillar_index": 12,
+      "pillar_bounds_m": [
+        [
+          -9.132052377154093,
+          2.8278346705661184,
+          0.0
+        ],
+        [
+          -8.298582744272618,
+          3.6613043034475945,
+          2.87075206889815
+        ]
+      ],
+      "anchor_type": "top",
+      "anchor_side_y": 1,
+      "anchor_yz_m": [
+        3.2445694870068564,
+        2.89075206889815
+      ],
+      "xy_boundary_margin_m": [
+        20.867947622845907,
+        26.338695696552406
+      ],
+      "nearest_pillar_index_by_xy_gap": 486,
+      "nearest_pillar_xy_gap_m": 1.3754728758416563,
+      "xy_overlap_pillar_indices": [],
+      "candidates": [
+        {
+          "candidate": 0,
+          "y_offset_m": -0.9,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.036000000000000004,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 1,
+          "y_offset_m": -0.9,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.036000000000000004,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 2,
+          "y_offset_m": -0.9,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.036000000000000004,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 3,
+          "y_offset_m": -0.45,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.018000000000000002,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 4,
+          "y_offset_m": -0.45,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.018000000000000002,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 5,
+          "y_offset_m": -0.45,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.018000000000000002,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 6,
+          "y_offset_m": 0.0,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 7,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 8,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 9,
+          "y_offset_m": 0.45000000000000007,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            2.05,
+            0.018000000000000002,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 10,
+          "y_offset_m": 0.45000000000000007,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.05,
+            0.018000000000000002,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 11,
+          "y_offset_m": 0.45000000000000007,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            2.05,
+            0.018000000000000002,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 12,
+          "y_offset_m": 0.9,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            2.1,
+            0.036000000000000004,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 13,
+          "y_offset_m": 0.9,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.1,
+            0.036000000000000004,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 14,
+          "y_offset_m": 0.9,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            2.1,
+            0.036000000000000004,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            -0.02,
+            -0.012
+          ]
+        }
+      ]
+    },
+    {
+      "group": 6,
+      "name": "higher_pillar_top",
+      "pillar_index": 13,
+      "pillar_bounds_m": [
+        [
+          -21.429126012896653,
+          15.301416090233444,
+          0.0
+        ],
+        [
+          -20.80359609637936,
+          15.926946006750741,
+          4.3448681087835
+        ]
+      ],
+      "anchor_type": "top",
+      "anchor_side_y": -1,
+      "anchor_yz_m": [
+        15.614181048492092,
+        4.3648681087835
+      ],
+      "xy_boundary_margin_m": [
+        8.570873987103347,
+        14.073053993249259
+      ],
+      "nearest_pillar_index_by_xy_gap": 122,
+      "nearest_pillar_xy_gap_m": 1.6877390226143185,
+      "xy_overlap_pillar_indices": [],
+      "candidates": [
+        {
+          "candidate": 0,
+          "y_offset_m": -0.9,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.036000000000000004,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 1,
+          "y_offset_m": -0.9,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.036000000000000004,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 2,
+          "y_offset_m": -0.9,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.036000000000000004,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 3,
+          "y_offset_m": -0.45,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.018000000000000002,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 4,
+          "y_offset_m": -0.45,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.018000000000000002,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 5,
+          "y_offset_m": -0.45,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.018000000000000002,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 6,
+          "y_offset_m": 0.0,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 7,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 8,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 9,
+          "y_offset_m": 0.45000000000000007,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            2.05,
+            0.018000000000000002,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 10,
+          "y_offset_m": 0.45000000000000007,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.05,
+            0.018000000000000002,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 11,
+          "y_offset_m": 0.45000000000000007,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            2.05,
+            0.018000000000000002,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 12,
+          "y_offset_m": 0.9,
+          "z_offset_m": -0.7,
+          "terminal_velocity_mps": [
+            2.1,
+            0.036000000000000004,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 13,
+          "y_offset_m": 0.9,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.1,
+            0.036000000000000004,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 14,
+          "y_offset_m": 0.9,
+          "z_offset_m": 0.7,
+          "terminal_velocity_mps": [
+            2.1,
+            0.036000000000000004,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        }
+      ]
+    },
+    {
+      "group": 7,
+      "name": "ordinary_negative_y_side",
+      "pillar_index": 2,
+      "pillar_bounds_m": [
+        [
+          -19.805023373982245,
+          1.8137674509921844,
+          0.0
+        ],
+        [
+          -18.947982704848542,
+          2.670808120125887,
+          6.9005316126524985
+        ]
+      ],
+      "anchor_type": "side",
+      "anchor_side_y": -1,
+      "anchor_yz_m": [
+        1.8137674509921844,
+        3.0
+      ],
+      "xy_boundary_margin_m": [
+        10.194976626017755,
+        27.329191879874113
+      ],
+      "nearest_pillar_index_by_xy_gap": 34,
+      "nearest_pillar_xy_gap_m": 0.3042118037146011,
+      "xy_overlap_pillar_indices": [],
+      "candidates": [
+        {
+          "candidate": 0,
+          "y_offset_m": -1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 1,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 2,
+          "y_offset_m": -1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.9,
+            -0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 3,
+          "y_offset_m": -0.6,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 4,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 5,
+          "y_offset_m": -0.6,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            1.95,
+            -0.024,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 6,
+          "y_offset_m": 0.0,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 7,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 8,
+          "y_offset_m": 0.0,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.0,
+            0.0,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 9,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 10,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 11,
+          "y_offset_m": 0.5999999999999999,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.05,
+            0.023999999999999994,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 12,
+          "y_offset_m": 1.2,
+          "z_offset_m": -0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            -0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 13,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.0,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.0
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        },
+        {
+          "candidate": 14,
+          "y_offset_m": 1.2,
+          "z_offset_m": 0.24,
+          "terminal_velocity_mps": [
+            2.1,
+            0.048,
+            0.015
+          ],
+          "terminal_acceleration_mps2": [
+            -0.03,
+            0.02,
+            -0.012
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": "input contract, endpoint p/v/a, complete Bernstein hull; no GPU, field accuracy, timing or collision-clearance claims",
+  "source_hashes": {
+    "experiments/esdf_reference_eval/fixtures.py": "45fde844b07217a12d8272dc0a5a46b31038681375673ea949086fb2d3c5fbf1",
+    "devtools/trajectory.py": "4b996a770f8919ef19a47e4e8eb11bdd56ff95846167ab2f7b96c040de6dae65"
+  }
+}

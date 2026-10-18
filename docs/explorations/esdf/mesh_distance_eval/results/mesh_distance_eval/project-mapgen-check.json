@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "binary": "/workspace/outputs/mesh_distance_eval/build-portable/offline_mapgen",
+  "seed": 17,
+  "comparison_seed": 18,
+  "sha256": "aabeb89ac24f1791ad469df6f44ccb8e5128b094ee249684ac7a1c8e4010eef8",
+  "invalid_requests_checked": 33,
+  "checks": [
+    "independent OBJ parsing",
+    "physical dimensions and narrow pillars",
+    "closed outward manifold boxes",
+    "positive volume",
+    "separate +Z ground plane",
+    "closed boundary clipping",
+    "independent overlapping objects",
+    "seed repeatability",
+    "invalid requests leave no output",
+    "precision boundary refused",
+    "existing files and symlinks preserved",
+    "concurrent publication safe",
+    "temporary outputs cleaned"
+  ]
+}

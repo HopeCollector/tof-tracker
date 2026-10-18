@@ -1,0 +1,34 @@
+{
+  "native_parity": {
+    "count": 2048,
+    "value_max_error_m": 3.9747299063197516e-07,
+    "raw_world_gradient_max_error": 4.5127655859955595e-06,
+    "native_unit_gradient_nonfinite_count": 0,
+    "true_derivative_minus_native_unit_gradient": {
+      "count": 6144,
+      "max_abs": 0.5161463963853301,
+      "p95_abs": 0.012652777323332209,
+      "rmse": 0.017509832419463207,
+      "mean": 4.166661458838914e-05,
+      "min": -0.5161463963853301,
+      "max": 0.4493805081881197
+    },
+    "native_lookup_mismatch_count": 0,
+    "passed": true,
+    "note": "native normalized gradient is diagnostic, never used as the training VJP"
+  },
+  "contract": {
+    "passed": true,
+    "domain_policy": "inclusive declared bounds; outside/nonfinite -> NaN, leaf=-1, zero query gradient; no padding obstacles"
+  },
+  "leaf_count": 6161,
+  "analytic_box": {
+    "points": 8192,
+    "distance_max_error_m": 0.011831361499975004,
+    "distance_p95_error_m": 0.0018269947808563448,
+    "unique_gradient_max_component_error": 0.9527775843047738,
+    "all_finite": true,
+    "note": "This tests an interpolated field; its approximation error is separate from raw-mesh primitive parity."
+  },
+  "passed": true
+}

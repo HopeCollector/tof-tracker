@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "checks": [
+    "A-to-B direction, translated 90-degree example, homogeneous matrix, points translate while vectors do not",
+    "three rotation axes and oblique axis checked by Rodrigues geometry, inverse recovery, preserved lengths and q/-q equivalence",
+    "RPY degrees produce unit xyzw quaternions, Rx-then-Ry-then-Rz order, mixed rotations, pitch singularity and batch prefixes",
+    "T_A_C = T_B_C @ T_A_B, three-link associativity and inverse frame reversal; B_i/B_j require an explicit world bridge",
+    "standard NumPy prefix broadcasting: pairwise points, scalar-point batch, explicit (N,1) transforms over an (M,3) cloud; incompatible prefixes rejected",
+    "rotation/translation and quaternion/translation constructor broadcasting, batched inverse/composition and incompatible constructor/composition batches",
+    "float32 quaternion and SO(3) rounding accepted, quaternion norm error within 1e-6 corrected and larger error rejected",
+    "accepted rotation rounding is normalized without input mutation: near-identity composition/inverse and repeated float32 oblique rotation preserve SO(3) without scale/shear drift; errors beyond tolerance rejected",
+    "constructors own input data; mutating original arrays, exposed matrix/rotation/translation and write flags cannot corrupt a transform",
+    "invalid frames, shapes, boolean/complex/string/object data, nonfinite values, reflection/non-SO(3), nonunit quaternions and nonhomogeneous last rows rejected",
+    "foreign array-like inputs rejected before __array__ conversion; the NumPy CPU boundary cannot silently consume tensors"
+  ],
+  "scope": "NumPy CPU rigid transforms and degree-RPY conversion",
+  "direction": "T_A_B maps A to B; T_A_C = T_B_C @ T_A_B",
+  "broadcasting": "standard NumPy prefixes, with explicit (N,1) for an (M,3) point cloud",
+  "quaternion": "unit xyzw, norm tolerance 1e-6 with rounding normalization"
+}

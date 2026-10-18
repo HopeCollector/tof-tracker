@@ -1,0 +1,23 @@
+Split all 120 float64 curves
+Traceback (most recent call last):
+  File "/workspace/experiments/esdf_curve_integral/integrate.py", line 115, in split_batch
+    pieces, diagnostic = split_curve(field, c)
+                         ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/experiments/esdf_grid_eval/path_integrals.py", line 62, in split_curve
+    raise ValueError("near-tangent grid-face contact; this experiment rejects it")
+ValueError: near-tangent grid-face contact; this experiment rejects it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/experiments/esdf_curve_integral/evaluate.py", line 245, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/workspace/experiments/esdf_curve_integral/evaluate.py", line 182, in main
+    start=time.perf_counter(); segments=split_batch(field,coefficients)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/experiments/esdf_curve_integral/integrate.py", line 117, in split_batch
+    raise CurveSplitError(curve_index, error) from error
+experiments.esdf_curve_integral.integrate.CurveSplitError: curve 1 could not be split: near-tangent grid-face contact; this experiment rejects it

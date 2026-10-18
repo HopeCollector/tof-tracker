@@ -1,0 +1,15 @@
+[
+  {
+    "utc": "2026-10-17T09:37:45.019301+00:00",
+    "processes": [
+      {
+        "Name": "export_sdflib",
+        "Pid": "22",
+        "VmPeak": "10755656 kB",
+        "VmHWM": "7475156 kB",
+        "VmRSS": "6587608 kB"
+      }
+    ],
+    "scope": "sampled process VmHWM, not guaranteed final peak or total container memory"
+  }
+]

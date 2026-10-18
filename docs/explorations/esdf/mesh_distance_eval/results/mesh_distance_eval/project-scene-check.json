@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "checks": [
+    "single explicit JSON read, immutable radii, exact keys/types/ranges, duplicate-key rejection",
+    "explicit physical sphere centers/radii match analytic 3D surface/extrema; invalid spheres rejected",
+    "analytic roll/pitch, float32 quaternion rounding correction, independent Euler/inverse/distance/q-sign checks, immutable poses",
+    "independent vehicle/target updates share background; original snapshot/radii retained; invalid updates rejected",
+    "complete OBJ object-local indices, independent analytic box normals/closure/volume, exact bounds, configured spheres and shared background",
+    "public mesh snapshot preserves independently known entities, world geometry, physical radii and declared domain/time",
+    "sensor-style real/target-only reads share immutable geometry; deterministic filters preserve metadata and reject unknown/invalid IDs",
+    "stable IDs/time across independent state updates and old snapshots; mesh extrema do not imply a declared map domain",
+    "optional finite snapshot time propagates through constructors and updates; absent time stays unknown and invalid values are rejected",
+    "map object names target/vehicle remain independent from namespaced dynamic sphere IDs",
+    "ground-only and independent overlapping objects; optional metadata; strict OBJ features/units/indices/bounds; degenerate/open/inward/disconnected surfaces rejected; immutable copied mesh storage"
+  ],
+  "check_groups": 11,
+  "mesh_vertex_count": 12,
+  "mesh_triangle_count": 14,
+  "units": "metres",
+  "quaternion": "unit xyzw body-to-world, norm tolerance 1e-6 with rounding correction",
+  "scope": "physical scene loading/state/transforms and public filtered geometry snapshots; sensing, ESDF, collision and dynamics are not implemented"
+}

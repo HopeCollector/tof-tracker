@@ -1,0 +1,25 @@
+{
+  "boundary_passed": false,
+  "boundary_finite": false,
+  "outside_domain_probe_count": 9,
+  "nonfinite_counts": {
+    "probe_trajectories": 9,
+    "in_domain_probe_trajectories": 0,
+    "obstacle_probe_values": 9,
+    "total_probe_values": 9,
+    "obstacle_fd_values": 9,
+    "total_fd_values": 9,
+    "obstacle_autograd_values": 0,
+    "total_autograd_values": 0
+  },
+  "failure_reasons": [
+    "perturbed_trajectory_hull_outside_domain",
+    "nonfinite_finite_difference_or_autograd"
+  ],
+  "nonfinite_rows_all_failed": true,
+  "json_allow_nan_false_written": true,
+  "raw_npz_preserves_nonfinite": true,
+  "interior_passed": true,
+  "atol": 2e-06,
+  "rtol": 0.001
+}

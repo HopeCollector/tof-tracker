@@ -1,0 +1,108 @@
+{
+  "binary": "outputs/adaptive_distance_eval/raw-probe-runner-20261017/build/mesh_value_probe",
+  "binary_sha256": "a3866fdcc9b93d5da2dc1691d7155d45b044ab4588aa84dce5d137c5853aca54",
+  "union_mesh_sha256": "499000a02e0e84604a5a94812de8191cfc3db156ac5826f7d603461f6ee629dc",
+  "source_map_sha256": "da25463989072ef10ceaa5c6cbddd55697c9c16a8d9c2e3c5df3cb5f523ba6e5",
+  "seed": 812,
+  "clear_ground_xy_count": 939,
+  "ground_levels": [
+    {
+      "z_m": 0.0,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": 1e-07,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": -1e-07,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": 1e-05,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": -1e-05,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": 0.0125,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    },
+    {
+      "z_m": -0.0125,
+      "point_count": 939,
+      "finite": true,
+      "distance_max_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "nonzero_signs_pass": true,
+      "passed": true
+    }
+  ],
+  "counterexamples": [
+    {
+      "name": "ground-cancellation",
+      "point": [
+        -10.1875,
+        14.462499618530273,
+        0.0
+      ],
+      "selected_face": 19496,
+      "tmd_distance_diagnostic_m": 6.03156597169567e-06,
+      "expected_m": -0.0,
+      "raw_m": 0.0,
+      "distance_error_m": 0.0,
+      "gradient_max_component_error": 0.0,
+      "passed": true
+    },
+    {
+      "name": "obtuse-region",
+      "point": [
+        2.325000047683716,
+        1.225000023841858,
+        0.0
+      ],
+      "selected_face": 22588,
+      "tmd_distance_diagnostic_m": -0.053032875061035156,
+      "expected_m": -0.0530329608393485,
+      "raw_m": -0.053032875061035156,
+      "distance_error_m": 8.577831334122266e-08,
+      "gradient_max_component_error": 0.0,
+      "passed": true
+    }
+  ],
+  "scope": "Raw mesh values only; same float32 mesh/query representation as SdfLib. No octree, GPU, or global selection/continuity certificate.",
+  "interpolation_source_sha256": "29aba8b4a8708be7a5e581d0d487a725f371dbf2e9664a0d45d6549b1677e4a7",
+  "passed": true
+}

@@ -1,0 +1,241 @@
+{
+  "passed": false,
+  "sampled_passed": false,
+  "checks": {
+    "has_shared_faces": true,
+    "finite_values_and_world_gradients": true,
+    "value_jump_within_5e_6_m": false,
+    "gradient_l2_jump_within_2e_3": true,
+    "offset_lookup_matches_both_sides": true,
+    "exact_face_lookup_selects_an_adjacent_leaf": true,
+    "query_matches_selected_polynomial_value": true,
+    "query_matches_selected_polynomial_world_gradient": true
+  },
+  "coverage_complete": true,
+  "maximum_faces": null,
+  "selection": "all faces",
+  "enumerated_faces": {
+    "total": 35379,
+    "same_level": 24689,
+    "coarse_fine": 10690,
+    "by_axis": {
+      "x": 11721,
+      "y": 11859,
+      "z": 11799
+    }
+  },
+  "checked_faces": {
+    "total": 35379,
+    "same_level": 24689,
+    "coarse_fine": 10690,
+    "by_axis": {
+      "x": 11721,
+      "y": 11859,
+      "z": 11799
+    }
+  },
+  "samples_per_face": 25,
+  "samples_per_axis": 5,
+  "dtype": "torch.float64",
+  "device": "cpu",
+  "thresholds": {
+    "value_m": 5e-06,
+    "gradient_l2": 0.002
+  },
+  "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+  "all": {
+    "face_count": 35379,
+    "probe_count": 884475,
+    "value_jump_m": {
+      "maximum": 1.8154474263787357e-05,
+      "p95": 7.025404441141074e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.0006777595182482278,
+      "p95": 5.2584023905949896e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.0004256889160521027,
+      "p95": 3.7301011776161224e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 733,
+    "gradient_fail_faces": 0,
+    "worst_value_face": {
+      "selected_face_index": 23573,
+      "enumerated_face_index": 23573,
+      "left_leaf": 10507,
+      "right_leaf": 10515,
+      "axis": "y",
+      "depths": [
+        3,
+        3
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.4000000059604645,
+        0.6000000089406967,
+        0.800000011920929
+      ],
+      "value_jump_m": 1.8154474263787357e-05,
+      "gradient_jump_l2": 0.0003430420142741116
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 19351,
+      "enumerated_face_index": 19351,
+      "left_leaf": 6723,
+      "right_leaf": 6725,
+      "axis": "y",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 24,
+      "point": [
+        0.02500000037252903,
+        -0.07500000111758709,
+        0.05000000074505806
+      ],
+      "value_jump_m": 4.546414849038172e-06,
+      "gradient_jump_l2": 0.0006777595182482278
+    }
+  },
+  "same_level": {
+    "face_count": 24689,
+    "probe_count": 617225,
+    "value_jump_m": {
+      "maximum": 1.8154474263787357e-05,
+      "p95": 7.049288590743597e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.0006777595182482278,
+      "p95": 5.659271732008578e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.0004256889160521027,
+      "p95": 3.991781478670931e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 586,
+    "gradient_fail_faces": 0,
+    "worst_value_face": {
+      "selected_face_index": 23573,
+      "enumerated_face_index": 23573,
+      "left_leaf": 10507,
+      "right_leaf": 10515,
+      "axis": "y",
+      "depths": [
+        3,
+        3
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.4000000059604645,
+        0.6000000089406967,
+        0.800000011920929
+      ],
+      "value_jump_m": 1.8154474263787357e-05,
+      "gradient_jump_l2": 0.0003430420142741116
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 19351,
+      "enumerated_face_index": 19351,
+      "left_leaf": 6723,
+      "right_leaf": 6725,
+      "axis": "y",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 24,
+      "point": [
+        0.02500000037252903,
+        -0.07500000111758709,
+        0.05000000074505806
+      ],
+      "value_jump_m": 4.546414849038172e-06,
+      "gradient_jump_l2": 0.0006777595182482278
+    }
+  },
+  "coarse_fine": {
+    "face_count": 10690,
+    "probe_count": 267250,
+    "value_jump_m": {
+      "maximum": 1.5015711212984506e-05,
+      "p95": 6.973697833548283e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.0005357806121618569,
+      "p95": 4.3593369492182857e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.00033663176245579685,
+      "p95": 3.135118275529313e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 147,
+    "gradient_fail_faces": 0,
+    "worst_value_face": {
+      "selected_face_index": 12361,
+      "enumerated_face_index": 12361,
+      "left_leaf": 575,
+      "right_leaf": 609,
+      "axis": "y",
+      "depths": [
+        3,
+        4
+      ],
+      "probe_index": 24,
+      "point": [
+        0.6000000089406967,
+        -0.6000000089406967,
+        -0.20000000298023224
+      ],
+      "value_jump_m": 1.5015711212984506e-05,
+      "gradient_jump_l2": 0.00026869996176765126
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 27392,
+      "enumerated_face_index": 27392,
+      "left_leaf": 3065,
+      "right_leaf": 6505,
+      "axis": "z",
+      "depths": [
+        6,
+        5
+      ],
+      "probe_index": 24,
+      "point": [
+        -0.02500000037252903,
+        -0.02500000037252903,
+        0.0
+      ],
+      "value_jump_m": 3.7487479929154688e-06,
+      "gradient_jump_l2": 0.0005357806121618569
+    }
+  },
+  "lookup": {
+    "offset_failure_faces": 0,
+    "exact_failure_faces": 0,
+    "selected_query_value_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    },
+    "selected_query_gradient_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    }
+  },
+  "artifacts": {
+    "raw": "outputs/adaptive_distance_eval/shared-nodes-portable-20261017/rotated_box-seams/seam-checks-raw.npz",
+    "summary": "outputs/adaptive_distance_eval/shared-nodes-portable-20261017/rotated_box-seams/seam-checks.json"
+  }
+}

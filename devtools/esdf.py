@@ -13,6 +13,7 @@ from collections.abc import Mapping
 import hashlib
 import json
 import math
+from os import PathLike
 from pathlib import Path
 
 import numpy as np
@@ -71,6 +72,10 @@ def _digest(path):
 
 
 def _weights(t):
+    # Cubic convolution, a=-0.5: R. G. Keys, "Cubic Convolution Interpolation
+    # for Digital Image Processing", IEEE TASSP 29(6), 1981, pp.1153-1160.
+    # Paper: https://ncorr.com/download/publications/keysbicubic.pdf
+    # This repository implements the formula; no accompanying code was copied.
     t2, t3 = t * t, t * t * t
     return torch.stack((-.5 * t + t2 - .5 * t3,
                         1. - 2.5 * t2 + 1.5 * t3,
@@ -90,6 +95,11 @@ class ESDFGrid:
     are fixed. Invalid positions return NaN and zero position gradients.
     Representable endpoints in the query dtype snap to declared coordinates
     without clamping the normal gradient.
+
+    Each query uses shared 4x4x4 nodes in a tensor-product Catmull--Rom cubic
+    (a=-0.5). The common face values and first derivatives give C1 continuity
+    at internal cell boundaries. At the closed domain boundary the derivative
+    is one-sided; no outside extension or collision guarantee is implied.
     """
 
     def __init__(self, samples, *, sample_origin_m, spacing_m, bounds_m,
@@ -158,7 +168,14 @@ class ESDFGrid:
                         metadata=self._metadata, device=device)
 
     def query(self, points: Tensor, *, return_valid=False):
-        """Evaluate one shared tensor-product cubic, with autograd positions."""
+        """Return metre distances of shape (...), differentiable in positions.
+
+        Input is a strided float32/float64 tensor with shape (...,3), on this
+        grid's device. Empty/noncontiguous inputs are allowed. With
+        ``return_valid=True``, also return a same-shape Boolean domain mask.
+        NaN, Inf and out-of-domain points are invalid: distance is NaN and
+        position gradient zero. Callers must handle invalid points in losses.
+        """
         if not isinstance(points, Tensor) or points.layout != torch.strided:
             raise ValueError("points must be a strided Torch tensor")
         if points.ndim < 1 or points.shape[-1] != 3 or points.dtype not in (torch.float32, torch.float64):
@@ -195,7 +212,12 @@ class ESDFGrid:
         return (value, valid) if return_valid else value
 
     def save(self, path):
-        """Create samples.npy and metadata.json in a new map directory."""
+        """Create samples.npy and metadata.json in a new map directory.
+
+        Nodes are XYZ float32 including halo; JSON records the interpolation,
+        origin, spacing, valid bounds, shape, node SHA256 and source metadata.
+        Existing directories are rejected; no cache or overwrite policy runs.
+        """
         path = Path(path)
         path.mkdir(parents=True, exist_ok=False)
         np.save(path / "samples.npy", self._values.cpu().numpy(), allow_pickle=False)
@@ -209,6 +231,11 @@ class ESDFGrid:
 
     @classmethod
     def load(cls, path, *, device="cpu"):
+        """Load fixed nodes, validating format, shape, dtype, bounds and SHA256.
+
+        Loading/querying a saved grid does not require the native mesh library.
+        The caller chooses when to load or rebuild and which device to use.
+        """
         path = Path(path)
         record = json.loads((path / "metadata.json").read_text(encoding="utf-8"))
         expected = {"format": _FORMAT, "version": _VERSION, "axis_order": "xyz",
@@ -270,3 +297,64 @@ def build_esdf(distance_query, *, bounds_m, voxel_size_m=.2, chunk_size=65536,
         values[begin:begin + len(points)] = packed
     return ESDFGrid(values.reshape(shape), sample_origin_m=origin,
                     spacing_m=spacing, bounds_m=bounds, metadata=metadata)
+
+
+def build_esdf_from_mesh(source, *, library_path, bounds_m=None,
+                         voxel_size_m=.2, chunk_size=65536):
+    """Build one fixed-spacing C1 distance approximation from static geometry.
+
+    ``source`` is an OBJ path accepted by MeshMap, or a public GeometrySnapshot
+    from ``scene.get_geometry(exclude_ids={"vehicle", "target"})``. An OBJ path
+    loads every map object; snapshot filtering is the caller's responsibility.
+    ``bounds_m`` is optional (2,3) [lo_xyz,hi_xyz] in world metres, defaulting to
+    the asset/snapshot's declared domain. A source without a declared domain
+    requires explicit bounds. Bounds never crop obstacles or add walls.
+
+    Geometry preparation supports unions of axis-aligned closed boxes with an
+    optional rectangular z=0 ground, or one caller-prepared closed obstacle
+    without ground. Unsupported mixtures/spheres are rejected. Ground is
+    explicitly extended as occupied z<=0; see PreparedMesh.from_geometry for
+    that convention and the exposed-boundary input contract.
+
+    The already compiled native library at ``library_path`` supplies a CPU BVH
+    query. The builder covers storage rounding and interpolation halo, samples
+    float32 nodes, releases the BVH and returns an ESDFGrid on CPU. Uniform
+    ``voxel_size_m`` is configurable; ``chunk_size`` only bounds temporary
+    query arrays. Call ``grid.save(path)`` explicitly when persistence is needed.
+    No compilation, cache lookup, scheduling or training integration occurs.
+    """
+    # Keep mesh preparation dependencies out of saved-grid loading/querying.
+    from .mesh import MeshMap
+    from .mesh_distance import MeshDistanceQuery, PreparedMesh
+    from .scene import GeometrySnapshot, SceneObject
+
+    spacing = _positive(voxel_size_m, "voxel_size_m")
+    if type(chunk_size) is not int or chunk_size <= 0:
+        raise ValueError("chunk_size must be a positive integer")
+    provenance = {}
+    if isinstance(source, (str, PathLike)):
+        path = Path(source)
+        asset = MeshMap.from_obj(path)
+        size = asset.size_xyz_m
+        declared = None if size is None else ((-size[0]/2, size[0]/2),
+                                              (-size[1]/2, size[1]/2), (0., size[2]))
+        snapshot = GeometrySnapshot(tuple(SceneObject("map/" + obj.name, obj.kind, obj)
+                                          for obj in asset.objects), None, declared)
+        provenance = {"source_map": str(path), "source_sha256": _digest(path)}
+    elif isinstance(source, GeometrySnapshot):
+        snapshot = source
+    else:
+        raise TypeError("source must be an OBJ path or public GeometrySnapshot")
+    if bounds_m is None:
+        if snapshot.map_bounds_m is None:
+            raise ValueError("source has no declared map domain; supply bounds_m")
+        bounds_m = np.asarray(snapshot.map_bounds_m, dtype=np.float64).T
+    bounds = _bounds(bounds_m)
+    # Upper storage rounding is less than one cell; add another cell for halo.
+    support = bounds + np.array([[-1.], [2.]]) * spacing
+    mesh = PreparedMesh.from_geometry(snapshot, query_bounds_m=support)
+    with MeshDistanceQuery(mesh.vertices_m, mesh.triangles,
+                           library_path=library_path) as query:
+        return build_esdf(query, bounds_m=bounds, voxel_size_m=spacing,
+                          chunk_size=chunk_size,
+                          metadata={**provenance, "geometry": mesh.metadata})

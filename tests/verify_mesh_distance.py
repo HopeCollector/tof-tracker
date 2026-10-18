@@ -1,7 +1,8 @@
 """Independent analytic checks for offline mesh distances; run inside Docker.
 
 No SdfLib, Torch, trimesh proximity, or production rectangle-distance helper is
-used as the reference. Optional --map exercises the complete public map input.
+used as the geometry reference. The public ESDF builder also gets a small
+end-to-end plane check. Optional --map exercises the complete public map input.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -9,6 +10,7 @@ import ctypes
 from itertools import product
 import json
 from pathlib import Path
+import tempfile
 
 import numpy as np
 
@@ -65,6 +67,63 @@ def cross_distance(points):
     dxy = distance*np.where(inside,-1,1)
     q = np.stack((dxy,np.abs(points[:,2])-1),axis=1)
     return np.linalg.norm(np.maximum(q,0),axis=1)+np.minimum(q.max(axis=1),0)
+
+
+def builder_check(library_path):
+    """Exercise the moved callable composition with an independent z plane."""
+    import torch
+    from devtools.esdf import ESDFGrid, build_esdf_from_mesh
+
+    geometry = ground()
+    text = "# unit metre\n# size_xyz 6 6 2\no ground\n"
+    text += "".join("v " + " ".join(map(str,p)) + "\n" for p in geometry.vertices_m)
+    text += "".join("f " + " ".join(str(i+1) for i in face) + "\n" for face in geometry.triangles)
+    declared = ((-3.,3.),(-3.,3.),(0.,2.))
+    snap = GeometrySnapshot(snapshot(geometry).objects,None,declared)
+    with tempfile.TemporaryDirectory(prefix="esdf-component-") as directory:
+        root = Path(directory)
+        obj = root/"plane.obj"; obj.write_text(text)
+        field = build_esdf_from_mesh(obj,library_path=library_path,voxel_size_m=.5,chunk_size=17)
+        other = build_esdf_from_mesh(snap,library_path=library_path,voxel_size_m=.5,chunk_size=4096)
+        assert field.bounds_m == ((-3.,-3.,0.),(3.,3.,2.))
+        assert torch.equal(field.samples,other.samples)
+        # Every node, including the halo, has exact signed distance z.
+        z = field.sample_origin_m[2]+np.arange(field.shape[2])*field.spacing_m
+        expected = np.broadcast_to(z,field.shape).astype(np.float32)
+        np.testing.assert_array_equal(field.samples.numpy(),expected)
+        nonaligned = build_esdf_from_mesh(snap,library_path=library_path,
+            bounds_m=[[-.9,-.8,.1],[1.13,1.27,1.38]],voxel_size_m=.3,chunk_size=19)
+        z = nonaligned.sample_origin_m[2]+np.arange(nonaligned.shape[2])*nonaligned.spacing_m
+        np.testing.assert_allclose(nonaligned.samples.numpy(),np.broadcast_to(z,nonaligned.shape),atol=1e-7,rtol=0)
+        for source in (snapshot(geometry),root/"no-domain.obj"):
+            if isinstance(source,Path): source.write_text(text.replace("# size_xyz 6 6 2\n",""))
+            try:
+                build_esdf_from_mesh(source,library_path=library_path)
+            except ValueError as error:
+                assert "bounds_m" in str(error)
+            else: raise AssertionError("missing declared domain accepted")
+        explicit = build_esdf_from_mesh(snapshot(geometry),library_path=library_path,
+            bounds_m=[[-1.,-1.,0.],[1.,1.,1.]],voxel_size_m=.25)
+        assert explicit.spacing_m == .25
+        sphere = GeometrySnapshot((SceneObject("target","target",Sphere(Pose((0.,0.,0.)),.2)),),None,declared)
+        try: build_esdf_from_mesh(sphere,library_path=library_path)
+        except ValueError: pass
+        else: raise AssertionError("sphere accepted into static mesh builder")
+        field.save(root/"saved")
+        loaded = ESDFGrid.load(root/"saved")
+        p = torch.tensor([[.12,-.3,.31],[1.,1.,1.]],dtype=torch.float64,requires_grad=True)
+        distance = loaded.query(p)
+        gradient, = torch.autograd.grad(distance.sum(),p)
+        torch.testing.assert_close(distance,p[:,2],atol=1e-13,rtol=0)
+        torch.testing.assert_close(gradient,p.new_tensor([[0,0,1],[0,0,1]]),atol=1e-13,rtol=0)
+        absent = root/"not-compiled.so"
+        try: build_esdf_from_mesh(obj,library_path=absent,voxel_size_m=.5)
+        except FileNotFoundError: pass
+        else: raise AssertionError("missing native library accepted")
+        assert not absent.exists()  # No implicit compilation or cache creation.
+    return {"passed":True,"obj_snapshot_nodes_identical":True,"all_halo_nodes_analytic":True,
+            "nonaligned_bounds_and_configurable_spacing":True,"save_load_position_gradient":True,
+            "explicit_native_library":True,"shape":field.shape}
 
 
 def run(library_path, map_path=None):
@@ -183,6 +242,7 @@ def run(library_path, map_path=None):
         checked("complete_map_free_space_vs_analytic_boxes_and_ground",mesh,p[free],expected[free],2e-10)
         results["complete_map_geometry"] = {key:mesh.metadata[key] for key in
             ("obstacle_count","overlap_pair_count","rectangle_count","vertex_count","triangle_count","closed_oriented_edge_check")}
+    results["public_esdf_builder"] = builder_check(library_path)
     return results
 
 

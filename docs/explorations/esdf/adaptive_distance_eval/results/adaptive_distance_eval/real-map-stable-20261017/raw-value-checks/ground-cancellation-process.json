@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/workspace/outputs/adaptive_distance_eval/raw-probe-runner-20261017/build/mesh_value_probe",
+    "/workspace/outputs/adaptive_distance_eval/real-map-stable-20261017/union.obj",
+    "/workspace/outputs/adaptive_distance_eval/real-map-stable-20261017/raw-value-checks/ground-cancellation-points.txt",
+    "/workspace/outputs/adaptive_distance_eval/real-map-stable-20261017/raw-value-checks/ground-cancellation-values.txt"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

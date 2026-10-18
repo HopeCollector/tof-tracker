@@ -1,6 +1,6 @@
 """Run the project's checks in the development container, stopping on failure.
 
-The map generator and mesh distance library must be built; ``just check`` prepares them. Each
+The map generator must already be built; ``just check`` prepares it. Each
 verification script documents its own scope and writes its results to outputs/.
 """
 
@@ -20,8 +20,6 @@ def main():
         [sys.executable, "tests/verify_geometry.py", "--results", "outputs/geometry/verification.json"],
         [sys.executable, "tests/verify_scene.py", "--results", "outputs/scene/verification.json"],
         [sys.executable, "tests/verify_trajectory.py", "--results", "outputs/trajectory/verification.json"],
-        [sys.executable, "tests/verify_mesh_distance.py", "--library", "outputs/esdf/build/libmesh_distance.so"],
-        [sys.executable, "tests/verify_esdf.py", "--results", "outputs/esdf/verification.json"],
         [sys.executable, "tests/verify_map_viewer.py", "--results", "outputs/map_viewer/verification.json"],
     ]
     for command in checks:

@@ -1,0 +1,34 @@
+{
+  "source_tree": "9987f814043f6761dd1fea5921937deebde7cc3b",
+  "command": "python tests/run_checks.py",
+  "exit_code": 0,
+  "image_id": "sha256:a736f2dd0e600f79ef6d746bbb4a7573492ef3d2285ad454cdca752ae27fb0d4",
+  "scope": "Fresh git archive, no previous outputs, CMake Release builds of mapgen and mesh_distance followed by full CPU checks. Mesh and environment checks emit stdout; other per-module records copied here. No full-map resampling or repeated GPU benchmark.",
+  "module_results": {
+    "map_viewer": {
+      "path": "outputs/esdf_grid_eval/exact-tree-20261018/map_viewer-verification.json",
+      "sha256": "880dc7ca565b00256aa8f156b1bae2dcdbfd03f368490d1afab6411016cb4f63"
+    },
+    "trajectory": {
+      "path": "outputs/esdf_grid_eval/exact-tree-20261018/trajectory-verification.json",
+      "sha256": "d8692a7f6176deef1aef163fb8602b06dd89945a157519280303d53558876440"
+    },
+    "scene": {
+      "path": "outputs/esdf_grid_eval/exact-tree-20261018/scene-verification.json",
+      "sha256": "153b06d7010352c0cefdc5591302e521949cc82b7aa9964f5ae2ed67fa97f9f8"
+    },
+    "geometry": {
+      "path": "outputs/esdf_grid_eval/exact-tree-20261018/geometry-verification.json",
+      "sha256": "943f5ef19f74373ed094c9efab1c8bf7e911a459590c0c08534bc354d1479e2f"
+    },
+    "mapgen": {
+      "path": "outputs/esdf_grid_eval/exact-tree-20261018/mapgen-verification.json",
+      "sha256": "6af8cff01db8f05ddbd5784e9a5fc89c3edb48c3b11261655d09a6a569528edb"
+    },
+    "esdf": {
+      "path": "outputs/esdf_grid_eval/exact-tree-20261018/esdf-verification.json",
+      "sha256": "41092bde60f3a66633bbcc8c215ae6205c0361017daeabbfd8891268065eaf85"
+    }
+  },
+  "library_sha256": "843d020c012e275d54b917e6883f453c9447bf588ec41bc39d797f955e285dd0"
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "esdf-component-cleanup-verification-v1",
+  "scope": "Existing mesh-to-ESDF composition moved into devtools; no cache, scheduler, training warmup, CLI, automatic compile or interpolation algorithm change.",
+  "validation": {
+    "native_build": "cmake -S devtools; Release shared library built in Docker",
+    "mesh_distance_and_public_builder": "passed",
+    "esdf_cpu_groups_passed": 8,
+    "esdf_cuda_groups_passed": 8,
+    "unchanged_project_checks": "passed",
+    "archived_import_and_two_cpu_checks": "passed",
+    "independent_historical_artifact_hashes": 3177,
+    "independent_historical_artifact_bytes": 4102004485,
+    "tracked_historical_evidence_files": 370,
+    "tracked_historical_evidence_bytes": 26701763,
+    "independent_source_manifest_entries": 79,
+    "independent_markdown_local_links": 137
+  },
+  "code_sha256": {
+    "devtools/esdf.py": "bf94d51e5a826d77e24f84dc9495cce8abf5387160a647b00abfdcc22bff23b2",
+    "devtools/mesh_distance.py": "0fcec78a071cf6f8ea04eb4fb460652bd9ac8d3b7409c65b41281a3b4c3cfd92",
+    "devtools/_mesh_distance.cpp": "e772d83ec26b20df4495675ead6a515c9e520226e0f0984b86e17c798e5d9bbe",
+    "devtools/CMakeLists.txt": "e34bd89fc788b67dbe08a24b80e5584f53c0ae387475c3ae551f30152ad608ba",
+    "tests/verify_mesh_distance.py": "1597bae4acc2f6359a4d0fb219f545b8b38723c89098ede7fc5d4060a1bf91d4",
+    "tests/verify_esdf.py": "59a67820caf21c1f89ce2adffa3f7620d022eb6135064cb2c0624c5554697a8f"
+  },
+  "result_files": [
+    {
+      "source": "outputs/esdf-cleanup/mesh-verification.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/esdf-cleanup__mesh-verification.json",
+      "bytes": 2107,
+      "sha256": "fa883306f34a457f03ffae422477d1a201c58850675ceb583d64bef9cb8b69ba"
+    },
+    {
+      "source": "outputs/esdf-cleanup/esdf-cpu-verification.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/esdf-cleanup__esdf-cpu-verification.json",
+      "bytes": 4419,
+      "sha256": "6378c9f737d0a241b6665ea38722f6ea301b41b32250be2de134e8b4f219d596"
+    },
+    {
+      "source": "outputs/esdf-cleanup/esdf-cuda-verification.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/esdf-cleanup__esdf-cuda-verification.json",
+      "bytes": 4419,
+      "sha256": "e689b402bf9bd3da17980e3de48d712c5cb2710446581477024e9b5a2f7a8b1e"
+    },
+    {
+      "source": "outputs/esdf-cleanup-archive/curve/results.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/esdf-cleanup-archive__curve__results.json",
+      "bytes": 29013,
+      "sha256": "417b86b9c5996d3ea13e32024a69df0e983006d537cad2346310b787dd6e29d6"
+    },
+    {
+      "source": "outputs/esdf-cleanup-archive/oracle.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/esdf-cleanup-archive__oracle.json",
+      "bytes": 4545,
+      "sha256": "6d07a52544ed1042a752eff997d84d35f1afacc6fd378f136f8b227fe818c3fd"
+    },
+    {
+      "source": "outputs/mapgen/verification.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/mapgen__verification.json",
+      "bytes": 711,
+      "sha256": "6af8cff01db8f05ddbd5784e9a5fc89c3edb48c3b11261655d09a6a569528edb"
+    },
+    {
+      "source": "outputs/geometry/verification.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/geometry__verification.json",
+      "bytes": 1929,
+      "sha256": "943f5ef19f74373ed094c9efab1c8bf7e911a459590c0c08534bc354d1479e2f"
+    },
+    {
+      "source": "outputs/scene/verification.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/scene__verification.json",
+      "bytes": 1810,
+      "sha256": "153b06d7010352c0cefdc5591302e521949cc82b7aa9964f5ae2ed67fa97f9f8"
+    },
+    {
+      "source": "outputs/trajectory/verification.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/trajectory__verification.json",
+      "bytes": 3531,
+      "sha256": "b4ab0f8779fcde11037402e26d3cc6cbd13bc72525a2d36eb1bc82260095165f"
+    },
+    {
+      "source": "outputs/map_viewer/verification.json",
+      "archive": "docs/explorations/esdf/artifacts/cleanup-checks/map_viewer__verification.json",
+      "bytes": 987,
+      "sha256": "880dc7ca565b00256aa8f156b1bae2dcdbfd03f368490d1afab6411016cb4f63"
+    }
+  ],
+  "historical_evidence_semantics": "Historical timestamps, metrics and original source hashes were preserved; cleanup validation is separate from prior performance measurements.",
+  "local_build_and_logs": "docs/explorations/esdf/artifacts/outputs/esdf-cleanup (Git ignored)"
+}

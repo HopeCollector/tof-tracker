@@ -1,0 +1,68 @@
+{
+  "scope": "Independent readback of saved raw Bernstein integral; full-curve composite Simpson without supplied crossing partition; numerical agreement only, no root certificate",
+  "source_hash_match": {
+    "/workspace/experiments/esdf_grid_eval/evaluate.py": true,
+    "/workspace/experiments/esdf_grid_eval/path_integrals.py": true,
+    "devtools/esdf.py": true,
+    "devtools/trajectory.py": true
+  },
+  "cases": [
+    {
+      "field": "quadratic_scalar_not_sdf",
+      "curve": "three_axis_quintic",
+      "raw_Bernstein_cost_difference": 0.0,
+      "global_Simpson4096_cost_difference": 3.209238430557093e-17,
+      "global_Simpson4096_coefficient_gradient_difference": 6.591949208711867e-17,
+      "recomputed_parameter_fd_max_difference": 2.4072859591134366e-12,
+      "passed": true
+    },
+    {
+      "field": "quadratic_scalar_not_sdf",
+      "curve": "return_across_faces",
+      "raw_Bernstein_cost_difference": 0.0,
+      "global_Simpson4096_cost_difference": 1.6479873021779667e-16,
+      "global_Simpson4096_coefficient_gradient_difference": 1.1622647289044608e-16,
+      "recomputed_parameter_fd_max_difference": 1.3413454374999745e-12,
+      "passed": true
+    },
+    {
+      "field": "quadratic_scalar_not_sdf",
+      "curve": "constant_z_off_faces",
+      "raw_Bernstein_cost_difference": 4.336808689942018e-19,
+      "global_Simpson4096_cost_difference": 2.6020852139652106e-18,
+      "global_Simpson4096_coefficient_gradient_difference": 1.1796119636642288e-16,
+      "recomputed_parameter_fd_max_difference": 4.276665827029902e-13,
+      "passed": true
+    },
+    {
+      "field": "sphere_sdf_samples",
+      "curve": "three_axis_quintic",
+      "raw_Bernstein_cost_difference": 2.7755575615628914e-17,
+      "global_Simpson4096_cost_difference": 1.4365453271381057e-12,
+      "global_Simpson4096_coefficient_gradient_difference": 2.0495919628160664e-08,
+      "recomputed_parameter_fd_max_difference": 2.2644303099284002e-11,
+      "passed": true
+    },
+    {
+      "field": "sphere_sdf_samples",
+      "curve": "return_across_faces",
+      "raw_Bernstein_cost_difference": 0.0,
+      "global_Simpson4096_cost_difference": 7.420689063231123e-12,
+      "global_Simpson4096_coefficient_gradient_difference": 1.1682272677004946e-08,
+      "recomputed_parameter_fd_max_difference": 9.417178842285878e-12,
+      "passed": true
+    },
+    {
+      "field": "sphere_sdf_samples",
+      "curve": "constant_z_off_faces",
+      "raw_Bernstein_cost_difference": 6.938893903907228e-18,
+      "global_Simpson4096_cost_difference": 3.145747551336342e-13,
+      "global_Simpson4096_coefficient_gradient_difference": 1.1414937254108914e-08,
+      "recomputed_parameter_fd_max_difference": 8.067467050301702e-12,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "raw_sha256": "11cdd473605b40de5da0ab442d995f3aa8327524583bd41427f97f4ad34e79cd",
+  "results_sha256": "2f3158e91e39b5bcf32e26b5eae86e40ba8f7d48d6cf8875f90a59df19a38ab6"
+}

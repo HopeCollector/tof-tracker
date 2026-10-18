@@ -1,0 +1,841 @@
+{
+  "passed": true,
+  "device": "cpu",
+  "python": "3.12.3",
+  "torch": "2.9.1+cu128",
+  "numpy": "2.5.4",
+  "wall_seconds": 1.3271335260069463,
+  "checks": {
+    "plane_closed_form": {
+      "passed": true,
+      "segments": 37,
+      "curves": 3,
+      "orders": [
+        {
+          "order": 4,
+          "cost_abs_error": 8.881784197001252e-16,
+          "coefficient_gradient_abs_error": 2.921218822393712e-12
+        },
+        {
+          "order": 8,
+          "cost_abs_error": 8.881784197001252e-16,
+          "coefficient_gradient_abs_error": 1.91402449445377e-13
+        },
+        {
+          "order": 16,
+          "cost_abs_error": 1.7763568394002505e-15,
+          "coefficient_gradient_abs_error": 1.9095836023552692e-13
+        },
+        {
+          "order": 32,
+          "cost_abs_error": 1.7763568394002505e-15,
+          "coefficient_gradient_abs_error": 1.9095836023552692e-13
+        }
+      ],
+      "objective": "normalized_time_mean; no duration factor",
+      "split_diagnostics": [
+        {
+          "face_events": [
+            {
+              "u": 0.048780487804877204,
+              "axis": 0,
+              "index": 4,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.3461454173580023e-15,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.2012195121951228,
+              "axis": 0,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.3877787807814457e-15,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.3536585365853666,
+              "axis": 0,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.2212453270876722e-15,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.5060975609756104,
+              "axis": 0,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.1102230246251565e-15,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.6585365853658542,
+              "axis": 0,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.881784197001252e-16,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.8109756097560981,
+              "axis": 0,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 6.661338147750939e-16,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.9634146341463419,
+              "axis": 0,
+              "index": 10,
+              "kind": "transverse_crossing",
+              "root_residual_m": 4.440892098500626e-16,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.1318681318681323,
+              "axis": 1,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 3.885780586188048e-16,
+              "slope_m_per_u": 0.91
+            },
+            {
+              "u": 0.40659340659340604,
+              "axis": 1,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 4.996003610813204e-16,
+              "slope_m_per_u": 0.91
+            },
+            {
+              "u": 0.6813186813186816,
+              "axis": 1,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 0.91
+            },
+            {
+              "u": 0.9560439560439553,
+              "axis": 1,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 6.661338147750939e-16,
+              "slope_m_per_u": 0.91
+            },
+            {
+              "u": 0.25,
+              "axis": 2,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.5
+            },
+            {
+              "u": 0.75,
+              "axis": 2,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.5
+            }
+          ],
+          "identically_on_faces": [],
+          "endpoint_stationary_contacts": [],
+          "endpoint_value_normalizations": [],
+          "state_counts": {
+            "transverse_crossings": 13,
+            "endpoint_stationary_contacts": 0,
+            "endpoint_value_normalizations": 0,
+            "whole_coordinate_on_faces": 0,
+            "accepted_internal_tangencies": 0
+          },
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "root_method": "numerical derivative roots, monotone brackets, bisection; internal near-tangencies rejected",
+          "endpoint_time_tolerance": 1e-10,
+          "near_tangency_policy": "reject internal stationary face residual < 1e-9 m; classify endpoint within 1e-10"
+        },
+        {
+          "face_events": [
+            {
+              "u": 0.09375,
+              "axis": 0,
+              "index": 4,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.25,
+              "axis": 0,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.40625,
+              "axis": 0,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.5625,
+              "axis": 0,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.7187499999999991,
+              "axis": 0,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.3322676295501878e-15,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.8749999999999991,
+              "axis": 0,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.3322676295501878e-15,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.18181818181818254,
+              "axis": 1,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.604228440844963e-16,
+              "slope_m_per_u": 1.1
+            },
+            {
+              "u": 0.40909090909090917,
+              "axis": 1,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.6653345369377348e-16,
+              "slope_m_per_u": 1.1
+            },
+            {
+              "u": 0.6363636363636358,
+              "axis": 1,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 5.551115123125783e-16,
+              "slope_m_per_u": 1.1
+            },
+            {
+              "u": 0.8636363636363642,
+              "axis": 1,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 7.771561172376096e-16,
+              "slope_m_per_u": 1.1
+            },
+            {
+              "u": 0.75,
+              "axis": 2,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.5
+            },
+            {
+              "u": 0.25,
+              "axis": 2,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.5
+            }
+          ],
+          "identically_on_faces": [],
+          "endpoint_stationary_contacts": [],
+          "endpoint_value_normalizations": [],
+          "state_counts": {
+            "transverse_crossings": 12,
+            "endpoint_stationary_contacts": 0,
+            "endpoint_value_normalizations": 0,
+            "whole_coordinate_on_faces": 0,
+            "accepted_internal_tangencies": 0
+          },
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "root_method": "numerical derivative roots, monotone brackets, bisection; internal near-tangencies rejected",
+          "endpoint_time_tolerance": 1e-10,
+          "near_tangency_policy": "reject internal stationary face residual < 1e-9 m; classify endpoint within 1e-10"
+        },
+        {
+          "face_events": [
+            {
+              "u": 0.03870967741935427,
+              "axis": 0,
+              "index": 4,
+              "kind": "transverse_crossing",
+              "root_residual_m": 9.298117831235686e-16,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.20000000000000018,
+              "axis": 0,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.3612903225806452,
+              "axis": 0,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.5225806451612902,
+              "axis": 0,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.6838709677419361,
+              "axis": 0,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.881784197001252e-16,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.8451612903225802,
+              "axis": 0,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 6.661338147750939e-16,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.07317073170731714,
+              "axis": 1,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 4.85722573273506e-17,
+              "slope_m_per_u": 0.82
+            },
+            {
+              "u": 0.37804878048780477,
+              "axis": 1,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.1102230246251565e-16,
+              "slope_m_per_u": 0.82
+            },
+            {
+              "u": 0.6829268292682924,
+              "axis": 1,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 3.3306690738754696e-16,
+              "slope_m_per_u": 0.82
+            },
+            {
+              "u": 0.98780487804878,
+              "axis": 1,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 4.440892098500626e-16,
+              "slope_m_per_u": 0.82
+            }
+          ],
+          "identically_on_faces": [],
+          "endpoint_stationary_contacts": [],
+          "endpoint_value_normalizations": [],
+          "state_counts": {
+            "transverse_crossings": 10,
+            "endpoint_stationary_contacts": 0,
+            "endpoint_value_normalizations": 0,
+            "whole_coordinate_on_faces": 0,
+            "accepted_internal_tangencies": 0
+          },
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "root_method": "numerical derivative roots, monotone brackets, bisection; internal near-tangencies rejected",
+          "endpoint_time_tolerance": 1e-10,
+          "near_tangency_policy": "reject internal stationary face residual < 1e-9 m; classify endpoint within 1e-10"
+        }
+      ]
+    },
+    "general_field_and_fd": {
+      "passed": true,
+      "segments": 42,
+      "orders": [
+        {
+          "order": 4,
+          "cost_abs_error": 2.0653518895130674e-07,
+          "coefficient_gradient_abs_error": 1.6526165147467964e-06
+        },
+        {
+          "order": 8,
+          "cost_abs_error": 1.3428369527446193e-11,
+          "coefficient_gradient_abs_error": 9.958162183743013e-08
+        },
+        {
+          "order": 16,
+          "cost_abs_error": 1.3453238523197797e-11,
+          "coefficient_gradient_abs_error": 9.958156721445732e-08
+        },
+        {
+          "order": 32,
+          "cost_abs_error": 1.3453238523197797e-11,
+          "coefficient_gradient_abs_error": 9.958156699241272e-08
+        }
+      ],
+      "independent_composite_gl8_panels": [
+        512,
+        1024
+      ],
+      "independent_convergence": {
+        "cost_abs_change": 6.565148424897416e-11,
+        "coefficient_gradient_abs_change": 2.1719154386090622e-07
+      },
+      "coefficient_fd_max_abs_error": 7.961398207356751e-10,
+      "boundary_and_duration_fd_max_abs_error": 1.626087403616694e-09,
+      "fd_step": 2e-06,
+      "fd_rebuilds_every_partition": true,
+      "boundary_parameter_order": "p0[3],v0[3],a0[3],p1[3],v1[3],a1[3],T",
+      "float32_own_partition_segments": 42,
+      "float32_value_gradient_finite": true,
+      "single_vs_batch_cost_abs_error": 0.0,
+      "split_diagnostics": [
+        {
+          "face_events": [
+            {
+              "u": 0.22643689222150254,
+              "axis": 0,
+              "index": 4,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.326672684688674e-16,
+              "slope_m_per_u": 1.3077985186776537
+            },
+            {
+              "u": 0.37004560490624794,
+              "axis": 0,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.881784197001252e-16,
+              "slope_m_per_u": 2.1172666430648226
+            },
+            {
+              "u": 0.47923634300289475,
+              "axis": 0,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.5543122344752192e-15,
+              "slope_m_per_u": 2.401239766440279
+            },
+            {
+              "u": 0.5839467161642817,
+              "axis": 0,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.7763568394002505e-15,
+              "slope_m_per_u": 2.3146518098684794
+            },
+            {
+              "u": 0.7029323400698511,
+              "axis": 0,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 1.8295564666132493
+            },
+            {
+              "u": 0.9049789017024592,
+              "axis": 0,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 6.661338147750939e-16,
+              "slope_m_per_u": 0.6750188805679114
+            },
+            {
+              "u": 0.10541390348531454,
+              "axis": 1,
+              "index": 4,
+              "kind": "transverse_crossing",
+              "root_residual_m": 3.122502256758253e-16,
+              "slope_m_per_u": 0.6190236786848662
+            },
+            {
+              "u": 0.32661466614443047,
+              "axis": 1,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.4432899320127035e-15,
+              "slope_m_per_u": 1.6407349810771765
+            },
+            {
+              "u": 0.46221404727276205,
+              "axis": 1,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.5543122344752192e-15,
+              "slope_m_per_u": 1.9758372253958276
+            },
+            {
+              "u": 0.590098621748548,
+              "axis": 1,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 5.551115123125783e-16,
+              "slope_m_per_u": 1.86166974095657
+            },
+            {
+              "u": 0.7495119232270104,
+              "axis": 1,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.881784197001252e-16,
+              "slope_m_per_u": 1.2017864468912145
+            },
+            {
+              "u": 0.19086903952989598,
+              "axis": 2,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 5.134781488891349e-16,
+              "slope_m_per_u": 0.8915135695142047
+            },
+            {
+              "u": 0.3811887703733925,
+              "axis": 2,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 3.885780586188048e-16,
+              "slope_m_per_u": 1.673507925927696
+            },
+            {
+              "u": 0.5202771753074282,
+              "axis": 2,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.6653345369377348e-15,
+              "slope_m_per_u": 1.8470978088062138
+            },
+            {
+              "u": 0.6638908013954063,
+              "axis": 2,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 4.440892098500626e-16,
+              "slope_m_per_u": 1.5613820242846828
+            },
+            {
+              "u": 0.8938605189134785,
+              "axis": 2,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 6.661338147750939e-16,
+              "slope_m_per_u": 0.6054113794548817
+            }
+          ],
+          "identically_on_faces": [],
+          "endpoint_stationary_contacts": [],
+          "endpoint_value_normalizations": [],
+          "state_counts": {
+            "transverse_crossings": 16,
+            "endpoint_stationary_contacts": 0,
+            "endpoint_value_normalizations": 0,
+            "whole_coordinate_on_faces": 0,
+            "accepted_internal_tangencies": 0
+          },
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "root_method": "numerical derivative roots, monotone brackets, bisection; internal near-tangencies rejected",
+          "endpoint_time_tolerance": 1e-10,
+          "near_tangency_policy": "reject internal stationary face residual < 1e-9 m; classify endpoint within 1e-10"
+        },
+        {
+          "face_events": [
+            {
+              "u": 0.034523271896935395,
+              "axis": 0,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.27675647831893e-15,
+              "slope_m_per_u": 5.586696786421105
+            },
+            {
+              "u": 0.9655320992058058,
+              "axis": 0,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 3.885780586188048e-16,
+              "slope_m_per_u": 5.604003532909424
+            },
+            {
+              "u": 0.08164255962085379,
+              "axis": 0,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.881784197001252e-16,
+              "slope_m_per_u": 5.025048830990778
+            },
+            {
+              "u": 0.9186365985437246,
+              "axis": 0,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.3322676295501878e-15,
+              "slope_m_per_u": 5.056456531866825
+            },
+            {
+              "u": 0.13472629682841397,
+              "axis": 0,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.2212453270876722e-15,
+              "slope_m_per_u": 4.394245635907886
+            },
+            {
+              "u": 0.8659464145755511,
+              "axis": 0,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 4.440892098500626e-16,
+              "slope_m_per_u": 4.43145711313336
+            },
+            {
+              "u": 0.19682905727545458,
+              "axis": 0,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 2.886579864025407e-15,
+              "slope_m_per_u": 3.656869028101383
+            },
+            {
+              "u": 0.8044048695237929,
+              "axis": 0,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.9984014443252818e-15,
+              "slope_m_per_u": 3.691663633485998
+            },
+            {
+              "u": 0.27517265028932714,
+              "axis": 0,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.881784197001252e-16,
+              "slope_m_per_u": 2.724669892886691
+            },
+            {
+              "u": 0.7267880586377355,
+              "axis": 0,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 6.661338147750939e-16,
+              "slope_m_per_u": 2.7489030699151122
+            },
+            {
+              "u": 0.4025447701142689,
+              "axis": 0,
+              "index": 10,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.881784197001252e-16,
+              "slope_m_per_u": 1.1981371127645284
+            },
+            {
+              "u": 0.6003061894676038,
+              "axis": 0,
+              "index": 10,
+              "kind": "transverse_crossing",
+              "root_residual_m": 4.440892098500626e-16,
+              "slope_m_per_u": 1.2037404273771468
+            },
+            {
+              "u": 0.031246421199404573,
+              "axis": 1,
+              "index": 4,
+              "kind": "transverse_crossing",
+              "root_residual_m": 7.355227538141662e-16,
+              "slope_m_per_u": 1.6005379451888953
+            },
+            {
+              "u": 0.18696001706265886,
+              "axis": 1,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 3.3306690738754696e-16,
+              "slope_m_per_u": 1.6117381992074145
+            },
+            {
+              "u": 0.34159017417769366,
+              "axis": 1,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.2212453270876722e-15,
+              "slope_m_per_u": 1.6198525393851697
+            },
+            {
+              "u": 0.49612449310664264,
+              "axis": 1,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 5.551115123125783e-16,
+              "slope_m_per_u": 1.612883021765465
+            },
+            {
+              "u": 0.6520544958733128,
+              "axis": 1,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 4.440892098500626e-16,
+              "slope_m_per_u": 1.592299174870987
+            },
+            {
+              "u": 0.8101035671736927,
+              "axis": 1,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.5738162815922891
+            },
+            {
+              "u": 0.9686382634961808,
+              "axis": 1,
+              "index": 10,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.1102230246251565e-15,
+              "slope_m_per_u": 1.5891526474683149
+            },
+            {
+              "u": 0.08337391162076546,
+              "axis": 2,
+              "index": 5,
+              "kind": "transverse_crossing",
+              "root_residual_m": 8.604228440844963e-16,
+              "slope_m_per_u": 1.1983541172011956
+            },
+            {
+              "u": 0.29271218950914335,
+              "axis": 2,
+              "index": 6,
+              "kind": "transverse_crossing",
+              "root_residual_m": 1.1102230246251565e-16,
+              "slope_m_per_u": 1.190689068591343
+            },
+            {
+              "u": 0.5026176567977858,
+              "axis": 2,
+              "index": 7,
+              "kind": "transverse_crossing",
+              "root_residual_m": 5.551115123125783e-16,
+              "slope_m_per_u": 1.1938819070481765
+            },
+            {
+              "u": 0.7108360711798651,
+              "axis": 2,
+              "index": 8,
+              "kind": "transverse_crossing",
+              "root_residual_m": 5.551115123125783e-16,
+              "slope_m_per_u": 1.208097186823597
+            },
+            {
+              "u": 0.9171083411866219,
+              "axis": 2,
+              "index": 9,
+              "kind": "transverse_crossing",
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 1.211054262866183
+            }
+          ],
+          "identically_on_faces": [],
+          "endpoint_stationary_contacts": [],
+          "endpoint_value_normalizations": [],
+          "state_counts": {
+            "transverse_crossings": 24,
+            "endpoint_stationary_contacts": 0,
+            "endpoint_value_normalizations": 0,
+            "whole_coordinate_on_faces": 0,
+            "accepted_internal_tangencies": 0
+          },
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "root_method": "numerical derivative roots, monotone brackets, bisection; internal near-tangencies rejected",
+          "endpoint_time_tolerance": 1e-10,
+          "near_tangency_policy": "reject internal stationary face residual < 1e-9 m; classify endpoint within 1e-10"
+        }
+      ]
+    },
+    "rejections": {
+      "passed": true,
+      "cases": {
+        "near_tangency_batch_index_1": {
+          "exception": "CurveSplitError",
+          "message": "curve 1 could not be split: internal near-tangent grid-face contact at axis=0, index=9, u=0.5; rejected"
+        },
+        "outside_domain": {
+          "exception": "CurveSplitError",
+          "message": "curve 0 could not be split: curve leaves the declared query domain"
+        },
+        "nonfinite_coefficients": {
+          "exception": "CurveSplitError",
+          "message": "curve 0 could not be split: expected one finite quintic with coefficients (6,3)"
+        },
+        "empty_batch": {
+          "exception": "ValueError",
+          "message": "coefficients must be a nonempty strided float32/64 tensor [B,6,3]"
+        },
+        "stale_plan": {
+          "exception": "ValueError",
+          "message": "stale or incompatible quadrature plan; split the current coefficients again"
+        },
+        "changing_plan_dtype": {
+          "exception": "ValueError",
+          "message": "quadrature dtype must match split input; split the converted coefficients again"
+        },
+        "unsupported_order": {
+          "exception": "ValueError",
+          "message": "order must be one of 4, 8, 16, 32"
+        },
+        "penalty_overflow": {
+          "exception": "FloatingPointError",
+          "message": "nonfinite field/penalty/integral; the batch is not partially accepted"
+        },
+        "nonpositive_penalty_radius": {
+          "exception": "ValueError",
+          "message": "d0 must be finite and r finite and positive"
+        }
+      },
+      "near_endpoint_stationary_accepted": [
+        {
+          "axis": 2,
+          "index": 9,
+          "computed_u": 0.0,
+          "endpoint_u": 0.0,
+          "face_residual_m": 0.0
+        },
+        {
+          "axis": 2,
+          "index": 9,
+          "computed_u": 0.9999999999999987,
+          "endpoint_u": 1.0,
+          "face_residual_m": 2.081668171172163e-17
+        }
+      ],
+      "near_endpoint_integral_and_gradient_finite": true
+    }
+  },
+  "failure": null,
+  "limits": "numerical GL convergence and first gradients; no exact integral, certified roots or collision safety",
+  "source_hashes": {
+    "docs/explorations/esdf/esdf_curve_integral/code/integrate.py": "89505d1e3ea59900429dae314ca718b8995b7554e17538bf4d51c09870f20035",
+    "docs/explorations/esdf/esdf_curve_integral/code/verify_esdf_curve_integral.py": "185dbacc893e4e5ca1a87fd99ec5bcacf98d13b73646e7d54ff640ec832d93bc",
+    "docs/explorations/esdf/esdf_grid_eval/code/path_integrals.py": "cce6abf1566dc127b222a752ad35f7e2f8eb903f7e7370546eba9f21f95b07de",
+    "devtools/esdf.py": "bf94d51e5a826d77e24f84dc9495cce8abf5387160a647b00abfdcc22bff23b2",
+    "devtools/trajectory.py": "4b996a770f8919ef19a47e4e8eb11bdd56ff95846167ab2f7b96c040de6dae65"
+  }
+}

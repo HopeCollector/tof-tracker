@@ -1,0 +1,42 @@
+{
+  "completed": true,
+  "map": "outputs/mesh_distance_eval/reviewed-20261015/pillar_omni.obj",
+  "output": "outputs/esdf/full-0p2-20261018",
+  "bounds_m": [
+    [
+      -30.0,
+      -30.0,
+      0.0
+    ],
+    [
+      30.0,
+      30.0,
+      15.0
+    ]
+  ],
+  "sample_origin_m": [
+    -30.2,
+    -30.2,
+    -0.2
+  ],
+  "voxel_size_m": 0.2,
+  "shape_xyz_with_halo": [
+    303,
+    303,
+    78
+  ],
+  "node_count": 7161102,
+  "node_bytes": 28644408,
+  "geometry_preparation_seconds": 0.7309366580157075,
+  "bvh_seconds": 0.05356658200616948,
+  "node_sampling_seconds": 180.2326723949809,
+  "save_seconds": 0.02050752899958752,
+  "total_wall_seconds": 181.0379303249938,
+  "process_peak_rss_bytes": 645115904,
+  "rss_scope": "Linux lifetime peak RSS of this Python builder, including imports, mesh preparation, BVH, node sampling and save; not container total or swap",
+  "library_sha256": "814c5b3b5b7ef7ba3ea4d2d4cdfe023a6f254b9c0918a61b868189646ad990d2",
+  "map_files": {
+    "samples.npy": 28644536,
+    "metadata.json": 140173
+  }
+}

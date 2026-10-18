@@ -1,0 +1,11 @@
+{
+  "status": "intentionally_stopped_before_export",
+  "reason": "ROI adaptive field exposed approximately 0.578m geometry errors near a pillar-ground junction despite native polynomial parity. Stop this source variant for diagnosis before finishing the expensive full-map field.",
+  "container_started_at_utc": "2026-10-17T08:55:40.820621472Z",
+  "stop_requested_at_utc": "2026-10-17T09:04:14Z",
+  "runtime_image": "sha256:e2a850a01321f2ab57a3f9f05b9a95d469f45c5e5db76264e7e6cf531fede32c",
+  "last_observed_container_memory_gib": 6.108,
+  "oom_observed_before_stop": false,
+  "upstream_header_sha256": "41cae0029bd695a64cca8ed49d3e8bfb582ff6cd3de6add54092792ec33015b1",
+  "full_map_result_exported": false
+}

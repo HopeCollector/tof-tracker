@@ -1,0 +1,241 @@
+{
+  "passed": false,
+  "sampled_passed": false,
+  "checks": {
+    "has_shared_faces": true,
+    "finite_values_and_world_gradients": true,
+    "value_jump_within_5e_6_m": false,
+    "gradient_l2_jump_within_2e_3": false,
+    "offset_lookup_matches_both_sides": true,
+    "exact_face_lookup_selects_an_adjacent_leaf": true,
+    "query_matches_selected_polynomial_value": true,
+    "query_matches_selected_polynomial_world_gradient": true
+  },
+  "coverage_complete": true,
+  "maximum_faces": null,
+  "selection": "all faces",
+  "enumerated_faces": {
+    "total": 145725,
+    "same_level": 103962,
+    "coarse_fine": 41763,
+    "by_axis": {
+      "x": 55225,
+      "y": 45247,
+      "z": 45253
+    }
+  },
+  "checked_faces": {
+    "total": 145725,
+    "same_level": 103962,
+    "coarse_fine": 41763,
+    "by_axis": {
+      "x": 55225,
+      "y": 45247,
+      "z": 45253
+    }
+  },
+  "samples_per_face": 25,
+  "samples_per_axis": 5,
+  "dtype": "torch.float64",
+  "device": "cpu",
+  "thresholds": {
+    "value_m": 5e-06,
+    "gradient_l2": 0.002
+  },
+  "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+  "all": {
+    "face_count": 145725,
+    "probe_count": 3643125,
+    "value_jump_m": {
+      "maximum": 0.007035092094349604,
+      "p95": 5.438300773596971e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 2.0002790196663005,
+      "p95": 7.609693060445793e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 2.000279003513818,
+      "p95": 5.709200595760411e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 2439,
+    "gradient_fail_faces": 618,
+    "worst_value_face": {
+      "selected_face_index": 80560,
+      "enumerated_face_index": 80560,
+      "left_leaf": 24455,
+      "right_leaf": 24947,
+      "axis": "y",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 19,
+      "point": [
+        -0.0062500000931322575,
+        0.4000000059604645,
+        0.05000000074505806
+      ],
+      "value_jump_m": 0.007035092094349604,
+      "gradient_jump_l2": 0.3745440198475583
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 68991,
+      "enumerated_face_index": 68991,
+      "left_leaf": 13341,
+      "right_leaf": 13742,
+      "axis": "y",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 24,
+      "point": [
+        0.0,
+        -0.4000000059604645,
+        -0.20000000298023224
+      ],
+      "value_jump_m": 2.393500859176889e-06,
+      "gradient_jump_l2": 2.0002790196663005
+    }
+  },
+  "same_level": {
+    "face_count": 103962,
+    "probe_count": 2599050,
+    "value_jump_m": {
+      "maximum": 0.007035092094349604,
+      "p95": 5.010377614161883e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 2.0002790196663005,
+      "p95": 7.617442807009876e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 2.000279003513818,
+      "p95": 5.735374122215283e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 1883,
+    "gradient_fail_faces": 153,
+    "worst_value_face": {
+      "selected_face_index": 80560,
+      "enumerated_face_index": 80560,
+      "left_leaf": 24455,
+      "right_leaf": 24947,
+      "axis": "y",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 19,
+      "point": [
+        -0.0062500000931322575,
+        0.4000000059604645,
+        0.05000000074505806
+      ],
+      "value_jump_m": 0.007035092094349604,
+      "gradient_jump_l2": 0.3745440198475583
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 68991,
+      "enumerated_face_index": 68991,
+      "left_leaf": 13341,
+      "right_leaf": 13742,
+      "axis": "y",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 24,
+      "point": [
+        0.0,
+        -0.4000000059604645,
+        -0.20000000298023224
+      ],
+      "value_jump_m": 2.393500859176889e-06,
+      "gradient_jump_l2": 2.0002790196663005
+    }
+  },
+  "coarse_fine": {
+    "face_count": 41763,
+    "probe_count": 1044075,
+    "value_jump_m": {
+      "maximum": 0.0008948989748149942,
+      "p95": 6.372573908008938e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 2.000199677547518,
+      "p95": 7.594779617916407e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 2.000199668761433,
+      "p95": 5.610315810847204e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 556,
+    "gradient_fail_faces": 465,
+    "worst_value_face": {
+      "selected_face_index": 74994,
+      "enumerated_face_index": 74994,
+      "left_leaf": 19122,
+      "right_leaf": 19564,
+      "axis": "y",
+      "depths": [
+        5,
+        6
+      ],
+      "probe_index": 17,
+      "point": [
+        -0.7312500108964741,
+        0.20000000298023224,
+        -0.1625000024214387
+      ],
+      "value_jump_m": 0.0008948989748149942,
+      "gradient_jump_l2": 0.20328563773811587
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 16504,
+      "enumerated_face_index": 16504,
+      "left_leaf": 13341,
+      "right_leaf": 13342,
+      "axis": "x",
+      "depths": [
+        6,
+        3
+      ],
+      "probe_index": 24,
+      "point": [
+        0.0,
+        -0.4000000059604645,
+        -0.20000000298023224
+      ],
+      "value_jump_m": 1.5888377421502398e-06,
+      "gradient_jump_l2": 2.000199677547518
+    }
+  },
+  "lookup": {
+    "offset_failure_faces": 0,
+    "exact_failure_faces": 0,
+    "selected_query_value_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    },
+    "selected_query_gradient_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    }
+  },
+  "artifacts": {
+    "raw": "outputs/adaptive_distance_eval/baseline-portable-20261017/ridge-seams/seam-checks-raw.npz",
+    "summary": "outputs/adaptive_distance_eval/baseline-portable-20261017/ridge-seams/seam-checks.json"
+  }
+}

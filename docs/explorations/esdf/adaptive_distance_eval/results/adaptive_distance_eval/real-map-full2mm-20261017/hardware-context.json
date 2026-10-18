@@ -1,0 +1,17 @@
+{
+  "cpu_model_read_from_proc_cpuinfo": "AMD Ryzen 7 9700X 8-Core Processor",
+  "cpu_model_observed_utc": "2026-10-17T09:43:05Z",
+  "builder_threads": 1,
+  "build_container_cpu_limit": 4,
+  "build_container_initial_memory_limit_bytes": 12884901888,
+  "build_container_initial_memory_and_swap_limit_bytes": 15032385536,
+  "build_container_memory_limit_bytes": 15032385536,
+  "build_container_memory_and_swap_limit_bytes": 21474836480,
+  "build_container_limits_changed_utc": "2026-10-17T09:58:48Z",
+  "resource_comparison_note": "The failed full-map .001m trial had 12GiB memory/14GiB memory+swap. The .002m trial starts with those limits and increases to 14GiB/20GiB during construction; do not attribute resource completion solely to the relaxed heuristic.",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "gpu_driver_version": "595.91.07",
+  "gpu_total_memory_mib": 16303,
+  "gpu_was_not_exclusive": true,
+  "gpu_context_note": "Existing sensor/viewer containers were left running. gpu-before-evaluation.csv is a build-phase snapshot; synchronized benchmark distributions are retained rather than a dedicated-device performance guarantee."
+}

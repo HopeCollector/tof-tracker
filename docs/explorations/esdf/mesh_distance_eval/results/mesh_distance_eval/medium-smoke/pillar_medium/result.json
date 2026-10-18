@@ -1,0 +1,256 @@
+{
+  "case": "pillar_medium",
+  "size_xyz_m": [
+    32.0,
+    32.0,
+    8.8
+  ],
+  "shape_xyz": [
+    160,
+    160,
+    44
+  ],
+  "origin_xyz": [
+    -15.9,
+    -15.9,
+    0.1
+  ],
+  "spacing_m": 0.2,
+  "triangles": 6000,
+  "points": 65536,
+  "geometry_file_sha256": "8be9ccf6277ad0f68d2af82f9d889994e8fb9886a7de1742b41a952bf1ea0afb",
+  "first": {
+    "scene_load_cpu_ms": 68.0065719934646,
+    "public_selection_cpu_ms": 0.11113000800833106,
+    "static_pack_upload_bvh_ms": 38.55716600082815,
+    "points_upload_ms": 0.14279100287239999,
+    "torch_distance_ms": 763.2598080090247,
+    "tape_distance_cost_backward_ms": 61.205735997646116,
+    "GPU_sampling_field_ms": 111.75271199317649,
+    "field_download_ms": 0.26935200730804354,
+    "optional_field_upload_ms": 0.28699199901893735
+  },
+  "profiles": {
+    "1024": {
+      "A_torch": {
+        "distance": {
+          "median_ms": 5.66151698876638,
+          "p95_ms": 5.900315799226519,
+          "min_ms": 5.660638009430841,
+          "samples_ms": [
+            5.926849000388756,
+            5.660638009430841,
+            5.66151698876638
+          ],
+          "warmup": 3
+        },
+        "distance_cost_backward": {
+          "median_ms": 5.840138997882605,
+          "p95_ms": 5.900592898251489,
+          "min_ms": 5.834169001900591,
+          "samples_ms": [
+            5.907309998292476,
+            5.840138997882605,
+            5.834169001900591
+          ],
+          "warmup": 3
+        }
+      },
+      "A_tape": {
+        "distance": {
+          "median_ms": 5.687848009984009,
+          "p95_ms": 5.848174905986525,
+          "min_ms": 5.598717005341314,
+          "samples_ms": [
+            5.598717005341314,
+            5.86598900554236,
+            5.687848009984009
+          ],
+          "warmup": 3
+        },
+        "distance_cost_backward": {
+          "median_ms": 11.052362999180332,
+          "p95_ms": 11.367464710201602,
+          "min_ms": 10.952862008707598,
+          "samples_ms": [
+            11.052362999180332,
+            11.402476011426188,
+            10.952862008707598
+          ],
+          "warmup": 3
+        }
+      },
+      "B_trilinear": {
+        "distance": {
+          "median_ms": 0.0776310043875128,
+          "p95_ms": 0.08679300080984831,
+          "min_ms": 0.07347000064328313,
+          "samples_ms": [
+            0.08781100041233003,
+            0.07347000064328313,
+            0.0776310043875128
+          ],
+          "warmup": 3
+        },
+        "distance_cost_backward": {
+          "median_ms": 0.19467099627945572,
+          "p95_ms": 0.19891901029041037,
+          "min_ms": 0.19206199795007706,
+          "samples_ms": [
+            0.1993910118471831,
+            0.19206199795007706,
+            0.19467099627945572
+          ],
+          "warmup": 3
+        }
+      }
+    },
+    "65536": {
+      "A_torch": {
+        "distance": {
+          "median_ms": 10.932153003523126,
+          "p95_ms": 11.006888998963404,
+          "min_ms": 10.903303002123721,
+          "samples_ms": [
+            10.903303002123721,
+            11.015192998456769,
+            10.932153003523126
+          ],
+          "warmup": 3
+        },
+        "distance_cost_backward": {
+          "median_ms": 11.125953998998739,
+          "p95_ms": 11.141217994736508,
+          "min_ms": 11.111113999504596,
+          "samples_ms": [
+            11.142913994262926,
+            11.111113999504596,
+            11.125953998998739
+          ],
+          "warmup": 3
+        }
+      },
+      "A_tape": {
+        "distance": {
+          "median_ms": 10.811100990395062,
+          "p95_ms": 10.848865903972182,
+          "min_ms": 10.787832012283616,
+          "samples_ms": [
+            10.811100990395062,
+            10.853062005480751,
+            10.787832012283616
+          ],
+          "warmup": 3
+        },
+        "distance_cost_backward": {
+          "median_ms": 21.880554995732382,
+          "p95_ms": 22.490201499022078,
+          "min_ms": 21.779814996989444,
+          "samples_ms": [
+            21.880554995732382,
+            22.5579399993876,
+            21.779814996989444
+          ],
+          "warmup": 3
+        }
+      },
+      "B_trilinear": {
+        "distance": {
+          "median_ms": 0.09428100020159036,
+          "p95_ms": 0.09611610003048554,
+          "min_ms": 0.09176100138574839,
+          "samples_ms": [
+            0.0963200000114739,
+            0.09428100020159036,
+            0.09176100138574839
+          ],
+          "warmup": 3
+        },
+        "distance_cost_backward": {
+          "median_ms": 0.4239919944666326,
+          "p95_ms": 0.4333258984843269,
+          "min_ms": 0.37301299744285643,
+          "samples_ms": [
+            0.37301299744285643,
+            0.4239919944666326,
+            0.4343629989307374
+          ],
+          "warmup": 3
+        }
+      }
+    }
+  },
+  "field_sampling": {
+    "median_ms": 110.82751500362065,
+    "p95_ms": 111.52852139639435,
+    "min_ms": 110.37004299578257,
+    "samples_ms": [
+      111.60641099559143,
+      110.37004299578257,
+      110.82751500362065
+    ],
+    "warmup": 3
+  },
+  "snapshot_update": {
+    "median_ms": 0.5797839985461906,
+    "p95_ms": 0.6862180074676871,
+    "min_ms": 0.5697640008293092,
+    "samples_ms": [
+      0.6980440084589645,
+      0.5797839985461906,
+      0.5697640008293092
+    ],
+    "warmup": 3
+  },
+  "A_target_update": {
+    "median_ms": 0.07435098814312369,
+    "p95_ms": 0.07858100725570694,
+    "min_ms": 0.07371000538114458,
+    "samples_ms": [
+      0.0790510093793273,
+      0.07371000538114458,
+      0.07435098814312369
+    ],
+    "warmup": 3
+  },
+  "B_target_update_fresh_sampling": {
+    "median_ms": 111.13213800126687,
+    "p95_ms": 111.62410860852106,
+    "min_ms": 110.71429499133956,
+    "samples_ms": [
+      110.71429499133956,
+      111.13213800126687,
+      111.67877200932708
+    ],
+    "warmup": 3
+  },
+  "correctness": {
+    "raw_surface_oracle": {
+      "max_abs": 9.365746027611976e-07,
+      "mean_abs": 1.711142130656363e-07,
+      "p95_abs": 4.442713290309097e-07,
+      "max_overestimate": 8.559322335344177e-07,
+      "min_difference": -9.365746027611976e-07
+    },
+    "B_minus_A": {
+      "max_abs": 0.11410117149353027,
+      "mean_abs": 0.010285764001309872,
+      "p95_abs": 0.043672963976860046,
+      "max_overestimate": 0.10336202383041382,
+      "min_difference": -0.11410117149353027
+    },
+    "oracle_points": 256,
+    "all_finite": true
+  },
+  "memory": {
+    "torch_baseline_bytes": 0,
+    "torch_current_increment_bytes": 10707456,
+    "torch_benchmark_peak_above_resident_bytes": 24660480,
+    "global_free_delta_bytes": 147914752,
+    "field_bytes": 4505600,
+    "field_volume_copy_bytes": 4505600,
+    "vertex_bytes": 48000,
+    "index_bytes": 72000,
+    "note": "Torch excludes Warp BVH allocator; global free delta includes caches and desktop activity. See isolated memory probes."
+  }
+}

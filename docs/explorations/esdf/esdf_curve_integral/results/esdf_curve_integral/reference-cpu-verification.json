@@ -1,0 +1,25 @@
+{
+  "spatial_field": "small float32 C1 node grid",
+  "terminal9_chain_max_abs": 8.881784197001252e-16,
+  "coefficient18_same_nodes_ad_max_abs": 8.881784197001252e-16,
+  "coefficient18_closed_moment_max_abs": [
+    5.249706919174812e-16,
+    4.460949838691608e-16,
+    4.691342800344778e-16,
+    1.1700709845463564e-15
+  ],
+  "terminal9_fd_steps": [
+    0.0001,
+    1e-05
+  ],
+  "terminal9_fd_max_abs": [
+    2.4908044515825623e-09,
+    3.401090520327443e-11
+  ],
+  "closed_plane_cost_error": 4.440892098500626e-16,
+  "same_nodes_ad_value_error": 0.0,
+  "rowwise_failure_preserved": true,
+  "refinement_formula_checked": true,
+  "physical_duration_factor_checked": true,
+  "certified": false
+}

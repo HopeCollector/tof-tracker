@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "device": "cuda",
+  "checks": {
+    "sliver_recompute_finite_analytic_gradient": true,
+    "native_thin_face_failure_class_rejected": true,
+    "search_miss_torch_nan_zero_gradient": true,
+    "search_miss_tape_nan_zero_gradient": true,
+    "offset_torch_outputs_finite": true,
+    "offset_torch_exact_face_distance_and_gradient": true,
+    "offset_tape_outputs_finite": true
+  },
+  "diagnostics": {
+    "native_thin_face_rejections": {
+      "0.001": "unsupported thin/float32-degenerate mesh triangles (quality < 1e-3)",
+      "0.0001": "unsupported thin/float32-degenerate mesh triangles (quality < 1e-3)"
+    },
+    "offset_torch": [
+      {
+        "requested_separation_m": 2e-05,
+        "max_distance_error_m": 0.0,
+        "max_gradient_component_error": 0.0
+      },
+      {
+        "requested_separation_m": 0.0001,
+        "max_distance_error_m": 0.0,
+        "max_gradient_component_error": 0.0
+      },
+      {
+        "requested_separation_m": 0.001,
+        "max_distance_error_m": 0.0,
+        "max_gradient_component_error": 0.0
+      },
+      {
+        "requested_separation_m": 0.1,
+        "max_distance_error_m": 0.0,
+        "max_gradient_component_error": 0.0
+      }
+    ],
+    "offset_tape": [
+      {
+        "requested_separation_m": 2e-05,
+        "max_distance_error_m": 1.2970536772627383e-05,
+        "max_gradient_component_error": 0.40920060873031616
+      },
+      {
+        "requested_separation_m": 0.0001,
+        "max_distance_error_m": 3.5682605812326074e-06,
+        "max_gradient_component_error": 0.03472745418548584
+      },
+      {
+        "requested_separation_m": 0.001,
+        "max_distance_error_m": 1.921900548040867e-06,
+        "max_gradient_component_error": 0.00028437376022338867
+      },
+      {
+        "requested_separation_m": 0.1,
+        "max_distance_error_m": 1.9073486328125e-06,
+        "max_gradient_component_error": 5.960464477539063e-08
+      }
+    ],
+    "offset_tape_claim": "Values and gradients are retained as numeric diagnostics. Finite native output does not assert accurate near-surface derivatives; no near-surface pass is claimed."
+  },
+  "raw_arrays": "review-regression-arrays.npz",
+  "backend_sha256": "5c772ac8a7de0affc7de9a5055e1bb6e15a676f942fd1448a4d62e4f36377013"
+}

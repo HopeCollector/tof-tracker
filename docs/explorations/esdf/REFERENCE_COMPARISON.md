@@ -4,7 +4,7 @@
 
 ## 比较口径
 
-固定参考为 YOPO-tracker `89c4d6f9140c269c58a6e5dc3fe6b93b58580219` 的 SafetyLoss。原始七个 forward/query/crop/求值方法逐字保留，构造器接受显式地图数组；原 L 的行序、置换和 float32 行为另做数值核对。许可、参数、Omni 的 speed envelope 差异及源文件哈希见[源码审计](../../../experiments/esdf_reference_eval/REFERENCE.md)。
+固定参考为 YOPO-tracker `89c4d6f9140c269c58a6e5dc3fe6b93b58580219` 的 SafetyLoss。原始七个 forward/query/crop/求值方法逐字保留，构造器接受显式地图数组；原 L 的行序、置换和 float32 行为另做数值核对。许可、参数、Omni 的 speed envelope 差异及源文件哈希见[源码审计](esdf_reference_eval/REFERENCE.md)。
 
 没有找到与当前 OBJ 匹配的原训练点云。为保证几何来源一致，本实验对同一张 60×60×15 m、500 柱、seed 23 的 OBJ 生成 float32 表面 PLY，再喂给原 EDT / 查询方法。面上最大采样间隔 0.1 m，含端点、重复点与重叠内部面，不填柱体内部，不做原 PCL centroid filter。**这是受控输入对比，不能称为原数据集或原随机 generator 的完整复现。** 原构图函数对这份 PLY 的输出与提取版逐位一致；端到端重放得到的 EDT 和 occupancy 文件也逐位一致。
 
@@ -102,4 +102,4 @@ RTX 5070 Ti，Torch 2.9.1+cu128，float32，地图和输入常驻 GPU；两次�
 
 本结论限定在这张地图、这个固定 penalty 和这 120 条几何选定的压力轨迹，不是随机总体统计。C1 仍有点距离符号反例、梯度尾部误差和 0.2 m 平滑误差；没有测试训练、网络学习、迭代优化、连续最小净空或闭环飞行。
 
-主产物为 `outputs/esdf_reference_eval/integrated-20261018-v2/`，首轮 `comparison-20261018-v1/` 与原构图 parity 保留；两轮 82 个 raw 数组逐值一致。另有实际 GPU float32 位置上的几何对照，结论与主表相同。命令、固定来源和完整输入输出见[实验入口](../../../experiments/esdf_reference_eval/README.md)，[紧凑结果](../../../experiments/esdf_reference_eval/summary.json)保存结果及哈希，[独立审查](../../../experiments/esdf_reference_eval/REVIEW.md)保存复核范围。
+主产物为 `outputs/esdf_reference_eval/integrated-20261018-v2/`，首轮 `comparison-20261018-v1/` 与原构图 parity 保留；两轮 82 个 raw 数组逐值一致。另有实际 GPU float32 位置上的几何对照，结论与主表相同。命令、固定来源和完整输入输出见[实验入口](esdf_reference_eval/README.md)，[紧凑结果](esdf_reference_eval/summary.json)保存结果及哈希，[独立审查](esdf_reference_eval/REVIEW.md)保存复核范围。

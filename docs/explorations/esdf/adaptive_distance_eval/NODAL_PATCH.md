@@ -22,10 +22,10 @@ float32 位置重新计算。不同线程也有各自的缓存。
 在 Docker 内创建副本后，使用独立构建目录编译，保留原版输出作对照：
 
 ```bash
-python -m experiments.adaptive_distance_eval.nodal_patch \
+python -m docs.explorations.esdf.adaptive_distance_eval.code.nodal_patch \
   --source /opt/SdfLib \
   --destination outputs/adaptive_distance_eval/vendor/SdfLib-nodal
-cmake -S experiments/adaptive_distance_eval \
+cmake -S docs/explorations/esdf/adaptive_distance_eval/code \
   -B outputs/adaptive_distance_eval/build-nodal \
   -DSDFLIB_SOURCE_DIR=/workspace/outputs/adaptive_distance_eval/vendor/SdfLib-nodal \
   -DCMAKE_BUILD_TYPE=Release
@@ -55,7 +55,7 @@ outputs/adaptive_distance_eval/build-nodal/export_sdflib \
 默认参数继续生成上述已测的 1 μm 补丁，字节及 SHA-256 不变。实际地图使用：
 
 ```bash
-python -m experiments.adaptive_distance_eval.nodal_patch --source /opt/SdfLib \
+python -m docs.explorations.esdf.adaptive_distance_eval.code.nodal_patch --source /opt/SdfLib \
   --destination outputs/adaptive_distance_eval/vendor/SdfLib-real-map \
   --node-key-step-m .0125 --robust-mesh-values
 ```

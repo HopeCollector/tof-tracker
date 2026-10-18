@@ -1,0 +1,12 @@
+{
+  "stop_confirmed_at_utc": "2026-10-17T10:30:20Z",
+  "container_name": "tof-adaptive-real-map-depth9-run",
+  "container_id": "f69c16faccb25ebb7208b593238329d2a476686e24e0713c6b97470a4272b56d",
+  "reason": "User explicitly requested stopping tests and returning with existing evidence; no further build, GPU evaluation, or test is authorized.",
+  "action": "docker stop --time 1 tof-adaptive-real-map-depth9-run",
+  "stop_command_exit_code": 0,
+  "full_export_complete": false,
+  "gpu_evaluation_started": false,
+  "evidence_preserved": true,
+  "classification": "Explicit user-requested active stop, not a measured build failure or OOM"
+}

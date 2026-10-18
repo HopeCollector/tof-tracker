@@ -1,0 +1,14 @@
+{
+  "status": "task_sampling_failed_before_optimization",
+  "field": "roi-adaptive",
+  "requested_trajectories": 16,
+  "requested_steps": 10,
+  "candidate_pairs": 2048,
+  "seed": 23,
+  "logical_bounds_m": [[-3.2,-3.2,0],[3.2,3.2,6.4]],
+  "trajectory_length_m": [4,8],
+  "endpoint_distance_min_m": 0.65,
+  "endpoint_domain_margin_m": 0.8,
+  "error": "RuntimeError: could not obtain 16 endpoint-free, in-domain tasks from 2048 candidates",
+  "interpretation": "This full-map trajectory recipe cannot supply enough endpoint-free, in-domain tasks in the 6.4m ROI. No optimization was run and no optimizer stability result is inferred. Keep the full-map recipe unchanged for the intended full-map run."
+}

@@ -1,0 +1,51 @@
+{
+  "captured_at_utc": "2026-10-17T10:28:41.134856+00:00",
+  "scope": "In-progress snapshot; exporter VmHWM and container memory.peak are maxima so far, not final. Container cgroup metrics cover all processes. memory.swap.max is extra swap.",
+  "processes": [
+    {
+      "argv": [
+        "outputs/adaptive_distance_eval/mesh-value-probe-v4-20261017/build/export_sdflib",
+        "outputs/adaptive_distance_eval/real-map-depth9-20261017/union.obj",
+        "outputs/adaptive_distance_eval/real-map-depth9-20261017/full",
+        "3",
+        "9",
+        "0.002",
+        "1",
+        "--bounds",
+        "-51.2",
+        "-51.2",
+        "-43.7",
+        "51.2",
+        "51.2",
+        "58.7",
+        "--query-count",
+        "4096",
+        "--threads",
+        "1",
+        "--morton-index"
+      ],
+      "status": {
+        "State": "R (running)",
+        "Pid": "73",
+        "VmPeak": "9979792 kB",
+        "VmSize": "7628448 kB",
+        "VmHWM": "7196212 kB",
+        "VmRSS": "4863688 kB",
+        "RssAnon": "4859104 kB",
+        "RssFile": "4584 kB",
+        "VmSwap": "0 kB",
+        "Threads": "1"
+      }
+    }
+  ],
+  "cgroup_v2": {
+    "memory.current": "5347999744",
+    "memory.peak": "7732072448",
+    "memory.max": "15032385536",
+    "memory.swap.current": "0",
+    "memory.swap.max": "6442450944",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+    "memory.events.local": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+    "cpu.max": "200000 100000"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "status": "failed_before_complete_result",
+  "completed_cases": ["quadratic_scalar_not_sdf/three_axis_quintic", "quadratic_scalar_not_sdf/return_across_faces"],
+  "failed_case": "quadratic_scalar_not_sdf/whole_curve_on_grid_face",
+  "phase": "parameter_finite_difference_recomputed_splits",
+  "error": "ValueError: near-tangent grid-face contact; this experiment rejects it",
+  "interpretation": "The baseline curve is identically on a grid plane. Boundary-state perturbations approach a degenerate face contact; the conservative root policy rejects the perturbed curve.",
+  "change_for_v2": "Use constant z=0.375 off grid faces for the ordinary finite-difference fixture. Keep the same root/tangency thresholds, and separately check tangent and outside-domain rejection.",
+  "record_source": "Manually preserved from the first Docker tool stdout; no complete results.json was produced."
+}

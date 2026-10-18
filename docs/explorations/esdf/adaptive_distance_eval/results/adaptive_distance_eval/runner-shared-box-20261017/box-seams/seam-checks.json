@@ -1,0 +1,241 @@
+{
+  "passed": false,
+  "sampled_passed": false,
+  "checks": {
+    "has_shared_faces": true,
+    "finite_values_and_world_gradients": true,
+    "value_jump_within_5e_6_m": false,
+    "gradient_l2_jump_within_2e_3": false,
+    "offset_lookup_matches_both_sides": true,
+    "exact_face_lookup_selects_an_adjacent_leaf": true,
+    "query_matches_selected_polynomial_value": true,
+    "query_matches_selected_polynomial_world_gradient": true
+  },
+  "coverage_complete": true,
+  "maximum_faces": null,
+  "selection": "all faces",
+  "enumerated_faces": {
+    "total": 36069,
+    "same_level": 25341,
+    "coarse_fine": 10728,
+    "by_axis": {
+      "x": 11992,
+      "y": 12319,
+      "z": 11758
+    }
+  },
+  "checked_faces": {
+    "total": 36069,
+    "same_level": 25341,
+    "coarse_fine": 10728,
+    "by_axis": {
+      "x": 11992,
+      "y": 12319,
+      "z": 11758
+    }
+  },
+  "samples_per_face": 25,
+  "samples_per_axis": 5,
+  "dtype": "torch.float64",
+  "device": "cpu",
+  "thresholds": {
+    "value_m": 5e-06,
+    "gradient_l2": 0.002
+  },
+  "scope": "finite exact-face probes; not an all-points continuity or rounding certificate",
+  "all": {
+    "face_count": 36069,
+    "probe_count": 901725,
+    "value_jump_m": {
+      "maximum": 0.0009994329486357756,
+      "p95": 5.447770085875696e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.06752533970516215,
+      "p95": 3.937153202092398e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.06326927264504108,
+      "p95": 2.8280216819234753e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 607,
+    "gradient_fail_faces": 4,
+    "worst_value_face": {
+      "selected_face_index": 27513,
+      "enumerated_face_index": 27513,
+      "left_leaf": 2626,
+      "right_leaf": 2654,
+      "axis": "z",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 24,
+      "point": [
+        0.3250000048428774,
+        0.20000000298023224,
+        -0.3500000052154064
+      ],
+      "value_jump_m": 0.0009994329486357756,
+      "gradient_jump_l2": 0.01652845175607083
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 15017,
+      "enumerated_face_index": 15017,
+      "left_leaf": 2627,
+      "right_leaf": 2967,
+      "axis": "y",
+      "depths": [
+        6,
+        5
+      ],
+      "probe_index": 2,
+      "point": [
+        0.3250000048428774,
+        0.20000000298023224,
+        -0.36250000540167093
+      ],
+      "value_jump_m": 0.0005094010900547619,
+      "gradient_jump_l2": 0.06752533970516215
+    }
+  },
+  "same_level": {
+    "face_count": 25341,
+    "probe_count": 633525,
+    "value_jump_m": {
+      "maximum": 0.0009994329486357756,
+      "p95": 5.368093430213601e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.06329333214682044,
+      "p95": 4.135446074800767e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.06326927264504108,
+      "p95": 2.9572898033214358e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 500,
+    "gradient_fail_faces": 2,
+    "worst_value_face": {
+      "selected_face_index": 27513,
+      "enumerated_face_index": 27513,
+      "left_leaf": 2626,
+      "right_leaf": 2654,
+      "axis": "z",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 24,
+      "point": [
+        0.3250000048428774,
+        0.20000000298023224,
+        -0.3500000052154064
+      ],
+      "value_jump_m": 0.0009994329486357756,
+      "gradient_jump_l2": 0.01652845175607083
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 27513,
+      "enumerated_face_index": 27513,
+      "left_leaf": 2626,
+      "right_leaf": 2654,
+      "axis": "z",
+      "depths": [
+        6,
+        6
+      ],
+      "probe_index": 14,
+      "point": [
+        0.3125000046566129,
+        0.20000000298023224,
+        -0.3500000052154064
+      ],
+      "value_jump_m": 0.0005410075118714996,
+      "gradient_jump_l2": 0.06329333214682044
+    }
+  },
+  "coarse_fine": {
+    "face_count": 10728,
+    "probe_count": 268200,
+    "value_jump_m": {
+      "maximum": 0.0009993587419848682,
+      "p95": 5.607256328352125e-07,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_l2": {
+      "maximum": 0.06752533970516215,
+      "p95": 3.508874086925716e-05,
+      "nonfinite_count": 0
+    },
+    "gradient_jump_linf": {
+      "maximum": 0.06326716989972708,
+      "p95": 2.5387219514205745e-05,
+      "nonfinite_count": 0
+    },
+    "value_fail_faces": 107,
+    "gradient_fail_faces": 2,
+    "worst_value_face": {
+      "selected_face_index": 15017,
+      "enumerated_face_index": 15017,
+      "left_leaf": 2627,
+      "right_leaf": 2967,
+      "axis": "y",
+      "depths": [
+        6,
+        5
+      ],
+      "probe_index": 4,
+      "point": [
+        0.3250000048428774,
+        0.20000000298023224,
+        -0.3500000052154064
+      ],
+      "value_jump_m": 0.0009993587419848682,
+      "gradient_jump_l2": 0.016523275038732358
+    },
+    "worst_gradient_face": {
+      "selected_face_index": 15017,
+      "enumerated_face_index": 15017,
+      "left_leaf": 2627,
+      "right_leaf": 2967,
+      "axis": "y",
+      "depths": [
+        6,
+        5
+      ],
+      "probe_index": 2,
+      "point": [
+        0.3250000048428774,
+        0.20000000298023224,
+        -0.36250000540167093
+      ],
+      "value_jump_m": 0.0005094010900547619,
+      "gradient_jump_l2": 0.06752533970516215
+    }
+  },
+  "lookup": {
+    "offset_failure_faces": 0,
+    "exact_failure_faces": 0,
+    "selected_query_value_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    },
+    "selected_query_gradient_error": {
+      "maximum": 0.0,
+      "p95": 0.0,
+      "nonfinite_count": 0
+    }
+  },
+  "artifacts": {
+    "raw": "outputs/adaptive_distance_eval/runner-shared-box-20261017/box-seams/seam-checks-raw.npz",
+    "summary": "outputs/adaptive_distance_eval/runner-shared-box-20261017/box-seams/seam-checks.json"
+  }
+}

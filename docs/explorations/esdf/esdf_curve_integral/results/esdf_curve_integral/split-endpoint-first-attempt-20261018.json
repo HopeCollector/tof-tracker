@@ -1,0 +1,508 @@
+{
+  "failures": {
+    "torch.float64": [
+      {
+        "curve": 1,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 4,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 7,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 10,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 13,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 16,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 19,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 22,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 25,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 28,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 31,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 34,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 37,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 40,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 43,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 106,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 109,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 112,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 115,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      },
+      {
+        "curve": 118,
+        "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+      }
+    ],
+    "torch.float32": []
+  },
+  "fd_failures": [
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 0,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 0,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 1,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 1,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 3,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 3,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 4,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 4,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 6,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 6,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 7,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 7,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 8,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 0.0001,
+      "parameter": 8,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 0,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 0,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 1,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 1,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 3,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 3,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 4,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 4,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 6,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 6,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 7,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 7,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 8,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 7,
+      "step": 1e-05,
+      "parameter": 8,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 0,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 0,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 1,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 1,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 3,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 3,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 4,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 4,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 6,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 6,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 7,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 7,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 8,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 0.0001,
+      "parameter": 8,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 0,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 0,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 1,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 1,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 3,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 3,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 4,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 4,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 6,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 6,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 7,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 7,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 8,
+      "sign": -1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    },
+    {
+      "curve": 112,
+      "step": 1e-05,
+      "parameter": 8,
+      "sign": 1,
+      "error": "curve 0 could not be split: unreliable or nearly multiple internal face root"
+    }
+  ],
+  "curve1_face_roots": [
+    {
+      "u": 0.0,
+      "slope": 0.0,
+      "residual": 0.0
+    },
+    {
+      "u": 0.0,
+      "slope": 0.0,
+      "residual": 0.0
+    },
+    {
+      "u": 0.5555555555555557,
+      "slope": -0.002286236854138083,
+      "residual": 1.070816960479511e-18
+    },
+    {
+      "u": 0.9999999737849276,
+      "slope": 8.738357100319759e-10,
+      "residual": 1.387778708020004e-17
+    },
+    {
+      "u": 1.0000000262150714,
+      "slope": -8.738357558473091e-10,
+      "residual": 6.938894267714432e-18
+    }
+  ]
+}

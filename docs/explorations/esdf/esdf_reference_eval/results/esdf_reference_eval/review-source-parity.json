@@ -1,0 +1,15 @@
+{
+  "scope": "verbatim source comparison of retained query/forward methods; explicit adapter constructor excluded",
+  "original_sha256": "bcc8adbc607a1c7e764aa7f69fb71f524245f7aa21fb79a2d48765e85610d52b",
+  "reference_py_sha256": "4079ab6d1326af2e7c3a1a99401c6e24768cb15402a0695835cd977dfbe824f9",
+  "methods": {
+    "forward": true,
+    "get_distance_cost": true,
+    "cost_function": true,
+    "get_coefficient_from_derivative": true,
+    "get_position_from_coeff": true,
+    "get_velocity_from_coeff": true,
+    "get_batch_sdf": true
+  },
+  "passed": true
+}

@@ -1,0 +1,556 @@
+{
+  "passed": false,
+  "pipeline_gate": false,
+  "indices": [
+    0
+  ],
+  "normalized_steps": [
+    0.001,
+    0.0003,
+    0.0001
+  ],
+  "atol": 2e-06,
+  "rtol": 0.001,
+  "rows": [
+    {
+      "trajectory": 0,
+      "parameter": "terminal_position_x",
+      "normalized_parameter": 0.0,
+      "obs_autograd": -0.1451587047008916,
+      "total_autograd": 1.7317960785596422,
+      "obs_fd": [
+        null,
+        null,
+        null
+      ],
+      "total_fd": [
+        null,
+        null,
+        null
+      ],
+      "obs_absolute_error": [
+        null,
+        null,
+        null
+      ],
+      "total_absolute_error": [
+        null,
+        null,
+        null
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        4,
+        3,
+        2
+      ],
+      "obs_error_increased_on_last_step": false,
+      "crosses_parameter_box": false,
+      "finite": false,
+      "outside_domain_probe_count": 3,
+      "nonfinite_probe_count": 3,
+      "passed": false
+    },
+    {
+      "trajectory": 0,
+      "parameter": "terminal_position_y",
+      "normalized_parameter": 0.0,
+      "obs_autograd": -0.04838623490029721,
+      "total_autograd": -0.04838623490029721,
+      "obs_fd": [
+        -0.04838623610542436,
+        -0.04838623500887559,
+        -0.048386234912656256
+      ],
+      "total_fd": [
+        -0.048386236105590896,
+        -0.048386235008320476,
+        -0.048386234912101145
+      ],
+      "obs_absolute_error": [
+        1.2051271508495276e-09,
+        1.085783754573022e-10,
+        1.2359044343490666e-11
+      ],
+      "total_absolute_error": [
+        1.2052936843032214e-09,
+        1.0802326394498962e-10,
+        1.1803932831178088e-11
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": false,
+      "crosses_parameter_box": false,
+      "finite": true,
+      "outside_domain_probe_count": 0,
+      "nonfinite_probe_count": 0,
+      "passed": true
+    },
+    {
+      "trajectory": 0,
+      "parameter": "terminal_position_z",
+      "normalized_parameter": 0.0,
+      "obs_autograd": -0.024193117450148606,
+      "total_autograd": -0.024193117450148606,
+      "obs_fd": [
+        -0.024193117600768144,
+        -0.024193117463637098,
+        -0.02419311745160968
+      ],
+      "total_fd": [
+        -0.024193117600823655,
+        -0.02419311746345206,
+        -0.02419311745160968
+      ],
+      "obs_absolute_error": [
+        1.506195376754782e-10,
+        1.3488491573676598e-11,
+        1.4610743170884177e-12
+      ],
+      "total_absolute_error": [
+        1.5067504882670946e-10,
+        1.3303455559388055e-11,
+        1.4610743170884177e-12
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": false,
+      "crosses_parameter_box": false,
+      "finite": true,
+      "outside_domain_probe_count": 0,
+      "nonfinite_probe_count": 0,
+      "passed": true
+    },
+    {
+      "trajectory": 0,
+      "parameter": "terminal_velocity_x",
+      "normalized_parameter": 0.0,
+      "obs_autograd": 0.1797542318529024,
+      "total_autograd": -3.5741553346681654,
+      "obs_fd": [
+        null,
+        null,
+        null
+      ],
+      "total_fd": [
+        null,
+        null,
+        null
+      ],
+      "obs_absolute_error": [
+        null,
+        null,
+        null
+      ],
+      "total_absolute_error": [
+        null,
+        null,
+        null
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": false,
+      "crosses_parameter_box": false,
+      "finite": false,
+      "outside_domain_probe_count": 3,
+      "nonfinite_probe_count": 3,
+      "passed": false
+    },
+    {
+      "trajectory": 0,
+      "parameter": "terminal_velocity_y",
+      "normalized_parameter": 0.0,
+      "obs_autograd": 0.05991807728430079,
+      "total_autograd": 0.05991807728430079,
+      "obs_fd": [
+        0.059918078326448576,
+        0.0599180773782256,
+        0.05991807729421872
+      ],
+      "total_fd": [
+        0.05991807832650409,
+        0.0599180773782256,
+        0.05991807729532894
+      ],
+      "obs_absolute_error": [
+        1.0421477847355476e-09,
+        9.392480543324311e-11,
+        9.917927590308295e-12
+      ],
+      "total_absolute_error": [
+        1.0422032958867788e-09,
+        9.392480543324311e-11,
+        1.1028150614933452e-11
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": false,
+      "crosses_parameter_box": false,
+      "finite": true,
+      "outside_domain_probe_count": 0,
+      "nonfinite_probe_count": 0,
+      "passed": true
+    },
+    {
+      "trajectory": 0,
+      "parameter": "terminal_velocity_z",
+      "normalized_parameter": 0.0,
+      "obs_autograd": 0.029959038642150396,
+      "total_autograd": 0.029959038642150396,
+      "obs_fd": [
+        0.02995903877245354,
+        0.029959038653955737,
+        0.02995903864377869
+      ],
+      "total_fd": [
+        0.02995903877245354,
+        0.02995903865358566,
+        0.02995903864322358
+      ],
+      "obs_absolute_error": [
+        1.3030314327533432e-10,
+        1.1805341426640581e-11,
+        1.628294721278678e-12
+      ],
+      "total_absolute_error": [
+        1.3030314327533432e-10,
+        1.1435265928616545e-11,
+        1.0731832089660998e-12
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": false,
+      "crosses_parameter_box": false,
+      "finite": true,
+      "outside_domain_probe_count": 0,
+      "nonfinite_probe_count": 0,
+      "passed": true
+    },
+    {
+      "trajectory": 0,
+      "parameter": "terminal_acceleration_x",
+      "normalized_parameter": 0.0,
+      "obs_autograd": -0.01870519325979557,
+      "total_autograd": 0.6132621274761724,
+      "obs_fd": [
+        null,
+        null,
+        null
+      ],
+      "total_fd": [
+        null,
+        null,
+        null
+      ],
+      "obs_absolute_error": [
+        null,
+        null,
+        null
+      ],
+      "total_absolute_error": [
+        null,
+        null,
+        null
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": false,
+      "crosses_parameter_box": false,
+      "finite": false,
+      "outside_domain_probe_count": 3,
+      "nonfinite_probe_count": 3,
+      "passed": false
+    },
+    {
+      "trajectory": 0,
+      "parameter": "terminal_acceleration_y",
+      "normalized_parameter": 0.0,
+      "obs_autograd": -0.006235064419931855,
+      "total_autograd": -0.006235064419931855,
+      "obs_fd": [
+        -0.0062350644207676,
+        -0.006235064419953437,
+        -0.006235064419213288
+      ],
+      "total_fd": [
+        -0.0062350644207676,
+        -0.0062350644203235115,
+        -0.0062350644181030646
+      ],
+      "obs_absolute_error": [
+        8.357446679152503e-13,
+        2.1581694764627457e-14,
+        7.185675665599689e-13
+      ],
+      "total_absolute_error": [
+        8.357446679152503e-13,
+        3.9165632542692563e-13,
+        1.8287905911851254e-12
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": true,
+      "crosses_parameter_box": false,
+      "finite": true,
+      "outside_domain_probe_count": 0,
+      "nonfinite_probe_count": 0,
+      "passed": true
+    },
+    {
+      "trajectory": 0,
+      "parameter": "terminal_acceleration_z",
+      "normalized_parameter": 0.0,
+      "obs_autograd": -0.0031175322099659276,
+      "total_autograd": -0.0031175322099659276,
+      "obs_fd": [
+        -0.0031175322101617553,
+        -0.0031175322099767184,
+        -0.003117532209606644
+      ],
+      "total_fd": [
+        -0.0031175322101617553,
+        -0.0031175322101617557,
+        -0.0031175322101617553
+      ],
+      "obs_absolute_error": [
+        1.9582772903259382e-13,
+        1.0790847382313729e-14,
+        3.5928378327998445e-13
+      ],
+      "total_absolute_error": [
+        1.9582772903259382e-13,
+        1.9582816271346282e-13,
+        1.9582772903259382e-13
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": true,
+      "crosses_parameter_box": false,
+      "finite": true,
+      "outside_domain_probe_count": 0,
+      "nonfinite_probe_count": 0,
+      "passed": true
+    },
+    {
+      "trajectory": 0,
+      "parameter": "duration",
+      "normalized_parameter": 0.0,
+      "obs_autograd": 0.0,
+      "total_autograd": -2.2523232164552422,
+      "obs_fd": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "total_fd": [
+        -2.2523240573224523,
+        -2.252323292131949,
+        -2.2523232248627956
+      ],
+      "obs_absolute_error": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "total_absolute_error": [
+        8.408672100834735e-07,
+        7.567670667896209e-08,
+        8.407553320211036e-09
+      ],
+      "leaf_changes_from_base_minus_plus": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "leaf_changes_between_sides": [
+        0,
+        0,
+        0
+      ],
+      "obs_error_increased_on_last_step": false,
+      "crosses_parameter_box": false,
+      "finite": true,
+      "outside_domain_probe_count": 0,
+      "nonfinite_probe_count": 0,
+      "passed": true
+    }
+  ],
+  "finite": false,
+  "obstacle_autograd_connected": true,
+  "outside_domain_probe_count": 9,
+  "nonfinite_counts": {
+    "probe_trajectories": 9,
+    "in_domain_probe_trajectories": 0,
+    "obstacle_probe_values": 9,
+    "total_probe_values": 9,
+    "obstacle_fd_values": 9,
+    "total_fd_values": 9,
+    "obstacle_autograd_values": 0,
+    "total_autograd_values": 0
+  },
+  "failure_reasons": [
+    "perturbed_trajectory_hull_outside_domain",
+    "nonfinite_finite_difference_or_autograd"
+  ],
+  "obs_maximum_absolute_error": null,
+  "total_maximum_absolute_error": null,
+  "note": "centre differences of unclipped normalized parameters; crossing a leaf or parameter limit is recorded, not filtered; nonfinite JSON values become null, while NPZ retains the original inf/nan"
+}

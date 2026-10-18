@@ -1,0 +1,1054 @@
+{
+  "passed": true,
+  "checks_passed": 97,
+  "checks_total": 97,
+  "scope": "First-order position derivatives; world-metre public scene geometry; float32 CUDA queries against float64 independent CPU references.",
+  "checks": {
+    "box_torch_mesh_analytic": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 393,
+        "nonfinite": 0,
+        "max_abs": 2.4136820231390743e-07,
+        "mean_abs": 4.967739850527799e-08,
+        "p95_abs": 1.4706052207102968e-07
+      }
+    },
+    "box_torch_public_composition": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 393,
+        "nonfinite": 0,
+        "max_abs": 2.2795685850063307e-07,
+        "mean_abs": 4.2464127615721113e-08,
+        "p95_abs": 1.3532050293640905e-07
+      }
+    },
+    "box_torch_normal_disjoint": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 393,
+        "nonfinite": 0,
+        "max_abs": 2.4136820231390743e-07,
+        "mean_abs": 4.967739850527799e-08,
+        "p95_abs": 1.4706052207102968e-07
+      }
+    },
+    "box_torch_near_surface_sign": {
+      "passed": true
+    },
+    "box_tape_mesh_analytic": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 393,
+        "nonfinite": 0,
+        "max_abs": 2.733071868821213e-07,
+        "mean_abs": 5.951194063533066e-08,
+        "p95_abs": 1.7278795723107975e-07
+      }
+    },
+    "box_tape_public_composition": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 393,
+        "nonfinite": 0,
+        "max_abs": 2.733071868821213e-07,
+        "mean_abs": 5.0261063200874544e-08,
+        "p95_abs": 1.5515582214575828e-07
+      }
+    },
+    "box_tape_normal_disjoint": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 393,
+        "nonfinite": 0,
+        "max_abs": 2.733071868821213e-07,
+        "mean_abs": 5.951194063533066e-08,
+        "p95_abs": 1.7278795723107975e-07
+      }
+    },
+    "box_tape_near_surface_sign": {
+      "passed": true
+    },
+    "box_torch_gradient_analytic": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 1.1357377172060978e-07,
+        "mean_abs": 1.840792532107708e-08,
+        "p95_abs": 8.866395413420488e-08
+      }
+    },
+    "box_torch_gradient_own_fd": {
+      "passed": true,
+      "tolerance": 0.003,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 0.00038993358612060547,
+        "mean_abs": 9.617010752360026e-05,
+        "p95_abs": 0.00027281641960144023
+      }
+    },
+    "box_torch_nonsmooth_finite": {
+      "passed": true,
+      "note": "Exact surface, medial ties and vertex: selected derivative only; no uniqueness claim."
+    },
+    "box_tape_gradient_analytic": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 1.375929628011363e-07,
+        "mean_abs": 2.0394747157772907e-08,
+        "p95_abs": 8.392208016849693e-08
+      }
+    },
+    "box_tape_gradient_own_fd": {
+      "passed": true,
+      "tolerance": 0.003,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 0.0002409219741821289,
+        "mean_abs": 8.623401323988682e-05,
+        "p95_abs": 0.00022815465927124022
+      }
+    },
+    "box_tape_nonsmooth_finite": {
+      "passed": true,
+      "note": "Exact surface, medial ties and vertex: selected derivative only; no uniqueness claim."
+    },
+    "box_two_routes_gradient_agree": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 5.960464477539063e-08,
+        "mean_abs": 9.934107806747907e-09,
+        "p95_abs": 5.960464477539063e-08
+      }
+    },
+    "field_xyz_shape": {
+      "passed": true
+    },
+    "field_grid_nodes_match_source": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 128,
+        "nonfinite": 0,
+        "max_abs": 3.424023589104763e-07,
+        "mean_abs": 5.194132701724641e-08,
+        "p95_abs": 1.2835527698484826e-07
+      }
+    },
+    "field_continuous_distance_lipschitz_bound": {
+      "passed": true,
+      "tolerance": 0.17323508075688773,
+      "error": {
+        "count": 256,
+        "nonfinite": 0,
+        "max_abs": 0.02054066335034399,
+        "mean_abs": 0.0012253583564318824,
+        "p95_abs": 0.0072872881720928775
+      }
+    },
+    "field_gradient_vs_own_interpolation_fd": {
+      "passed": true,
+      "tolerance": 0.003,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 0.001083672046661377,
+        "mean_abs": 0.0003960716227690379,
+        "p95_abs": 0.0009137332439422605
+      }
+    },
+    "field_thin_obstacle_aliasing_exposed": {
+      "passed": true
+    },
+    "invalid_torch_nan_and_zero_gradient": {
+      "passed": true
+    },
+    "invalid_tape_nan_and_zero_gradient": {
+      "passed": true
+    },
+    "map_boundary_inclusive": {
+      "passed": true
+    },
+    "field_boundary_inclusive_finite": {
+      "passed": true
+    },
+    "field_outside_nan_zero_gradient": {
+      "passed": true
+    },
+    "finite_ground_rectangle_not_infinite_plane": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 5,
+        "nonfinite": 0,
+        "max_abs": 3.225560241126857e-08,
+        "mean_abs": 1.364602358888689e-08,
+        "p95_abs": 3.0019152807980726e-08
+      }
+    },
+    "training_parameter_query_exp_loss_sgd_torch": {
+      "passed": true,
+      "losses": [
+        0.8196091055870056,
+        0.8052970170974731,
+        0.7915163636207581,
+        0.7782359719276428,
+        0.7654272317886353,
+        0.7530637979507446
+      ],
+      "gradient_norms": [
+        0.42498236894607544,
+        0.41697219014167786,
+        0.4092912971973419,
+        0.4019182622432709,
+        0.39483359456062317
+      ],
+      "note": "First-order position gradients only; no geometry or second-order differentiation claim."
+    },
+    "training_parameter_query_exp_loss_sgd_tape": {
+      "passed": true,
+      "losses": [
+        0.8196091055870056,
+        0.8052970170974731,
+        0.7915163636207581,
+        0.7782359719276428,
+        0.7654272317886353,
+        0.7530637979507446
+      ],
+      "gradient_norms": [
+        0.42498236894607544,
+        0.41697219014167786,
+        0.4092912971973419,
+        0.4019182622432709,
+        0.39483359456062317
+      ],
+      "note": "First-order position gradients only; no geometry or second-order differentiation claim."
+    },
+    "training_parameter_query_exp_loss_sgd_field": {
+      "passed": true,
+      "losses": [
+        0.8190959692001343,
+        0.8048176765441895,
+        0.7911590337753296,
+        0.7780773639678955,
+        0.7653653621673584,
+        0.752966582775116
+      ],
+      "gradient_norms": [
+        0.42482781410217285,
+        0.41544660925865173,
+        0.40652018785476685,
+        0.3980131149291992,
+        0.3956488370895386
+      ],
+      "note": "First-order position gradients only; no geometry or second-order differentiation claim."
+    },
+    "oracle_triangle_vs_analytic_box": {
+      "passed": true,
+      "tolerance": 2e-12,
+      "error": {
+        "count": 256,
+        "nonfinite": 0,
+        "max_abs": 2.220446049250313e-16,
+        "mean_abs": 3.0357660829594124e-18,
+        "p95_abs": 0.0
+      }
+    },
+    "oracle_winding_vs_analytic_inside": {
+      "passed": true
+    },
+    "oracle_closest_point_distance": {
+      "passed": true,
+      "tolerance": 2e-12,
+      "error": {
+        "count": 256,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "oracle_union_single_box": {
+      "passed": true,
+      "tolerance": 2e-12,
+      "error": {
+        "count": 256,
+        "nonfinite": 0,
+        "max_abs": 2.220446049250313e-16,
+        "mean_abs": 2.6020852139652106e-18,
+        "p95_abs": 0.0
+      }
+    },
+    "sphere_exact_torch_distance": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 16,
+        "nonfinite": 0,
+        "max_abs": 1.1920928988384816e-07,
+        "mean_abs": 5.257725720769768e-08,
+        "p95_abs": 1.192092897173147e-07
+      }
+    },
+    "sphere_exact_torch_gradient": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 48,
+        "nonfinite": 0,
+        "max_abs": 2.7174259206730333e-07,
+        "mean_abs": 3.483724269707592e-08,
+        "p95_abs": 1.2984370210689094e-07
+      }
+    },
+    "sphere_exact_torch_gradient_fd": {
+      "passed": true,
+      "tolerance": 0.003,
+      "error": {
+        "count": 48,
+        "nonfinite": 0,
+        "max_abs": 0.000755608081817627,
+        "mean_abs": 0.00018949123720328012,
+        "p95_abs": 0.0004200614988803863
+      }
+    },
+    "sphere_exact_tape_distance": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 16,
+        "nonfinite": 0,
+        "max_abs": 1.1920928988384816e-07,
+        "mean_abs": 5.257725720769768e-08,
+        "p95_abs": 1.192092897173147e-07
+      }
+    },
+    "sphere_exact_tape_gradient": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 48,
+        "nonfinite": 0,
+        "max_abs": 2.7174259206730333e-07,
+        "mean_abs": 3.483724269707592e-08,
+        "p95_abs": 1.2984370210689094e-07
+      }
+    },
+    "sphere_exact_tape_gradient_fd": {
+      "passed": true,
+      "tolerance": 0.003,
+      "error": {
+        "count": 48,
+        "nonfinite": 0,
+        "max_abs": 0.000755608081817627,
+        "mean_abs": 0.00018949123720328012,
+        "p95_abs": 0.0004200614988803863
+      }
+    },
+    "sphere_mesh_torch_vs_triangle_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 320,
+        "nonfinite": 0,
+        "max_abs": 1.2344024775609586e-07,
+        "mean_abs": 2.997489760054071e-08,
+        "p95_abs": 8.152090998983509e-08
+      }
+    },
+    "sphere_mesh_tape_vs_triangle_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 320,
+        "nonfinite": 0,
+        "max_abs": 2.6313863394841763e-07,
+        "mean_abs": 3.945752584477393e-08,
+        "p95_abs": 1.1733713492778631e-07
+      }
+    },
+    "full_3d_pose_torch_distance": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 5,
+        "nonfinite": 0,
+        "max_abs": 8.504253889984881e-08,
+        "mean_abs": 3.4800250148236954e-08,
+        "p95_abs": 7.757077429282333e-08
+      }
+    },
+    "full_3d_pose_torch_gradient": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 4.7038553308009767e-07,
+        "mean_abs": 1.0382049250208988e-07,
+        "p95_abs": 3.857664483075672e-07
+      }
+    },
+    "full_3d_pose_tape_distance": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 5,
+        "nonfinite": 0,
+        "max_abs": 8.504253889984881e-08,
+        "mean_abs": 3.313132008742059e-08,
+        "p95_abs": 7.614026280577945e-08
+      }
+    },
+    "full_3d_pose_tape_gradient": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 4.7038553308009767e-07,
+        "mean_abs": 9.615832108622601e-08,
+        "p95_abs": 3.440431969647937e-07
+      }
+    },
+    "narrow_gap_torch": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 5,
+        "nonfinite": 0,
+        "max_abs": 1.639127722441458e-09,
+        "mean_abs": 1.1026859425555813e-09,
+        "p95_abs": 1.639127722441458e-09
+      }
+    },
+    "narrow_gap_tape": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 5,
+        "nonfinite": 0,
+        "max_abs": 5.364418020903372e-09,
+        "mean_abs": 2.592802061940347e-09,
+        "p95_abs": 5.12599944713088e-09
+      }
+    },
+    "sliver_triangle_torch_distance": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 5,
+        "nonfinite": 0,
+        "max_abs": 1.8803833018443683e-07,
+        "mean_abs": 3.811779176361718e-08,
+        "p95_abs": 1.50615438545415e-07
+      }
+    },
+    "sliver_triangle_torch_gradient": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 6.433138130534921e-08,
+        "mean_abs": 6.5938219643041776e-09,
+        "p95_abs": 3.5164311076862866e-08
+      }
+    },
+    "overlap_union_oracle_center": {
+      "passed": true,
+      "tolerance": 1e-12,
+      "error": {
+        "count": 2,
+        "nonfinite": 0,
+        "max_abs": 1.1102230246251565e-16,
+        "mean_abs": 5.551115123125783e-17,
+        "p95_abs": 1.0547118733938987e-16
+      }
+    },
+    "overlap_torch_stated_original_face_semantics": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 7,
+        "nonfinite": 0,
+        "max_abs": 2.384185793236071e-08,
+        "mean_abs": 1.1531420469295434e-08,
+        "p95_abs": 2.1235750835568716e-08
+      }
+    },
+    "overlap_torch_winding_inside_sign": {
+      "passed": true
+    },
+    "overlap_torch_external_union_distance": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 3,
+        "nonfinite": 0,
+        "max_abs": 1.515483427638742e-08,
+        "mean_abs": 1.299889736590861e-08,
+        "p95_abs": 1.4831443739815597e-08
+      }
+    },
+    "overlap_tape_stated_original_face_semantics": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 7,
+        "nonfinite": 0,
+        "max_abs": 1.3436412382716867e-07,
+        "mean_abs": 2.85613189765499e-08,
+        "p95_abs": 1.0120744405872621e-07
+      }
+    },
+    "overlap_tape_winding_inside_sign": {
+      "passed": true
+    },
+    "overlap_tape_external_union_distance": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 3,
+        "nonfinite": 0,
+        "max_abs": 1.3436412382716867e-07,
+        "mean_abs": 5.2735327216169026e-08,
+        "p95_abs": 1.221198043355187e-07
+      }
+    },
+    "overlap_interior_nonexactness_exposed": {
+      "passed": true
+    },
+    "update_0_torch_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_0_torch_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 1.9077903967712473e-07,
+        "mean_abs": 3.564174052191523e-08,
+        "p95_abs": 1.0233715096452658e-07
+      }
+    },
+    "update_0_tape_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_0_tape_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 2.030803534225356e-07,
+        "mean_abs": 4.0009597722841704e-08,
+        "p95_abs": 1.0886495854789403e-07
+      }
+    },
+    "update_0_field_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 90036,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_0_field_queries_fresh": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_0_static_bvh_reused": {
+      "passed": true
+    },
+    "update_0_static_surface_preserved": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 2,
+        "nonfinite": 0,
+        "max_abs": 1.1920928910669204e-08,
+        "mean_abs": 1.1920928910669204e-08,
+        "p95_abs": 1.1920928910669204e-08
+      }
+    },
+    "update_1_torch_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_1_torch_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 1.9077903967712473e-07,
+        "mean_abs": 3.952816025810164e-08,
+        "p95_abs": 1.0596264267137556e-07
+      }
+    },
+    "update_1_tape_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_1_tape_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 2.030803534225356e-07,
+        "mean_abs": 4.224033288193393e-08,
+        "p95_abs": 1.0596264267137556e-07
+      }
+    },
+    "update_1_field_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 90036,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_1_field_queries_fresh": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_1_static_bvh_reused": {
+      "passed": true
+    },
+    "update_1_static_surface_preserved": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 2,
+        "nonfinite": 0,
+        "max_abs": 1.1920928910669204e-08,
+        "mean_abs": 1.1920928910669204e-08,
+        "p95_abs": 1.1920928910669204e-08
+      }
+    },
+    "update_2_torch_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_2_torch_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 1.5416083076758014e-07,
+        "mean_abs": 3.794269046406932e-08,
+        "p95_abs": 1.0596264267137556e-07
+      }
+    },
+    "update_2_tape_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_2_tape_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 2.030803534225356e-07,
+        "mean_abs": 3.975978269538105e-08,
+        "p95_abs": 1.0596264267137556e-07
+      }
+    },
+    "update_2_field_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 90036,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_2_field_queries_fresh": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_2_static_bvh_reused": {
+      "passed": true
+    },
+    "update_2_static_surface_preserved": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 2,
+        "nonfinite": 0,
+        "max_abs": 1.1920928910669204e-08,
+        "mean_abs": 1.1920928910669204e-08,
+        "p95_abs": 1.1920928910669204e-08
+      }
+    },
+    "update_3_torch_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_3_torch_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 1.9077903967712473e-07,
+        "mean_abs": 3.9429933625255586e-08,
+        "p95_abs": 1.0886495854789403e-07
+      }
+    },
+    "update_3_tape_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_3_tape_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 2.030803534225356e-07,
+        "mean_abs": 4.2142106249087874e-08,
+        "p95_abs": 1.0886495854789403e-07
+      }
+    },
+    "update_3_field_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 90036,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_3_field_queries_fresh": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_3_static_bvh_reused": {
+      "passed": true
+    },
+    "update_3_static_surface_preserved": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 2,
+        "nonfinite": 0,
+        "max_abs": 1.1920928910669204e-08,
+        "mean_abs": 1.1920928910669204e-08,
+        "p95_abs": 1.1920928910669204e-08
+      }
+    },
+    "update_4_torch_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_4_torch_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 1.9077903967712473e-07,
+        "mean_abs": 3.564174052191523e-08,
+        "p95_abs": 1.0233715096452658e-07
+      }
+    },
+    "update_4_tape_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_4_tape_oracle": {
+      "passed": true,
+      "tolerance": 3e-05,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 2.030803534225356e-07,
+        "mean_abs": 4.0009597722841704e-08,
+        "p95_abs": 1.0886495854789403e-07
+      }
+    },
+    "update_4_field_fresh_equivalence": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 90036,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_4_field_queries_fresh": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 72,
+        "nonfinite": 0,
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "p95_abs": 0.0
+      }
+    },
+    "update_4_static_bvh_reused": {
+      "passed": true
+    },
+    "update_4_static_surface_preserved": {
+      "passed": true,
+      "tolerance": 3e-06,
+      "error": {
+        "count": 2,
+        "nonfinite": 0,
+        "max_abs": 1.1920928910669204e-08,
+        "mean_abs": 1.1920928910669204e-08,
+        "p95_abs": 1.1920928910669204e-08
+      }
+    }
+  },
+  "details": {
+    "field_continuous_error": {
+      "spacing_m": 0.1,
+      "distance_error_m": {
+        "count": 256,
+        "nonfinite": 0,
+        "max_abs": 0.02054066335034399,
+        "mean_abs": 0.0012253583564318824,
+        "p95_abs": 0.0072872881720928775
+      },
+      "note": "Interpolation error relative to continuous geometry; not oracle query error."
+    },
+    "field_gradient_continuous_geometry_bias": {
+      "error": {
+        "count": 15,
+        "nonfinite": 0,
+        "max_abs": 0.041110103997486824,
+        "mean_abs": 0.010600358850594623,
+        "p95_abs": 0.0346003837863022
+      },
+      "note": "Descriptive bias relative to continuous geometry, separate from interpolation derivative correctness."
+    },
+    "domain_policy": {
+      "map_domain": "A requires declared or explicit bounds; outside and nonfinite inputs return NaN and zero derivative.",
+      "field_domain": "B is valid on the inclusive sample-node convex hull; padding is never exposed as valid geometry.",
+      "boundary_derivative": "B border interpolation selects zero normal derivative exactly at its support boundary; no exterior derivative claim."
+    },
+    "sphere_mesh_approximation": {
+      "vertices": 162,
+      "triangles": 320,
+      "mesh_vs_exact_sphere_error_m": {
+        "count": 320,
+        "nonfinite": 0,
+        "max_abs": 0.010385064130174544,
+        "mean_abs": 0.006554662256139818,
+        "p95_abs": 0.009502328612412054
+      },
+      "note": "Inscribed triangulated sphere shape error is separate from backend query error."
+    },
+    "dynamic_update": {
+      "positions": [
+        [
+          2.5,
+          1.2,
+          2.0
+        ],
+        [
+          0.85,
+          0.0,
+          2.0
+        ],
+        [
+          -2.2,
+          1.2,
+          2.4
+        ],
+        [
+          -0.85,
+          0.0,
+          2.0
+        ],
+        [
+          2.5,
+          1.2,
+          2.0
+        ]
+      ],
+      "static_bvh_reused": true,
+      "field_update": "Full resampling from the replacement snapshot; no incremental voxel-clearing claim.",
+      "overlap_semantics": "Sphere/mesh min-composition, also not an exact Boolean-union interior SDF.",
+      "check": "Every move, including overlap and departure, compared with a fresh backend and full fresh field."
+    }
+  },
+  "expected_limitations": [
+    {
+      "name": "sampling_can_miss_subcell_obstacles",
+      "status": "expected_limitation",
+      "spacing_m": 0.1,
+      "obstacle_thickness_m": 0.02,
+      "continuous_m": [
+        -0.009999999776482582,
+        -0.005000000819563866,
+        -0.004999998956918716
+      ],
+      "sampled_m": [
+        0.03199999779462814,
+        0.030000001192092896,
+        0.03399999812245369
+      ]
+    },
+    {
+      "name": "overlapping_shells_are_not_exact_union_interior_sdf",
+      "status": "expected_limitation",
+      "center_m": [
+        0.0,
+        0.0,
+        2.5
+      ],
+      "true_union_sdf_m": -0.7071067811865476,
+      "combined_mesh_sdf_m": -0.5,
+      "min_object_sdf_m": -0.5,
+      "interior_error_m": {
+        "count": 4,
+        "nonfinite": 0,
+        "max_abs": 0.20710678118654757,
+        "mean_abs": 0.1681980411031336,
+        "p95_abs": 0.20604076043228675
+      },
+      "normal_sign_disagreements": 2,
+      "note": "Winding classifies overlapping interiors, but nearest original triangles include hidden faces."
+    }
+  ],
+  "raw_arrays": "verification_arrays.npz"
+}

@@ -1,0 +1,31 @@
+{
+  "count": 612,
+  "raw_value_vs_rectangle_max_abs_m": 3.2419689244278516e-07,
+  "raw_gradient_vs_rectangle_unique_max_abs": 5.783708552087319e-07,
+  "unique_gradient_count": 612,
+  "gradient_exclusion": "|d|<=1e-5 or competing rectangle nearest gradients differ >1e-4 within 1e-7 distance tie",
+  "raw_values_all_finite": true,
+  "raw_gradients_all_finite": true,
+  "raw_gradient_norm_max_error": 2.9043450089361045e-08,
+  "zero_distance_examples": [
+    [
+      40.0,
+      40.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      -40.0,
+      -40.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "passed": true
+}

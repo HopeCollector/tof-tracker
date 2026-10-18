@@ -1,0 +1,12 @@
+{
+  "source_path": "outputs/esdf_reference_eval/integrated-20261018-v2/comparison/raw.npz",
+  "source_sha256": "0a18e9ffa683538d164c70ae79dbf0ba99d7cd0855bf9e7e7ee01b86b0695ff8",
+  "rows": 120,
+  "mesh_cost_converged": 120,
+  "mesh_gradient_converged": 116,
+  "sampled_tie_count": 866,
+  "batch_prefix_flattening_preserves_order": true,
+  "different_coefficients_rejected": true,
+  "role": "secondary spatial-geometry comparison only",
+  "certified": false
+}

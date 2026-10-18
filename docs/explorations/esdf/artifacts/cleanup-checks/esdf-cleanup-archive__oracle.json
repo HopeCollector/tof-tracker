@@ -1,0 +1,169 @@
+{
+  "analytic_box": {
+    "count": 306,
+    "distance_max_abs_m": 2.220446049250313e-16
+  },
+  "box_gradient_and_gradcheck": {
+    "max_abs": 0.0
+  },
+  "overlap_true_union": {
+    "distance_max_abs_m": 2.220446049250313e-16,
+    "center_true_distance_m": -0.28284271247461906,
+    "incorrect_min_object_distance_m": -0.2
+  },
+  "ground_union_and_near_zero": {
+    "passed": true
+  },
+  "duplicate_same_gradient_not_tie": {
+    "passed": true
+  },
+  "restricted_matches_global": {
+    "points": 400,
+    "bitwise_distance_gradient_and_ids": true
+  },
+  "invalid_empty_dtype_batch": {
+    "passed": true
+  },
+  "tracker_30_mean_terminal9_fd": {
+    "value": 1.826653592609017,
+    "steps": [
+      2e-05,
+      1e-05
+    ],
+    "gradient_fd_max_abs": [
+      1.141513550351192e-10,
+      3.2615687928228e-11
+    ],
+    "sgd_value": 1.811713282691593,
+    "duration_s": 1.6666666666666667
+  },
+  "quadrature_plane_closed_form": {
+    "normalized": 1.4216010615820136,
+    "physical": 2.416721804689423,
+    "finite_mean_30": 1.4058639958509085,
+    "value_abs_error": 0.0,
+    "gradient_max_abs_error": 2.220446049250313e-16,
+    "history": [
+      {
+        "panels": 1,
+        "evaluations": 4,
+        "finite": true,
+        "value_delta_max": null,
+        "gradient_delta_max": null,
+        "within_tolerance": false
+      },
+      {
+        "panels": 2,
+        "evaluations": 8,
+        "finite": true,
+        "value_delta_max": 3.058731046223784e-11,
+        "gradient_delta_max": 5.866758190364862e-10,
+        "within_tolerance": false
+      },
+      {
+        "panels": 4,
+        "evaluations": 16,
+        "finite": true,
+        "value_delta_max": 1.2101430968414206e-13,
+        "gradient_delta_max": 2.326139281194628e-12,
+        "within_tolerance": true
+      },
+      {
+        "panels": 8,
+        "evaluations": 32,
+        "finite": true,
+        "value_delta_max": 4.440892098500626e-16,
+        "gradient_delta_max": 8.881784197001252e-15,
+        "within_tolerance": true
+      }
+    ],
+    "duration_gradient_extension": true
+  },
+  "quadrature_feature_changes": {
+    "history": [
+      {
+        "panels": 1,
+        "evaluations": 8,
+        "finite": true,
+        "value_delta_max": null,
+        "gradient_delta_max": null,
+        "within_tolerance": false
+      },
+      {
+        "panels": 2,
+        "evaluations": 16,
+        "finite": true,
+        "value_delta_max": 0.004771851854487252,
+        "gradient_delta_max": 0.031913950308361194,
+        "within_tolerance": false
+      },
+      {
+        "panels": 4,
+        "evaluations": 32,
+        "finite": true,
+        "value_delta_max": 0.001663915546646244,
+        "gradient_delta_max": 0.010223042313985076,
+        "within_tolerance": false
+      },
+      {
+        "panels": 8,
+        "evaluations": 64,
+        "finite": true,
+        "value_delta_max": 0.00018035951367068037,
+        "gradient_delta_max": 0.0009443243392750489,
+        "within_tolerance": false
+      },
+      {
+        "panels": 16,
+        "evaluations": 128,
+        "finite": true,
+        "value_delta_max": 2.1935034975939516e-05,
+        "gradient_delta_max": 0.00011065731961323877,
+        "within_tolerance": false
+      },
+      {
+        "panels": 32,
+        "evaluations": 256,
+        "finite": true,
+        "value_delta_max": 2.7257671240121795e-06,
+        "gradient_delta_max": 1.365802752673062e-05,
+        "within_tolerance": false
+      },
+      {
+        "panels": 64,
+        "evaluations": 512,
+        "finite": true,
+        "value_delta_max": 3.402314696643316e-07,
+        "gradient_delta_max": 1.7020590403760139e-06,
+        "within_tolerance": false
+      },
+      {
+        "panels": 128,
+        "evaluations": 1024,
+        "finite": true,
+        "value_delta_max": 4.251374274844011e-08,
+        "gradient_delta_max": 2.1259680593743724e-07,
+        "within_tolerance": false
+      },
+      {
+        "panels": 256,
+        "evaluations": 2048,
+        "finite": true,
+        "value_delta_max": 5.313744111390406e-09,
+        "gradient_delta_max": 2.6569596300873854e-08,
+        "within_tolerance": true
+      },
+      {
+        "panels": 512,
+        "evaluations": 4096,
+        "finite": true,
+        "value_delta_max": 6.642029148906659e-10,
+        "gradient_delta_max": 3.3210438843411794e-09,
+        "within_tolerance": true
+      }
+    ],
+    "dense32768_value_abs_difference": 1.0040590581184006e-09,
+    "dense32768_gradient_abs_difference": 1.987184639062889e-09,
+    "budget_exhaustion_reports_unconverged": true
+  }
+}

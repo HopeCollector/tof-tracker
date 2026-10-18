@@ -1,0 +1,299 @@
+{
+  "subset_gradient_sensitivity": {
+    "all": {
+      "count": 120,
+      "reference_edt": {
+        "p": {
+          "median": 0.6756637255545865,
+          "p95": 2.4952729032675616
+        },
+        "v": {
+          "median": 0.9128976079098978,
+          "p95": 2.6275442970640213
+        },
+        "a": {
+          "median": 1.0677260177311119,
+          "p95": 3.593214184941845
+        }
+      },
+      "same_mesh_nodes_trilinear": {
+        "p": {
+          "median": 0.11098606038082047,
+          "p95": 0.5843148485420097
+        },
+        "v": {
+          "median": 0.12694622055444466,
+          "p95": 0.6953704604056967
+        },
+        "a": {
+          "median": 0.15120765184639054,
+          "p95": 1.0501929879212324
+        }
+      },
+      "c1": {
+        "p": {
+          "median": 0.03923148957587211,
+          "p95": 0.30775970053510193
+        },
+        "v": {
+          "median": 0.03990302981616381,
+          "p95": 0.3266034546811224
+        },
+        "a": {
+          "median": 0.04817525132527711,
+          "p95": 0.44973136877997943
+        }
+      }
+    },
+    "mesh_converged": {
+      "count": 116,
+      "reference_edt": {
+        "p": {
+          "median": 0.6559063544122428,
+          "p95": 2.3347761452596316
+        },
+        "v": {
+          "median": 0.8775888142976238,
+          "p95": 2.4983059066922766
+        },
+        "a": {
+          "median": 1.0554034199510784,
+          "p95": 3.457454953856419
+        }
+      },
+      "same_mesh_nodes_trilinear": {
+        "p": {
+          "median": 0.10970724866199952,
+          "p95": 0.4523566920505385
+        },
+        "v": {
+          "median": 0.1233728895509227,
+          "p95": 0.595144343747374
+        },
+        "a": {
+          "median": 0.14699102523241644,
+          "p95": 0.6875781362964429
+        }
+      },
+      "c1": {
+        "p": {
+          "median": 0.03908644154402412,
+          "p95": 0.28164344906022065
+        },
+        "v": {
+          "median": 0.03677584310891928,
+          "p95": 0.273817719353166
+        },
+        "a": {
+          "median": 0.04718947661814411,
+          "p95": 0.3413515686329355
+        }
+      }
+    },
+    "all_four_converged": {
+      "count": 101,
+      "reference_edt": {
+        "p": {
+          "median": 0.5390890488353965,
+          "p95": 2.3347761452596343
+        },
+        "v": {
+          "median": 0.8508396150152251,
+          "p95": 2.631208780810063
+        },
+        "a": {
+          "median": 0.8693108374002101,
+          "p95": 4.322728212649843
+        }
+      },
+      "same_mesh_nodes_trilinear": {
+        "p": {
+          "median": 0.09706834430409463,
+          "p95": 0.48215671044013386
+        },
+        "v": {
+          "median": 0.11663699886122185,
+          "p95": 0.6772181923233329
+        },
+        "a": {
+          "median": 0.10817138271250949,
+          "p95": 0.9505181731086035
+        }
+      },
+      "c1": {
+        "p": {
+          "median": 0.03780855553158098,
+          "p95": 0.29828341622476834
+        },
+        "v": {
+          "median": 0.028528125006765416,
+          "p95": 0.3076776677730313
+        },
+        "a": {
+          "median": 0.031819172482949014,
+          "p95": 0.44111404902402557
+        }
+      }
+    }
+  },
+  "temporal_spatial": {
+    "reference_edt": {
+      "temporal": {
+        "median": 0.004078819884485168,
+        "p95": 0.017479814245131103,
+        "max": 0.049380726695054535
+      },
+      "spatial": {
+        "median": 0.06927476291624504,
+        "p95": 0.20808661064364675,
+        "max": 0.22946914477092634
+      }
+    },
+    "same_mesh_nodes_trilinear": {
+      "temporal": {
+        "median": 0.0046535109275588,
+        "p95": 0.012050617804677848,
+        "max": 0.02990586710754358
+      },
+      "spatial": {
+        "median": 0.01007752250958661,
+        "p95": 0.018588942499544736,
+        "max": 0.034193509875312174
+      }
+    },
+    "c1": {
+      "temporal": {
+        "median": 0.004246715770266266,
+        "p95": 0.012827868050303651,
+        "max": 0.026402004361922977
+      },
+      "spatial": {
+        "median": 0.0010177743763150472,
+        "p95": 0.0066195604672174245,
+        "max": 0.01509430188377625
+      }
+    }
+  },
+  "timing": [
+    {
+      "scenes": 1,
+      "scope": "given_decoded_coefficients",
+      "backward": false,
+      "ms": {
+        "reference_edt": 0.23750199761707336,
+        "same_mesh_nodes_trilinear": 0.24231149291153997,
+        "c1": 0.5673139967257157
+      }
+    },
+    {
+      "scenes": 1,
+      "scope": "given_decoded_coefficients",
+      "backward": true,
+      "ms": {
+        "reference_edt": 0.6787744932807982,
+        "same_mesh_nodes_trilinear": 0.6728890002705157,
+        "c1": 1.2612235004780814
+      }
+    },
+    {
+      "scenes": 1,
+      "scope": "boundary_decode_and_loss",
+      "backward": false,
+      "ms": {
+        "reference_edt": 0.45249800314195454,
+        "same_mesh_nodes_trilinear": 1.4182695013005286,
+        "c1": 1.7465419950895011
+      }
+    },
+    {
+      "scenes": 1,
+      "scope": "boundary_decode_and_loss",
+      "backward": true,
+      "ms": {
+        "reference_edt": 0.9038465068442747,
+        "same_mesh_nodes_trilinear": 2.2748704941477627,
+        "c1": 2.687748012249358
+      }
+    },
+    {
+      "scenes": 8,
+      "scope": "given_decoded_coefficients",
+      "backward": false,
+      "ms": {
+        "reference_edt": 0.33853750210255384,
+        "same_mesh_nodes_trilinear": 0.33845748112071306,
+        "c1": 0.466544006485492
+      }
+    },
+    {
+      "scenes": 8,
+      "scope": "given_decoded_coefficients",
+      "backward": true,
+      "ms": {
+        "reference_edt": 0.6769844912923872,
+        "same_mesh_nodes_trilinear": 0.6824444863013923,
+        "c1": 1.267418498173356
+      }
+    },
+    {
+      "scenes": 8,
+      "scope": "boundary_decode_and_loss",
+      "backward": false,
+      "ms": {
+        "reference_edt": 0.42618298903107643,
+        "same_mesh_nodes_trilinear": 1.6477104945806786,
+        "c1": 1.631540508242324
+      }
+    },
+    {
+      "scenes": 8,
+      "scope": "boundary_decode_and_loss",
+      "backward": true,
+      "ms": {
+        "reference_edt": 0.9103615011554211,
+        "same_mesh_nodes_trilinear": 2.0108735043322667,
+        "c1": 2.7826789882965386
+      }
+    },
+    {
+      "scenes": 64,
+      "scope": "given_decoded_coefficients",
+      "backward": false,
+      "ms": {
+        "reference_edt": 0.4870429984293878,
+        "same_mesh_nodes_trilinear": 0.4277130065020174,
+        "c1": 0.5170484946575016
+      }
+    },
+    {
+      "scenes": 64,
+      "scope": "given_decoded_coefficients",
+      "backward": true,
+      "ms": {
+        "reference_edt": 0.850210984935984,
+        "same_mesh_nodes_trilinear": 0.8379459904972464,
+        "c1": 1.2731339957099408
+      }
+    },
+    {
+      "scenes": 64,
+      "scope": "boundary_decode_and_loss",
+      "backward": false,
+      "ms": {
+        "reference_edt": 0.5549134948523715,
+        "same_mesh_nodes_trilinear": 1.8250374996569008,
+        "c1": 1.9696235103765503
+      }
+    },
+    {
+      "scenes": 64,
+      "scope": "boundary_decode_and_loss",
+      "backward": true,
+      "ms": {
+        "reference_edt": 1.100806999602355,
+        "same_mesh_nodes_trilinear": 2.495382505003363,
+        "c1": 3.21844698919449
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "scope": "3600 reconstructed double positions, native CPU triangle BVH vs saved rectangle-union oracle; independent query algorithm, shared source OBJ/box-union model",
+  "count": 3600,
+  "max_distance_difference_m": 7.105427357601002e-15,
+  "max_loss_difference": 7.993605777301127e-15,
+  "native_library_sha256": "843d020c012e275d54b917e6883f453c9447bf588ec41bc39d797f955e285dd0",
+  "map_sha256": "da25463989072ef10ceaa5c6cbddd55697c9c16a8d9c2e3c5df3cb5f523ba6e5",
+  "raw_sha256": "0a18e9ffa683538d164c70ae79dbf0ba99d7cd0855bf9e7e7ee01b86b0695ff8",
+  "examples": [
+    {
+      "group": 0,
+      "candidate": 7,
+      "native_loss": 2.447545196692667,
+      "native_30_sample_min_distance_m": 0.0045828331047061965
+    },
+    {
+      "group": 7,
+      "candidate": 7,
+      "native_loss": 5.671375327846271,
+      "native_30_sample_min_distance_m": -0.17487734148371903
+    }
+  ]
+}

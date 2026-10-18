@@ -1,0 +1,33 @@
+{
+  "source_map_sha256": "da25463989072ef10ceaa5c6cbddd55697c9c16a8d9c2e3c5df3cb5f523ba6e5",
+  "pointcloud_sha256": "528ca978aa9789371d8ba960f88c1ce0aa49a86eb972a2cd656038f9ac6406f0",
+  "spacing_m": 0.2,
+  "point_spacing_max_m": 0.1,
+  "point_count": 1769723,
+  "dropped_upper_boundary_points": 6214,
+  "origin_m": [
+    -30.0,
+    -30.0,
+    -0.2
+  ],
+  "max_bounds_m": [
+    30.0,
+    30.0,
+    20.99766445159912
+  ],
+  "shape_xyz": [
+    300,
+    300,
+    106
+  ],
+  "occupied_nodes": 350262,
+  "node_bytes": 38160000,
+  "surface_sampling_and_voxelization_seconds": 0.24583528100629337,
+  "two_edt_seconds": 0.8651585770130623,
+  "process_peak_rss_bytes_including_original_parity": 1443958784,
+  "original_builder_parity": {
+    "bitwise_equal_to_original_builder": true,
+    "original_sha256": "bcc8adbc607a1c7e764aa7f69fb71f524245f7aa21fb79a2d48765e85610d52b"
+  },
+  "limits": "Controlled same-OBJ raw box-face+ground sampling, float32 .1m-max spacing; not original dataset/generator/PCL VoxelGrid. Interior is not filled. Original floor-index, double EDT, no half-cell correction preserved."
+}

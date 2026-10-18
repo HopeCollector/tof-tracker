@@ -1,0 +1,19 @@
+{
+  "same_input_float_vertices_promoted_to_float64": true,
+  "point": [
+    2.325000047683716,
+    1.225000023841858,
+    0.0
+  ],
+  "local_projection": [
+    9.418887073918413,
+    -0.051083709579087436,
+    0.0
+  ],
+  "v2_local_x": 8.604727851274022,
+  "de1": 0.051083709579087436,
+  "selected_by_upstream_region_logic": "V1 (triangle second vertex)",
+  "upstream_same_algorithm_float64": -0.8157602498291261,
+  "icg_correct_edge_distance": -0.053032875061035156,
+  "conclusion": "Region classification fails for this obtuse triangle even in float64; precision-only promotion does not repair it."
+}

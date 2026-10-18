@@ -1,0 +1,694 @@
+{
+  "passed": true,
+  "device": "cpu",
+  "python": "3.12.3",
+  "torch": "2.9.1+cu128",
+  "numpy": "2.5.4",
+  "wall_seconds": 0.47622558899456635,
+  "checks": {
+    "plane_closed_form": {
+      "passed": true,
+      "segments": 37,
+      "curves": 3,
+      "orders": [
+        {
+          "order": 4,
+          "cost_abs_error": 8.881784197001252e-16,
+          "coefficient_gradient_abs_error": 2.921440866998637e-12
+        },
+        {
+          "order": 8,
+          "cost_abs_error": 8.881784197001252e-16,
+          "coefficient_gradient_abs_error": 1.9118040484045196e-13
+        },
+        {
+          "order": 16,
+          "cost_abs_error": 8.881784197001252e-16,
+          "coefficient_gradient_abs_error": 1.9118040484045196e-13
+        },
+        {
+          "order": 32,
+          "cost_abs_error": 8.881784197001252e-16,
+          "coefficient_gradient_abs_error": 1.9118040484045196e-13
+        }
+      ],
+      "objective": "normalized_time_mean; no duration factor",
+      "split_diagnostics": [
+        {
+          "face_events": [
+            {
+              "u": 0.04878048780487803,
+              "axis": 0,
+              "index": 4,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.20121951219512194,
+              "axis": 0,
+              "index": 5,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.35365853658536583,
+              "axis": 0,
+              "index": 6,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.5060975609756098,
+              "axis": 0,
+              "index": 7,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.6585365853658537,
+              "axis": 0,
+              "index": 8,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.8109756097560976,
+              "axis": 0,
+              "index": 9,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.9634146341463415,
+              "axis": 0,
+              "index": 10,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.64
+            },
+            {
+              "u": 0.13186813186813187,
+              "axis": 1,
+              "index": 6,
+              "root_residual_m": 1.3877787807814457e-17,
+              "slope_m_per_u": 0.91
+            },
+            {
+              "u": 0.4065934065934066,
+              "axis": 1,
+              "index": 7,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.91
+            },
+            {
+              "u": 0.6813186813186813,
+              "axis": 1,
+              "index": 8,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.91
+            },
+            {
+              "u": 0.956043956043956,
+              "axis": 1,
+              "index": 9,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.91
+            },
+            {
+              "u": 0.25,
+              "axis": 2,
+              "index": 8,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.5
+            },
+            {
+              "u": 0.75,
+              "axis": 2,
+              "index": 9,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.5
+            }
+          ],
+          "identically_on_faces": [],
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "near_tangency_policy": "reject stationary face residual < 1e-9 m"
+        },
+        {
+          "face_events": [
+            {
+              "u": 0.09375000000000001,
+              "axis": 0,
+              "index": 4,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.25,
+              "axis": 0,
+              "index": 5,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.40625,
+              "axis": 0,
+              "index": 6,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.5625,
+              "axis": 0,
+              "index": 7,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.7187499999999999,
+              "axis": 0,
+              "index": 8,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.8749999999999999,
+              "axis": 0,
+              "index": 9,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6
+            },
+            {
+              "u": 0.18181818181818177,
+              "axis": 1,
+              "index": 5,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.1
+            },
+            {
+              "u": 0.409090909090909,
+              "axis": 1,
+              "index": 6,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.1
+            },
+            {
+              "u": 0.6363636363636362,
+              "axis": 1,
+              "index": 7,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.1
+            },
+            {
+              "u": 0.8636363636363635,
+              "axis": 1,
+              "index": 8,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.1
+            },
+            {
+              "u": 0.75,
+              "axis": 2,
+              "index": 8,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.5
+            },
+            {
+              "u": 0.25,
+              "axis": 2,
+              "index": 9,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.5
+            }
+          ],
+          "identically_on_faces": [],
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "near_tangency_policy": "reject stationary face residual < 1e-9 m"
+        },
+        {
+          "face_events": [
+            {
+              "u": 0.038709677419354875,
+              "axis": 0,
+              "index": 4,
+              "root_residual_m": 6.938893903907228e-18,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.20000000000000004,
+              "axis": 0,
+              "index": 5,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.3612903225806452,
+              "axis": 0,
+              "index": 6,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.5225806451612903,
+              "axis": 0,
+              "index": 7,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.6838709677419355,
+              "axis": 0,
+              "index": 8,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.8451612903225807,
+              "axis": 0,
+              "index": 9,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.55
+            },
+            {
+              "u": 0.07317073170731707,
+              "axis": 1,
+              "index": 6,
+              "root_residual_m": 6.938893903907228e-18,
+              "slope_m_per_u": 0.82
+            },
+            {
+              "u": 0.3780487804878049,
+              "axis": 1,
+              "index": 7,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.82
+            },
+            {
+              "u": 0.6829268292682927,
+              "axis": 1,
+              "index": 8,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.82
+            },
+            {
+              "u": 0.9878048780487806,
+              "axis": 1,
+              "index": 9,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 0.82
+            }
+          ],
+          "identically_on_faces": [],
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "near_tangency_policy": "reject stationary face residual < 1e-9 m"
+        }
+      ]
+    },
+    "general_field_and_fd": {
+      "passed": true,
+      "segments": 42,
+      "orders": [
+        {
+          "order": 4,
+          "cost_abs_error": 2.0653518895130674e-07,
+          "coefficient_gradient_abs_error": 1.6526165120822611e-06
+        },
+        {
+          "order": 8,
+          "cost_abs_error": 1.3428369527446193e-11,
+          "coefficient_gradient_abs_error": 9.958162183743013e-08
+        },
+        {
+          "order": 16,
+          "cost_abs_error": 1.3454126701617497e-11,
+          "coefficient_gradient_abs_error": 9.958156721445732e-08
+        },
+        {
+          "order": 32,
+          "cost_abs_error": 1.3453238523197797e-11,
+          "coefficient_gradient_abs_error": 9.958156743650193e-08
+        }
+      ],
+      "independent_composite_gl8_panels": [
+        512,
+        1024
+      ],
+      "independent_convergence": {
+        "cost_abs_change": 6.565148424897416e-11,
+        "coefficient_gradient_abs_change": 2.1719154386090622e-07
+      },
+      "coefficient_fd_max_abs_error": 5.097958166722094e-10,
+      "boundary_and_duration_fd_max_abs_error": 1.626086966466378e-09,
+      "fd_step": 2e-06,
+      "fd_rebuilds_every_partition": true,
+      "boundary_parameter_order": "p0[3],v0[3],a0[3],p1[3],v1[3],a1[3],T",
+      "float32_own_partition_segments": 42,
+      "float32_value_gradient_finite": true,
+      "single_vs_batch_cost_abs_error": 0.0,
+      "split_diagnostics": [
+        {
+          "face_events": [
+            {
+              "u": 0.22643689222150332,
+              "axis": 0,
+              "index": 4,
+              "root_residual_m": 1.942890293094024e-16,
+              "slope_m_per_u": 1.3077985186776586
+            },
+            {
+              "u": 0.3700456049062486,
+              "axis": 0,
+              "index": 5,
+              "root_residual_m": 4.996003610813204e-16,
+              "slope_m_per_u": 2.1172666430648253
+            },
+            {
+              "u": 0.4792363430028953,
+              "axis": 0,
+              "index": 6,
+              "root_residual_m": 1.1102230246251565e-16,
+              "slope_m_per_u": 2.401239766440279
+            },
+            {
+              "u": 0.5839467161642815,
+              "axis": 0,
+              "index": 7,
+              "root_residual_m": 2.4424906541753444e-15,
+              "slope_m_per_u": 2.314651809868481
+            },
+            {
+              "u": 0.7029323400698488,
+              "axis": 0,
+              "index": 8,
+              "root_residual_m": 4.884981308350689e-15,
+              "slope_m_per_u": 1.8295564666132627
+            },
+            {
+              "u": 0.9049789017024494,
+              "axis": 0,
+              "index": 9,
+              "root_residual_m": 5.995204332975845e-15,
+              "slope_m_per_u": 0.6750188805679507
+            },
+            {
+              "u": 0.10541390348531392,
+              "axis": 1,
+              "index": 4,
+              "root_residual_m": 6.938893903907228e-17,
+              "slope_m_per_u": 0.6190236786848639
+            },
+            {
+              "u": 0.32661466614443113,
+              "axis": 1,
+              "index": 5,
+              "root_residual_m": 2.7755575615628914e-16,
+              "slope_m_per_u": 1.6407349810771792
+            },
+            {
+              "u": 0.46221404727276233,
+              "axis": 1,
+              "index": 6,
+              "root_residual_m": 2.1094237467877974e-15,
+              "slope_m_per_u": 1.975837225395828
+            },
+            {
+              "u": 0.5900986217485467,
+              "axis": 1,
+              "index": 7,
+              "root_residual_m": 2.9976021664879227e-15,
+              "slope_m_per_u": 1.861669740956574
+            },
+            {
+              "u": 0.7495119232270084,
+              "axis": 1,
+              "index": 8,
+              "root_residual_m": 1.3322676295501878e-15,
+              "slope_m_per_u": 1.2017864468912238
+            },
+            {
+              "u": 0.19086903952989542,
+              "axis": 2,
+              "index": 5,
+              "root_residual_m": 1.3877787807814457e-17,
+              "slope_m_per_u": 0.891513569514202
+            },
+            {
+              "u": 0.3811887703733921,
+              "axis": 2,
+              "index": 6,
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 1.673507925927695
+            },
+            {
+              "u": 0.5202771753074276,
+              "axis": 2,
+              "index": 7,
+              "root_residual_m": 4.440892098500626e-16,
+              "slope_m_per_u": 1.8470978088062147
+            },
+            {
+              "u": 0.663890801395403,
+              "axis": 2,
+              "index": 8,
+              "root_residual_m": 4.551914400963142e-15,
+              "slope_m_per_u": 1.5613820242846939
+            },
+            {
+              "u": 0.8938605189134712,
+              "axis": 2,
+              "index": 9,
+              "root_residual_m": 5.10702591327572e-15,
+              "slope_m_per_u": 0.6054113794549059
+            }
+          ],
+          "identically_on_faces": [],
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "near_tangency_policy": "reject stationary face residual < 1e-9 m"
+        },
+        {
+          "face_events": [
+            {
+              "u": 0.03452327189693536,
+              "axis": 0,
+              "index": 5,
+              "root_residual_m": 1.4988010832439613e-15,
+              "slope_m_per_u": 5.586696786421106
+            },
+            {
+              "u": 0.965532099205807,
+              "axis": 0,
+              "index": 5,
+              "root_residual_m": 6.161737786669619e-15,
+              "slope_m_per_u": 5.604003532909438
+            },
+            {
+              "u": 0.08164255962085355,
+              "axis": 0,
+              "index": 6,
+              "root_residual_m": 2.0539125955565396e-15,
+              "slope_m_per_u": 5.025048830990782
+            },
+            {
+              "u": 0.9186365985437253,
+              "axis": 0,
+              "index": 6,
+              "root_residual_m": 5.10702591327572e-15,
+              "slope_m_per_u": 5.056456531866832
+            },
+            {
+              "u": 0.134726296828413,
+              "axis": 0,
+              "index": 7,
+              "root_residual_m": 3.1086244689504383e-15,
+              "slope_m_per_u": 4.394245635907897
+            },
+            {
+              "u": 0.8659464145755517,
+              "axis": 0,
+              "index": 7,
+              "root_residual_m": 2.220446049250313e-15,
+              "slope_m_per_u": 4.431457113133366
+            },
+            {
+              "u": 0.19682905727545483,
+              "axis": 0,
+              "index": 8,
+              "root_residual_m": 2.1094237467877974e-15,
+              "slope_m_per_u": 3.6568690281013803
+            },
+            {
+              "u": 0.8044048695237923,
+              "axis": 0,
+              "index": 8,
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 3.691663633485991
+            },
+            {
+              "u": 0.2751726502893277,
+              "axis": 0,
+              "index": 9,
+              "root_residual_m": 6.661338147750939e-16,
+              "slope_m_per_u": 2.724669892886684
+            },
+            {
+              "u": 0.7267880586377344,
+              "axis": 0,
+              "index": 9,
+              "root_residual_m": 2.6645352591003757e-15,
+              "slope_m_per_u": 2.7489030699151
+            },
+            {
+              "u": 0.4025447701142694,
+              "axis": 0,
+              "index": 10,
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 1.1981371127645222
+            },
+            {
+              "u": 0.600306189467604,
+              "axis": 0,
+              "index": 10,
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 1.2037404273771477
+            },
+            {
+              "u": 0.031246421199403997,
+              "axis": 1,
+              "index": 4,
+              "root_residual_m": 1.8735013540549517e-16,
+              "slope_m_per_u": 1.6005379451888953
+            },
+            {
+              "u": 0.18696001706265858,
+              "axis": 1,
+              "index": 5,
+              "root_residual_m": 1.1102230246251565e-16,
+              "slope_m_per_u": 1.6117381992074145
+            },
+            {
+              "u": 0.3415901741776944,
+              "axis": 1,
+              "index": 6,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.6198525393851697
+            },
+            {
+              "u": 0.49612449310664286,
+              "axis": 1,
+              "index": 7,
+              "root_residual_m": 2.220446049250313e-16,
+              "slope_m_per_u": 1.612883021765465
+            },
+            {
+              "u": 0.6520544958733119,
+              "axis": 1,
+              "index": 8,
+              "root_residual_m": 1.7763568394002505e-15,
+              "slope_m_per_u": 1.592299174870987
+            },
+            {
+              "u": 0.8101035671736923,
+              "axis": 1,
+              "index": 9,
+              "root_residual_m": 6.661338147750939e-16,
+              "slope_m_per_u": 1.5738162815922891
+            },
+            {
+              "u": 0.9686382634961795,
+              "axis": 1,
+              "index": 10,
+              "root_residual_m": 8.881784197001252e-16,
+              "slope_m_per_u": 1.5891526474683144
+            },
+            {
+              "u": 0.08337391162076449,
+              "axis": 2,
+              "index": 5,
+              "root_residual_m": 3.0531133177191805e-16,
+              "slope_m_per_u": 1.1983541172011956
+            },
+            {
+              "u": 0.2927121895091433,
+              "axis": 2,
+              "index": 6,
+              "root_residual_m": 5.551115123125783e-17,
+              "slope_m_per_u": 1.190689068591343
+            },
+            {
+              "u": 0.5026176567977854,
+              "axis": 2,
+              "index": 7,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.1938819070481765
+            },
+            {
+              "u": 0.7108360711798648,
+              "axis": 2,
+              "index": 8,
+              "root_residual_m": 1.1102230246251565e-16,
+              "slope_m_per_u": 1.208097186823597
+            },
+            {
+              "u": 0.9171083411866215,
+              "axis": 2,
+              "index": 9,
+              "root_residual_m": 0.0,
+              "slope_m_per_u": 1.211054262866183
+            }
+          ],
+          "identically_on_faces": [],
+          "coverage_check": "coordinate extrema via numerical degree-four roots; not certified",
+          "near_tangency_policy": "reject stationary face residual < 1e-9 m"
+        }
+      ]
+    },
+    "rejections": {
+      "passed": true,
+      "cases": {
+        "near_tangency_batch_index_1": {
+          "exception": "CurveSplitError",
+          "message": "curve 1 could not be split: near-tangent grid-face contact; this experiment rejects it"
+        },
+        "outside_domain": {
+          "exception": "CurveSplitError",
+          "message": "curve 0 could not be split: curve leaves the declared query domain"
+        },
+        "nonfinite_coefficients": {
+          "exception": "CurveSplitError",
+          "message": "curve 0 could not be split: expected one finite quintic with coefficients (6,3)"
+        },
+        "empty_batch": {
+          "exception": "ValueError",
+          "message": "coefficients must be a nonempty strided float32/64 tensor [B,6,3]"
+        },
+        "stale_plan": {
+          "exception": "ValueError",
+          "message": "stale or incompatible quadrature plan; split the current coefficients again"
+        },
+        "changing_plan_dtype": {
+          "exception": "ValueError",
+          "message": "quadrature dtype must match split input; split the converted coefficients again"
+        },
+        "unsupported_order": {
+          "exception": "ValueError",
+          "message": "order must be one of 4, 8, 16, 32"
+        },
+        "penalty_overflow": {
+          "exception": "FloatingPointError",
+          "message": "nonfinite field/penalty/integral; the batch is not partially accepted"
+        },
+        "nonpositive_penalty_radius": {
+          "exception": "ValueError",
+          "message": "d0 must be finite and r finite and positive"
+        }
+      }
+    }
+  },
+  "failure": null,
+  "limits": "numerical GL convergence and first gradients; no exact integral, certified roots or collision safety",
+  "source_hashes": {
+    "experiments/esdf_curve_integral/integrate.py": "72612dba6e01288a6c63518c13cdf90b1c7ff7cb2f259a78cf3f7b2c6097c79c",
+    "tests/verify_esdf_curve_integral.py": "b07f426bce3f54f2b0c7fdae1a06e6316994331e2ab52d3869aa5c85df028b02",
+    "experiments/esdf_grid_eval/path_integrals.py": "cce6abf1566dc127b222a752ad35f7e2f8eb903f7e7370546eba9f21f95b07de",
+    "devtools/esdf.py": "0ba44fe2f18d91c366abbc45cb1083d0225da54b083d7228ed2f36bc65ce261c",
+    "devtools/trajectory.py": "4b996a770f8919ef19a47e4e8eb11bdd56ff95846167ab2f7b96c040de6dae65"
+  }
+}

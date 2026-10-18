@@ -1,0 +1,11 @@
+{
+  "route": "B",
+  "case": "analytic",
+  "context_baseline_free_bytes": 14049738752,
+  "post_prepare_global_used_delta_bytes": 77266944,
+  "post_backward_global_used_delta_bytes": 81461248,
+  "torch_resident_delta_bytes": 196608,
+  "torch_peak_delta_bytes": 3408384,
+  "limitation": "Fresh process but global CUDA free deltas include other GPU activity; Warp peak not instrumented.",
+  "gpu_status": "Thu Oct 15 07:00:37 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 595.91.07              Driver Version: 595.91.07      CUDA Version: 13.2     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 5070 Ti     Off |   00000000:01:00.0  On |                  N/A |\n| 48%   44C    P1             44W /  300W |    2518MiB /  16303MiB |      9%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A               1      C   python                                  550MiB |\n|    0   N/A  N/A             205      C   /opt/venv/bin/python                    306MiB |\n+-----------------------------------------------------------------------------------------+\n"
+}

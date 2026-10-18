@@ -1,0 +1,4 @@
+{
+  "sparse_cuda_finite": true,
+  "compile_error": "InductorError('CalledProcessError: Command \\'[\\'/usr/bin/gcc\\', \\'/tmp/tmpspgi94sm/cuda_utils.c\\', \\'-O3\\', \\'-shared\\', \\'-fPIC\\', \\'-Wno-psabi\\', \\'-o\\', \\'/tmp/tmpspgi94sm/cuda_utils.cpython-312-x86_64-linux-gnu.so\\', \\'-lcuda\\', \\'-L/opt/venv/lib/python3.12/site-packages/triton/backends/nvidia/lib\\', \\'-L/lib/x86_64-linux-gnu\\', \\'-I/opt/venv/lib/python3.12/site-packages/triton/backends/nvidia/include\\', \\'-I/tmp/tmpspgi94sm\\', \\'-I/usr/include/python3.12\\']\\' returned non-zero exit status 1.\\n\\nSet TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you\\'re reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS=\"+dynamo\"\\n')"
+}

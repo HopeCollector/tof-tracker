@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "checks": [
+    "exact independent OBJ vertices/faces, separate ground, physical crease edges and no display sampling",
+    "embedded Plotly, escaped names/metadata, background-only display controls and bounded viewport",
+    "closed outward spheres, physical radius/bounds and independent volume",
+    "scene retains complete map, physical spheres, pitched FLU axes and background identity",
+    "map-only CLI exports complete offline HTML without changing the input",
+    "scene CLI loads physical radii and renders full roll without changing configuration",
+    "paired positions use default physical configuration and identity FLU attitude",
+    "incomplete scene arguments fail before output",
+    "bad format/geometry/port/nonfinite poses and removed display parameters fail without output",
+    "input/config files and their hardlink/symlink aliases are protected",
+    "foreground HTTP serves only its HTML and Ctrl+C closes the listener cleanly"
+  ]
+}

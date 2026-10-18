@@ -1,0 +1,161 @@
+{
+  "status": "passed",
+  "device": "cuda",
+  "torch_version": "2.9.1+cu128",
+  "elapsed_correctness_seconds": 1.00636539698462,
+  "scope": "fixed-node interpolation C1, position AD and serialization contract; not geometric gradient, clearance or performance validation",
+  "source_sha256": {
+    "/workspace/tests/verify_esdf.py": "59a67820caf21c1f89ce2adffa3f7620d022eb6135064cb2c0624c5554697a8f",
+    "devtools/esdf.py": "bf94d51e5a826d77e24f84dc9495cce8abf5387160a647b00abfdcc22bff23b2"
+  },
+  "groups": {
+    "analytic_reproduction": {
+      "status": "passed",
+      "plane": {
+        "point_count": 135,
+        "value_max_abs": 3.3306690738754696e-16,
+        "gradient_max_abs": 9.992007221626409e-16
+      },
+      "quadratic_with_cross_terms": {
+        "point_count": 135,
+        "value_max_abs": 6.661338147750939e-16,
+        "gradient_max_abs": 3.6637359812630166e-15
+      }
+    },
+    "all_internal_faces": {
+      "status": "passed",
+      "fixture_shape": [
+        7,
+        6,
+        5
+      ],
+      "faces_by_axis": [
+        18,
+        16,
+        12
+      ],
+      "all_internal_faces": 46,
+      "face_points": 414,
+      "independent_same_point_value_jump": 0.0,
+      "independent_same_point_world_gradient_jump": 0.0,
+      "query_face_value_error": 1.1102230246251565e-15,
+      "query_face_world_gradient_error": 1.2434497875801753e-14,
+      "query_two_sided_linear_limit_value_jump": 6.5653593672720945e-12,
+      "query_two_sided_linear_limit_gradient_jump": 2.0333035255504228e-10,
+      "query_one_sided_oracle_gradient_errors": [
+        2.1094237467877974e-14,
+        1.4210854715202004e-14
+      ],
+      "scope": "every internal face of a fixed random fixture, 3x3 interior points; numerical evidence plus shared Hermite jets, not geometric-SDF C1"
+    },
+    "float32_and_finite_differences": {
+      "status": "passed",
+      "float32_value_error": 2.4571106935211695e-07,
+      "float32_world_gradient_error": 3.748590740926261e-06,
+      "float64_central_differences": [
+        {
+          "step_m": 1e-05,
+          "gradient_max_abs": 2.5425384464483614e-08
+        },
+        {
+          "step_m": 1e-06,
+          "gradient_max_abs": 1.4155592253928262e-09
+        }
+      ],
+      "points_away_from_seams": 47
+    },
+    "batch_shape_and_ownership": {
+      "status": "passed",
+      "noncontiguous_batch_shape": [
+        2,
+        4,
+        3,
+        3
+      ],
+      "empty_shapes": [
+        [
+          0,
+          3
+        ],
+        [
+          2,
+          0,
+          3
+        ],
+        [
+          0,
+          2,
+          3
+        ]
+      ],
+      "sample_input_detached_and_cloned": true,
+      "samples_property_isolated": true,
+      "map_sample_gradient": null,
+      "query_gradient_preserved": true
+    },
+    "closed_bounds_and_invalid_queries": {
+      "status": "passed",
+      "torch.float64": {
+        "legal_corners": 8,
+        "rejected_nextafter_or_nonfinite": 9,
+        "invalid_gradient_exactly_zero": true
+      },
+      "torch.float32": {
+        "legal_corners": 8,
+        "rejected_nextafter_or_nonfinite": 9,
+        "invalid_gradient_exactly_zero": true
+      }
+    },
+    "construction_and_query_rejections": {
+      "status": "passed",
+      "rejected_cases": 31,
+      "wrong_device_case": true
+    },
+    "builder_resolution_and_padding": {
+      "status": "passed",
+      "resolutions": [
+        {
+          "spacing_m": 0.2,
+          "shape": [
+            7,
+            7,
+            7
+          ],
+          "callback_count": 10,
+          "sample_count": 343,
+          "ceil_padding_does_not_expand_bounds": true
+        },
+        {
+          "spacing_m": 0.1,
+          "shape": [
+            11,
+            10,
+            11
+          ],
+          "callback_count": 33,
+          "sample_count": 1210,
+          "ceil_padding_does_not_expand_bounds": true
+        },
+        {
+          "spacing_m": 0.05,
+          "shape": [
+            19,
+            16,
+            18
+          ],
+          "callback_count": 148,
+          "sample_count": 5472,
+          "ceil_padding_does_not_expand_bounds": true
+        }
+      ],
+      "builder_invalid_cases": 5
+    },
+    "storage_roundtrip_and_corruption": {
+      "status": "passed",
+      "sample_dtype": "float32",
+      "metadata_deep_copy": true,
+      "value_and_gradient_bitwise_roundtrip": true,
+      "rejected_corruptions": 12
+    }
+  }
+}

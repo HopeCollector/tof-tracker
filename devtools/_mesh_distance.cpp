@@ -1,5 +1,27 @@
 // CPU mesh-distance C ABI. All coordinates and residual calculations are double.
-// See mesh_distance.md and third_party/TriangleMeshDistance-SOURCE.md.
+// Public input/lifetime contracts are documented in mesh_distance.py.
+//
+// Vendored TriangleMeshDistance.h: Jose Antonio Fernandez Fernandez, 2021, MIT.
+// Source: https://github.com/UPC-ViRVIG/SdfLib commit
+// 8db373ef71d65be24badf6ae10750a932bbc223b, file
+// libs/InteractiveComputerGraphics/InteractiveComputerGraphics/TriangleMeshDistance.h.
+// Original SHA256:
+// c9a4fabb0e54a3b2d4ef4eb9deb941387d9916f8bd138d0ed5ff7c329175c58c.
+// Vendored SHA256:
+// e1ff3c81ffb856a8d53a2576704cc83b55bfd63f8bcc14ca8ae06cb8838886f3.
+// The header adds <stdexcept> and signed_distance guards for a missing/nonfinite
+// nearest triangle before indexing, an invalid nearest-entity enum, and
+// nonfinite pseudonormals. It also normalizes trailing whitespace/newline.
+// Pre-whitespace-normalization patched SHA256 (older validation snapshots):
+// 1c631199a4462c3443aac0ef9647b007c38dfff874e518d1dd6f40a0c50e752a.
+// Successful finite BVH/query arithmetic is unchanged; these guards turn
+// overflow/error paths into C ABI failures. MIT notice and separate LICENSE
+// are retained. No SdfLib runtime, octree or Hermite data is linked.
+//
+// Below, the BVH selects a nearest triangle and its pseudonormal sign. We
+// independently recompute closest projection/three clamped-segment residuals
+// to avoid cancellation in the header's expanded quadratic. The selected face
+// still comes from the BVH: this is not a Boolean or exact-arithmetic proof.
 #include <cstdint>
 #include <limits>
 #include <memory>

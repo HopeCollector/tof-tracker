@@ -1,0 +1,579 @@
+{
+  "source_raw": "outputs/esdf_reference_eval/integrated-20261018-v2/comparison/raw.npz",
+  "source_sha256": "0a18e9ffa683538d164c70ae79dbf0ba99d7cd0855bf9e7e7ee01b86b0695ff8",
+  "results": {
+    "torch.float64": {
+      "failed_count": 20,
+      "success_count": 100,
+      "successful_segment_count": 2941,
+      "failures": [
+        {
+          "curve": 1,
+          "group": 0,
+          "candidate": 1,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 4,
+          "group": 0,
+          "candidate": 4,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 7,
+          "group": 0,
+          "candidate": 7,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 10,
+          "group": 0,
+          "candidate": 10,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 13,
+          "group": 0,
+          "candidate": 13,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 16,
+          "group": 1,
+          "candidate": 1,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 19,
+          "group": 1,
+          "candidate": 4,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 22,
+          "group": 1,
+          "candidate": 7,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 25,
+          "group": 1,
+          "candidate": 10,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 28,
+          "group": 1,
+          "candidate": 13,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 31,
+          "group": 2,
+          "candidate": 1,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 34,
+          "group": 2,
+          "candidate": 4,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 37,
+          "group": 2,
+          "candidate": 7,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 40,
+          "group": 2,
+          "candidate": 10,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 43,
+          "group": 2,
+          "candidate": 13,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 106,
+          "group": 7,
+          "candidate": 1,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 109,
+          "group": 7,
+          "candidate": 4,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 112,
+          "group": 7,
+          "candidate": 7,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 115,
+          "group": 7,
+          "candidate": 10,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        },
+        {
+          "curve": 118,
+          "group": 7,
+          "candidate": 13,
+          "reason": "near-tangent grid-face contact; this experiment rejects it",
+          "stationary_contacts": [
+            {
+              "axis": 2,
+              "grid_index": 16,
+              "level_m": 3.0,
+              "u": 0.9999999999999987,
+              "endpoint_gap": 1.3322676295501878e-15,
+              "residual_m": 2.081668171172163e-17,
+              "side_values_m": [
+                2.0816681711721617e-17,
+                2.0816681711721642e-17
+              ],
+              "equation": [
+                0.0,
+                0.0,
+                0.020833333333333336,
+                -0.07916666666666669,
+                0.09583333333333338,
+                -0.037500000000000006
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "torch.float32": {
+      "failed_count": 0,
+      "success_count": 120,
+      "successful_segment_count": 3533,
+      "failures": []
+    }
+  }
+}

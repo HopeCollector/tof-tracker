@@ -1,0 +1,93 @@
+{
+  "status": "passed",
+  "device": "cpu",
+  "torch_version": "2.9.1+cu128",
+  "scope": "development trajectory fitting/sampling; no dynamics, map or old solver",
+  "numerical_gradcheck": "CPU float64 only; CUDA checks real batch forward/backward",
+  "groups": {
+    "analytic_polynomials": {
+      "status": "passed",
+      "checks": [
+        "seeded full-3D quintic and cubic physical-time coefficient recovery",
+        "17 per-trajectory times and all ten endpoint conditions"
+      ],
+      "batch_shape": [
+        2,
+        3
+      ],
+      "samples": 17
+    },
+    "constant_acceleration": {
+      "status": "passed",
+      "checks": [
+        "nonzero initial position, velocity and acceleration on all three axes",
+        "constant linear/yaw acceleration with physical seconds and zero excess coefficients"
+      ]
+    },
+    "yaw_branches": {
+      "status": "passed",
+      "checks": [
+        "default unwrapped preserves raw endpoints and multiple turns",
+        "shortest crosses pi continuously and retains terminal yaw rate",
+        "exact positive half-turn selects -pi; branch derivative is intentionally not checked"
+      ]
+    },
+    "broadcasting": {
+      "status": "passed",
+      "checks": [
+        "all endpoint fields and T broadcast jointly to (2,3)",
+        "scalar, shared and per-batch seconds; extra time batches (4,1,1,S)",
+        "noncontiguous strided states, durations and sample times remain accepted"
+      ]
+    },
+    "time_derivatives": {
+      "status": "passed",
+      "checks": [
+        "autograd d(position)/dt equals velocity in seconds on every axis",
+        "autograd d2(position)/dt2 equals acceleration; d(yaw)/dt equals yaw_rate"
+      ]
+    },
+    "all_input_gradients": {
+      "status": "passed",
+      "checks": [
+        "float64 numerical gradcheck of p/v/a/yaw/rate at both ends, T and time",
+        "unwrapped and shortest away from branch; second-order gradgradcheck",
+        "every input has finite nonzero gradients",
+        "joint (2,2) broadcasting reduces gradients across expanded axes; shortest crosses pi"
+      ],
+      "input_tensors": 12,
+      "yaw_branch_limit": "no derivative claim at +/-pi"
+    },
+    "float32_and_small_duration": {
+      "status": "passed",
+      "checks": [
+        "float32 dtype and singleton batch/sample axes retained",
+        "unbatched scalar sample retains S=1; positive 1e-12 duration accepted",
+        "empty sample axis, empty trajectory batch and their combination preserve all field shapes"
+      ]
+    },
+    "validation": {
+      "status": "passed",
+      "checks": [
+        "Tensor-only float32/float64 strided finite inputs and common dtype/device",
+        "state vector dimensions, compatible fit/time batches and exact coefficient batches",
+        "strict positive duration; times outside [0,T] rejected without clipping",
+        "invalid yaw mode and direct PolynomialTrajectory construction",
+        "finite inputs causing coefficient/output overflow explicitly raise ValueError"
+      ],
+      "rejected_cases": 216,
+      "device_mismatch_cases": 0
+    },
+    "batch_forward_backward": {
+      "status": "passed",
+      "checks": [
+        "4096 float32 trajectories x 32 samples in one forward/backward graph",
+        "endpoint recovery and finite nonzero initial/terminal/yaw/duration gradients"
+      ],
+      "batch_size": 4096,
+      "samples": 32,
+      "elapsed_seconds": 0.006886047020088881,
+      "timing_scope": "single synchronized correctness run, not a benchmark"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # 共享 float32 节点的规则 C1 距离场
 
-本轮实现了离线 mesh 建图、规则节点保存 / 加载和 CPU / CUDA C1 位置查询。**完整 60×60×15 米地图的体积与查询速度可用；0.2 米间距的几何误差仍明显，不能把接缝连续当作精确避障验收。** 正式调用见 [ESDF 接口](../../../devtools/esdf.md)，独立审查见 [C1_REVIEW](C1_REVIEW.md)。
+本轮实现了离线 mesh 建图、规则节点保存 / 加载和 CPU / CUDA C1 位置查询。**完整 60×60×15 米地图的体积与查询速度可用；0.2 米间距的几何误差仍明显，不能把接缝连续当作精确避障验收。** 正式调用见 [ESDF 接口](../../../devtools/README.md)，独立审查见 [C1_REVIEW](C1_REVIEW.md)。
 
 ## 数据与执行口径
 
@@ -68,10 +68,10 @@ float32 位置和地图已经驻留 GPU；同步 Python wall time，2 次预热�
 
 ## 复现与证据
 
-- 正式建图：`just esdf MAP.obj --output NEW_DIR --voxel-size 0.2`。
+- 本报告原建图入口为历史 `just esdf` 命令；该命令已撤回。当前正式调用以 [devtools README](../../../devtools/README.md) 为准，数值仍对应原构建版本。
 - 正式 CPU 合同检查：`just check`；CUDA 检查在显式启用 GPU 的容器中运行 `python tests/verify_esdf.py --device cuda --results OUTPUT.json`。
-- 实际地图评估：容器中运行 `python -m experiments.esdf_grid_eval.evaluate_map --grid GRID_DIR --map MAP.obj --output NEW_DIR --device cuda`，固定针对上述完整 500 柱参考地图。
+- 实际地图评估：容器中运行 `python -m docs.explorations.esdf.esdf_grid_eval.code.evaluate_map --grid GRID_DIR --map MAP.obj --output NEW_DIR --device cuda`，固定针对上述完整 500 柱参考地图。
 - 全图原始数组与结果：`outputs/esdf_grid_eval/full-0p2-20261018/{raw.npz,results.json}`；独立 readback / 原始数组核算另保存在同父目录的 review JSON，不覆盖原始结果。
-- [紧凑结果及哈希](../../../experiments/esdf_grid_eval/real-map-summary.json)记录构建、误差、时间与原始数据路径。路径积分是[单独小实验](PATH_INTEGRAL_REPORT.md)，未进入正式地图模块。
+- [紧凑结果及哈希](esdf_grid_eval/real-map-summary.json)记录构建、误差、时间与原始数据路径。路径积分是[单独小实验](PATH_INTEGRAL_REPORT.md)，未进入正式地图模块。
 
 历史 SdfLib 自适应路线的两次 OOM、主动停止、局部误差及存储膨胀仍保存在[归档](README.md)，本轮没有重跑全图八叉树。

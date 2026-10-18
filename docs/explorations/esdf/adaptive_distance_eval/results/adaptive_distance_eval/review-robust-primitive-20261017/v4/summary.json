@@ -1,0 +1,1114 @@
+{
+  "passed": true,
+  "cases": {
+    "ground_z_-0.0125": {
+      "count": 939,
+      "unique_gradient_count": 939,
+      "distance_max_abs_m": 0.0,
+      "gradient_unique_max_abs": 0.0,
+      "gradient_unique_error_gt_001": 0,
+      "gradient_norm_max_abs_error": 0.0,
+      "finite": true,
+      "passed": true,
+      "worst_unique_gradient": [
+        {
+          "point": [
+            29.649999618530273,
+            20.862499237060547,
+            -0.012500000186264515
+          ],
+          "expected_distance": -0.012500000186264515,
+          "actual_distance": -0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -0.012500000186369674,
+          "tmd_nearest_point": [
+            29.649999618530266,
+            20.862499237061147,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.5625,
+            13.774999618530273,
+            -0.012500000186264515
+          ],
+          "expected_distance": -0.012500000186264515,
+          "actual_distance": -0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -0.01250000018629862,
+          "tmd_nearest_point": [
+            29.5625,
+            13.774999618530035,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.487499237060547,
+            -16.662500381469727,
+            -0.012500000186264515
+          ],
+          "expected_distance": -0.012500000186264515,
+          "actual_distance": -0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -0.012500000186263092,
+          "tmd_nearest_point": [
+            29.487499237060554,
+            -16.662500381469776,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.475000381469727,
+            -4.650000095367432,
+            -0.012500000186264515
+          ],
+          "expected_distance": -0.012500000186264515,
+          "actual_distance": -0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -0.01250000018629862,
+          "tmd_nearest_point": [
+            29.475000381469727,
+            -4.650000095367474,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.450000762939453,
+            -15.850000381469727,
+            -0.012500000186264515
+          ],
+          "expected_distance": -0.012500000186264515,
+          "actual_distance": -0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -0.01250000018629862,
+          "tmd_nearest_point": [
+            29.450000762939464,
+            -15.85000038146979,
+            0.0
+          ]
+        }
+      ]
+    },
+    "ground_z_-1e-05": {
+      "count": 939,
+      "unique_gradient_count": 939,
+      "distance_max_abs_m": 0.0,
+      "gradient_unique_max_abs": 0.0,
+      "gradient_unique_error_gt_001": 0,
+      "gradient_norm_max_abs_error": 0.0,
+      "finite": true,
+      "passed": true,
+      "worst_unique_gradient": [
+        {
+          "point": [
+            29.649999618530273,
+            20.862499237060547,
+            -9.999999747378752e-06
+          ],
+          "expected_distance": -9.999999747378752e-06,
+          "actual_distance": -9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -1.0000089231145716e-05,
+          "tmd_nearest_point": [
+            29.649999618530266,
+            20.862499237061147,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.5625,
+            13.774999618530273,
+            -9.999999747378752e-06
+          ],
+          "expected_distance": -9.999999747378752e-06,
+          "actual_distance": -9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -9.999911595469118e-06,
+          "tmd_nearest_point": [
+            29.5625,
+            13.774999618530035,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.487499237060547,
+            -16.662500381469727,
+            -9.999999747378752e-06
+          ],
+          "expected_distance": -9.999999747378752e-06,
+          "actual_distance": -9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -1.0000000413701846e-05,
+          "tmd_nearest_point": [
+            29.487499237060554,
+            -16.662500381469776,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.475000381469727,
+            -4.650000095367432,
+            -9.999999747378752e-06
+          ],
+          "expected_distance": -9.999999747378752e-06,
+          "actual_distance": -9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -1.0000000413701846e-05,
+          "tmd_nearest_point": [
+            29.475000381469727,
+            -4.650000095367474,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.450000762939453,
+            -15.850000381469727,
+            -9.999999747378752e-06
+          ],
+          "expected_distance": -9.999999747378752e-06,
+          "actual_distance": -9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -1.0000000413701846e-05,
+          "tmd_nearest_point": [
+            29.450000762939464,
+            -15.85000038146979,
+            0.0
+          ]
+        }
+      ]
+    },
+    "ground_z_-1e-07": {
+      "count": 939,
+      "unique_gradient_count": 939,
+      "distance_max_abs_m": 0.0,
+      "gradient_unique_max_abs": 0.0,
+      "gradient_unique_error_gt_001": 0,
+      "gradient_norm_max_abs_error": 0.0,
+      "finite": true,
+      "passed": true,
+      "worst_unique_gradient": [
+        {
+          "point": [
+            29.649999618530273,
+            20.862499237060547,
+            -1.0000000116860974e-07
+          ],
+          "expected_distance": -1.0000000116860974e-07,
+          "actual_distance": -1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -1.1151007970493857e-07,
+          "tmd_nearest_point": [
+            29.649999618530266,
+            20.862499237061147,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.5625,
+            13.774999618530273,
+            -1.0000000116860974e-07
+          ],
+          "expected_distance": -1.0000000116860974e-07,
+          "actual_distance": -1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -1.0323827311807139e-07,
+          "tmd_nearest_point": [
+            29.5625,
+            13.774999618530035,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.487499237060547,
+            -16.662500381469727,
+            -1.0000000116860974e-07
+          ],
+          "expected_distance": -1.0000000116860974e-07,
+          "actual_distance": -1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -9.8843121241194e-08,
+          "tmd_nearest_point": [
+            29.487499237060554,
+            -16.662500381469776,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.475000381469727,
+            -4.650000095367432,
+            -1.0000000116860974e-07
+          ],
+          "expected_distance": -1.0000000116860974e-07,
+          "actual_distance": -1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -1.0323827311807139e-07,
+          "tmd_nearest_point": [
+            29.475000381469727,
+            -4.650000095367474,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.450000762939453,
+            -15.850000381469727,
+            -1.0000000116860974e-07
+          ],
+          "expected_distance": -1.0000000116860974e-07,
+          "actual_distance": -1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            -0.0,
+            -0.0,
+            1.0
+          ],
+          "tmd_distance": -1.0323827311807139e-07,
+          "tmd_nearest_point": [
+            29.450000762939464,
+            -15.85000038146979,
+            0.0
+          ]
+        }
+      ]
+    },
+    "ground_z_0": {
+      "count": 939,
+      "unique_gradient_count": 939,
+      "distance_max_abs_m": 0.0,
+      "gradient_unique_max_abs": 0.0,
+      "gradient_unique_error_gt_001": 0,
+      "gradient_norm_max_abs_error": 0.0,
+      "finite": true,
+      "passed": true,
+      "worst_unique_gradient": [
+        {
+          "point": [
+            29.649999618530273,
+            20.862499237060547,
+            0.0
+          ],
+          "expected_distance": 0.0,
+          "actual_distance": 0.0,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 4.2146848510894035e-08,
+          "tmd_nearest_point": [
+            29.649999618530266,
+            20.862499237061147,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.5625,
+            13.774999618530273,
+            0.0
+          ],
+          "expected_distance": 0.0,
+          "actual_distance": 0.0,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.0,
+          "tmd_nearest_point": [
+            29.5625,
+            13.774999618530035,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.487499237060547,
+            -16.662500381469727,
+            0.0
+          ],
+          "expected_distance": 0.0,
+          "actual_distance": 0.0,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.0,
+          "tmd_nearest_point": [
+            29.487499237060554,
+            -16.662500381469776,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.475000381469727,
+            -4.650000095367432,
+            0.0
+          ],
+          "expected_distance": 0.0,
+          "actual_distance": 0.0,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.0,
+          "tmd_nearest_point": [
+            29.475000381469727,
+            -4.650000095367474,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.450000762939453,
+            -15.850000381469727,
+            0.0
+          ],
+          "expected_distance": 0.0,
+          "actual_distance": 0.0,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.0,
+          "tmd_nearest_point": [
+            29.450000762939464,
+            -15.85000038146979,
+            0.0
+          ]
+        }
+      ]
+    },
+    "ground_z_1e-07": {
+      "count": 939,
+      "unique_gradient_count": 939,
+      "distance_max_abs_m": 0.0,
+      "gradient_unique_max_abs": 0.0,
+      "gradient_unique_error_gt_001": 0,
+      "gradient_norm_max_abs_error": 0.0,
+      "finite": true,
+      "passed": true,
+      "worst_unique_gradient": [
+        {
+          "point": [
+            29.649999618530273,
+            20.862499237060547,
+            1.0000000116860974e-07
+          ],
+          "expected_distance": 1.0000000116860974e-07,
+          "actual_distance": 1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 1.1151007970493857e-07,
+          "tmd_nearest_point": [
+            29.649999618530266,
+            20.862499237061147,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.5625,
+            13.774999618530273,
+            1.0000000116860974e-07
+          ],
+          "expected_distance": 1.0000000116860974e-07,
+          "actual_distance": 1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 1.0323827311807139e-07,
+          "tmd_nearest_point": [
+            29.5625,
+            13.774999618530035,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.487499237060547,
+            -16.662500381469727,
+            1.0000000116860974e-07
+          ],
+          "expected_distance": 1.0000000116860974e-07,
+          "actual_distance": 1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 9.8843121241194e-08,
+          "tmd_nearest_point": [
+            29.487499237060554,
+            -16.662500381469776,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.475000381469727,
+            -4.650000095367432,
+            1.0000000116860974e-07
+          ],
+          "expected_distance": 1.0000000116860974e-07,
+          "actual_distance": 1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 1.0323827311807139e-07,
+          "tmd_nearest_point": [
+            29.475000381469727,
+            -4.650000095367474,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.450000762939453,
+            -15.850000381469727,
+            1.0000000116860974e-07
+          ],
+          "expected_distance": 1.0000000116860974e-07,
+          "actual_distance": 1.0000000116860974e-07,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 1.0323827311807139e-07,
+          "tmd_nearest_point": [
+            29.450000762939464,
+            -15.85000038146979,
+            0.0
+          ]
+        }
+      ]
+    },
+    "ground_z_1e-05": {
+      "count": 939,
+      "unique_gradient_count": 939,
+      "distance_max_abs_m": 0.0,
+      "gradient_unique_max_abs": 0.0,
+      "gradient_unique_error_gt_001": 0,
+      "gradient_norm_max_abs_error": 0.0,
+      "finite": true,
+      "passed": true,
+      "worst_unique_gradient": [
+        {
+          "point": [
+            29.649999618530273,
+            20.862499237060547,
+            9.999999747378752e-06
+          ],
+          "expected_distance": 9.999999747378752e-06,
+          "actual_distance": 9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 1.0000089231145716e-05,
+          "tmd_nearest_point": [
+            29.649999618530266,
+            20.862499237061147,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.5625,
+            13.774999618530273,
+            9.999999747378752e-06
+          ],
+          "expected_distance": 9.999999747378752e-06,
+          "actual_distance": 9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 9.999911595469118e-06,
+          "tmd_nearest_point": [
+            29.5625,
+            13.774999618530035,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.487499237060547,
+            -16.662500381469727,
+            9.999999747378752e-06
+          ],
+          "expected_distance": 9.999999747378752e-06,
+          "actual_distance": 9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 1.0000000413701846e-05,
+          "tmd_nearest_point": [
+            29.487499237060554,
+            -16.662500381469776,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.475000381469727,
+            -4.650000095367432,
+            9.999999747378752e-06
+          ],
+          "expected_distance": 9.999999747378752e-06,
+          "actual_distance": 9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 1.0000000413701846e-05,
+          "tmd_nearest_point": [
+            29.475000381469727,
+            -4.650000095367474,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.450000762939453,
+            -15.850000381469727,
+            9.999999747378752e-06
+          ],
+          "expected_distance": 9.999999747378752e-06,
+          "actual_distance": 9.999999747378752e-06,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 1.0000000413701846e-05,
+          "tmd_nearest_point": [
+            29.450000762939464,
+            -15.85000038146979,
+            0.0
+          ]
+        }
+      ]
+    },
+    "ground_z_0.0125": {
+      "count": 939,
+      "unique_gradient_count": 939,
+      "distance_max_abs_m": 0.0,
+      "gradient_unique_max_abs": 0.0,
+      "gradient_unique_error_gt_001": 0,
+      "gradient_norm_max_abs_error": 0.0,
+      "finite": true,
+      "passed": true,
+      "worst_unique_gradient": [
+        {
+          "point": [
+            29.649999618530273,
+            20.862499237060547,
+            0.012500000186264515
+          ],
+          "expected_distance": 0.012500000186264515,
+          "actual_distance": 0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.012500000186369674,
+          "tmd_nearest_point": [
+            29.649999618530266,
+            20.862499237061147,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.5625,
+            13.774999618530273,
+            0.012500000186264515
+          ],
+          "expected_distance": 0.012500000186264515,
+          "actual_distance": 0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.01250000018629862,
+          "tmd_nearest_point": [
+            29.5625,
+            13.774999618530035,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.487499237060547,
+            -16.662500381469727,
+            0.012500000186264515
+          ],
+          "expected_distance": 0.012500000186264515,
+          "actual_distance": 0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.012500000186263092,
+          "tmd_nearest_point": [
+            29.487499237060554,
+            -16.662500381469776,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.475000381469727,
+            -4.650000095367432,
+            0.012500000186264515
+          ],
+          "expected_distance": 0.012500000186264515,
+          "actual_distance": 0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.01250000018629862,
+          "tmd_nearest_point": [
+            29.475000381469727,
+            -4.650000095367474,
+            0.0
+          ]
+        },
+        {
+          "point": [
+            29.450000762939453,
+            -15.850000381469727,
+            0.012500000186264515
+          ],
+          "expected_distance": 0.012500000186264515,
+          "actual_distance": 0.012500000186264515,
+          "expected_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "actual_gradient": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "tmd_distance": 0.01250000018629862,
+          "tmd_nearest_point": [
+            29.450000762939464,
+            -15.85000038146979,
+            0.0
+          ]
+        }
+      ]
+    },
+    "original_612": {
+      "count": 612,
+      "unique_gradient_count": 612,
+      "distance_max_abs_m": 3.2419689244278516e-07,
+      "gradient_unique_max_abs": 5.783708552087319e-07,
+      "gradient_unique_error_gt_001": 0,
+      "gradient_norm_max_abs_error": 2.9043450089361045e-08,
+      "finite": true,
+      "passed": true,
+      "worst_unique_gradient": [
+        {
+          "point": [
+            2.325000047683716,
+            1.225000023841858,
+            -0.02500000037252903
+          ],
+          "expected_distance": -0.058630153965466635,
+          "actual_distance": -0.0586300753057003,
+          "expected_gradient": [
+            0.9045338832059882,
+            -0.0,
+            0.42640175202770436
+          ],
+          "actual_gradient": [
+            0.9045336246490479,
+            -0.0,
+            0.42640233039855957
+          ],
+          "tmd_distance": -0.05863007637608975,
+          "tmd_nearest_point": [
+            2.378032922744751,
+            1.225000023841858,
+            5.551115123125783e-17
+          ]
+        },
+        {
+          "point": [
+            2.325000047683716,
+            1.2374999523162842,
+            -0.02500000037252903
+          ],
+          "expected_distance": -0.058630153965466635,
+          "actual_distance": -0.0586300753057003,
+          "expected_gradient": [
+            0.9045338832059882,
+            -0.0,
+            0.42640175202770436
+          ],
+          "actual_gradient": [
+            0.9045336246490479,
+            -0.0,
+            0.42640233039855957
+          ],
+          "tmd_distance": -0.05863007637608975,
+          "tmd_nearest_point": [
+            2.378032922744751,
+            1.2374999523162842,
+            5.551115123125783e-17
+          ]
+        },
+        {
+          "point": [
+            2.325000047683716,
+            1.274999976158142,
+            -0.02500000037252903
+          ],
+          "expected_distance": -0.058630153965466635,
+          "actual_distance": -0.0586300753057003,
+          "expected_gradient": [
+            0.9045338832059882,
+            -0.0,
+            0.42640175202770436
+          ],
+          "actual_gradient": [
+            0.9045336246490479,
+            -0.0,
+            0.42640233039855957
+          ],
+          "tmd_distance": -0.05863007637608975,
+          "tmd_nearest_point": [
+            2.378032922744751,
+            1.274999976158142,
+            8.326672684688674e-17
+          ]
+        },
+        {
+          "point": [
+            2.325000047683716,
+            1.25,
+            -0.02500000037252903
+          ],
+          "expected_distance": -0.058630153965466635,
+          "actual_distance": -0.0586300753057003,
+          "expected_gradient": [
+            0.9045338832059882,
+            -0.0,
+            0.42640175202770436
+          ],
+          "actual_gradient": [
+            0.9045336246490479,
+            -0.0,
+            0.42640233039855957
+          ],
+          "tmd_distance": -0.05863007637608975,
+          "tmd_nearest_point": [
+            2.378032922744751,
+            1.25,
+            8.326672684688674e-17
+          ]
+        },
+        {
+          "point": [
+            2.325000047683716,
+            1.2625000476837158,
+            -0.02500000037252903
+          ],
+          "expected_distance": -0.058630153965466635,
+          "actual_distance": -0.0586300753057003,
+          "expected_gradient": [
+            0.9045338832059882,
+            -0.0,
+            0.42640175202770436
+          ],
+          "actual_gradient": [
+            0.9045336246490479,
+            -0.0,
+            0.42640233039855957
+          ],
+          "tmd_distance": -0.05863007637608975,
+          "tmd_nearest_point": [
+            2.378032922744751,
+            1.2625000476837158,
+            8.326672684688674e-17
+          ]
+        }
+      ]
+    }
+  },
+  "seed": 812,
+  "ground_xy_candidates": 1024,
+  "ground_xy_free_gt_005m": 939,
+  "tolerances": {
+    "distance_m": 1e-05,
+    "unique_gradient_linf": 0.001
+  },
+  "old_probe_gradient_exclusion": "|d|<=1e-7 or competing rectangle gradients differ >1e-4 in 1e-7 distance tie",
+  "scope": "Raw mesh-value primitive only; not an interpolated-field or C1 certificate. Below-ground probes validate the explicitly extended slab.",
+  "binary": "outputs/adaptive_distance_eval/mesh-value-probe-v4-20261017/robust_probe",
+  "binary_sha256": "35e6a25b4ad1e683d7d86f0823d304ec5443bc21e203843531b3cb5581dd7547",
+  "mesh_sha256": "499000a02e0e84604a5a94812de8191cfc3db156ac5826f7d603461f6ee629dc",
+  "script_sha256": "5e6db49f07a76cf196bb421bffb8c4a4602f6cc9d90f21d362298e5625209796"
+}
