@@ -29,7 +29,7 @@ Python 依赖与版本见 [pyproject.toml](pyproject.toml)。另需准备：
 - GPU 采样和完整检查需要 NVIDIA GPU 与兼容所装 PyTorch / Warp 的驱动；Docker GPU 运行还需要 NVIDIA Container Toolkit。当前 PyTorch 使用 CUDA 12.8 运行时，随 wheel 安装，无需单独安装完整 CUDA Toolkit。
 - 网页依赖见 [package.json](package.json)，由 Docker 构建阶段安装，宿主无需安装 Node.js。
 
-整个项目在 Docker 中执行，依赖只安装在容器内。宿主使用已有 Docker、`just` 和浏览器；环境细节见 [docker/README.md](docker/README.md)。在仓库根目录运行：
+项目默认使用 Docker，依赖在容器内安装。宿主使用已有 Docker、`just` 和浏览器；环境细节见 [docker/README.md](docker/README.md)。在仓库根目录运行：
 
 ```bash
 just build                                      # 构建开发镜像
@@ -44,6 +44,8 @@ just run cmake --version                         # 在容器内执行命令
 ```
 
 地图输出路径须不存在，重复生成时换一个文件名。`view` 根据位置参数选择地图或场景，生成离线 HTML 并提供前台服务；浏览器打开终端给出的地址，看完在原终端按 Ctrl+C。完整参数见上述工具说明；`just` 列出所有命令。
+
+需要宿主开发时，Python 依赖见 [pyproject.toml](pyproject.toml)，编译依赖参考 [docker/Dockerfile](docker/Dockerfile)。宿主系统和共享环境的变更遵循 [开发环境与授权约定](AGENTS.md#开发环境与外部来源)。
 
 ## 接下来
 
