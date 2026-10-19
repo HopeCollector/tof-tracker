@@ -11,7 +11,7 @@ just view outputs/mapgen/pillars-3.obj \
   --vehicle-rpy-deg 15 -20 30
 ```
 
-浏览器打开终端给出的 `http://127.0.0.1:8080/<地图名>.html`。`just view` 保持前台运行，看完在原终端按 Ctrl+C。
+浏览器打开终端给出的本地随机端口链接。`just view` 保持前台运行，看完在原终端按 Ctrl+C。
 
 只生成离线 HTML：
 

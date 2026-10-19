@@ -14,11 +14,11 @@ vscode:
 
 # 在容器内运行全部项目检查，包含真实 GPU 与 HTTP 联调
 check: map-build
-    ./docker/dev.sh run --gpu python tests/run_checks.py
+    ./docker/dev.sh run python tests/run_checks.py
 
 # 在线窗口化 sensor 审查，浏览器打开终端给出的地址
 review *args:
-    ./docker/dev.sh run --web --gpu python tools/sensor_review/server.py --host 0.0.0.0 --port 8080 "$@"
+    ./docker/dev.sh run python tools/sensor_review/server.py --host 0.0.0.0 --port 8080 "$@"
 
 # 在容器内执行命令；无参数进入 Bash
 run *args:
@@ -34,6 +34,6 @@ map-build:
 map +args: map-build
     ./docker/dev.sh run outputs/mapgen/build/offline_mapgen "$@"
 
-# 自动选择地图或场景查看，http://127.0.0.1:8080，Ctrl+C 退出
+# 自动选择地图或场景查看，浏览器打开终端给出的地址
 view +args:
-    ./docker/dev.sh run --web python tools/map_viewer/view_map.py "$@" --serve --host 0.0.0.0 --port 8080
+    ./docker/dev.sh run python tools/map_viewer/view_map.py "$@" --serve --host 0.0.0.0 --port 8080

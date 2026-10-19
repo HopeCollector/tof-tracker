@@ -35,11 +35,10 @@ if str(REPOSITORY) not in sys.path:
 
 from devtools.config import load_config
 from devtools.mesh import MeshMap
-from devtools.ray_rendering import RayRenderer
 from devtools.scene import Pose, Scene, Sphere
-from devtools.sensors import SensorSampler
-from devtools.rig import TOF_ORDER, mounted_pose, poses_to_tensor
-from devtools.perception import sample_measurement_diagnostics
+from devtools.sensors import RayRenderer, SensorSampler
+from tools.sensor_review.fixtures.layout import TOF_ORDER, mounted_pose, poses_to_tensor
+from tools.sensor_review.fixtures.perception import sample_measurement_diagnostics
 from devtools.trajectory import TrajectoryState, fit_trajectory
 
 
@@ -277,13 +276,13 @@ class ReviewState:
                     "tof/" + name, labels[name], sensors.tof,
                     mounted_pose(body, sensors.tof_mounts[index]), tof_matrices[index],
                     diagnostic.tof_raw.distance_m[index], diagnostic.tof_raw.object_index[index],
-                    diagnostic.rig.tof_m[0, index], diagnostic.tof_raw.object_ids)
+                    diagnostic.layout.tof_m[0, index], diagnostic.tof_raw.object_ids)
                 view.update(sampling="weighted_quantile_subrays",
                             reduction={"kind": "weighted_quantile", "quantile": sensors.tof_depth_quantile,
                                        "signal_floor": sensors.tof_signal_floor})
                 _sample_diagnostics(view, diagnostic.tof_raw, index, sensors.tof)
                 views.append(view)
-            camera = diagnostic.rig.camera
+            camera = diagnostic.layout.camera
             view = self._view("camera", "前向相机", sensors.camera,
                               mounted_pose(body, sensors.camera_mount), camera_matrix,
                               diagnostic.camera_raw.distance_m[0],
@@ -311,10 +310,10 @@ class ReviewState:
         self.sample_id += 1
         return {"request_id": request_id, "map_id": map_id, "sample_id": self.sample_id,
                 "scene_revision": self.scene_revision,
-                "scene_version": diagnostic.rig.scene_version, "t_ref": diagnostic.rig.t_ref,
+                "scene_version": diagnostic.layout.scene_version, "t_ref": diagnostic.layout.t_ref,
                 "diagnostics": {"geometry_info": self.renderer.geometry_info,
                                 "memory_info": self.renderer.memory_info,
-                                "execution_info": diagnostic.rig.execution_info,
+                                "execution_info": diagnostic.layout.execution_info,
                                 "perception_source": "development_environment"},
                 "views": views}
 
@@ -434,7 +433,8 @@ class ReviewHTTPServer(ThreadingHTTPServer):
         web_root, vendor_root = Path(web_root), Path(vendor_root)
         self.assets = {"/": web_root / "index.html", "/index.html": web_root / "index.html",
                        "/app.js": web_root / "app.js", "/style.css": web_root / "style.css"}
-        for name in ("three.module.js", "three.core.js", "OrbitControls.js", "three-LICENSE.txt", "manifest.json"):
+        for name in ("three.module.js", "three.core.js", "OrbitControls.js", "three-LICENSE.txt",
+                     "package.json", "package-lock.json"):
             self.assets["/vendor/" + name] = vendor_root / name
         super().__init__(address, ReviewHandler)
 
@@ -539,7 +539,7 @@ def main():
         threading.Thread(target=server.shutdown, name="sensor-review-stop", daemon=True).start()
 
     signal.signal(signal.SIGTERM, shutdown)
-    LOG.info("sensor review listening at http://%s:%d", args.host, server.server_port)
+    LOG.info("sensor review listening on %s:%d inside container", args.host, server.server_port)
     try:
         server.serve_forever(poll_interval=.25)
     except KeyboardInterrupt:

@@ -1,16 +1,13 @@
 # 场景、观测与几何查询
 
-`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿、GPU 射线传感器、可微轨迹解析和离线规则距离场。
+`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现场景、GPU 射线传感器、可微轨迹解析和离线规则距离场。
 
 | 文件 | 当前职责 |
 |---|---|
 | [`config.py`](config.py) | 已实现：读取、校验物理参数、采样预算与外层识别配置 |
 | [`mesh.py`](mesh.py) | 已实现：读取独立闭合障碍和地面平面的 OBJ 资产 |
 | [`scene.py`](scene.py) | 已实现：场景加载、按对象 ID 读取几何、球体状态替换 |
-| [`ray_rendering.py`](ray_rendering.py) | 已实现：一份静态 mesh BVH 与解析球、一批射线、CUDA 命中结果；移动球体只更新中心 |
-| [`sensors.py`](sensors.py) | 已实现：ToF / camera 世界位姿采样、请求收集与混合射线分块 |
-| [`rig.py`](rig.py) | 已实现：外层设备安装、四路 ToF 与相机的采样配方和结果打包 |
-| [`perception.py`](perception.py) | 已实现：利用物理采样结果生成模拟目标 mask、可见比例与框提示 |
+| [`sensors/`](sensors/) | 已实现：ToF / camera 世界位姿采样、共享场景与混合射线分块 |
 | [`trajectory.py`](trajectory.py) | 已实现：三维五次 / 航向三次边界解析与 Torch 可微采样 |
 | [`esdf/`](esdf/) | 已实现：离线 mesh 建图、共享 float32 距离节点的保存/加载及三线性批量位置查询 |
 
@@ -60,11 +57,10 @@ print(next_scene.get_geometry().get_object("vehicle").pose.body_to_world((1, 0, 
 
 ## 传感器与几何查询
 
-`ToFSensor` 和 `CameraSensor` 只接传感器自身的世界位姿；安装和设备组装见 `rig.py`，目标提示见 `perception.py`。即时和集中采样共用 GPU 管线。接上面的场景例子调用：
+`ToFSensor` 和 `CameraSensor` 只接传感器自身的世界位姿，即时和集中采样共用 GPU 管线。安装关系和识别由调用方处理；[审查工具](../tools/sensor_review/README.md)用专用夹具观察内部数据。接上面的场景例子调用：
 
 ```python
-from devtools.ray_rendering import RayRenderer
-from devtools.sensors import CameraSensor, SensorSampler, ToFSensor
+from devtools.sensors import CameraSensor, RayRenderer, SensorSampler, ToFSensor
 
 with RayRenderer(sensor_geometry) as renderer:
     sampler = SensorSampler(renderer, runtime=config.sampling_runtime)

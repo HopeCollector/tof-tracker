@@ -15,7 +15,7 @@ import math
 
 import torch
 
-from .config import DepthConfig, _finite_number
+from ..config import DepthConfig, _finite_number
 
 
 def _check_samples(distance, identity):

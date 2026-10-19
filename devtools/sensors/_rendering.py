@@ -15,8 +15,8 @@ import numpy as np
 import torch
 import warp as wp
 
-from .mesh import MeshObject
-from .scene import GeometrySnapshot, Sphere
+from ..mesh import MeshObject
+from ..scene import GeometrySnapshot, Sphere
 
 
 @wp.kernel

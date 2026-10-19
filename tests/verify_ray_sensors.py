@@ -12,25 +12,30 @@ from dataclasses import fields, is_dataclass, replace
 import json
 import math
 from pathlib import Path
+import sys
 import traceback
 from unittest.mock import patch
 
 import numpy as np
 import torch
 
+# Review fixtures deliberately live outside the installed sensor package.
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from devtools.config import (DepthConfig, PerceptionConfig, SamplingRuntimeConfig,
                              load_config)
 from devtools.mesh import MeshMap, MeshObject
-from devtools.ray_rendering import RayRenderer
 from devtools.scene import GeometrySnapshot, Pose, Scene, SceneObject, Sphere
-from devtools.sensors import CameraSensor, SensorSampler, ToFSensor
-from devtools._sensor_ops import generate_rays, process_samples
-from devtools.rig import (poses_to_tensor, sample_rig as _sample_rig,
-                          sample_rig_diagnostics as _sample_rig_diagnostics)
-from devtools._ray_processing import select_subray
+from devtools.sensors import CameraSensor, RayRenderer, SensorSampler, ToFSensor
+from devtools.sensors._ops import generate_rays, poses_to_tensor, process_samples
+from devtools.sensors._processing import select_subray
+from tools.sensor_review.fixtures.capture import capture_sample
+from tools.sensor_review.fixtures.layout import (sample_layout as _sample_rig,
+                                                sample_layout_diagnostics as _sample_rig_diagnostics)
 
 
-ROOT = Path(__file__).resolve().parents[1]
 ATOL = 3e-5
 BOX_FACES = ((0, 2, 1), (0, 3, 2), (4, 5, 6), (4, 6, 7),
              (0, 1, 5), (0, 5, 4), (1, 2, 6), (1, 6, 5),
@@ -46,7 +51,7 @@ def _depth(renderer, config, poses, *, reduction="nearest", diagnostics=False,
     if not diagnostics:
         return sensor.sample(poses)
     batch = sampler.batch()
-    handle = batch._submit(sensor, poses, diagnostics=True)
+    handle = capture_sample(sensor, poses, batch=batch)
     batch.execute()
     return handle.result()
 
@@ -470,7 +475,7 @@ def verify_weighted_reduction():
 
 
 def verify_camera_coverage():
-    from devtools.perception import process_camera_perception
+    from tools.sensor_review.fixtures.perception import process_camera_perception
 
     config = DepthConfig(4, 4, 60., 60., .015, 8., samples_per_axis=2)
     target = sphere((3., 0., 2.), .7)
@@ -567,7 +572,7 @@ def verify_float32_tangent_witnesses():
     Torch's analytic denominator included them. We preserve the boundary and
     assert bounded, finite diagnostics, not an impossible exact tangent oracle.
     """
-    from devtools.perception import process_camera_perception
+    from tools.sensor_review.fixtures.perception import process_camera_perception
 
     origin = np.asarray((0., 0., 2.), dtype=np.float32)
     directions = np.asarray(((.7742729187011719, .6328518390655518, 0.),
@@ -709,8 +714,8 @@ def verify_known_domain_and_batch_rig():
         assert not hasattr(batched, "target_hint") and not hasattr(batched.camera, "target_mask")
         assert batched.camera.raw is None
         diagnostic = _rig_diagnostics(renderer, settings, matrices)
-        close(host(batched.tof_m), host(diagnostic.rig.tof_m))
-        close(host(batched.camera.range_m), host(diagnostic.rig.camera.range_m))
+        close(host(batched.tof_m), host(diagnostic.layout.tof_m))
+        close(host(batched.camera.range_m), host(diagnostic.layout.camera.range_m))
         assert batched.tof_m.shape == (2, 4, 8, 8)
         assert diagnostic.tof_raw.subray_distance_m.shape == (8, 8, 8, 16)
         assert diagnostic.tof_raw.ray_origins_world_m.shape == (8, 3)
@@ -727,7 +732,7 @@ def verify_known_domain_and_batch_rig():
 
 
 def verify_runtime_budget():
-    from devtools._ray_budget import plan
+    from devtools.sensors._budget import plan
 
     for invalid in (0., -1., 1.01, math.nan, math.inf, True, "0.5"):
         rejected(lambda invalid=invalid: SamplingRuntimeConfig(invalid), (TypeError, ValueError))
@@ -810,8 +815,8 @@ def compare_tensor_fields(left, right):
 
 
 def verify_unified_chunks_and_perception():
-    import devtools.sensors as sensor_module
-    from devtools.perception import sample_measurements
+    from devtools.sensors import _sampling as sensor_module
+    from tools.sensor_review.fixtures.perception import sample_measurements
 
     configuration = load_config(ROOT / "configs" / "devtools.json")
     settings = replace(configuration.sensors,

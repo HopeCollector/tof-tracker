@@ -40,8 +40,8 @@ def plan(renderer, item_count, rays_per_item, retained_output_bytes, runtime,
     ``extra_fixed_bytes`` is any additional request-wide planned storage.
 
     The 384 bytes/ray allowance includes raw trace output, directions/indices,
-    postprocessing and the outer sphere-perception temporary storage. Retained output is also
-    counted separately; their overlap intentionally makes the plan conservative.
+    postprocessing and conservative temporary tensor storage. Retained output
+    is counted separately; the overlap intentionally makes the plan conservative.
     A native Warp BVH allowance is estimated, never reported as measured bytes.
     """
     item_count = _integer(item_count, "item_count", 1)

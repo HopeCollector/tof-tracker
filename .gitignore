@@ -12,6 +12,7 @@ build/
 dist/
 *.egg-info/
 outputs/
+node_modules/
 
 # Editor and temporary files.
 .vscode/

@@ -1,4 +1,4 @@
-"""Outer development recipe: mounts, four ToFs and a forward depth camera.
+"""Review fixture: mounts, four ToFs and a forward depth camera.
 
 Physical sensors accept world poses only. This module owns body-relative
 installation and packages independent sensor requests into one shared batch.
@@ -11,17 +11,18 @@ from functools import lru_cache
 import numpy as np
 import torch
 
-from .config import MountConfig, RigConfig
-from .scene import Pose
-from .sensors import CameraSensor, DepthBatch, SensorSampler, ToFSensor
-from ._sensor_ops import SampleBatch, _check_poses, poses_to_tensor
+from devtools.config import MountConfig, RigConfig
+from devtools.scene import Pose
+from devtools.sensors import CameraSensor, DepthBatch, SensorSampler, ToFSensor
+from devtools.sensors._ops import SampleBatch, _check_poses, poses_to_tensor
+from .capture import capture_sample
 
 
 TOF_ORDER = ("right", "front", "left", "rear")
 
 
 @dataclass(frozen=True)
-class RigBatch:
+class LayoutBatch:
     tof_m: torch.Tensor
     camera: DepthBatch
     scene_version: int
@@ -30,8 +31,8 @@ class RigBatch:
 
 
 @dataclass(frozen=True)
-class RigDiagnostics:
-    rig: RigBatch
+class LayoutDiagnostics:
+    layout: LayoutBatch
     tof_raw: SampleBatch
     camera_raw: SampleBatch
     tof_poses: torch.Tensor
@@ -71,8 +72,8 @@ def mounted_poses(body_poses: torch.Tensor, mounts: Sequence[MountConfig]) -> to
     return torch.matmul(body_poses[:, None], tensor[None])
 
 
-def _submit_rig(sampler, config, body_poses, *, diagnostics=False,
-                camera_consumer=None, retained_output_bytes=0):
+def _collect_layout(sampler, config, body_poses, *, diagnostics=False,
+                    camera_consumer=None, retained_output_bytes=0):
     if not isinstance(sampler, SensorSampler) or not isinstance(config, RigConfig):
         raise TypeError("expected SensorSampler and outer RigConfig")
     _check_poses(body_poses)
@@ -82,37 +83,37 @@ def _submit_rig(sampler, config, body_poses, *, diagnostics=False,
                     signal_floor=config.tof_signal_floor)
     camera = CameraSensor(sampler, config.camera)
     batch = sampler.batch()
-    tof_handle = batch._submit(tof, tof_poses, diagnostics=diagnostics)
-    camera_handle = batch._submit(camera, camera_poses, diagnostics=diagnostics,
-                                  consumer=camera_consumer,
-                                  retained_output_bytes=(retained_output_bytes
-                                      + 4 * (tof_poses.numel() + camera_poses.numel())))
+    tof_handle = capture_sample(tof, tof_poses, batch=batch, diagnostics=diagnostics)
+    camera_handle = capture_sample(camera, camera_poses, batch=batch, diagnostics=diagnostics,
+                                   consumer=camera_consumer,
+                                   retained_output_bytes=(retained_output_bytes
+                                       + 4 * (tof_poses.numel() + camera_poses.numel())))
     return batch, tof_handle, camera_handle, tof_poses, camera_poses
 
 
-def _rig_result(tof, camera, count):
+def _layout_result(tof, camera, count):
     if (tof.object_ids != camera.object_ids or tof.scene_version != camera.scene_version
             or tof.t_ref != camera.t_ref):
-        raise RuntimeError("scene changed between rig requests")
-    return RigBatch(tof.range_m.reshape(count, 4, *tof.range_m.shape[-2:]), camera,
+        raise RuntimeError("scene changed between review layout requests")
+    return LayoutBatch(tof.range_m.reshape(count, 4, *tof.range_m.shape[-2:]), camera,
                     tof.scene_version, tof.t_ref, camera.execution_info)
 
 
-def sample_rig(sampler: SensorSampler, config: RigConfig, body_poses: torch.Tensor) -> RigBatch:
+def sample_layout(sampler: SensorSampler, config: RigConfig, body_poses: torch.Tensor) -> LayoutBatch:
     """Sample this outer recipe through two requests in one mixed ray batch."""
-    batch, tof, camera, _, _ = _submit_rig(sampler, config, body_poses)
+    batch, tof, camera, _, _ = _collect_layout(sampler, config, body_poses)
     batch.execute()
-    return _rig_result(tof.result(), camera.result(), len(body_poses))
+    return _layout_result(tof.result(), camera.result(), len(body_poses))
 
 
-def sample_rig_diagnostics(sampler: SensorSampler, config: RigConfig,
-                           body_poses: torch.Tensor) -> RigDiagnostics:
+def sample_layout_diagnostics(sampler: SensorSampler, config: RigConfig,
+                              body_poses: torch.Tensor) -> LayoutDiagnostics:
     """Explicitly retain same-pass raw for a memory-budgeted review request."""
-    batch, tof, camera, tof_poses, camera_poses = _submit_rig(
+    batch, tof, camera, tof_poses, camera_poses = _collect_layout(
         sampler, config, body_poses, diagnostics=True)
     batch.execute()
     td, cd = tof.result(), camera.result()
-    return RigDiagnostics(_rig_result(td, cd, len(body_poses)), td.raw, cd.raw,
+    return LayoutDiagnostics(_layout_result(td, cd, len(body_poses)), td.raw, cd.raw,
                           tof_poses, camera_poses)
 
 

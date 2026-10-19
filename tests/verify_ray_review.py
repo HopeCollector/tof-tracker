@@ -192,7 +192,8 @@ def verify_static_assets(service):
                                ("/vendor/three.core.js", "text/javascript"),
                                ("/vendor/OrbitControls.js", "text/javascript"),
                                ("/vendor/three-LICENSE.txt", "text/plain"),
-                               ("/vendor/manifest.json", "application/json")):
+                               ("/vendor/package.json", "application/json"),
+                               ("/vendor/package-lock.json", "application/json")):
         with urlopen(service.url + path, timeout=15) as response:
             data = response.read()
             assert response.status == 200 and response.headers["Content-Type"].startswith(content_type)
@@ -201,7 +202,7 @@ def verify_static_assets(service):
         sizes[path] = len(data)
         if path == "/":
             assert b"/app.js" in data and b"/style.css" in data
-        if path.endswith("manifest.json"):
+        if path.endswith(".json"):
             assert isinstance(json.loads(data), dict)
     for path in ("/../etc/passwd", "/%2e%2e/etc/passwd", "/unknown.js"):
         service.request("GET", path, expected="4xx")

@@ -8,15 +8,14 @@ exactly the same request collection and execution path as an explicit batch.
 from collections.abc import Sequence
 from dataclasses import fields, replace
 import math
-import operator
 
 import torch
 
-from .config import DepthConfig, SamplingRuntimeConfig
-from .ray_rendering import RayRenderer
-from .scene import Pose
-from ._ray_budget import plan
-from ._sensor_ops import (
+from ..config import DepthConfig, SamplingRuntimeConfig
+from ._rendering import RayRenderer
+from ..scene import Pose
+from ._budget import plan
+from ._ops import (
     DepthBatch, _check_poses, _compact_rays, _slice_hits,
     compact_depth as _compact_depth, concat_depth as _concat_depth,
     depth_output_bytes as _depth_output_bytes, poses_to_tensor as _poses_to_tensor,
@@ -90,12 +89,12 @@ def _record_result(depth, stream):
 
 
 class _SamplingHandle:
-    def __init__(self, sensor, poses, diagnostics, consumer, retained_output_bytes):
+    def __init__(self, sensor, poses):
         self._sensor = sensor
         self._poses = poses
-        self._diagnostics = diagnostics
-        self._consumer = consumer
-        self._retained_output_bytes = retained_output_bytes
+        self._diagnostics = False
+        self._consumer = None
+        self._retained_output_bytes = 0
         self._pieces = []
         self._result = None
         self._state = "pending"
@@ -127,36 +126,14 @@ class _SamplingBatch:
         self._ready = None
         self.execution_info = None
 
-    def _submit(self, sensor, world_poses, *, diagnostics=False, consumer=None,
-                retained_output_bytes=0):
-        """Development-only same-pass consumption, without a second trace.
-
-        consumer(depth, raw, frozen_poses, start, stop) sees a contiguous local
-        view interval of this request. It must release raw before returning;
-        its return value is ignored. Reserve retained consumer outputs, their
-        concatenation peak and any extra temporary workspace in
-        retained_output_bytes. diagnostics=True explicitly retains complete raw
-        in the final handle result and reserves it before tracing.
-        """
+    def _submit(self, sensor, world_poses):
         if self._state != "collecting":
             raise RuntimeError("sampling batch is no longer collecting requests")
         if not isinstance(sensor, (ToFSensor, CameraSensor)) or sensor._sampler is not self._sampler:
             raise ValueError("sensor and batch must belong to the same sampler")
-        if not isinstance(diagnostics, bool):
-            raise TypeError("diagnostics must be bool")
-        if consumer is not None and not callable(consumer):
-            raise TypeError("consumer must be callable")
-        if isinstance(retained_output_bytes, bool):
-            raise ValueError("retained_output_bytes must be a nonnegative integer")
-        try:
-            retained_output_bytes = operator.index(retained_output_bytes)
-        except TypeError as error:
-            raise ValueError("retained_output_bytes must be a nonnegative integer") from error
-        if retained_output_bytes < 0:
-            raise ValueError("retained_output_bytes must be a nonnegative integer")
         self._sampler.renderer._require_open()
         poses = _freeze_poses(world_poses, self._sampler.renderer.device)
-        handle = _SamplingHandle(sensor, poses, diagnostics, consumer, retained_output_bytes)
+        handle = _SamplingHandle(sensor, poses)
         self._requests.append(handle)
         return handle
 

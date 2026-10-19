@@ -14,10 +14,10 @@ import math
 import numpy as np
 import torch
 
-from .config import DepthConfig
-from .ray_rendering import RayHits
-from .scene import Pose
-from ._ray_processing import gather_subray, range_by_sample, select_subray
+from ..config import DepthConfig
+from ._rendering import RayHits
+from ..scene import Pose
+from ._processing import gather_subray, range_by_sample, select_subray
 
 
 @dataclass(frozen=True)
@@ -113,7 +113,7 @@ def _check_poses(poses: torch.Tensor) -> None:
     if poses.ndim != 3 or poses.shape[0] < 1 or poses.shape[1:] != (4, 4):
         raise ValueError("poses must have shape [B,4,4] with B >= 1")
     # The caller establishes readiness when crossing streams. Keep its storage
-    # alive until this stream's asynchronous mount/ray/postprocess reads finish.
+    # alive until this stream's asynchronous ray/postprocess reads finish.
     poses.record_stream(torch.cuda.current_stream(poses.device))
 
 

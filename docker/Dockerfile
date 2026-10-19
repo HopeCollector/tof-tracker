@@ -1,3 +1,14 @@
+# Browser dependencies are installed by npm, with no Node runtime in the image.
+FROM node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d AS web-assets
+WORKDIR /web
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund \
+    && mkdir /assets \
+    && cp node_modules/three/build/three.module.js node_modules/three/build/three.core.js /assets/ \
+    && cp node_modules/three/examples/jsm/controls/OrbitControls.js /assets/ \
+    && cp node_modules/three/LICENSE /assets/three-LICENSE.txt \
+    && cp package.json package-lock.json /assets/
+
 # Project development environment.
 FROM ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
 
@@ -21,9 +32,7 @@ ENV PATH="/opt/venv/bin:${PATH}" \
     PYTHONPYCACHEPREFIX=/tmp/python-cache \
     PIP_CACHE_DIR=/tmp/pip-cache
 
-# Browser modules for the review tool.
-COPY docker/fetch_review_assets.py /tmp/fetch_review_assets.py
-RUN python /tmp/fetch_review_assets.py
+COPY --from=web-assets /assets /opt/sensor-review-web
 
 WORKDIR /workspace
 COPY pyproject.toml README.md ./
@@ -32,7 +41,7 @@ COPY devtools ./devtools
 COPY training ./training
 # Python requirements come from pyproject.toml; use the CUDA 12.8 wheel index.
 RUN python -m pip install --no-build-isolation --no-cache-dir \
-    --extra-index-url https://download.pytorch.org/whl/cu128 -e '.[viewer,gpu]'
+    --extra-index-url https://download.pytorch.org/whl/cu128 -e .
 ENV PYTHONPYCACHEPREFIX=/tmp/runtime-python-cache
 
 CMD ["bash"]

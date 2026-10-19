@@ -13,6 +13,7 @@ import gc
 import json
 import math
 from pathlib import Path
+import sys
 import traceback
 from unittest.mock import patch
 import weakref
@@ -20,16 +21,20 @@ import weakref
 import numpy as np
 import torch
 
+# Review fixtures are source tools, not part of the installed sensor API.
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from devtools.config import DepthConfig, SamplingRuntimeConfig
-from devtools.sensors import CameraSensor, SensorSampler, ToFSensor
-from devtools.ray_rendering import RayRenderer
-from devtools.rig import poses_to_tensor
+from devtools.sensors import CameraSensor, RayRenderer, SensorSampler, ToFSensor
+from devtools.sensors._ops import poses_to_tensor
 from devtools.scene import Pose
+from tools.sensor_review.fixtures.capture import capture_sample
 from verify_ray_sensors import (box, close, compare_tensor_fields, cpu_selection,
                                 ground, host, independent_rays, oracle,
                                 rejected, snapshot, sphere, tensor_fields)
 
-ROOT = Path(__file__).resolve().parents[1]
 TOF = DepthConfig(4, 3, 45., 45., .015, 4., samples_per_axis=4)
 CAMERA = DepthConfig(5, 4, 65., 50., .015, 6., samples_per_axis=2)
 
@@ -174,7 +179,7 @@ def verify_epoch_failure_and_execution_guards():
             protected.append((start, stop))
 
         running = sampler.batch()
-        good = running._submit(sensor, views, consumer=guarded)
+        good = capture_sample(sensor, views, batch=running, diagnostics=False, consumer=guarded)
         running.execute()
         assert protected == [(0, len(views))]
         compare_tensor_fields(back, good.result())
@@ -184,7 +189,7 @@ def verify_epoch_failure_and_execution_guards():
 
         failed = sampler.batch()
         first = sensor.sample(views[:1], batch=failed)
-        second = failed._submit(sensor, views[1:], consumer=broken)
+        second = capture_sample(sensor, views[1:], batch=failed, diagnostics=False, consumer=broken)
         rejected(failed.execute, (ValueError,))
         for handle in (first, second):
             try:
@@ -204,7 +209,7 @@ def verify_epoch_failure_and_execution_guards():
 
 
 def verify_chunk_budget_consumers_and_diagnostics():
-    import devtools.sensors as module
+    from devtools.sensors import _sampling as module
     source, views = source_scene(), poses(5)
     with RayRenderer(source) as renderer:
         sampler = SensorSampler(renderer)
@@ -218,7 +223,7 @@ def verify_chunk_budget_consumers_and_diagnostics():
                     assert stop - start == len(frozen) == len(depth.range_m)
                     assert raw.subray_distance_m.is_cuda
                     consumed[index].append((start, stop))
-                handles.append(batch._submit(sensor, value, diagnostics=True, consumer=consume))
+                handles.append(capture_sample(sensor, value, batch=batch, consumer=consume))
             before = renderer.geometry_info["trace_calls"]
             with no_readback():
                 batch.execute()
@@ -295,8 +300,8 @@ def verify_output_ownership_and_cycle_free_release():
             small_value.range_m.numel() * small_value.range_m.element_size())
         del large_handle, shared
         diagnostic = sampler.batch()
-        small_raw = diagnostic._submit(sensor, views[0], diagnostics=True)
-        big_raw = diagnostic._submit(sensor, views * 8, diagnostics=True)
+        small_raw = capture_sample(sensor, views[0], batch=diagnostic)
+        big_raw = capture_sample(sensor, views * 8, batch=diagnostic)
         diagnostic.execute()
         for name, tensor in tensor_fields(small_raw.result()).items():
             assert tensor.untyped_storage().nbytes() == tensor.numel() * tensor.element_size(), name
@@ -318,7 +323,7 @@ def verify_output_ownership_and_cycle_free_release():
 
 
 def verify_cross_stream_collection_lifetime():
-    import devtools.sensors as module
+    from devtools.sensors import _sampling as module
     source, views = source_scene(), poses(16)
     with RayRenderer(source) as renderer:
         sampler = SensorSampler(renderer)

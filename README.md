@@ -27,7 +27,7 @@ Python 依赖与版本见 [pyproject.toml](pyproject.toml)。另需准备：
 
 - Python 3.12、C++17 编译器、CMake 和 Git；容器入口使用 Docker 与 `just`。
 - GPU 采样和完整检查需要 NVIDIA GPU 与兼容所装 PyTorch / Warp 的驱动；Docker GPU 运行还需要 NVIDIA Container Toolkit。当前 PyTorch 使用 CUDA 12.8 运行时，随 wheel 安装，无需单独安装完整 CUDA Toolkit。
-- 审查工具的 Three.js 模块由 Docker 构建时的脚本下载，无需安装 Node.js。
+- 网页依赖见 [package.json](package.json)，由 Docker 构建阶段安装，宿主无需安装 Node.js。
 
 整个项目在 Docker 中执行，依赖只安装在容器内。宿主使用已有 Docker、`just` 和浏览器；环境细节见 [docker/README.md](docker/README.md)。在仓库根目录运行：
 

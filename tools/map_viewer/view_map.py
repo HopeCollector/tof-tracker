@@ -213,8 +213,10 @@ def serve_html(path, host="127.0.0.1", port=8080):
             self.wfile.write(content)
 
     with ThreadingHTTPServer((host, port), Handler) as server:
-        address = "127.0.0.1" if host == "0.0.0.0" else host
-        print(f"浏览器打开 http://{address}:{port}/{quote(path.name)} （Ctrl+C 结束）", flush=True)
+        if host == "0.0.0.0":
+            print(f"容器内监听 {host}:{port}；宿主访问链接由容器入口打印", flush=True)
+        else:
+            print(f"浏览器打开 http://{host}:{port}/{quote(path.name)} （Ctrl+C 结束）", flush=True)
         server.serve_forever()
 
 

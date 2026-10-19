@@ -1,4 +1,4 @@
-"""Development environment's simulated recognition, outside physical sensors.
+"""Review fixture's simulated recognition, outside physical sensors.
 
 Visibility comes from the full-scene closest-hit identities. The unoccluded
 denominator uses Torch analytic sphere intersections of those same camera
@@ -11,13 +11,13 @@ import math
 
 import torch
 
-from .config import DepthConfig, PerceptionConfig, RigConfig, _finite_number
-from .scene import GeometrySnapshot, Sphere
-from .sensors import DepthBatch, SensorSampler
-from .rig import _submit_rig
-from ._sensor_ops import (SampleBatch, compact_depth, concat_samples, gather_subray,
-                          sample_ray_origins, select_subray)
-from ._ray_processing import _check_samples, range_by_sample
+from devtools.config import DepthConfig, PerceptionConfig, RigConfig, _finite_number
+from devtools.scene import GeometrySnapshot, Sphere
+from devtools.sensors import DepthBatch, SensorSampler
+from devtools.sensors._ops import (SampleBatch, compact_depth, concat_samples, gather_subray,
+                                   sample_ray_origins, select_subray)
+from devtools.sensors._processing import _check_samples, range_by_sample
+from .layout import _collect_layout
 
 
 @dataclass(frozen=True)
@@ -35,7 +35,7 @@ class PerceivedCameraBatch:
 
 @dataclass(frozen=True)
 class MeasurementBatch:
-    """Compact algorithm-facing synthetic measurements, grouped on CUDA."""
+    """Review-only synthetic measurements, grouped on CUDA."""
 
     tof_m: torch.Tensor
     camera: PerceivedCameraBatch
@@ -52,7 +52,7 @@ class MeasurementBatch:
 class MeasurementDiagnostics:
     """Small-batch review of physical sampling and outer analytic target facts."""
 
-    rig: MeasurementBatch
+    layout: MeasurementBatch
     tof_raw: SampleBatch
     camera_raw: SampleBatch
     target_raw: SampleBatch | None
@@ -223,7 +223,7 @@ def _sample(sampler, sensors, body_poses, snapshot, config, target_id, diagnosti
         if target_raw is not None:
             target_raws.append(target_raw)
 
-    batch, tof, camera, tof_poses, camera_poses = _submit_rig(
+    batch, tof, camera, tof_poses, camera_poses = _collect_layout(
         sampler, sensors, body_poses, diagnostics=diagnostics,
         camera_consumer=consume_camera,
         retained_output_bytes=measurement_output_bytes(sensors, len(body_poses), diagnostics=diagnostics))
