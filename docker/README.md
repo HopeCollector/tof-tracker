@@ -1,6 +1,6 @@
 # 项目开发容器
 
-整个项目共用 `tof-tracker-dev:ubuntu24.04`。开发、依赖安装、编译、训练和测试均在容器内执行；宿主只提供现有 Docker、源码目录和项目产物目录。本目录保存环境配置、通用容器入口与环境检查；项目使用入口见 [项目 README](../README.md#使用方法)。
+本目录说明默认的 Docker 开发路线，使用共享镜像 `tof-tracker-dev:ubuntu24.04`。采用这一路线时，开发、依赖安装、编译、训练和测试在容器内执行，宿主提供现有 Docker、源码目录和项目产物目录。本目录保存环境配置、通用容器入口与环境检查；项目使用入口及宿主开发的依赖来源见 [项目 README](../README.md#使用方法)。
 
 ## 构建与通用运行
 
@@ -30,7 +30,7 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 
 `run` 保留各个参数的边界，含空格的参数照常加引号。管道、重定向等语法需显式交给容器内 shell，例如 `just run bash -c 'python --version && cmake --version'`。通用入口的可选参数为 `run [--web] [--] [命令及参数]`；`--web` 只发布 `127.0.0.1:8080:8080`，可用 `--` 结束入口选项。
 
-源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。不要在宿主创建项目 Python 环境，也不要在 `run` 中用 root 临时补装依赖。
+源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。采用容器开发时无需在宿主创建项目 Python 环境；不要在 `run` 中用 root 临时补装依赖。
 
 宿主 VS Code 的依赖提示缓存用 `just vscode` 导出到 `.vscode/pylance-site-packages/`，目录自动创建；分析版本与依赖路径写入 `.vscode/pyrightconfig.json`。镜像重建后重新运行即可刷新。导出入口见 [export-vscode.sh](export-vscode.sh)。
 
