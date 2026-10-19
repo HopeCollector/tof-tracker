@@ -121,7 +121,13 @@ print(distance.shape, gradient.shape)  # (2,), (2, 3)
 just check
 ```
 
-`tests/run_checks.py` 先显式编译上述原生库，再检查 mesh 建图、三线性独立参考、格面距离连续性、八角点范围、位置及轨迹参数反传和保存加载。单盒与间隔两个体素的双盒解析用例另检查节点精度、半体素误差阈值与符号；这些用例不构成任意几何的误差保证。任一步失败都会终止流程并返回非零状态。`verify_mesh_distance.py --map MAP.obj --esdf-voxel 0.5` 可在真实地图的自由空间重复精度检查。
+`tests/run_checks.py` 先显式编译上述原生库，再检查 mesh 建图、三线性独立参考、格面距离连续性、八角点范围、位置及轨迹参数反传和保存加载。单盒与间隔两个体素的双盒解析用例另检查节点精度、半体素误差阈值与符号；这些用例不构成任意几何的误差保证。任一步失败都会终止流程并返回非零状态。编译上述原生库后，可在真实地图的自由空间重复精度检查：
+
+```sh
+just run python tests/verify_mesh_distance.py \
+  --library outputs/esdf/build/libmesh_distance.so \
+  --map outputs/mapgen/pillars-3.obj --esdf-voxel 0.5
+```
 
 ## 开发用轨迹解析
 
