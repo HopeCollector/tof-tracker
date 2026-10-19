@@ -25,7 +25,11 @@ def main():
         ["cmake", "--build", "outputs/esdf/build", "--parallel", "2"],
         [sys.executable, "tests/verify_mesh_distance.py", "--library", "outputs/esdf/build/libmesh_distance.so"],
         [sys.executable, "tests/verify_esdf.py", "--results", "outputs/esdf/verification.json"],
+        [sys.executable, "tests/verify_esdf.py", "--device", "cuda", "--results", "outputs/esdf/cuda-verification.json"],
         [sys.executable, "tests/verify_map_viewer.py", "--results", "outputs/map_viewer/verification.json"],
+        [sys.executable, "tests/verify_ray_sensors.py", "--results", "outputs/sensors/ray-verification.json"],
+        [sys.executable, "tests/verify_sensor_batch.py", "--results", "outputs/sensors/batch-verification.json"],
+        [sys.executable, "tests/verify_ray_review.py", "--results", "outputs/sensor_review/ray-verification.json"],
     ]
     for command in checks:
         print("check:", " ".join(command), flush=True)

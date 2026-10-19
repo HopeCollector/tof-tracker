@@ -7,20 +7,21 @@ name = "tof-tracker"
 version = "0.0.0"
 description = "ToF-based tracking algorithm with local training and development tools"
 readme = "README.md"
-dependencies = ["numpy>=2.0", "torch==2.9.1"]
-
-[project.optional-dependencies]
-viewer = ["plotly==7.1.0"]
+dependencies = ["numpy>=2.0", "torch==2.9.1", "plotly==7.1.0", "warp-lang==1.15.0"]
 
 # One development installation. These modules are not separate products,
 # and this package list does not define the deployed algorithm artifacts.
 [tool.setuptools]
-packages = ["tof_tracker", "training", "devtools", "devtools.esdf"]
+packages = ["tof_tracker", "training", "devtools", "devtools.esdf", "devtools.sensors"]
 
 [tool.setuptools.package-dir]
 tof_tracker = "src/tof_tracker"
 training = "training"
 devtools = "devtools"
+
+[tool.setuptools.package-data]
+"devtools.sensors" = ["third_party_notices/*"]
+"devtools.esdf" = ["CMakeLists.txt", "_mesh_distance.cpp", "third_party/*.h", "third_party/*-LICENSE"]
 
 [tool.pyright]
 extends = ".vscode/pyrightconfig.json"

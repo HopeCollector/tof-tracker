@@ -5,6 +5,7 @@
 .vscode
 .venv
 venv
+node_modules
 outputs
 build
 dist

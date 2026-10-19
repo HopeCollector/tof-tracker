@@ -13,7 +13,7 @@ just run cmake --version     # 在容器内执行命令
 just check                   # 运行环境与现有工具的全部检查
 ```
 
-`docker/dev.sh` 只提供 `build` 与 `run`。`build` 按项目配置在镜像内安装依赖；`run` 负责挂载、用户权限、终端和可选端口，不选择业务脚本。
+`docker/dev.sh` 只提供 `build` 与 `run`。`build` 按项目配置在镜像内安装依赖；`run` 统一启用 GPU，负责挂载、用户权限、终端和本地随机端口，不选择业务脚本。
 
 ```text
 just build → dev.sh build → Dockerfile → 编译依赖 + /opt/venv 中的项目安装
@@ -28,9 +28,11 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 ./docker/dev.sh run python -c 'import tof_tracker, devtools, training; print("imports OK")'
 ```
 
-`run` 保留各个参数的边界，含空格的参数照常加引号。管道、重定向等语法需显式交给容器内 shell，例如 `just run bash -c 'python --version && cmake --version'`。通用入口的可选参数为 `run [--web] [--] [命令及参数]`；`--web` 只发布 `127.0.0.1:8080:8080`，可用 `--` 结束入口选项。
+`run` 保留各个参数的边界，含空格的参数照常加引号。管道、重定向等语法需显式交给容器内 shell，例如 `just run bash -c 'python --version && cmake --version'`。
 
 源码挂载到 `/workspace`，镜像中的 editable 安装指向此处。编辑 Python 源码后可直接运行；修改依赖定义、包布局或 `Dockerfile` 后须 `just build` 重建镜像。新 Python 依赖写入 `pyproject.toml`，编译库依赖写入 `Dockerfile`。采用容器开发时无需在宿主创建项目 Python 环境；不要在 `run` 中用 root 临时补装依赖。
+
+网页依赖在根 `package.json` 与锁文件中声明，由 Docker 构建阶段的 `npm ci` 安装。
 
 宿主 VS Code 的依赖提示缓存用 `just vscode` 导出到 `.vscode/pylance-site-packages/`，目录自动创建；分析版本与依赖路径写入 `.vscode/pyrightconfig.json`。镜像重建后重新运行即可刷新。导出入口见 [export-vscode.sh](export-vscode.sh)。
 
@@ -43,7 +45,7 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 
 运行时只挂载本仓库，使用调用者的 UID/GID；不挂用户主目录、Docker socket 或其他仓库，不传递用户全局配置与凭据。`HOME` 和缓存位于容器 `/tmp`。容器退出后删除，源码修改和 `outputs/` 产物保留在项目中并归调用者所有。
 
-使用 `run --web` 时，容器内服务须监听 `0.0.0.0:8080`，Docker 仅将该端口发布到宿主回环地址。同一宿主端口只能由一个服务占用；前台程序退出后临时容器删除，端口释放。查看器用法见 [查看器说明](../tools/map_viewer/README.md)。
+容器内网页服务监听 `0.0.0.0:8080`，Docker 映射到宿主回环地址的随机端口；服务就绪后打印访问链接。前台程序退出后容器删除，端口释放。查看器用法见 [查看器说明](../tools/map_viewer/README.md)。
 
 ## 验证入口
 

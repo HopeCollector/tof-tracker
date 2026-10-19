@@ -16,3 +16,7 @@ OBJ 实体、地面平面、CLI、校验和文件保存为本仓实现，未采�
 场景、球体、完整位姿与点变换为本仓实现。配置机制参考 `C5-lidar-yopo` 提交 `ab9cbfaef8216b8a47a952b40d199fd7e5cef134` 的 `configuration/omni.py`（根许可 MIT，TJU 2024），采用“JSON 显式物理参数 → 入口校验 → 传给消费者”的流程，未复制其函数、全局配置、旧阈值或默认物理尺寸。
 
 当前接口见[开发辅助模块说明](../devtools/README.md#统一配置与场景)，验证入口见 [verify_scene.py](../tests/verify_scene.py)。
+
+## 传感器来源
+
+ToF 信号权重与加权分位公式参考 `Omni_ToF-YOPO` 固定提交 `cf0b7f4b17712667a8bbdb1126f5e914904ece9d` 的 `Simulator/src/src/test_simulator_cuda.cpp:50–132`（`renderToFSenseMImage` / `weightedQuantileDepth`，MIT；[许可与署名](../devtools/sensors/third_party_notices/Omni_ToF-YOPO-LICENSE)）。本仓改写为批量 Torch 运算，保留实际径向距离和命中身份；独立验证见 [verify_ray_sensors.py](../tests/verify_ray_sensors.py)。

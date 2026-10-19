@@ -1,0 +1,7 @@
+{
+  "name": "tof-tracker-devtools",
+  "private": true,
+  "dependencies": {
+    "three": "0.180.0"
+  }
+}
