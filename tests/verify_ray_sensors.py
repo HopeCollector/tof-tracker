@@ -13,6 +13,7 @@ import json
 import math
 from pathlib import Path
 import sys
+import tempfile
 import traceback
 from unittest.mock import patch
 
@@ -37,17 +38,16 @@ from tools.sensor_review.fixtures.layout import (sample_layout as _sample_rig,
 
 
 ATOL = 3e-5
+FIXTURE_RUNTIME = SamplingRuntimeConfig(.5)
+FIXTURE_PERCEPTION = PerceptionConfig(.2)
+FIXTURE_QUANTILE = .2
+FIXTURE_SIGNAL_FLOOR = .08
 BOX_FACES = ((0, 2, 1), (0, 3, 2), (4, 5, 6), (4, 6, 7),
              (0, 1, 5), (0, 5, 4), (1, 2, 6), (1, 6, 5),
              (2, 3, 7), (2, 7, 6), (3, 0, 4), (3, 4, 7))
 
 
-def _depth(renderer, config, poses, *, reduction="nearest", diagnostics=False,
-           runtime=None, quantile=.2, signal_floor=.08):
-    """Test adapter: all physical samples go through the new request API."""
-    sampler = SensorSampler(renderer, runtime=runtime)
-    sensor = (ToFSensor(sampler, config, quantile=quantile, signal_floor=signal_floor)
-              if reduction == "weighted_quantile" else CameraSensor(sampler, config))
+def _sample_sensor(sensor, sampler, poses, *, diagnostics):
     if not diagnostics:
         return sensor.sample(poses)
     batch = sampler.batch()
@@ -56,15 +56,29 @@ def _depth(renderer, config, poses, *, reduction="nearest", diagnostics=False,
     return handle.result()
 
 
-def _camera(renderer, config, poses):
-    return CameraSensor(SensorSampler(renderer), config).sample(poses)
+def _depth(renderer, config, poses, *, runtime, diagnostics=False):
+    """Test adapter for camera requests with an explicit sampling budget."""
+    sampler = SensorSampler(renderer, runtime=runtime)
+    sensor = CameraSensor(sampler, config)
+    return _sample_sensor(sensor, sampler, poses, diagnostics=diagnostics)
 
 
-def _rig(renderer, config, poses, *, runtime=None):
+def _tof(renderer, config, poses, *, runtime, quantile, signal_floor, diagnostics=False):
+    sampler = SensorSampler(renderer, runtime=runtime)
+    sensor = ToFSensor(sampler, config,
+                       quantile=quantile, signal_floor=signal_floor)
+    return _sample_sensor(sensor, sampler, poses, diagnostics=diagnostics)
+
+
+def _camera(renderer, config, poses, *, runtime):
+    return CameraSensor(SensorSampler(renderer, runtime=runtime), config).sample(poses)
+
+
+def _rig(renderer, config, poses, *, runtime):
     return _sample_rig(SensorSampler(renderer, runtime=runtime), config, poses)
 
 
-def _rig_diagnostics(renderer, config, poses, *, runtime=None):
+def _rig_diagnostics(renderer, config, poses, *, runtime):
     return _sample_rig_diagnostics(SensorSampler(renderer, runtime=runtime), config, poses)
 
 
@@ -289,7 +303,7 @@ def verify_spheres_and_limits():
     # ideal-geometry guarantee at a single floating-point ULP.
     guard = 4e-6
     guard_cases = []
-    config = DepthConfig(1, 1, 45., 45., .015, 4.)
+    config = DepthConfig(1, 1, 45., 45., .015, 4., samples_per_axis=1)
     pose = Pose((0., 0., 2.))
     matrices = poses_to_tensor((pose,))
     for offset in (0., .5 * guard, 2 * guard):
@@ -302,7 +316,7 @@ def verify_spheres_and_limits():
             actual_i = int(host(raw.object_index)[0])
             assert actual_i == int(expected_i[0])
             close(np.asarray((actual_d,)), expected_d, 1e-6)
-            formal = _depth(renderer, config, matrices, diagnostics=True)
+            formal = _depth(renderer, config, matrices, diagnostics=True, runtime=FIXTURE_RUNTIME)
             value = float(host(formal.range_m)[0, 0, 0])
             if offset == 0:
                 assert value == 4. and actual_d == 4.
@@ -420,7 +434,7 @@ def verify_streams():
     return {"construction_A_trace_B_sync_A_trace_B": "passed", "same_stream_consumption": "passed"}
 
 
-def cpu_selection(distance, identity, maximum, quantile=.2, floor=.08):
+def cpu_selection(distance, identity, maximum, quantile, floor):
     distance = np.asarray(distance, dtype=float)
     effective = np.where(np.asarray(identity) >= 0, distance, maximum)
     weight = np.where(effective >= maximum - 1e-4, floor,
@@ -436,7 +450,7 @@ def verify_weighted_reduction():
                            [0.] * 16, [.005] * 16), dtype=np.float32).reshape(4, 1, 1, 16)
     identity = np.asarray(([0] + [1] * 15, [0] * 2 + [1] * 14,
                            [-1] * 16, [0] * 16), dtype=np.int64).reshape(4, 1, 1, 16)
-    expected_indices = np.asarray([cpu_selection(d, i, 4.) for d, i in zip(distance[:, 0, 0], identity[:, 0, 0])])
+    expected_indices = np.asarray([cpu_selection(d, i, 4., FIXTURE_QUANTILE, FIXTURE_SIGNAL_FLOOR) for d, i in zip(distance[:, 0, 0], identity[:, 0, 0])])
     selected = select_subray(torch.as_tensor(distance, device="cuda"), torch.as_tensor(identity, device="cuda"),
                              4., reduction="weighted_quantile", quantile=.2, signal_floor=.08)
     actual_indices = host(selected).reshape(-1)
@@ -458,7 +472,7 @@ def verify_weighted_reduction():
     mixed_i = rng.integers(-1, 3, mixed_d.shape, dtype=np.int64)
     mixed_d[mixed_i < 0] = 0
     for quantile in (0., .2, .65, 1.):
-        expected = np.asarray([cpu_selection(d, i, 4., quantile)
+        expected = np.asarray([cpu_selection(d, i, 4., quantile, FIXTURE_SIGNAL_FLOOR)
                                for d, i in zip(mixed_d[:, 0, 0], mixed_i[:, 0, 0])])
         actual = host(select_subray(torch.as_tensor(mixed_d, device="cuda"),
                                      torch.as_tensor(mixed_i, device="cuda"), 4.,
@@ -468,7 +482,8 @@ def verify_weighted_reduction():
     tied_d = torch.full((1, 1, 1, 16), 3., dtype=torch.float32, device="cuda")
     tied_i = torch.arange(16, dtype=torch.int64, device="cuda").reshape(1, 1, 1, 16)
     assert int(host(select_subray(tied_d, tied_i, 4., reduction="nearest"))[0, 0, 0]) == 0
-    assert int(host(select_subray(tied_d, tied_i, 4., reduction="weighted_quantile"))[0, 0, 0]) == 3
+    assert int(host(select_subray(tied_d, tied_i, 4., reduction="weighted_quantile",
+                                         quantile=FIXTURE_QUANTILE, signal_floor=FIXTURE_SIGNAL_FLOOR))[0, 0, 0]) == 3
     return {"one_near_return_of_16_m": float(actual_d[0]), "two_near_returns_of_16_m": float(actual_d[1]),
             "no_return_keeps_identity_minus_one": int(actual_i[2]), "nearest_is_separate_policy": "passed",
             "mixed_miss_quantile_cases": 48, "equal_depth_tie_order": "row-major stable"}
@@ -498,11 +513,11 @@ def verify_camera_coverage():
         actual_origins, actual_directions = generate_rays(matrices, config)
         close(host(actual_origins), origins)
         close(host(actual_directions), directions)
-        geometric = _camera(renderer, config, matrices)
+        geometric = _camera(renderer, config, matrices, runtime=FIXTURE_RUNTIME)
         assert not hasattr(geometric, "target_mask") and not hasattr(geometric, "target_hint")
         assert geometric.raw is None
         assert geometric.object_index is geometric.hit_point_sensor_m is geometric.triangle_index is None
-        depth = _depth(renderer, config, matrices, diagnostics=True)
+        depth = _depth(renderer, config, matrices, diagnostics=True, runtime=FIXTURE_RUNTIME)
         queries_before = renderer.geometry_info["trace_calls"]
         result, target_raw = process_camera_perception(
             depth, depth.raw, matrices, config, source, PerceptionConfig(0.), diagnostics=True)
@@ -548,13 +563,13 @@ def verify_camera_coverage():
             (TypeError, ValueError, NotImplementedError))
     # Independent inclusive sensor-range witnesses for the external analytic
     # sphere path, including a raw hit in the core's numerical guard region.
-    boundary_config = DepthConfig(1, 1, 45., 45., .015, 4.)
+    boundary_config = DepthConfig(1, 1, 45., 45., .015, 4., samples_per_axis=1)
     boundary_matrices = poses_to_tensor((Pose((0., 0., 2.)),))
     for offset, expected_visible in ((0., True), (2e-6, False), (8e-6, False)):
         boundary_source = snapshot(("target", sphere((4.25 + offset, 0., 2.), .25)),
                                    bounds=((-10., 10.), (-10., 10.), (0., 4.)))
         with RayRenderer(boundary_source) as renderer:
-            boundary_depth = _depth(renderer, boundary_config, boundary_matrices, diagnostics=True)
+            boundary_depth = _depth(renderer, boundary_config, boundary_matrices, diagnostics=True, runtime=FIXTURE_RUNTIME)
             before = renderer.geometry_info["trace_calls"]
             perceived, _ = process_camera_perception(
                 boundary_depth, boundary_depth.raw, boundary_matrices,
@@ -579,7 +594,7 @@ def verify_float32_tangent_witnesses():
                              (.7742730379104614, .6328516602516174, 0.),
                              (.774273157119751, .6328515410423279, 0.)), dtype=np.float32)
     source = snapshot(("target", sphere((2.1213203435596424, 2.1213203435596424, 2.), .3)))
-    config = DepthConfig(4, 1, 45., 45., .015, 30.)
+    config = DepthConfig(4, 1, 45., 45., .015, 30., samples_per_axis=1)
     origin_rows = np.repeat(origin[None], 4, axis=0)
     _, double_id, _ = oracle(source, origin_rows, directions, config.max_range_m)
     with RayRenderer(source) as renderer:
@@ -608,7 +623,7 @@ def verify_float32_tangent_witnesses():
             "policy": "fixture/core float32 hit and distance equality; float64 hit bits are diagnostic only"}
 
 
-def _perceive_without_query(depth, poses, config, source):
+def _perceive_without_query(depth, poses, config, source, perception):
     from tools.sensor_review.fixtures.perception import process_camera_perception
 
     # Check the whole fixture path, including diagnostics, without permitting a
@@ -620,7 +635,7 @@ def _perceive_without_query(depth, poses, config, source):
          patch.object(torch.Tensor, "item", side_effect=AssertionError("fixture read scalar")), \
          patch.object(torch.Tensor, "tolist", side_effect=AssertionError("fixture read list")):
         return process_camera_perception(depth, depth.raw, poses, config, source,
-                                         PerceptionConfig(.2), diagnostics=True)
+                                         perception, diagnostics=True)
 
 
 def _assert_unoccluded_alignment(depth, perceived, target_raw):
@@ -651,7 +666,8 @@ def verify_fixture_world_pose_alignment():
         (.4271531105041504, -.9041793346405029, 0., -7.090548992156982),
         (.9041793346405029, .4271531105041504, 0., -15.365572929382324),
         (0., 0., 1., 0.), (0., 0., 0., 1.)), device="cuda", dtype=torch.float32)[None]
-    default_config = load_config(ROOT / "configs" / "devtools.json").sensors.camera
+    configuration = load_config(ROOT / "configs" / "devtools.json")
+    default_config = configuration.sensors.camera
     assert default_config == DepthConfig(160, 120, 80., 60., .01, 30., 2)
     # Retain this original default-camera witness independently of the random
     # sequence so future changes to its generation cannot remove the regression.
@@ -661,13 +677,13 @@ def verify_fixture_world_pose_alignment():
     checked_poses, checked_rays, fixed_counts = 0, 0, []
     with RayRenderer(source) as renderer:
         for _ in range(5):
-            depth = _depth(renderer, fixed_config, fixed_pose, diagnostics=True)
-            perceived, target_raw = _perceive_without_query(depth, fixed_pose, fixed_config, source)
+            depth = _depth(renderer, fixed_config, fixed_pose, diagnostics=True, runtime=configuration.sampling_runtime)
+            perceived, target_raw = _perceive_without_query(depth, fixed_pose, fixed_config, source, configuration.perception)
             counts = _assert_unoccluded_alignment(depth, perceived, target_raw)
             assert counts.tolist() == [2]
             fixed_counts.append(int(counts[0]))
-        depth = _depth(renderer, default_config, default_witness, diagnostics=True)
-        perceived, target_raw = _perceive_without_query(depth, default_witness, default_config, source)
+        depth = _depth(renderer, default_config, default_witness, diagnostics=True, runtime=configuration.sampling_runtime)
+        perceived, target_raw = _perceive_without_query(depth, default_witness, default_config, source, configuration.perception)
         assert _assert_unoccluded_alignment(depth, perceived, target_raw).tolist() == [14]
         del depth, perceived, target_raw
         rng = np.random.default_rng(28)
@@ -686,8 +702,8 @@ def verify_fixture_world_pose_alignment():
             for start in range(0, 32, 4):
                 poses = torch.eye(4, device="cuda").repeat(4, 1, 1)
                 poses[:, :3, 3] = torch.as_tensor(-centers[start:start + 4], device="cuda", dtype=torch.float32)
-                depth = _depth(renderer, default_config, poses, diagnostics=True)
-                perceived, target_raw = _perceive_without_query(depth, poses, default_config, source)
+                depth = _depth(renderer, default_config, poses, diagnostics=True, runtime=configuration.sampling_runtime)
+                perceived, target_raw = _perceive_without_query(depth, poses, default_config, source, configuration.perception)
                 counts = _assert_unoccluded_alignment(depth, perceived, target_raw)
                 assert np.all(counts > 0), counts.tolist()
                 checked_poses += len(poses)
@@ -706,7 +722,7 @@ def verify_fixture_ranges_and_directions():
     from devtools.sensors._ops import sample_ray_origins
     from devtools.sensors._processing import range_by_sample
 
-    config = DepthConfig(1, 1, 45., 45., .125, 4.)
+    config = DepthConfig(1, 1, 45., 45., .125, 4., samples_per_axis=1)
     known = ((-10., 10.), (-10., 10.), (-10., 10.))
     cases = (("inside_minimum", .3125, (0., 0., 2.), (2., 0., 0.), known, 0, "nan"),
              ("minimum_endpoint", .375, (0., 0., 2.), (1e-30, 0., 0.), known, 0, "finite"),
@@ -730,7 +746,7 @@ def verify_fixture_ranges_and_directions():
             poses = poses_to_tensor((Pose((0., 0., 2.)),))
             hits = renderer.trace(origins, directions, config.max_range_m)
             depth = capture_process_samples(hits, origins, directions, poses, config)
-            perceived, target_raw = _perceive_without_query(depth, poses, config, source)
+            perceived, target_raw = _perceive_without_query(depth, poses, config, source, FIXTURE_PERCEPTION)
             _assert_unoccluded_alignment(depth, perceived, target_raw)
             fixture_ranges = range_by_sample(target_raw.subray_distance_m, target_raw.subray_object_index,
                                              sample_ray_origins(target_raw), target_raw.ray_directions_world,
@@ -761,11 +777,11 @@ def verify_fixture_stream_and_storage():
         with torch.cuda.stream(producer):
             poses = torch.eye(4, device="cuda")[None]
             poses[:, 2, 3] = 2.
-            depth = _depth(renderer, config, poses, diagnostics=True)
-            first, target = _perceive_without_query(depth, poses, config, source)
+            depth = _depth(renderer, config, poses, diagnostics=True, runtime=FIXTURE_RUNTIME)
+            first, target = _perceive_without_query(depth, poses, config, source, FIXTURE_PERCEPTION)
             # A second invocation must own distinct outputs without overwriting
             # the first launch's storage or losing its allocator stream lifetime.
-            second, next_target = _perceive_without_query(depth, poses, config, source)
+            second, next_target = _perceive_without_query(depth, poses, config, source, FIXTURE_PERCEPTION)
             saved_distance = target.subray_distance_m.clone()
             saved_identity = target.subray_object_index.clone()
             assert target.subray_distance_m.data_ptr() != next_target.subray_distance_m.data_ptr()
@@ -795,7 +811,8 @@ def verify_fixture_stream_and_storage():
 
 
 def verify_tof_ranges_and_small_target():
-    config = load_config(ROOT / "configs" / "devtools.json").sensors
+    configuration = load_config(ROOT / "configs" / "devtools.json")
+    config = configuration.sensors
     assert (config.tof.hfov_deg, config.tof.vfov_deg) == (45., 45.)
     assert (config.tof.min_range_m, config.tof.max_range_m) == (.015, 4.)
     assert config.tof.samples_per_axis == 4 and config.camera.samples_per_axis == 2
@@ -806,7 +823,8 @@ def verify_tof_ranges_and_small_target():
     near = box("near", ((.003, .005), (-.02, .02), (1.98, 2.02)))
     source = snapshot(("near", near), ("target", sphere((2., 0., 2.), .3)))
     with RayRenderer(source) as renderer:
-        result = _depth(renderer, config.tof, matrices, reduction="weighted_quantile", diagnostics=True)
+        result = _tof(renderer, config.tof, matrices, runtime=configuration.sampling_runtime,
+                      quantile=config.tof_depth_quantile, signal_floor=config.tof_signal_floor, diagnostics=True)
         assert np.isnan(host(result.range_m)).all()
         assert np.all(host(result.object_index) == 0)
     # A sphere centered across both grid axes supplies genuine subray hits in
@@ -815,7 +833,8 @@ def verify_tof_ranges_and_small_target():
     origins, directions = independent_rays((pose,), config.tof)
     expected_distance, expected_id, _ = oracle(source, origins, directions, 4.)
     with RayRenderer(source) as renderer:
-        result = _depth(renderer, config.tof, matrices, reduction="weighted_quantile", diagnostics=True)
+        result = _tof(renderer, config.tof, matrices, runtime=configuration.sampling_runtime,
+                      quantile=config.tof_depth_quantile, signal_floor=config.tof_signal_floor, diagnostics=True)
         raw = result.raw
         assert raw is not None
         close(host(raw.subray_distance_m).reshape(-1), expected_distance)
@@ -834,8 +853,9 @@ def verify_tof_ranges_and_small_target():
     source = snapshot(("target", sphere(tuple(target), .3)),
                       bounds=((-100., 100.), (-100., 100.), (-100., 100.)))
     with RayRenderer(source) as renderer:
-        old_result = _depth(renderer, config.tof, poses_to_tensor((old_pose,)),
-                                  reduction="weighted_quantile", diagnostics=True)
+        old_result = _tof(renderer, config.tof, poses_to_tensor((old_pose,)),
+                          runtime=configuration.sampling_runtime, quantile=config.tof_depth_quantile,
+                          signal_floor=config.tof_signal_floor, diagnostics=True)
         assert np.isposinf(host(old_result.range_m)).all()
         assert np.all(host(old_result.raw.subray_object_index) == -1)
     return {"tof_fov_deg": 45., "tof_range_m": [.015, 4.],
@@ -852,11 +872,11 @@ def verify_known_domain_and_batch_rig():
     config = DepthConfig(2, 2, 45., 45., .015, 4., samples_per_axis=2)
     poses = (Pose((0., 0., 2.)), Pose((0., .5, 2.)))
     with RayRenderer(source) as renderer:
-        result = _depth(renderer, config, poses_to_tensor(poses))
+        result = _depth(renderer, config, poses_to_tensor(poses), runtime=FIXTURE_RUNTIME)
         assert np.isnan(host(result.range_m)).all()
     no_domain = snapshot()
     with RayRenderer(no_domain) as renderer:
-        result = _depth(renderer, config, poses_to_tensor(poses))
+        result = _depth(renderer, config, poses_to_tensor(poses), runtime=FIXTURE_RUNTIME)
         assert np.isnan(host(result.range_m)).all(), "unknown domain must not establish empty space"
     # The first selected ray is fully known and empty, while the two rays on
     # the other side leave the map. The cell still has to remain unknown.
@@ -868,7 +888,7 @@ def verify_known_domain_and_batch_rig():
     known = ((endpoints >= limits[:, 0]) & (endpoints <= limits[:, 1])).all(axis=-1)
     assert known[0] and int(known.sum()) == 2
     with RayRenderer(mixed_source) as renderer:
-        result = _depth(renderer, mixed_config, poses_to_tensor((poses[0],)))
+        result = _depth(renderer, mixed_config, poses_to_tensor((poses[0],)), runtime=FIXTURE_RUNTIME)
         assert np.isnan(host(result.range_m)).all()
         # The raw kernel safely misses invalid input rays. Measurement policy
         # must not reinterpret those safe misses as known free-space returns.
@@ -885,23 +905,24 @@ def verify_known_domain_and_batch_rig():
     source = snapshot(("wall", box("wall", ((.5, .6), (-.9, .9), (1.1, 2.9)))),
                       bounds=((-1., 1.), (-1., 1.), (0., 4.)))
     with RayRenderer(source) as renderer:
-        result = _depth(renderer, config, poses_to_tensor((poses[0],)))
+        result = _depth(renderer, config, poses_to_tensor((poses[0],)), runtime=FIXTURE_RUNTIME)
         assert np.isfinite(host(result.range_m)).all()
     source_without_bounds = GeometrySnapshot(source.objects, source.t_ref, None)
     with RayRenderer(source_without_bounds) as renderer:
-        result = _depth(renderer, config, poses_to_tensor((poses[0],)))
+        result = _depth(renderer, config, poses_to_tensor((poses[0],)), runtime=FIXTURE_RUNTIME)
         assert np.isfinite(host(result.range_m)).all(), "real hits remain known without declared bounds"
     # Formal rig batching and diagnostics must refer to identical ray samples.
-    settings = load_config(ROOT / "configs" / "devtools.json").sensors
+    configuration = load_config(ROOT / "configs" / "devtools.json")
+    settings = configuration.sensors
     source = snapshot(("ground", ground()), ("target", sphere((3., 0., 2.), .3)))
     with RayRenderer(source) as renderer:
         matrices = poses_to_tensor(poses)
         before = renderer.geometry_info["trace_calls"]
-        batched = _rig(renderer, settings, matrices)
+        batched = _rig(renderer, settings, matrices, runtime=configuration.sampling_runtime)
         assert renderer.geometry_info["trace_calls"] - before == 1
         assert not hasattr(batched, "target_hint") and not hasattr(batched.camera, "target_mask")
         assert batched.camera.raw is None
-        diagnostic = _rig_diagnostics(renderer, settings, matrices)
+        diagnostic = _rig_diagnostics(renderer, settings, matrices, runtime=configuration.sampling_runtime)
         close(host(batched.tof_m), host(diagnostic.layout.tof_m))
         close(host(batched.camera.range_m), host(diagnostic.layout.camera.range_m))
         assert batched.tof_m.shape == (2, 4, 8, 8)
@@ -909,7 +930,7 @@ def verify_known_domain_and_batch_rig():
         assert diagnostic.tof_raw.ray_origins_world_m.shape == (8, 3)
         assert diagnostic.camera_raw.ray_origins_world_m.shape == (2, 3)
         for i in range(2):
-            single = _rig(renderer, settings, matrices[i:i + 1])
+            single = _rig(renderer, settings, matrices[i:i + 1], runtime=configuration.sampling_runtime)
             close(host(batched.tof_m)[i:i + 1], host(single.tof_m))
             close(host(batched.camera.range_m)[i:i + 1], host(single.camera.range_m))
         assert batched.tof_m.is_cuda and batched.camera.range_m.is_cuda
@@ -971,6 +992,111 @@ def verify_runtime_budget():
             "fraction_chunk_items": int(chunk), "retained_output_early_rejection": "passed",
             "already_live_outputs_not_subtracted_twice": "passed",
             "tiny_budget_rejects_before_trace": "passed"}
+
+
+def verify_nondefault_json_parameters():
+    """Follow nondefault JSON values through the public sampling/fixture paths."""
+    from tools.sensor_review.fixtures.layout import mounted_pose
+    from tools.sensor_review.fixtures.perception import sample_measurement_diagnostics
+
+    configurations = {}
+    document = (ROOT / "configs" / "devtools.json").read_text()
+    variants = (("configured", .4, .03, 2, 0.), ("quantile", .95, .03, 2, 0.),
+                ("signal_floor", .4, 2., 2, 0.), ("density", .4, .03, 1, 0.),
+                ("recognition", .4, .03, 2, 1.))
+    with tempfile.TemporaryDirectory(prefix="sensor-config-") as folder:
+        for name, quantile, signal_floor, side, threshold in variants:
+            value = json.loads(document)
+            value["sensors"]["tof"]["samples_per_axis"] = side
+            value["sensors"]["camera"].update(width=4, height=4, hfov_deg=60., vfov_deg=60.,
+                                               samples_per_axis=3)
+            value["sensors"]["tof_depth_quantile"] = quantile
+            value["sensors"]["tof_signal_floor"] = signal_floor
+            value["sampling_runtime"]["max_gpu_memory_fraction"] = .3
+            value["perception"]["min_visible_fraction"] = threshold
+            path = Path(folder) / (name + ".json")
+            path.write_text(json.dumps(value))
+            configurations[name] = load_config(path)
+
+    configured = configurations["configured"]
+    body = Pose((0., 0., 2.))
+    front_pose = mounted_pose(body, configured.sensors.tof_mounts[1])
+    origins, directions = independent_rays((front_pose,), configured.sensors.tof)
+    cell = (3, 3)
+    index = (cell[0] * configured.sensors.tof.width + cell[1]) * 4
+    witness = origins[index] + directions[index] / directions[index, 0]
+    source = snapshot(("near", box("near", ((.99, 1.01), (witness[1]-.01, witness[1]+.01),
+                                               (witness[2]-.01, witness[2]+.01)))),
+                      ("far", box("far", ((3., 3.1), (-10., 10.), (-10., 10.)))),
+                      bounds=((-40., 40.), (-40., 40.), (-40., 40.)))
+    selections, near_hits, ray_counts = {}, {}, {}
+    with RayRenderer(source) as renderer:
+        matrices = poses_to_tensor((body,), renderer.device)
+        for name in ("configured", "quantile", "signal_floor", "density"):
+            configuration = configurations[name]
+            sensors = configuration.sensors
+            diagnostic = _rig_diagnostics(renderer, sensors, matrices,
+                                          runtime=configuration.sampling_runtime)
+            sensor_pose = mounted_pose(body, sensors.tof_mounts[1])
+            origins, directions = independent_rays((sensor_pose,), sensors.tof)
+            distances, identities, _ = oracle(source, origins, directions, sensors.tof.max_range_m)
+            side = sensors.tof.samples_per_axis
+            shape = (sensors.tof.height, sensors.tof.width, side ** 2)
+            distances, identities = distances.reshape(shape), identities.reshape(shape)
+            selected = np.asarray([cpu_selection(d, i, sensors.tof.max_range_m,
+                                                 sensors.tof_depth_quantile, sensors.tof_signal_floor)
+                                   for d, i in zip(distances.reshape(-1, side ** 2),
+                                                   identities.reshape(-1, side ** 2))]).reshape(shape[:2])
+            expected = np.take_along_axis(distances, selected[..., None], axis=-1)[..., 0]
+            close(host(diagnostic.layout.tof_m)[0, 1], expected)
+            actual_id = host(diagnostic.tof_raw.object_index)[1]
+            expected_id = np.take_along_axis(identities, selected[..., None], axis=-1)[..., 0]
+            assert np.array_equal(actual_id, expected_id)
+            selections[name] = int(actual_id[cell])
+            near_hits[name] = int(np.count_nonzero(host(diagnostic.tof_raw.subray_object_index)[1] == 0))
+            info = diagnostic.layout.execution_info
+            expected_rays = 4 * sensors.tof.height * sensors.tof.width * side ** 2
+            expected_rays += sensors.camera.height * sensors.camera.width * sensors.camera.samples_per_axis ** 2
+            assert info["ray_count"] == expected_rays
+            ray_counts[name] = info["ray_count"]
+            planner = info["planner"]
+            fraction = configuration.sampling_runtime.max_gpu_memory_fraction
+            assert planner["max_gpu_memory_fraction"] == fraction
+            assert planner["sampling_workset_limit_bytes"] == int(planner["cuda_total_bytes"] * fraction)
+    assert selections == {"configured": 0, "quantile": 1, "signal_floor": 1, "density": 1}, selections
+    assert near_hits["configured"] == 1 and near_hits["density"] == 0, near_hits
+    assert ray_counts["configured"] > ray_counts["density"]
+
+    target = sphere((3., 0., 2.), .7)
+    source = snapshot(("occluder", box("occluder", ((1.5, 1.6), (.04, .16), (1.2, 2.8)))),
+                      ("target", target), bounds=((-40., 40.), (-40., 40.), (-40., 40.)))
+    camera_pose = mounted_pose(body, configured.sensors.camera_mount)
+    origins, directions = independent_rays((camera_pose,), configured.sensors.camera)
+    distances, identities, _ = oracle(source, origins, directions, configured.sensors.camera.max_range_m)
+    potential_distance, potential_id, _ = oracle(snapshot(("target", target)), origins, directions,
+                                                 configured.sensors.camera.max_range_m)
+    minimum = configured.sensors.camera.min_range_m
+    visible = (identities == 1) & (distances >= minimum)
+    potential = (potential_id >= 0) & (potential_distance >= minimum)
+    expected_fraction = float(visible.sum() / potential.sum())
+    assert 0 < expected_fraction < 1, expected_fraction
+    detections = {}
+    with RayRenderer(source) as renderer:
+        matrices = poses_to_tensor((body,), renderer.device)
+        for name in ("configured", "recognition"):
+            configuration = configurations[name]
+            diagnostic = sample_measurement_diagnostics(
+                SensorSampler(renderer, runtime=configuration.sampling_runtime), configuration.sensors,
+                matrices, source, configuration.perception)
+            camera = diagnostic.layout.camera
+            close(host(camera.visible_fraction), np.asarray([expected_fraction]), 1e-12)
+            detections[name] = bool(host(camera.target_hint)[0, 0])
+            assert detections[name] == (expected_fraction >= configuration.perception.min_visible_fraction)
+            assert diagnostic.camera_raw.subray_distance_m.shape == (1, 4, 4, 9)
+    assert detections == {"configured": True, "recognition": False}, detections
+    return {"selected_object_ids": selections, "near_subray_hits": near_hits, "ray_counts": ray_counts,
+            "sampling_memory_fraction": configured.sampling_runtime.max_gpu_memory_fraction,
+            "visible_fraction": expected_fraction, "recognition": detections}
 
 
 def tensor_fields(value, prefix=""):
@@ -1046,29 +1172,29 @@ def verify_unified_chunks_and_perception():
             with patch.object(torch.Tensor, "cpu", side_effect=AssertionError("unexpected CPU readback")), \
                  patch.object(torch.Tensor, "numpy", side_effect=AssertionError("unexpected NumPy readback")), \
                  patch.object(torch.Tensor, "item", side_effect=AssertionError("unexpected scalar readback")):
-                whole = _rig(renderer, settings, matrices)
+                whole = _rig(renderer, settings, matrices, runtime=configuration.sampling_runtime)
             assert renderer.geometry_info["trace_calls"] - before == whole.execution_info["trace_calls"] == 1
             assert whole.execution_info["chunks"] == 1
             assert whole.camera.raw is None and whole.camera.subray_range_m is None
             assert whole.camera.object_index is whole.camera.hit_point_sensor_m is whole.camera.triangle_index is None
             assert not hasattr(whole, "target_hint") and not hasattr(whole.camera, "target_mask")
-            whole_raw = _rig_diagnostics(renderer, settings, matrices)
+            whole_raw = _rig_diagnostics(renderer, settings, matrices, runtime=configuration.sampling_runtime)
             with patch.object(sensor_module, "_plan_chunks", side_effect=forced_plan):
                 before = renderer.geometry_info["trace_calls"]
-                chunked = _rig(renderer, settings, matrices)
+                chunked = _rig(renderer, settings, matrices, runtime=configuration.sampling_runtime)
                 assert renderer.geometry_info["trace_calls"] - before == chunked.execution_info["chunks"]
                 assert chunked.execution_info["trace_calls"] == chunked.execution_info["chunks"] > 1
-                chunked_raw = _rig_diagnostics(renderer, settings, matrices)
+                chunked_raw = _rig_diagnostics(renderer, settings, matrices, runtime=configuration.sampling_runtime)
             compact_parity = compare_tensor_fields(whole, chunked)
             raw_parity = compare_tensor_fields(whole_raw, chunked_raw)
             before = renderer.geometry_info["trace_calls"]
-            measured = sample_measurements(SensorSampler(renderer), settings, matrices, source, configuration.perception)
+            measured = sample_measurements(SensorSampler(renderer, runtime=configuration.sampling_runtime), settings, matrices, source, configuration.perception)
             assert renderer.geometry_info["trace_calls"] - before == 1
             assert measured.camera.depth.raw is None
             assert hasattr(measured.camera, "target_mask") and hasattr(measured, "target_hint")
             with patch.object(sensor_module, "_plan_chunks", side_effect=forced_plan):
                 before = renderer.geometry_info["trace_calls"]
-                measured_chunks = sample_measurements(SensorSampler(renderer), settings, matrices, source, configuration.perception)
+                measured_chunks = sample_measurements(SensorSampler(renderer, runtime=configuration.sampling_runtime), settings, matrices, source, configuration.perception)
                 assert renderer.geometry_info["trace_calls"] - before == measured_chunks.execution_info["chunks"] > 1
             measurement_parity = compare_tensor_fields(measured, measured_chunks)
         for ray_count, origins_shape, indices_shape, limits in calls:
@@ -1108,6 +1234,7 @@ def main():
               ("tof_new_range_small_and_old_target", verify_tof_ranges_and_small_target),
               ("known_domain_and_batch_rig", verify_known_domain_and_batch_rig),
               ("runtime_budget_and_retained_outputs", verify_runtime_budget),
+              ("nondefault_json_parameters", verify_nondefault_json_parameters),
               ("unified_chunk_and_perception_parity", verify_unified_chunks_and_perception))
     if args.only:
         unknown = set(args.only) - {name for name, _ in checks}

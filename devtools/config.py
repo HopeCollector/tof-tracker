@@ -5,7 +5,7 @@ specifications. Mounts retain full sensor-FLU to body-FLU rigid transforms.
 """
 
 from collections.abc import Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import json
 import math
 from pathlib import Path
@@ -14,7 +14,8 @@ from tof_tracker.geometry import Transform
 
 
 TOF_DIRECTIONS = ("right", "front", "left", "rear")
-_DEPTH_FIELDS = ("width", "height", "hfov_deg", "vfov_deg", "min_range_m", "max_range_m")
+_DEPTH_FIELDS = ("width", "height", "hfov_deg", "vfov_deg", "min_range_m", "max_range_m",
+                 "samples_per_axis")
 _MOUNT_FIELDS = ("position_m", "quaternion_xyzw")
 
 
@@ -57,7 +58,7 @@ class DepthConfig:
     vfov_deg: float
     min_range_m: float
     max_range_m: float
-    samples_per_axis: int = 1
+    samples_per_axis: int
 
     def __post_init__(self):
         for name in ("width", "height"):
@@ -124,8 +125,8 @@ class RigConfig:
     camera: DepthConfig
     tof_mounts: tuple[MountConfig, MountConfig, MountConfig, MountConfig]
     camera_mount: MountConfig
-    tof_depth_quantile: float = 0.2
-    tof_signal_floor: float = 0.08
+    tof_depth_quantile: float
+    tof_signal_floor: float
 
     def __post_init__(self):
         if not isinstance(self.tof, DepthConfig) or not isinstance(self.camera, DepthConfig):
@@ -155,7 +156,7 @@ class SamplingRuntimeConfig:
     budget, not a driver-enforced limit on training or other GPU users.
     """
 
-    max_gpu_memory_fraction: float = 0.5
+    max_gpu_memory_fraction: float
 
     def __post_init__(self):
         value = _finite_number(self.max_gpu_memory_fraction, "max_gpu_memory_fraction")
@@ -168,7 +169,7 @@ class SamplingRuntimeConfig:
 class PerceptionConfig:
     """Development environment's simulated external target recognition."""
 
-    min_visible_fraction: float = 0.2
+    min_visible_fraction: float
 
     def __post_init__(self):
         value = _finite_number(self.min_visible_fraction, "min_visible_fraction")
@@ -179,19 +180,19 @@ class PerceptionConfig:
 
 @dataclass(frozen=True)
 class SceneConfig:
-    """Physical scene facts and an optional outer development rig recipe."""
+    """Explicit physical scene, sensor, sampling and recognition configuration."""
 
     vehicle_radius_m: float
     target_radius_m: float
-    sensors: RigConfig | None = None
-    sampling_runtime: SamplingRuntimeConfig = field(default_factory=SamplingRuntimeConfig)
-    perception: PerceptionConfig = field(default_factory=PerceptionConfig)
+    sensors: RigConfig
+    sampling_runtime: SamplingRuntimeConfig
+    perception: PerceptionConfig
 
     def __post_init__(self):
         for name in ("vehicle_radius_m", "target_radius_m"):
             object.__setattr__(self, name, _positive_number(getattr(self, name), name))
-        if self.sensors is not None and not isinstance(self.sensors, RigConfig):
-            raise ValueError("sensors must be RigConfig or None")
+        if not isinstance(self.sensors, RigConfig):
+            raise ValueError("sensors must be RigConfig")
         if not isinstance(self.sampling_runtime, SamplingRuntimeConfig):
             raise ValueError("sampling_runtime must be SamplingRuntimeConfig")
         if not isinstance(self.perception, PerceptionConfig):
@@ -213,18 +214,11 @@ def _exact_keys(value, expected, name):
 
 
 def _load_sensors(value):
-    required = {"tof", "camera", "tof_mounts", "camera_mount"}
-    optional = {"tof_depth_quantile", "tof_signal_floor"}
-    if not isinstance(value, dict) or not required <= set(value) <= required | optional:
-        raise ValueError("sensors must contain tof, camera, tof_mounts, camera_mount; "
-                         "optional fields are tof_depth_quantile and tof_signal_floor")
+    _exact_keys(value, ("tof", "camera", "tof_mounts", "camera_mount",
+                        "tof_depth_quantile", "tof_signal_floor"), "sensors")
     depths = {}
     for name in ("tof", "camera"):
-        fields = value[name]
-        if (not isinstance(fields, dict)
-                or not set(_DEPTH_FIELDS) <= set(fields) <= set(_DEPTH_FIELDS) | {"samples_per_axis"}):
-            raise ValueError(f"sensors.{name} must contain {', '.join(_DEPTH_FIELDS)}; "
-                             "samples_per_axis is optional")
+        _exact_keys(value[name], _DEPTH_FIELDS, f"sensors.{name}")
         depths[name] = DepthConfig(**value[name])
     _exact_keys(value["tof_mounts"], TOF_DIRECTIONS, "sensors.tof_mounts")
     mounts = []
@@ -235,28 +229,19 @@ def _load_sensors(value):
     _exact_keys(value["camera_mount"], _MOUNT_FIELDS, "sensors.camera_mount")
     return RigConfig(depths["tof"], depths["camera"], tuple(mounts),
                         MountConfig(**value["camera_mount"]),
-                        value.get("tof_depth_quantile", 0.2), value.get("tof_signal_floor", 0.08))
+                        value["tof_depth_quantile"], value["tof_signal_floor"])
 
 
 def load_config(path: str | Path) -> SceneConfig:
-    """Read an explicit JSON path once; reject missing, extra and invalid facts.
-
-    Legacy vehicle/target-only files remain valid, with sensors=None. If a
-    sensors object is present, its required fields and all four mounts must be
-    supplied. Optional sampling fields retain backwards-compatible defaults;
-    unknown fields are rejected.
-    """
+    """Read an explicit JSON path once; reject missing, extra and invalid facts."""
     value = json.loads(Path(path).read_text(encoding="utf-8"), object_pairs_hook=_unique_object)
-    required, optional = {"vehicle", "target"}, {"sensors", "sampling_runtime", "perception"}
-    if not isinstance(value, dict) or not required <= set(value) <= required | optional:
-        raise ValueError("configuration must contain vehicle, target; optional sensors, sampling_runtime, perception")
+    _exact_keys(value, ("vehicle", "target", "sensors", "sampling_runtime", "perception"), "configuration")
     for name in ("vehicle", "target"):
         _exact_keys(value[name], ("radius_m",), name)
-    sensors = _load_sensors(value["sensors"]) if "sensors" in value else None
+    sensors = _load_sensors(value["sensors"])
     for key, fields in (("sampling_runtime", ("max_gpu_memory_fraction",)),
                         ("perception", ("min_visible_fraction",))):
-        if key in value:
-            _exact_keys(value[key], fields, key)
+        _exact_keys(value[key], fields, key)
     return SceneConfig(value["vehicle"]["radius_m"], value["target"]["radius_m"], sensors,
-                       SamplingRuntimeConfig(**value.get("sampling_runtime", {})),
-                       PerceptionConfig(**value.get("perception", {})))
+                       SamplingRuntimeConfig(**value["sampling_runtime"]),
+                       PerceptionConfig(**value["perception"]))

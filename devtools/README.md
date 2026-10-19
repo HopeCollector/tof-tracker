@@ -17,7 +17,7 @@
 
 `MeshMap.from_obj()` 保留完整对象，每个 `MeshObject` 包含名称、米制顶点和局部三角面索引。障碍分别闭合，可以重叠；地面为 Z=0 的开放平面。`Scene.from_obj()` 加载背景并添加飞机、目标。加载时不采样、不构建占据或 ESDF。
 
-[统一配置](../configs/devtools.json) 包含 `vehicle.radius_m`、`target.radius_m` 与可选的 `sensors`、`sampling_runtime`、`perception`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给消费者；半径须有限且为正，布尔值、缺项、未知字段和重复 JSON 键会被拒绝。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。`sensors` 为外层 `RigConfig` 配方，包含各设备参数和安装外参；后两项分别控制采样软显存预算和模拟识别阈值。旧的仅半径 JSON 仍有效，但没有设备配方。
+[统一配置](../configs/devtools.json) 包含 `vehicle.radius_m`、`target.radius_m`、`sensors`、`sampling_runtime` 和 `perception`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给消费者。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。`sensors` 为外层 `RigConfig` 配方，包含各设备参数和安装外参；后两项分别控制采样软显存预算和模拟识别阈值。
 
 `Pose` 使用米制三维位置和机体 FLU 到世界的单位 `quaternion_xyzw`：X 向前、Y 向左、Z 向上。四元数只允许 `1e-6` 内的范数舍入误差并归一化；完整横滚、俯仰和 Z 分量均保留，不作水平回正。`body_to_world()` 与 `world_to_body()` 变换点的位置，包含平移。
 
@@ -64,7 +64,9 @@ from devtools.sensors import CameraSensor, RayRenderer, SensorSampler, ToFSensor
 
 with RayRenderer(sensor_geometry) as renderer:
     sampler = SensorSampler(renderer, runtime=config.sampling_runtime)
-    tof = ToFSensor(sampler, config.sensors.tof)
+    tof = ToFSensor(sampler, config.sensors.tof,
+                    quantile=config.sensors.tof_depth_quantile,
+                    signal_floor=config.sensors.tof_signal_floor)
     camera = CameraSensor(sampler, config.sensors.camera)
     pose = Pose((-1, 0, 1))  # 已是传感器世界位姿
     depth = tof.sample(pose)  # 即时返回 CUDA DepthBatch
