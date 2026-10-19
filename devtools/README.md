@@ -1,6 +1,6 @@
 # 场景、观测与几何查询
 
-`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿、GPU 射线传感器与可微轨迹解析；ESDF 仍为占位。
+`devtools` 为算法开发提供场景、传感器观测、监督真值与几何事实，不进入在线算法的交付运行路径。当前已实现背景 mesh、飞机球、目标球、三维位姿、GPU 射线传感器、可微轨迹解析和离线规则距离场。
 
 | 文件 | 当前职责 |
 |---|---|
@@ -12,7 +12,7 @@
 | [`rig.py`](rig.py) | 已实现：外层设备安装、四路 ToF 与相机的采样配方和结果打包 |
 | [`perception.py`](perception.py) | 已实现：利用物理采样结果生成模拟目标 mask、可见比例与框提示 |
 | [`trajectory.py`](trajectory.py) | 已实现：三维五次 / 航向三次边界解析与 Torch 可微采样 |
-| [`esdf.py`](esdf.py) | 占位：距离场构建、加载及批量可微几何查询 |
+| [`esdf/`](esdf/) | 已实现：离线 mesh 建图、共享 float32 距离节点的保存/加载及三线性批量位置查询 |
 
 ## 统一配置与场景
 
@@ -82,13 +82,50 @@ with RayRenderer(sensor_geometry) as renderer:
 
 输入支持 `Pose`、非空 `Pose` 序列或 CUDA float32 `[4,4]` / `[B,4,4]` 刚体矩阵。返回 CUDA `[B,H,W]` 径向米制距离，已知无返回为 `+inf`，无可信测量为 `NaN`；其余合同见源码 docstring。算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
 
-ESDF 尚未构建或查询距离场。它负责回答批量轨迹采样点到物体表面的距离，并保留训练所需的计算图或提供明确导数；任务代价、惩罚权重、反传与参数更新属于训练。距离和边界语义须与场景物理事实一致，查询位置所需的梯度逐条验证，具体后端在实现时选择。
-
-接口计划使用配置和场景提供的完整环境几何构建距离场，支持目标和其他移动物体的更新：清除旧位置影响，同时保留静态占据。后端选型先对照 nvblox 与最小实现的正确性、更新和批量查询性能，再评估直接适配与借鉴实现的成本。
-
-地图周围计划加入物理围墙；围墙之外或无有效地图数据时的查询规则仍需确定。
-
 训练仅通过公开的观测、真值和几何查询接口访问辅助能力，不直接读取内部地图、实体存储或渲染状态；不能借封装切断梯度，也不能借梯度绕过公开接口。世界位姿、目标真值与物体身份只供开发、监督和评价，不能补入在线观测；在线算法核心不导入 `devtools`、训练模块、地图或仿真器。
+
+## ESDF 建图与查询
+
+ESDF 是本模块的静态地图组件：离线查询 mesh，在固定、均匀栅格的共享节点存一个 float32 距离值；间距可配置。CPU / CUDA 查询对所在格子的八个角点做三线性插值，并保留对输入位置的 Torch 计算图。距离值跨格连续（C0），梯度可以在格面跳变；格面上的反传采用选中格子的单侧导数。格内结果在八角点距离范围内（浮点舍入除外），但仍是几何近似，不保证准确零面、单位梯度或保守净空；粗网格仍可能漏掉薄障碍。
+
+先在项目 Docker 容器内显式编译建图所需的 CPU 距离库：
+
+```sh
+cmake -S devtools/esdf -B outputs/esdf/build -DCMAKE_BUILD_TYPE=Release
+cmake --build outputs/esdf/build -j2
+```
+
+在同一容器中调用；输入 OBJ 应已由调用方准备：
+
+```python
+import torch
+from devtools.esdf import ESDFGrid, build_esdf_from_mesh
+
+field = build_esdf_from_mesh(
+    "outputs/mapgen/pillars-3.obj",
+    library_path="outputs/esdf/build/libmesh_distance.so",
+    voxel_size_m=0.2,
+)
+field.save("outputs/esdf/pillars-3")  # 新目录；保存与加载由调用方决定
+field = ESDFGrid.load("outputs/esdf/pillars-3", device="cpu")
+points = torch.tensor([[0., 0., 1.], [1., 1., 2.]], requires_grad=True)
+distance, valid = field.query(points, return_valid=True)
+assert valid.all()
+gradient, = torch.autograd.grad(distance.sum(), points)
+print(distance.shape, gradient.shape)  # (2,), (2, 3)
+```
+
+建图也可接收 `scene.get_geometry(exclude_ids={"vehicle", "target"})` 的公开几何快照。默认范围取源的声明范围，没有声明时显式传 `bounds_m=[[x0,y0,z0],[x1,y1,z1]]`。范围不裁剪障碍，不添加围墙；当前适配支持轴对齐柱盒并集与 Z=0 地面，地面采用 `z<=0` 占据约定。单个已准备好的闭合外露边界也受支持；多个任意 mesh 的布尔并集和球体混入会拒绝。
+
+查询距离以米为单位，外正内负。位置为与场同 device 的 `(...,3)` float32 / float64 Tensor；越界及非有限输入返回 NaN、false mask 和零位置梯度。调用方须处理 invalid。已存地图加载和查询不需要原生库；`field.to("cuda")` 可迁移固定节点。地图格式使用 v2 / `trilinear` 标识，拒绝旧 C1 格式，避免同一份地图被静默换成另一种插值。建图、查询、存储格式和几何限制详见对应源码 docstring。
+
+正式 mesh 距离与 ESDF 检查已接入统一流程。在仓库根运行，编译和检查均在 Docker 中执行：
+
+```sh
+just check
+```
+
+`tests/run_checks.py` 先显式编译上述原生库，再检查 mesh 建图、三线性独立参考、格面距离连续性、八角点范围、位置及轨迹参数反传和保存加载。单盒与间隔两个体素的双盒解析用例另检查节点精度、半体素误差阈值与符号；这些用例不构成任意几何的误差保证。任一步失败都会终止流程并返回非零状态。`verify_mesh_distance.py --map MAP.obj --esdf-voxel 0.5` 可在真实地图的自由空间重复精度检查。
 
 ## 开发用轨迹解析
 

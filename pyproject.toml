@@ -16,7 +16,7 @@ gpu = ["warp-lang==1.15.0"]
 # One development installation. These modules are not separate products,
 # and this package list does not define the deployed algorithm artifacts.
 [tool.setuptools]
-packages = ["tof_tracker", "training", "devtools"]
+packages = ["tof_tracker", "training", "devtools", "devtools.esdf"]
 
 [tool.setuptools.package-dir]
 tof_tracker = "src/tof_tracker"

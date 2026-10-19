@@ -47,7 +47,7 @@ just run cmake --version                         # 在容器内执行命令
 
 ## 接下来
 
-- 将已有[开发用轨迹解析](devtools/README.md#开发用轨迹解析)对接公开几何查询和训练代价，逐条检查所需梯度；分别归入 `devtools/` 和 `training/`。
+- 基于现有[轨迹解析](devtools/README.md#开发用轨迹解析)和 [ESDF 查询](devtools/README.md#esdf-建图与查询)实现训练代价，检查所需参数梯度；归入 `training/`。
 - 完成少量样本的训练、保存和重载；入口为 [training/train.py](training/train.py)，职责见 [训练说明](training/README.md)。
 
 其他移动物体和闭环评价在需要时展开，闭环执行与批量训练分别组织。
