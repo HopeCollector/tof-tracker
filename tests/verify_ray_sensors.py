@@ -31,7 +31,7 @@ from devtools.scene import GeometrySnapshot, Pose, Scene, SceneObject, Sphere
 from devtools.sensors import CameraSensor, RayRenderer, SensorSampler, ToFSensor
 from devtools.sensors._ops import generate_rays, poses_to_tensor, process_samples
 from devtools.sensors._processing import select_subray
-from tools.sensor_review.fixtures.capture import capture_sample
+from tools.sensor_review.fixtures.capture import capture_sample, capture_process_samples
 from tools.sensor_review.fixtures.layout import (sample_layout as _sample_rig,
                                                 sample_layout_diagnostics as _sample_rig_diagnostics)
 
@@ -519,6 +519,11 @@ def verify_camera_coverage():
         close(host(result.visible_fraction), fraction, 1e-12)
         assert np.array_equal(host(result.unoccluded_samples), denominator)
         assert np.array_equal(host(result.unoccluded_pixels), potential.any(axis=-1).sum(axis=(1, 2)))
+        assert np.array_equal(host(target_raw.subray_object_index),
+                              np.where(target_identity.reshape(shape) >= 0, 1, -1))
+        close(host(target_raw.subray_distance_m), target_distance.reshape(shape))
+        target_hits = host(target_raw.subray_object_index) == 1
+        assert np.all(~visible | target_hits), "visible target rays must be target-only hits"
         assert np.any((coverage > 0) & (coverage < 1)), coverage
         # Subray occupancy supervises the mask even when a nearer subray gives
         # the pixel's representative depth a different object's identity.
@@ -565,13 +570,7 @@ def verify_camera_coverage():
 
 
 def verify_float32_tangent_witnesses():
-    """Keep observed precision witnesses without promising identical hit bits.
-
-    Nominal tangent angles 0 and +1e-8 rad quantize to the same float32 ray.
-    On the measured RTX 5070 Ti the Warp path missed those two records while
-    Torch's analytic denominator included them. We preserve the boundary and
-    assert bounded, finite diagnostics, not an impossible exact tangent oracle.
-    """
+    """Require fixture/core agreement while reporting the float64 boundary."""
     from tools.sensor_review.fixtures.perception import process_camera_perception
 
     origin = np.asarray((0., 0., 2.), dtype=np.float32)
@@ -588,22 +587,211 @@ def verify_float32_tangent_witnesses():
         directions_gpu = torch.as_tensor(directions, device=renderer.device)
         raw = renderer.trace(origins_gpu, directions_gpu, config.max_range_m)
         poses = poses_to_tensor((Pose(tuple(float(v) for v in origin)),))
-        depth = process_samples(raw, origins_gpu, directions_gpu, poses, config)
+        depth = capture_process_samples(raw, origins_gpu, directions_gpu, poses, config)
         perceived, target_raw = process_camera_perception(
             depth, depth.raw, poses, config, source, PerceptionConfig(0.), diagnostics=True)
-        warp_d, torch_d = host(raw.distance_m), host(target_raw.subray_distance_m).reshape(-1)
-        for values in (warp_d, torch_d):
+        warp_d, target_d = host(raw.distance_m), host(target_raw.subray_distance_m).reshape(-1)
+        for values in (warp_d, target_d):
             assert np.isfinite(values).all() and np.all((values >= 0) & (values <= config.max_range_m))
+        assert np.array_equal(warp_d, target_d), (warp_d.tolist(), target_d.tolist())
         fraction = float(host(perceived.visible_fraction)[0])
         assert math.isfinite(fraction) and 0 <= fraction <= 1
         assert np.isfinite(host(perceived.target_coverage)).all()
         warp_hit = host(raw.object_index) >= 0
-        torch_hit = host(target_raw.subray_object_index).reshape(-1) >= 0
+        target_hit = host(target_raw.subray_object_index).reshape(-1) >= 0
+        assert np.array_equal(warp_hit, target_hit), (warp_hit.tolist(), target_hit.tolist())
+        assert fraction == float(warp_hit.any())
     return {"input_directions_float32": directions.tolist(), "double_geometry_hit": (double_id >= 0).tolist(),
-            "warp_hit": warp_hit.tolist(), "torch_target_hit": torch_hit.tolist(),
-            "hit_bit_disagreements": int(np.count_nonzero(warp_hit != torch_hit)),
+            "warp_hit": warp_hit.tolist(), "fixture_target_hit": target_hit.tolist(),
+            "hit_bit_disagreements": int(np.count_nonzero(warp_hit != target_hit)),
             "visible_fraction": fraction,
-            "policy": "finite/bounded assertions; exact tangent hit-bit equality is not required"}
+            "policy": "fixture/core float32 hit and distance equality; float64 hit bits are diagnostic only"}
+
+
+def _perceive_without_query(depth, poses, config, source):
+    from tools.sensor_review.fixtures.perception import process_camera_perception
+
+    # Check the whole fixture path, including diagnostics, without permitting a
+    # replacement renderer or a hidden CUDA-to-host assertion in its code.
+    with patch.object(RayRenderer, "trace", side_effect=AssertionError("fixture queried ray core")), \
+         patch.object(RayRenderer, "__init__", side_effect=AssertionError("fixture built renderer")), \
+         patch.object(torch.Tensor, "cpu", side_effect=AssertionError("fixture read CPU")), \
+         patch.object(torch.Tensor, "numpy", side_effect=AssertionError("fixture read NumPy")), \
+         patch.object(torch.Tensor, "item", side_effect=AssertionError("fixture read scalar")), \
+         patch.object(torch.Tensor, "tolist", side_effect=AssertionError("fixture read list")):
+        return process_camera_perception(depth, depth.raw, poses, config, source,
+                                         PerceptionConfig(.2), diagnostics=True)
+
+
+def _assert_unoccluded_alignment(depth, perceived, target_raw):
+    """Compare original raw records, before any range/mask reconciliation."""
+    assert target_raw is not None
+    for name, dtype in (("subray_distance_m", torch.float32),
+                        ("subray_object_index", torch.int64),
+                        ("subray_hit_point_world_m", torch.float32)):
+        full, target = getattr(depth.raw, name), getattr(target_raw, name)
+        assert target.is_cuda and target.dtype == dtype and target.shape == full.shape
+        assert np.array_equal(host(full), host(target)), name
+    finite_hit = ((host(depth.raw.subray_object_index) >= 0)
+                  & np.isfinite(host(depth.subray_range_m)))
+    counts = finite_hit.sum(axis=(1, 2, 3))
+    assert np.array_equal(host(perceived.unoccluded_samples), counts)
+    assert np.array_equal(host(perceived.unoccluded_pixels), finite_hit.any(axis=-1).sum(axis=(1, 2)))
+    assert np.array_equal(host(perceived.target_mask), finite_hit.any(axis=-1))
+    close(host(perceived.target_coverage), finite_hit.mean(axis=-1), 0)
+    close(host(perceived.visible_fraction), (counts > 0).astype(float), 0)
+    return counts
+
+
+def verify_fixture_world_pose_alignment():
+    """Public camera requests retain the fixed 2.0-fraction failure and defaults."""
+    fixed_config = DepthConfig(2, 1, 2., 1., .01, 30., 1)
+    source = snapshot(("target", sphere((0., 0., 0.), .3)), t_ref=0.)
+    fixed_pose = torch.tensor((
+        (.4271531105041504, -.9041793346405029, 0., -7.090548992156982),
+        (.9041793346405029, .4271531105041504, 0., -15.365572929382324),
+        (0., 0., 1., 0.), (0., 0., 0., 1.)), device="cuda", dtype=torch.float32)[None]
+    default_config = load_config(ROOT / "configs" / "devtools.json").sensors.camera
+    assert default_config == DepthConfig(160, 120, 80., 60., .01, 30., 2)
+    # Retain this original default-camera witness independently of the random
+    # sequence so future changes to its generation cannot remove the regression.
+    default_witness = torch.eye(4, device="cuda")[None]
+    default_witness[0, :3, 3] = torch.tensor(
+        (-27.22176170349121, .01857154816389084, -.2298312932252884), device="cuda")
+    checked_poses, checked_rays, fixed_counts = 0, 0, []
+    with RayRenderer(source) as renderer:
+        for _ in range(5):
+            depth = _depth(renderer, fixed_config, fixed_pose, diagnostics=True)
+            perceived, target_raw = _perceive_without_query(depth, fixed_pose, fixed_config, source)
+            counts = _assert_unoccluded_alignment(depth, perceived, target_raw)
+            assert counts.tolist() == [2]
+            fixed_counts.append(int(counts[0]))
+        depth = _depth(renderer, default_config, default_witness, diagnostics=True)
+        perceived, target_raw = _perceive_without_query(depth, default_witness, default_config, source)
+        assert _assert_unoccluded_alignment(depth, perceived, target_raw).tolist() == [14]
+        del depth, perceived, target_raw
+        rng = np.random.default_rng(28)
+        d = np.asarray((1., (1 - 2 * (80 + .25) / 160) * math.tan(math.radians(40)),
+                        (1 - 2 * (60 + .25) / 120) * math.tan(math.radians(30))))
+        d /= np.linalg.norm(d)
+        n = np.cross(d, (0., 0., 1.))
+        n /= np.linalg.norm(n)
+        m = np.cross(d, n)
+        for _ in range(8):
+            angles, distances = rng.uniform(-math.pi, math.pi, 32), rng.uniform(1., 29., 32)
+            perpendicular = np.cos(angles)[:, None] * n + np.sin(angles)[:, None] * m
+            centers = distances[:, None] * d + (.3 + rng.uniform(-4e-7, 4e-7, 32))[:, None] * perpendicular
+            # Match all 256 original poses, but retain at most four camera views
+            # and their target diagnostics at once, rather than the full batch.
+            for start in range(0, 32, 4):
+                poses = torch.eye(4, device="cuda").repeat(4, 1, 1)
+                poses[:, :3, 3] = torch.as_tensor(-centers[start:start + 4], device="cuda", dtype=torch.float32)
+                depth = _depth(renderer, default_config, poses, diagnostics=True)
+                perceived, target_raw = _perceive_without_query(depth, poses, default_config, source)
+                counts = _assert_unoccluded_alignment(depth, perceived, target_raw)
+                assert np.all(counts > 0), counts.tolist()
+                checked_poses += len(poses)
+                checked_rays += depth.raw.subray_distance_m.numel()
+                del depth, perceived, target_raw
+        queries = renderer.geometry_info["trace_calls"]
+    return {"fixed_world_pose_repeats": 5, "fixed_visible_counts": fixed_counts,
+            "fixed_visible_fraction": 1., "default_witness_visible_count": 14,
+            "default_tangent_conditioned_poses": checked_poses, "default_checked_rays": checked_rays,
+            "max_retained_default_views": 4, "physical_queries": queries,
+            "fixture_extra_queries": 0, "raw_distance_and_identity": "exactly equal"}
+
+
+def verify_fixture_ranges_and_directions():
+    """Compare fixture raw and measured rays at numerical/known-domain edges."""
+    from devtools.sensors._ops import sample_ray_origins
+    from devtools.sensors._processing import range_by_sample
+
+    config = DepthConfig(1, 1, 45., 45., .125, 4.)
+    known = ((-10., 10.), (-10., 10.), (-10., 10.))
+    cases = (("inside_minimum", .3125, (0., 0., 2.), (2., 0., 0.), known, 0, "nan"),
+             ("minimum_endpoint", .375, (0., 0., 2.), (1e-30, 0., 0.), known, 0, "finite"),
+             ("maximum_endpoint", 4.25, (0., 0., 2.), (1e30, 0., 0.), known, 0, "finite"),
+             ("inside_query_guard", 4.250002, (0., 0., 2.), (3., 0., 0.), known, 0, "nan"),
+             ("outside_query_guard", 4.250008, (0., 0., 2.), (1., 0., 0.), known, -1, "inf"),
+             ("miss_without_domain", 4.250008, (0., 0., 2.), (1., 0., 0.), None, -1, "nan"),
+             ("hit_outside_domain", 3., (0., 0., 2.), (1., 0., 0.),
+              ((-1., 1.), (-1., 1.), (0., 4.)), 0, "nan"),
+             ("sphere_inside_exit", 3., (3., 0., 2.), (2., 0., 0.), known, 0, "finite"),
+             ("nonunit_oblique", 3., (0., 0., 2.), (2., .1, .03), known, 0, "finite"),
+             ("zero_direction", 3., (0., 0., 2.), (0., 0., 0.), known, -1, "nan"),
+             ("nonfinite_direction", 3., (0., 0., 2.), (math.inf, 0., 0.), known, -1, "nan"),
+             ("nonfinite_origin", 3., (math.nan, 0., 2.), (1., 0., 0.), known, -1, "nan"))
+    records = []
+    for name, center_x, origin, direction, bounds, expected_id, category in cases:
+        source = snapshot(("target", sphere((center_x, 0., 2.), .25)), bounds=bounds)
+        with RayRenderer(source) as renderer:
+            origins = torch.tensor((origin,), device="cuda", dtype=torch.float32)
+            directions = torch.tensor((direction,), device="cuda", dtype=torch.float32)
+            poses = poses_to_tensor((Pose((0., 0., 2.)),))
+            hits = renderer.trace(origins, directions, config.max_range_m)
+            depth = capture_process_samples(hits, origins, directions, poses, config)
+            perceived, target_raw = _perceive_without_query(depth, poses, config, source)
+            _assert_unoccluded_alignment(depth, perceived, target_raw)
+            fixture_ranges = range_by_sample(target_raw.subray_distance_m, target_raw.subray_object_index,
+                                             sample_ray_origins(target_raw), target_raw.ray_directions_world,
+                                             config, bounds)
+            close(host(fixture_ranges), host(depth.subray_range_m), 0)
+            assert int(host(hits.object_index)[0]) == expected_id, name
+            value = float(host(fixture_ranges).reshape(-1)[0])
+            assert {"finite": math.isfinite, "nan": math.isnan,
+                    "inf": lambda x: math.isinf(x) and x > 0}[category](value), (name, value)
+            if name == "minimum_endpoint":
+                assert value == config.min_range_m
+            if name == "maximum_endpoint":
+                assert value == config.max_range_m
+            if name == "sphere_inside_exit":
+                assert value == .25
+            records.append({"case": name, "raw_identity": expected_id, "range_category": category})
+    return {"cases": records, "raw_distance_and_identity": "exactly equal",
+            "range_nan_inf_and_finite": "exactly equal"}
+
+
+def verify_fixture_stream_and_storage():
+    """Queue fixture work and downstream reads on CUDA streams without readback."""
+    config = DepthConfig(8, 6, 60., 45., .01, 8., 2)
+    source = snapshot(("target", sphere((3., 0., 2.), .5)))
+    producer, consumer = torch.cuda.Stream(), torch.cuda.Stream()
+    producer.wait_stream(torch.cuda.current_stream())
+    with RayRenderer(source) as renderer:
+        with torch.cuda.stream(producer):
+            poses = torch.eye(4, device="cuda")[None]
+            poses[:, 2, 3] = 2.
+            depth = _depth(renderer, config, poses, diagnostics=True)
+            first, target = _perceive_without_query(depth, poses, config, source)
+            # A second invocation must own distinct outputs without overwriting
+            # the first launch's storage or losing its allocator stream lifetime.
+            second, next_target = _perceive_without_query(depth, poses, config, source)
+            saved_distance = target.subray_distance_m.clone()
+            saved_identity = target.subray_object_index.clone()
+            assert target.subray_distance_m.data_ptr() != next_target.subray_distance_m.data_ptr()
+            assert target.subray_object_index.data_ptr() != next_target.subray_object_index.data_ptr()
+            ready = torch.cuda.Event()
+            ready.record()
+        with torch.cuda.stream(consumer):
+            consumer.wait_event(ready)
+            outputs = (target.subray_distance_m, target.subray_object_index,
+                       first.visible_fraction, first.target_coverage)
+            for value in outputs:
+                value.record_stream(consumer)
+            consumed = tuple(value.clone() for value in outputs)
+            finished = torch.cuda.Event()
+            finished.record()
+        torch.cuda.current_stream().wait_event(finished)
+        _assert_unoccluded_alignment(depth, first, target)
+        close(host(consumed[0]), host(saved_distance), 0)
+        assert np.array_equal(host(consumed[1]), host(saved_identity))
+        close(host(consumed[2]), np.ones(1), 0)
+        close(host(consumed[3]), host(second.target_coverage), 0)
+    # Owned target results remain available after native renderer resources close.
+    close(host(target.subray_distance_m), host(saved_distance), 0)
+    assert np.array_equal(host(target.subray_object_index), host(saved_identity))
+    return {"producer_fixture_then_consumer_stream": "passed", "host_readback_in_fixture": 0,
+            "distinct_output_storage": "passed", "output_survives_renderer_close": "passed"}
 
 
 def verify_tof_ranges_and_small_target():
@@ -914,6 +1102,9 @@ def main():
               ("construction_and_query_streams", verify_streams),
               ("tof_weighted_quantile", verify_weighted_reduction),
               ("camera_subray_coverage_and_visibility", verify_camera_coverage),
+              ("fixture_world_pose_alignment", verify_fixture_world_pose_alignment),
+              ("fixture_range_direction_alignment", verify_fixture_ranges_and_directions),
+              ("fixture_stream_and_storage", verify_fixture_stream_and_storage),
               ("tof_new_range_small_and_old_target", verify_tof_ranges_and_small_target),
               ("known_domain_and_batch_rig", verify_known_domain_and_batch_rig),
               ("runtime_budget_and_retained_outputs", verify_runtime_budget),

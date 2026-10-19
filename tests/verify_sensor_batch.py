@@ -7,6 +7,7 @@ the development consumer is used only for same-query diagnostic boundaries.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import FrozenInstanceError
 import gc
@@ -28,7 +29,7 @@ if str(ROOT) not in sys.path:
 
 from devtools.config import DepthConfig, SamplingRuntimeConfig
 from devtools.sensors import CameraSensor, RayRenderer, SensorSampler, ToFSensor
-from devtools.sensors._ops import poses_to_tensor
+from devtools.sensors._ops import SampleBatch, poses_to_tensor
 from devtools.scene import Pose
 from tools.sensor_review.fixtures.capture import capture_sample
 from verify_ray_sensors import (box, close, compare_tensor_fields, cpu_selection,
@@ -258,6 +259,173 @@ def verify_chunk_budget_consumers_and_diagnostics():
                 "tiny_budget_rejects_before_trace": "passed"}
 
 
+def verify_fixture_query_inputs_across_chunks():
+    from devtools.sensors import _sampling as module
+    source, views = source_scene(), poses(5)
+    rays_per_view = CAMERA.width * CAMERA.height * CAMERA.samples_per_axis ** 2
+    with RayRenderer(source) as renderer:
+        sampler = SensorSampler(renderer)
+        sensor = CameraSensor(sampler, CAMERA)
+        batch = sampler.batch()
+        first = capture_sample(sensor, views[:1], batch=batch)
+        ordinary = sensor.sample(views[1:2], batch=batch)
+        tail = capture_sample(sensor, views[2:], batch=batch)
+        queries = []
+        trace, plan = renderer.trace, module._plan_chunks
+
+        def observe_trace(origins, directions, *args, **kwargs):
+            queries.append(directions.clone())
+            return trace(origins, directions, *args, **kwargs)
+
+        def two_views(*args, **kwargs):
+            capacity, info = plan(*args, **kwargs)
+            capacity = min(capacity, 2 * rays_per_view)
+            return capacity, {**info, "chunk_items": capacity}
+
+        original_process, original_concat = module._process_samples, module._concat_depth
+        with patch.object(renderer, "trace", side_effect=observe_trace), \
+             patch.object(module, "_plan_chunks", side_effect=two_views), no_readback():
+            batch.execute()
+        assert module._process_samples is original_process
+        assert module._concat_depth is original_concat
+        assert "execute" not in batch.__dict__, "completed fixture batch retains execution observer"
+        assert len(queries) == 3
+        assert batch.execution_info["postprocess_calls"] == 3, "equal policies were not coalesced"
+        compact(ordinary.result(), 1, CAMERA)
+        actual_inputs = torch.cat(queries).reshape(
+            len(views), CAMERA.height, CAMERA.width, CAMERA.samples_per_axis ** 2, 3)
+        expected = (actual_inputs[:1].clone(), actual_inputs[2:].clone())
+        values = (first.result(), tail.result())
+        differs_from_normalized = False
+        for value, exact in zip(values, expected):
+            captured = value.raw.query_directions_world
+            assert torch.equal(captured, exact), "capture changed pre-normalization query bits"
+            differs_from_normalized |= not torch.equal(captured, value.raw.ray_directions_world)
+            assert captured.untyped_storage().nbytes() == captured.numel() * captured.element_size(), (
+                "captured input retains another request or chunk's allocation")
+        assert differs_from_normalized, "probe did not exercise directions changed by diagnostic normalization"
+        assert values[0].raw.query_directions_world.data_ptr() != values[1].raw.query_directions_world.data_ptr()
+        del queries, actual_inputs, batch, ordinary, first, tail
+        sensor.sample(views[::-1])
+        renderer.sync(source_scene((3., 1., 2.)))
+        renderer.close()
+        for value, exact in zip(values, expected):
+            assert torch.equal(value.raw.query_directions_world, exact)
+    return {"mixed_handles": 3, "forced_chunks": 3,
+            "trace_inputs_equal_captured_inputs_bitwise": True,
+            "input_bits_differ_from_normalized_diagnostics": True,
+            "owned_query_inputs_survive_sync_close": True}
+
+
+def verify_fixture_observer_isolation_and_recovery():
+    from devtools.sensors import _sampling as module
+    source, views = source_scene(), poses(1)
+    original_process, original_concat = module._process_samples, module._concat_depth
+
+    def ordinary_diagnostics():
+        with RayRenderer(source) as renderer:
+            sensor = CameraSensor(SensorSampler(renderer), CAMERA)
+            batch = sensor._sampler.batch()
+            handle = sensor.sample(views, batch=batch)
+            handle._diagnostics = True
+            batch.execute()
+            raw = handle.result().raw
+            assert type(raw) is SampleBatch
+            assert not hasattr(raw, "query_directions_world"), "fixture observation leaked into ordinary batch"
+        return True
+
+    ordinary_diagnostics()
+    with RayRenderer(source) as renderer, ThreadPoolExecutor(max_workers=1) as executor:
+        sampler = SensorSampler(renderer)
+        sensor = CameraSensor(sampler, CAMERA)
+        observations = []
+
+        def check_other_thread(depth, raw, frozen, start, stop):
+            assert raw.query_directions_world.is_cuda
+            observations.append(executor.submit(ordinary_diagnostics).result(timeout=30))
+
+        batch = sampler.batch()
+        capture_sample(sensor, views, batch=batch, diagnostics=False, consumer=check_other_thread)
+        batch.execute()
+        assert observations == [True]
+        assert module._process_samples is original_process
+        assert module._concat_depth is original_concat
+        assert "execute" not in batch.__dict__
+
+        def fail_consumer(*args):
+            raise ValueError("deliberate capture observer failure")
+
+        failed = sampler.batch()
+        handle = capture_sample(sensor, views, batch=failed, consumer=fail_consumer)
+        rejected(failed.execute, (ValueError,))
+        rejected(handle.result, (RuntimeError,))
+        assert module._process_samples is original_process, "process observer survived a consumer exception"
+        assert module._concat_depth is original_concat, "concat observer survived a consumer exception"
+        assert "execute" not in failed.__dict__, "failed fixture batch retains execution observer"
+        compact(sensor.sample(views), 1, CAMERA)
+        retried = sampler.batch()
+        good = capture_sample(sensor, views, batch=retried)
+        retried.execute()
+        assert good.result().raw.query_directions_world is not None
+    ordinary_diagnostics()
+    assert module._process_samples is original_process and module._concat_depth is original_concat
+    return {"ordinary_batches_before_after": "unobserved",
+            "ordinary_batch_other_thread_during_capture": "unobserved",
+            "observers_restored_after_consumer_exception": True,
+            "normal_and_fixture_sampling_after_failure": "passed"}
+
+
+def verify_fixture_query_retained_budget():
+    from devtools.sensors import _sampling as module
+    source, views = source_scene(), poses(3)
+    rays_per_view = CAMERA.width * CAMERA.height * CAMERA.samples_per_axis ** 2
+    extra_consumer_bytes = 4096
+    with RayRenderer(source) as renderer:
+        sampler = SensorSampler(renderer)
+        sensor = CameraSensor(sampler, CAMERA)
+
+        def reserved_bytes(diagnostics, capture):
+            batch, reservations, observed = sampler.batch(), [], []
+            if capture:
+                def consume(depth, raw, frozen, start, stop):
+                    assert raw.query_directions_world.shape == (*raw.subray_distance_m.shape, 3)
+                    observed.append((start, stop))
+                handle = capture_sample(sensor, views, batch=batch, diagnostics=diagnostics,
+                                        consumer=consume, retained_output_bytes=extra_consumer_bytes)
+            else:
+                handle = sensor.sample(views, batch=batch)
+                handle._diagnostics = diagnostics
+            plan = module._plan_chunks
+
+            def observe_plan(*args, **kwargs):
+                reservations.append(args[3])
+                return plan(*args, **kwargs)
+
+            with patch.object(module, "_plan_chunks", side_effect=observe_plan), no_readback():
+                batch.execute()
+            assert len(reservations) == 1
+            if capture:
+                assert observed == [(0, len(views))]
+            if diagnostics:
+                assert (getattr(handle.result().raw, "query_directions_world", None) is not None) == capture
+            else:
+                compact(handle.result(), len(views), CAMERA)
+            return reservations[0]
+
+        baseline_retained = reserved_bytes(True, False)
+        fixture_retained = reserved_bytes(True, True)
+        extra_query_bytes = 2 * len(views) * rays_per_view * 3 * 4
+        assert fixture_retained - baseline_retained == extra_consumer_bytes + extra_query_bytes
+        baseline_compact = reserved_bytes(False, False)
+        fixture_compact = reserved_bytes(False, True)
+        assert fixture_compact - baseline_compact == extra_consumer_bytes, (
+            "consumer-only observation must not reserve retained query copies")
+    return {"captured_views": len(views), "owned_inputs_plus_concat_overlap_bytes": extra_query_bytes,
+            "consumer_retained_bytes": extra_consumer_bytes,
+            "planner_charges_owned_query_inputs": True,
+            "consumer_only_observation_has_no_retained_input_copies": True}
+
+
 def verify_output_ownership_and_cycle_free_release():
     source, views = source_scene(), poses()
     renderer = RayRenderer(source)
@@ -440,6 +608,9 @@ def main():
               ("interleaved_requests_freezing_grouping", verify_interleaved_freezing_and_grouping),
               ("epoch_failure_and_execution_guards", verify_epoch_failure_and_execution_guards),
               ("chunk_consumers_and_diagnostic_parity", verify_chunk_budget_consumers_and_diagnostics),
+              ("fixture_query_inputs_across_chunks", verify_fixture_query_inputs_across_chunks),
+              ("fixture_observer_isolation_recovery", verify_fixture_observer_isolation_and_recovery),
+              ("fixture_query_retained_budget", verify_fixture_query_retained_budget),
               ("output_lifetime_without_gc", verify_output_ownership_and_cycle_free_release),
               ("cross_stream_collection_storage", verify_cross_stream_collection_lifetime))
     if args.only and set(args.only) - {name for name, _ in checks}:

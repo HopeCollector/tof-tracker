@@ -1,7 +1,7 @@
 """Review fixture's simulated recognition, outside physical sensors.
 
 Visibility comes from the full-scene closest-hit identities. The unoccluded
-denominator uses Torch analytic sphere intersections of those same camera
+denominator uses Warp analytic sphere intersections of those same camera
 subrays, never a second renderer query or a projected bounding-box estimate.
 All tensors remain on CUDA; no noise or learned RGB recognition is implied.
 """
@@ -18,6 +18,7 @@ from devtools.sensors._ops import (SampleBatch, compact_depth, concat_samples, g
                                    sample_ray_origins, select_subray)
 from devtools.sensors._processing import _check_samples, range_by_sample
 from .layout import _collect_layout
+from .sphere_query import sphere_returns
 
 
 @dataclass(frozen=True)
@@ -115,32 +116,16 @@ def _empty_perception(depth):
 def _sphere_returns(raw, geometry, config, target_index):
     origins = sample_ray_origins(raw)
     directions = raw.ray_directions_world
-    center = torch.tensor(geometry.pose.position_m, dtype=torch.float32, device=directions.device)
-    radius = torch.tensor(geometry.radius_m, dtype=torch.float32, device=directions.device)
-    relative = origins - center
-    b = (relative * directions).sum(dim=-1)
-    perpendicular = relative - b[..., None] * directions
-    discriminant = radius * radius - perpendicular.square().sum(dim=-1)
-    root = discriminant.clamp_min(0).sqrt()
-    near = -b - root
-    distance = torch.where(near >= 0, near, -b + root)
-    limit = config.max_range_m + max(1e-6, config.max_range_m * 1e-6)
-    valid = ((discriminant >= 0) & (distance >= 0) & (distance <= limit)
-             & torch.isfinite(distance))
-    distance = torch.where(valid, distance, 0.0)
-    identity = torch.where(valid, target_index, -1).to(torch.int64)
+    distance, identity, points = sphere_returns(raw, geometry, config.max_range_m, target_index)
     ranges = range_by_sample(distance, identity, origins, directions, config, raw.map_bounds_m)
-    return distance, identity, ranges
+    return distance, identity, points, ranges
 
 
-def _target_diagnostics(raw, poses, config, distance, identity):
+def _target_diagnostics(raw, poses, config, distance, identity, points):
     """Assemble only requested target diagnostics; no second generic process."""
     selected = select_subray(distance, identity, config.max_range_m)
     representative_distance = gather_subray(distance, selected)
     representative_identity = gather_subray(identity, selected)
-    origins = sample_ray_origins(raw)
-    points = origins + distance[..., None] * raw.ray_directions_world
-    points = torch.where((identity >= 0)[..., None], points, 0.0)
     selected_world = gather_subray(points, selected)
     relative = selected_world - poses[:, None, None, :3, 3]
     sensor_points = torch.matmul(relative.reshape(len(poses), -1, 3), poses[:, :3, :3])
@@ -176,7 +161,7 @@ def process_camera_perception(depth: DepthBatch, camera_raw: SampleBatch, poses:
     if not isinstance(geometry, Sphere):
         raise NotImplementedError("analytic perception currently supports sphere targets only")
     target_index = camera_raw.object_ids.index(target_id)
-    distance, identity, ranges = _sphere_returns(camera_raw, geometry, camera_config, target_index)
+    distance, identity, points, ranges = _sphere_returns(camera_raw, geometry, camera_config, target_index)
     full_ranges = depth.subray_range_m
     if full_ranges is None:
         full_ranges = range_by_sample(camera_raw.subray_distance_m, camera_raw.subray_object_index,
@@ -184,7 +169,7 @@ def process_camera_perception(depth: DepthBatch, camera_raw: SampleBatch, poses:
                                       camera_config, camera_raw.map_bounds_m)
     values = camera_measurements(full_ranges, camera_raw.subray_object_index, ranges, identity,
                                  camera_config, target_index, config.min_visible_fraction)
-    target_raw = _target_diagnostics(camera_raw, poses, camera_config, distance, identity) if diagnostics else None
+    target_raw = _target_diagnostics(camera_raw, poses, camera_config, distance, identity, points) if diagnostics else None
     return PerceivedCameraBatch(depth, **values), target_raw
 
 
@@ -231,7 +216,7 @@ def _sample(sampler, sensors, body_poses, snapshot, config, target_id, diagnosti
     td, cd = tof.result(), camera.result()
     if td.scene_version != cd.scene_version or td.t_ref != cd.t_ref or td.object_ids != cd.object_ids:
         raise RuntimeError("scene changed between measurement requests")
-    info = {**batch.execution_info, "analytic_perception": "sphere_torch",
+    info = {**batch.execution_info, "analytic_perception": "sphere_warp",
             "perception_scene_queries": 0, "diagnostics": diagnostics}
     cd = replace(cd, execution_info=info)
     perceived = _concat_cameras(cameras, cd)
