@@ -509,7 +509,7 @@ def main():
     for verify in verifiers:
         groups[verify.__name__] = {"status": "passed", **verify(device)}
     result = {"status": "passed", "device": str(device), "torch_version": torch.__version__,
-              "scope": "development trajectory fitting/sampling; no dynamics, map or old solver",
+              "scope": "development trajectory fitting/sampling",
               "numerical_gradcheck": "CPU float64 only; CUDA checks real batch forward/backward",
               "groups": groups}
     args.results.parent.mkdir(parents=True, exist_ok=True)

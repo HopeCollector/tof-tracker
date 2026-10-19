@@ -333,7 +333,7 @@ def trajectory_parameter_gradients(device):
             "coefficient_gradient_max_abs": float(abs(array(gradient)-expected_coefficient_gradient).max()),
             "fitted_terminal_position_fd_step_m": step,
             "fitted_terminal_position_gradient_max_abs": float(abs(array(boundary_gradient-finite_difference)).max()),
-            "scope": "sampled squared-distance test loss; no formal trajectory loss or integration interface added"}
+            "scope": "sampled squared-distance test loss"}
 
 
 def batch_shape_and_ownership(device):

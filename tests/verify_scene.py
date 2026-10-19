@@ -441,7 +441,7 @@ def main():
     result = {"status": "passed", "checks": checks, "check_groups": len(checks),
               "mesh_vertex_count": mesh.vertex_count, "mesh_triangle_count": mesh.triangle_count, "units": "metres",
               "quaternion": "unit xyzw body-to-world, norm tolerance 1e-6 with rounding correction",
-              "scope": "physical scene loading/state/transforms and public filtered geometry snapshots; sensing, ESDF, collision and dynamics are not implemented"}
+              "scope": "physical scene loading/state/transforms and public filtered geometry snapshots"}
     args.results.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(f"scene: {len(checks)} check groups passed; result: {args.results}")
 
