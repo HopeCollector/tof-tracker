@@ -14,7 +14,7 @@ just map --type pillars --seed 3 \
 just view outputs/mapgen/pillars-3.obj
 ```
 
-`map` 自动先构建工具。输出父目录须已存在，输出路径须为新文件；重复生成时换一个文件名。场景查看参数见 [查看器说明](../map_viewer/README.md)。所有运行与检查均在 Docker 中执行。
+`map` 自动先构建工具。输出父目录须已存在，输出路径须为新文件；重复生成时换一个文件名。场景查看参数见 [查看器说明](../map_viewer/README.md)。上述运行与检查命令采用默认的 Docker 路线。
 
 ## Mesh 参数与格式
 

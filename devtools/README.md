@@ -49,7 +49,7 @@ print(target_only.get_object("target").pose.position_m)  # (1.0, 0.6, 1.2)，旧
 print(next_scene.get_geometry().get_object("vehicle").pose.body_to_world((1, 0, 0)))  # 约 (-0.5, 0, 0)
 ```
 
-输入为已有地图、半径配置和世界状态，输出为可供开发后端使用的场景快照。所有项目运行与验证均在 Docker 中执行，通用入口见 [docker/README.md](../docker/README.md)。
+输入为已有地图、半径配置和世界状态，输出为可供开发后端使用的场景快照。下述运行与验证命令采用默认的 Docker 路线，通用入口见 [docker/README.md](../docker/README.md)。
 
 [共用查看器](../tools/map_viewer/README.md) 可显示背景、两个球与机体轴，完整显示真实表面。
 
