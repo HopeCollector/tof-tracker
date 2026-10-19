@@ -19,4 +19,4 @@ OBJ 实体、地面平面、CLI、校验和文件保存为本仓实现，未采�
 
 ## 传感器来源
 
-ToF 信号权重与加权分位公式参考 `Omni_ToF-YOPO` 固定提交 `cf0b7f4b17712667a8bbdb1126f5e914904ece9d` 的 `Simulator/src/src/test_simulator_cuda.cpp:50–132`（`renderToFSenseMImage` / `weightedQuantileDepth`，MIT；[许可与署名](../devtools/third_party_notices/Omni_ToF-YOPO-LICENSE)）。本仓改写为批量 Torch 运算，保留实际径向距离和命中身份；独立验证见 [verify_ray_sensors.py](../tests/verify_ray_sensors.py)。
+ToF 信号权重与加权分位公式参考 `Omni_ToF-YOPO` 固定提交 `cf0b7f4b17712667a8bbdb1126f5e914904ece9d` 的 `Simulator/src/src/test_simulator_cuda.cpp:50–132`（`renderToFSenseMImage` / `weightedQuantileDepth`，MIT；[许可与署名](../devtools/sensors/third_party_notices/Omni_ToF-YOPO-LICENSE)）。本仓改写为批量 Torch 运算，保留实际径向距离和命中身份；独立验证见 [verify_ray_sensors.py](../tests/verify_ray_sensors.py)。

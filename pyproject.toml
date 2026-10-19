@@ -20,7 +20,7 @@ training = "training"
 devtools = "devtools"
 
 [tool.setuptools.package-data]
-"devtools" = ["third_party_notices/*"]
+"devtools.sensors" = ["third_party_notices/*"]
 "devtools.esdf" = ["CMakeLists.txt", "_mesh_distance.cpp", "third_party/*.h", "third_party/*-LICENSE"]
 
 [tool.pyright]
