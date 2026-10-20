@@ -49,7 +49,7 @@ just run [命令及参数] → dev.sh run → 临时项目容器；无命令时�
 
 ## 验证入口
 
-环境检查入口为 [check-env.sh](check-env.sh)，检查 Python 开发安装与三个包导入、C++17/CMake 编译、文件写入读回和文件归属；临时源码与构建文件在容器 `/tmp`。可单独运行：
+环境检查入口为 [check-env.sh](check-env.sh)，检查 Python 开发安装与三个包导入、C++17/CMake 编译、文件写入读回，并记录运行 UID/GID；临时源码与构建文件在容器 `/tmp`。可单独运行：
 
 ```bash
 just run bash docker/check-env.sh

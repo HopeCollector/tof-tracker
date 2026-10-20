@@ -6,6 +6,7 @@ asset, sphere and pose checks also cover strict input validation and updates.
 """
 
 import argparse
+from copy import deepcopy
 from dataclasses import FrozenInstanceError
 import hashlib
 import json
@@ -219,46 +220,123 @@ def verify_geometry_contract(mesh_scene, mesh_source, config, checks):
     checks.append("optional finite snapshot time propagates through constructors and updates; absent time stays unknown and invalid values are rejected")
 
 
+def verify_explicit_config_fields(config_path, values, config):
+    required_leaves = (
+        ("sensors", "tof", "samples_per_axis"),
+        ("sensors", "camera", "samples_per_axis"),
+        ("sensors", "tof_depth_quantile"),
+        ("sensors", "tof_signal_floor"),
+        ("sampling_runtime", "max_gpu_memory_fraction"),
+        ("perception", "min_visible_fraction"),
+    )
+    for keys in required_leaves:
+        missing = deepcopy(values)
+        section = missing
+        for key in keys[:-1]:
+            section = section[key]
+        del section[keys[-1]]
+        config_path.write_text(json.dumps(missing))
+        rejected(lambda: load_config(config_path))
+    for key in ("sensors", "sampling_runtime", "perception"):
+        missing = deepcopy(values)
+        del missing[key]
+        config_path.write_text(json.dumps(missing))
+        rejected(lambda: load_config(config_path))
+        for bad in (None, {}):
+            invalid = deepcopy(values)
+            invalid[key] = bad
+            config_path.write_text(json.dumps(invalid))
+            rejected(lambda: load_config(config_path))
+        arguments = vars(config).copy()
+        del arguments[key]
+        rejected(lambda: SceneConfig(**arguments), TypeError)
+        arguments[key] = None
+        rejected(lambda: SceneConfig(**arguments))
+
+    changed = deepcopy(values)
+    changed["sensors"]["tof"]["samples_per_axis"] = 3
+    changed["sensors"]["camera"]["samples_per_axis"] = 5
+    changed["sensors"]["tof_depth_quantile"] = 0.65
+    changed["sensors"]["tof_signal_floor"] = 0.17
+    changed["sampling_runtime"]["max_gpu_memory_fraction"] = 0.35
+    changed["perception"]["min_visible_fraction"] = 0.7
+    config_path.write_text(json.dumps(changed))
+    loaded = load_config(config_path)
+    assert (loaded.sensors.tof.samples_per_axis, loaded.sensors.camera.samples_per_axis,
+            loaded.sensors.tof_depth_quantile, loaded.sensors.tof_signal_floor,
+            loaded.sampling_runtime.max_gpu_memory_fraction,
+            loaded.perception.min_visible_fraction) == (3, 5, 0.65, 0.17, 0.35, 0.7)
+
+    numeric_fields = (
+        (config, ("vehicle_radius_m", "target_radius_m")),
+        (config.sensors.tof, ("width", "height", "hfov_deg", "vfov_deg",
+                              "min_range_m", "max_range_m", "samples_per_axis")),
+        (config.sensors, ("tof_depth_quantile", "tof_signal_floor")),
+        (config.sampling_runtime, ("max_gpu_memory_fraction",)),
+        (config.perception, ("min_visible_fraction",)),
+    )
+    for instance, fields in numeric_fields:
+        for key in fields:
+            arguments = vars(instance).copy()
+            del arguments[key]
+            rejected(lambda: type(instance)(**arguments), TypeError)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results", type=Path, required=True)
     args = parser.parse_args()
     args.results.parent.mkdir(parents=True, exist_ok=True)
     checks = []
-    config = load_config(Path(__file__).resolve().parents[1] / "configs" / "devtools.json")
-    assert config == SceneConfig(0.2, 0.3, config.sensors)
+    default_config = Path(__file__).resolve().parents[1] / "configs" / "devtools.json"
+    values = json.loads(default_config.read_text())
+    config = load_config(default_config)
+    assert config == SceneConfig(0.2, 0.3, config.sensors, config.sampling_runtime, config.perception)
     assert config.sensors is not None
+    assert config.sampling_runtime is not None and config.perception is not None
     with tempfile.TemporaryDirectory(prefix="scene-check-", dir=args.results.parent) as temp:
         folder = Path(temp)
         config_path = folder / "facts.json"
-        config_path.write_text('{"vehicle":{"radius_m":0.2},"target":{"radius_m":0.3}}')
+        config_path.write_text(json.dumps(values))
         first_config = load_config(config_path)
-        config_path.write_text('{"vehicle":{"radius_m":0.7},"target":{"radius_m":0.8}}')
-        assert first_config == SceneConfig(0.2, 0.3) and load_config(config_path) == SceneConfig(0.7, 0.8)
+        changed_radii = deepcopy(values)
+        changed_radii["vehicle"]["radius_m"] = 0.7
+        changed_radii["target"]["radius_m"] = 0.8
+        config_path.write_text(json.dumps(changed_radii))
+        assert first_config == config
+        assert load_config(config_path) == SceneConfig(0.7, 0.8, config.sensors,
+                                                      config.sampling_runtime, config.perception)
         rejected(lambda: setattr(config, "vehicle_radius_m", 1), FrozenInstanceError)
         invalid_config = [
             {}, [], {"vehicle": {"radius_m": 0.2}},
-            {"vehicle": {"radius_m": 0.2}, "target": {"radius_m": 0.3}, "sensor": {}},
-            {"vehicle": {"radius": 0.2}, "target": {"radius_m": 0.3}},
-            {"vehicle": {"radius_m": 0.2, "margin_m": 0.1}, "target": {"radius_m": 0.3}},
-            {"vehicle": [], "target": {"radius_m": 0.3}},
+            {key: values[key] for key in ("vehicle", "target")},
         ]
+        for key, bad in (("sensor", {}), ("vehicle", {"radius": 0.2}),
+                         ("vehicle", {"radius_m": 0.2, "margin_m": 0.1}), ("vehicle", [])):
+            invalid = deepcopy(values)
+            invalid[key] = bad
+            invalid_config.append(invalid)
         for bad in (True, False, "0.2", None, 0, -0.2, math.inf, -math.inf, math.nan):
             for name in ("vehicle", "target"):
-                value = {"vehicle": {"radius_m": 0.2}, "target": {"radius_m": 0.3}}
+                value = deepcopy(values)
                 value[name]["radius_m"] = bad
                 invalid_config.append(value)
-            rejected(lambda bad=bad: SceneConfig(bad, 0.3))
-            rejected(lambda bad=bad: SceneConfig(0.2, bad))
+            rejected(lambda bad=bad: SceneConfig(bad, 0.3, config.sensors,
+                                                config.sampling_runtime, config.perception))
+            rejected(lambda bad=bad: SceneConfig(0.2, bad, config.sensors,
+                                                config.sampling_runtime, config.perception))
         for value in invalid_config:
             config_path.write_text(json.dumps(value))
             rejected(lambda: load_config(config_path))
-        for text in ('{"vehicle":{"radius_m":0.2,"radius_m":0.3},"target":{"radius_m":0.3}}',
-                     '{"vehicle":{"radius_m":0.2},"vehicle":{"radius_m":0.3},"target":{"radius_m":0.3}}',
+        full_text = json.dumps(values)
+        for text in (full_text.replace('"vehicle": {', '"vehicle": {"radius_m": 0.9,', 1),
+                     full_text[:-1] + ', "vehicle": {"radius_m": 0.3}}',
                      '{"vehicle":'):
             config_path.write_text(text)
             rejected(lambda: load_config(config_path))
         checks.append("single explicit JSON read, immutable radii, exact keys/types/ranges, duplicate-key rejection")
+        verify_explicit_config_fields(config_path, values, config)
+        checks.append("configuration requires all sections and numeric fields; missing/null/empty sections and omitted constructor arguments are rejected; nondefault JSON values survive loading")
 
         source = folder / "physical.obj"
         source.write_text(mesh_obj(), encoding="ascii")
@@ -441,7 +519,7 @@ def main():
     result = {"status": "passed", "checks": checks, "check_groups": len(checks),
               "mesh_vertex_count": mesh.vertex_count, "mesh_triangle_count": mesh.triangle_count, "units": "metres",
               "quaternion": "unit xyzw body-to-world, norm tolerance 1e-6 with rounding correction",
-              "scope": "physical scene loading/state/transforms and public filtered geometry snapshots; sensing, ESDF, collision and dynamics are not implemented"}
+              "scope": "physical scene loading/state/transforms and public filtered geometry snapshots"}
     args.results.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(f"scene: {len(checks)} check groups passed; result: {args.results}")
 

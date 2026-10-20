@@ -298,12 +298,10 @@ class _SamplingBatch:
 class SensorSampler:
     """Shared scene executor and soft GPU workset policy, without device rigs."""
 
-    def __init__(self, renderer: RayRenderer, runtime=None):
+    def __init__(self, renderer: RayRenderer, runtime: SamplingRuntimeConfig):
         if not isinstance(renderer, RayRenderer):
             raise TypeError("renderer must be a RayRenderer")
         renderer._require_open()
-        if runtime is None:
-            runtime = SamplingRuntimeConfig()
         if not isinstance(runtime, SamplingRuntimeConfig):
             raise TypeError("runtime must be a SamplingRuntimeConfig")
         self.renderer = renderer
@@ -336,7 +334,7 @@ class ToFSensor(_Sensor):
     """ToF sampling with per-cell distance-weighted subray quantile reduction."""
 
     def __init__(self, sampler: SensorSampler, config: DepthConfig, *,
-                 quantile=0.2, signal_floor=0.08):
+                 quantile, signal_floor):
         self._initialize(sampler, config)
         if (isinstance(quantile, bool) or not isinstance(quantile, (float, int))
                 or not math.isfinite(quantile) or not 0 <= quantile <= 1):

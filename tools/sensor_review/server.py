@@ -111,8 +111,6 @@ class ReviewState:
 
     def __init__(self, roots, config_path, upload_root):
         self.config = load_config(config_path)
-        if self.config.sensors is None:
-            raise ValueError("sensor review requires a configuration with sensors")
         self.entries = {}
         for root in roots:
             root = Path(root).resolve()

@@ -58,7 +58,7 @@ cmake -S "$check_dir" -B "$check_dir/build" >/dev/null
 cmake --build "$check_dir/build" --parallel 2 >/dev/null
 "$check_dir/build/environment_check" "$check_dir"
 
-# This artifact also verifies that writes to the repository use the host UID/GID.
+# Record the running process's UID/GID in the repository.
 mkdir -p outputs/docker
 printf 'uid=%s gid=%s\n' "$(id -u)" "$(id -g)" > outputs/docker/environment-check.txt
-echo "Environment check passed; ownership record: outputs/docker/environment-check.txt"
+echo "Environment check passed; UID/GID record: outputs/docker/environment-check.txt"

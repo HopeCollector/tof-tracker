@@ -17,7 +17,7 @@
 
 `MeshMap.from_obj()` 保留完整对象，每个 `MeshObject` 包含名称、米制顶点和局部三角面索引。障碍分别闭合，可以重叠；地面为 Z=0 的开放平面。`Scene.from_obj()` 加载背景并添加飞机、目标。加载时不采样、不构建占据或 ESDF。
 
-[统一配置](../configs/devtools.json) 包含 `vehicle.radius_m`、`target.radius_m` 与可选的 `sensors`、`sampling_runtime`、`perception`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给消费者；半径须有限且为正，布尔值、缺项、未知字段和重复 JSON 键会被拒绝。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。`sensors` 为外层 `RigConfig` 配方，包含各设备参数和安装外参；后两项分别控制采样软显存预算和模拟识别阈值。旧的仅半径 JSON 仍有效，但没有设备配方。
+[统一配置](../configs/devtools.json) 包含 `vehicle.radius_m`、`target.radius_m`、`sensors`、`sampling_runtime` 和 `perception`。入口调用 `load_config(path)` 一次，将不可变 `SceneConfig` 显式传给消费者。配置中的 0.2 米 / 0.3 米是示例物理尺寸，安全裕量另行处理。`sensors` 为外层 `RigConfig` 配方，包含各设备参数和安装外参；后两项分别控制采样软显存预算和模拟识别阈值。
 
 `Pose` 使用米制三维位置和机体 FLU 到世界的单位 `quaternion_xyzw`：X 向前、Y 向左、Z 向上。四元数只允许 `1e-6` 内的范数舍入误差并归一化；完整横滚、俯仰和 Z 分量均保留，不作水平回正。`body_to_world()` 与 `world_to_body()` 变换点的位置，包含平移。
 
@@ -64,7 +64,9 @@ from devtools.sensors import CameraSensor, RayRenderer, SensorSampler, ToFSensor
 
 with RayRenderer(sensor_geometry) as renderer:
     sampler = SensorSampler(renderer, runtime=config.sampling_runtime)
-    tof = ToFSensor(sampler, config.sensors.tof)
+    tof = ToFSensor(sampler, config.sensors.tof,
+                    quantile=config.sensors.tof_depth_quantile,
+                    signal_floor=config.sensors.tof_signal_floor)
     camera = CameraSensor(sampler, config.sensors.camera)
     pose = Pose((-1, 0, 1))  # 已是传感器世界位姿
     depth = tof.sample(pose)  # 即时返回 CUDA DepthBatch
@@ -78,7 +80,7 @@ with RayRenderer(sensor_geometry) as renderer:
 
 输入支持 `Pose`、非空 `Pose` 序列或 CUDA float32 `[4,4]` / `[B,4,4]` 刚体矩阵。返回 CUDA `[B,H,W]` 径向米制距离，已知无返回为 `+inf`，无可信测量为 `NaN`；其余合同见源码 docstring。算法只接收[约定观测](../src/tof_tracker/README.md#输入约定)。
 
-训练仅通过公开的观测、真值和几何查询接口访问辅助能力，不直接读取内部地图、实体存储或渲染状态；不能借封装切断梯度，也不能借梯度绕过公开接口。世界位姿、目标真值与物体身份只供开发、监督和评价，不能补入在线观测；在线算法核心不导入 `devtools`、训练模块、地图或仿真器。
+训练仅通过公开的观测、真值和几何查询接口访问辅助能力，不直接读取内部地图、实体存储或渲染状态；不能借封装切断梯度，也不能借梯度绕过公开接口。世界位姿、目标真值与物体身份只供开发、监督和评价，不能补入在线观测。
 
 ## ESDF 建图与查询
 
@@ -121,7 +123,13 @@ print(distance.shape, gradient.shape)  # (2,), (2, 3)
 just check
 ```
 
-`tests/run_checks.py` 先显式编译上述原生库，再检查 mesh 建图、三线性独立参考、格面距离连续性、八角点范围、位置及轨迹参数反传和保存加载。单盒与间隔两个体素的双盒解析用例另检查节点精度、半体素误差阈值与符号；这些用例不构成任意几何的误差保证。任一步失败都会终止流程并返回非零状态。`verify_mesh_distance.py --map MAP.obj --esdf-voxel 0.5` 可在真实地图的自由空间重复精度检查。
+`tests/run_checks.py` 先显式编译上述原生库，再检查 mesh 建图、三线性独立参考、格面距离连续性、八角点范围、位置及轨迹参数反传和保存加载。单盒与间隔两个体素的双盒解析用例另检查节点精度、半体素误差阈值与符号；这些用例不构成任意几何的误差保证。任一步失败都会终止流程并返回非零状态。编译上述原生库后，可在真实地图的自由空间重复精度检查：
+
+```sh
+just run python tests/verify_mesh_distance.py \
+  --library outputs/esdf/build/libmesh_distance.so \
+  --map outputs/mapgen/pillars-3.obj --esdf-voxel 0.5
+```
 
 ## 开发用轨迹解析
 

@@ -38,6 +38,9 @@ from verify_ray_sensors import (box, close, compare_tensor_fields, cpu_selection
 
 TOF = DepthConfig(4, 3, 45., 45., .015, 4., samples_per_axis=4)
 CAMERA = DepthConfig(5, 4, 65., 50., .015, 6., samples_per_axis=2)
+RUNTIME = SamplingRuntimeConfig(max_gpu_memory_fraction=.5)
+TOF_QUANTILE = .2
+TOF_SIGNAL_FLOOR = .08
 
 
 def source_scene(target=(3., .1, 2.)):
@@ -68,7 +71,7 @@ def expected_ranges(source, views, config, *, quantile=None):
     selected = np.empty(shape[:-1], dtype=np.int64)
     for index in np.ndindex(shape[:-1]):
         selected[index] = (cpu_selection(distance[index], identity[index], config.max_range_m,
-                                         quantile=quantile)
+                                         quantile=quantile, floor=TOF_SIGNAL_FLOOR)
                            if quantile is not None else
                            np.argmin(np.where(identity[index] >= 0, distance[index], config.max_range_m)))
     chosen = np.take_along_axis(distance, selected[..., None], axis=-1)[..., 0]
@@ -87,11 +90,18 @@ def compact(result, count, config):
 
 def verify_inputs_and_oracle():
     source, views = source_scene(), poses()
+    rejected(lambda: DepthConfig(4, 3, 45., 45., .015, 4.), (TypeError,))
+    rejected(SamplingRuntimeConfig, (TypeError,))
     with RayRenderer(source) as renderer:
-        sampler = SensorSampler(renderer)
-        camera, tof = CameraSensor(sampler, CAMERA), ToFSensor(sampler, TOF)
+        rejected(lambda: SensorSampler(renderer), (TypeError,))
+        rejected(lambda: SensorSampler(renderer, runtime=None), (TypeError,))
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
+        for options in ({}, {"quantile": TOF_QUANTILE}, {"signal_floor": TOF_SIGNAL_FLOOR}):
+            rejected(lambda options=options: ToFSensor(sampler, TOF, **options), (TypeError,))
+        camera = CameraSensor(sampler, CAMERA)
+        tof = ToFSensor(sampler, TOF, quantile=TOF_QUANTILE, signal_floor=TOF_SIGNAL_FLOOR)
         matrices = poses_to_tensor(views)
-        for sensor, config, quantile in ((camera, CAMERA, None), (tof, TOF, .2)):
+        for sensor, config, quantile in ((camera, CAMERA, None), (tof, TOF, TOF_QUANTILE)):
             expected = expected_ranges(source, views, config, quantile=quantile)
             for value, count in ((views[0], 1), (views, 3), (matrices[0], 1), (matrices, 3)):
                 with no_readback():
@@ -102,25 +112,51 @@ def verify_inputs_and_oracle():
             rejected(lambda: sensor.sample(torch.eye(4)))
             rejected(lambda: sensor.sample(torch.empty((2, 4, 3), device=renderer.device)))
             rejected(lambda: sensor.sample(torch.eye(4, dtype=torch.float64, device=renderer.device)))
-        zero = ToFSensor(sampler, TOF, quantile=0.).sample(views)
+        zero = ToFSensor(sampler, TOF, quantile=0., signal_floor=TOF_SIGNAL_FLOOR).sample(views)
         close(host(zero.range_m), expected_ranges(source, views, TOF, quantile=0.))
         for invalid in (-.01, 1.01, math.nan, True):
-            rejected(lambda invalid=invalid: ToFSensor(sampler, TOF, quantile=invalid))
+            rejected(lambda invalid=invalid: ToFSensor(
+                sampler, TOF, quantile=invalid, signal_floor=TOF_SIGNAL_FLOOR))
         for invalid in (0., -.1, math.nan, True):
-            rejected(lambda invalid=invalid: ToFSensor(sampler, TOF, signal_floor=invalid))
+            rejected(lambda invalid=invalid: ToFSensor(
+                sampler, TOF, quantile=TOF_QUANTILE, signal_floor=invalid))
         rejected(lambda: setattr(CAMERA, "width", 99), (FrozenInstanceError, AttributeError))
+        runtime = SamplingRuntimeConfig(max_gpu_memory_fraction=.25)
+        custom = CameraSensor(SensorSampler(renderer, runtime=runtime), CAMERA).sample(views[0])
+        planner = custom.execution_info["planner"]
+        assert planner["max_gpu_memory_fraction"] == runtime.max_gpu_memory_fraction
+        assert planner["sampling_workset_limit_bytes"] == int(planner["cuda_total_bytes"] * .25)
+
+    half_cell = snapshot(("wall", box("wall", ((1., 1.1), (-1., 0.), (1., 3.)))),
+                         bounds=((-30., 30.), (-30., 30.), (-30., 30.)))
+    config = DepthConfig(1, 1, 45., 45., .015, 4., samples_per_axis=2)
+    pose = Pose((0., 0., 2.))
+    with RayRenderer(half_cell) as renderer:
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
+        near = ToFSensor(sampler, config, quantile=.8, signal_floor=TOF_SIGNAL_FLOOR).sample(pose)
+        high_floor = ToFSensor(sampler, config, quantile=.8, signal_floor=10.).sample(pose)
+        final_quantile = ToFSensor(sampler, config, quantile=1., signal_floor=TOF_SIGNAL_FLOOR).sample(pose)
+        # Two of four rays cross x=1; the other two have a known empty full range.
+        expected_near = math.sqrt(1 + 2 * (.5 * math.tan(math.radians(45.) / 2)) ** 2)
+        close(host(near.range_m), np.full((1, 1, 1), expected_near))
+        assert np.isposinf(host(high_floor.range_m)).all()
+        assert np.isposinf(host(final_quantile.range_m)).all()
     return {"world_pose_forms": ["Pose", "sequence", "CUDA44", "CUDAB44"],
-            "independent_float64_oracle": "passed", "quantile_zero": "passed"}
+            "independent_float64_oracle": "passed", "quantile_zero": "passed",
+            "required_public_parameters": "omissions rejected",
+            "explicit_runtime_fraction": runtime.max_gpu_memory_fraction,
+            "quantile_and_signal_floor_change_public_ranges": "passed"}
 
 
 def verify_interleaved_freezing_and_grouping():
     source, views = source_scene(), poses()
     with RayRenderer(source) as renderer:
-        sampler = SensorSampler(renderer)
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
         camera_a, camera_b = CameraSensor(sampler, CAMERA), CameraSensor(sampler, CAMERA)
         camera_other = CameraSensor(sampler, DepthConfig(3, 2, 55., 40., .015, 5., samples_per_axis=2))
-        tof_a, tof_b = ToFSensor(sampler, TOF), ToFSensor(sampler, TOF)
-        tof_other = ToFSensor(sampler, TOF, quantile=.8)
+        tof_a = ToFSensor(sampler, TOF, quantile=TOF_QUANTILE, signal_floor=TOF_SIGNAL_FLOOR)
+        tof_b = ToFSensor(sampler, TOF, quantile=TOF_QUANTILE, signal_floor=TOF_SIGNAL_FLOOR)
+        tof_other = ToFSensor(sampler, TOF, quantile=.8, signal_floor=TOF_SIGNAL_FLOOR)
         mutable_matrix = poses_to_tensor(views)
         mutable_list = list(views[:2])
         requests = ((camera_a, mutable_matrix), (tof_a, mutable_list),
@@ -147,7 +183,7 @@ def verify_interleaved_freezing_and_grouping():
         assert info["postprocess_calls"] == 4, info
         rejected(batch.execute, (RuntimeError,))
         rejected(lambda: camera_a.sample(views[0], batch=batch), (RuntimeError,))
-        foreign = SensorSampler(renderer).batch()
+        foreign = SensorSampler(renderer, runtime=RUNTIME).batch()
         rejected(lambda: camera_a.sample(views[0], batch=foreign), (ValueError, RuntimeError))
         return {"interleaved_requests": 6, "unique_reduction_groups": 4,
                 "full_scene_queries": 1, "frozen_GPU_and_sequence_inputs": "passed"}
@@ -156,7 +192,7 @@ def verify_interleaved_freezing_and_grouping():
 def verify_epoch_failure_and_execution_guards():
     source, views = source_scene(), poses()
     with RayRenderer(source) as renderer:
-        sampler = SensorSampler(renderer)
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
         sensor = CameraSensor(sampler, CAMERA)
         batch = sampler.batch()
         stale = sensor.sample(views, batch=batch)
@@ -213,8 +249,9 @@ def verify_chunk_budget_consumers_and_diagnostics():
     from devtools.sensors import _sampling as module
     source, views = source_scene(), poses(5)
     with RayRenderer(source) as renderer:
-        sampler = SensorSampler(renderer)
-        camera, tof = CameraSensor(sampler, CAMERA), ToFSensor(sampler, TOF)
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
+        camera = CameraSensor(sampler, CAMERA)
+        tof = ToFSensor(sampler, TOF, quantile=TOF_QUANTILE, signal_floor=TOF_SIGNAL_FLOOR)
         requests = ((tof, views), (camera, views[:3]), (tof, views[-1]))
 
         def run():
@@ -251,7 +288,8 @@ def verify_chunk_budget_consumers_and_diagnostics():
         for a, b in zip(whole, chunks):
             compare_tensor_fields(a, b)
         before = renderer.geometry_info["trace_calls"]
-        tiny = CameraSensor(SensorSampler(renderer, SamplingRuntimeConfig(1e-9)), CAMERA)
+        tiny_runtime = SamplingRuntimeConfig(max_gpu_memory_fraction=1e-9)
+        tiny = CameraSensor(SensorSampler(renderer, runtime=tiny_runtime), CAMERA)
         rejected(lambda: tiny.sample(views), (MemoryError,))
         assert renderer.geometry_info["trace_calls"] == before
         return {"ray_capacity": capacity, "chunks": chunks[0].execution_info["chunks"],
@@ -264,7 +302,7 @@ def verify_fixture_query_inputs_across_chunks():
     source, views = source_scene(), poses(5)
     rays_per_view = CAMERA.width * CAMERA.height * CAMERA.samples_per_axis ** 2
     with RayRenderer(source) as renderer:
-        sampler = SensorSampler(renderer)
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
         sensor = CameraSensor(sampler, CAMERA)
         batch = sampler.batch()
         first = capture_sample(sensor, views[:1], batch=batch)
@@ -324,7 +362,7 @@ def verify_fixture_observer_isolation_and_recovery():
 
     def ordinary_diagnostics():
         with RayRenderer(source) as renderer:
-            sensor = CameraSensor(SensorSampler(renderer), CAMERA)
+            sensor = CameraSensor(SensorSampler(renderer, runtime=RUNTIME), CAMERA)
             batch = sensor._sampler.batch()
             handle = sensor.sample(views, batch=batch)
             handle._diagnostics = True
@@ -336,7 +374,7 @@ def verify_fixture_observer_isolation_and_recovery():
 
     ordinary_diagnostics()
     with RayRenderer(source) as renderer, ThreadPoolExecutor(max_workers=1) as executor:
-        sampler = SensorSampler(renderer)
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
         sensor = CameraSensor(sampler, CAMERA)
         observations = []
 
@@ -381,7 +419,7 @@ def verify_fixture_query_retained_budget():
     rays_per_view = CAMERA.width * CAMERA.height * CAMERA.samples_per_axis ** 2
     extra_consumer_bytes = 4096
     with RayRenderer(source) as renderer:
-        sampler = SensorSampler(renderer)
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
         sensor = CameraSensor(sampler, CAMERA)
 
         def reserved_bytes(diagnostics, capture):
@@ -429,7 +467,7 @@ def verify_fixture_query_retained_budget():
 def verify_output_ownership_and_cycle_free_release():
     source, views = source_scene(), poses()
     renderer = RayRenderer(source)
-    sampler = SensorSampler(renderer)
+    sampler = SensorSampler(renderer, runtime=RUNTIME)
     sensor = CameraSensor(sampler, CAMERA)
     enabled = gc.isenabled()
     gc.disable()
@@ -494,7 +532,7 @@ def verify_cross_stream_collection_lifetime():
     from devtools.sensors import _sampling as module
     source, views = source_scene(), poses(16)
     with RayRenderer(source) as renderer:
-        sampler = SensorSampler(renderer)
+        sampler = SensorSampler(renderer, runtime=RUNTIME)
         sensor = CameraSensor(sampler, CAMERA)
         expected = host(sensor.sample(views).range_m).copy()
         torch.cuda.synchronize()

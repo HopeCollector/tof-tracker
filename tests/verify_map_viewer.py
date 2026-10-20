@@ -2,6 +2,7 @@
 
 import argparse
 from collections import Counter
+from copy import deepcopy
 import hashlib
 from html.parser import HTMLParser
 import json
@@ -15,7 +16,7 @@ import tempfile
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
-from devtools.config import SceneConfig
+from devtools.config import SceneConfig, load_config
 from devtools.mesh import MeshMap
 from devtools.scene import Pose, Scene
 
@@ -99,6 +100,9 @@ def main():
     args.results.parent.mkdir(parents=True, exist_ok=True)
     checks = []
     entry = Path(view_map.__file__).resolve()
+    default_config = ROOT / "configs" / "devtools.json"
+    config_values = json.loads(default_config.read_text())
+    default_settings = load_config(default_config)
     with tempfile.TemporaryDirectory(prefix="viewer-check-", dir=args.results.parent) as temp:
         folder = Path(temp)
         source = folder / "exact & <map>.obj"
@@ -166,7 +170,10 @@ def main():
         checks.append("closed outward spheres, physical radius/bounds and independent volume")
 
         center = (0.2, -0.3, 1.0)
-        config = SceneConfig(vehicle_radius_m=0.25, target_radius_m=0.5)
+        config = SceneConfig(vehicle_radius_m=0.25, target_radius_m=0.5,
+                             sensors=default_settings.sensors,
+                             sampling_runtime=default_settings.sampling_runtime,
+                             perception=default_settings.perception)
         scene = Scene.from_obj(source, config,
                                Pose(center, (0, math.sqrt(0.5), 0, math.sqrt(0.5))), (2, 1, 1.5))
         scene_page = view_map.build_mesh_html(mesh_map, scene=scene)
@@ -212,8 +219,10 @@ def main():
 
         config_path, scene_output = folder / "physical.json", folder / "scene.html"
         for vehicle_radius, target_radius in ((0.2, 0.3), (0.45, 0.7)):
-            config_path.write_text(json.dumps({"vehicle": {"radius_m": vehicle_radius},
-                                              "target": {"radius_m": target_radius}}))
+            physical_config = deepcopy(config_values)
+            physical_config["vehicle"]["radius_m"] = vehicle_radius
+            physical_config["target"]["radius_m"] = target_radius
+            config_path.write_text(json.dumps(physical_config))
             config_before = hashlib.sha256(config_path.read_bytes()).hexdigest()
             result = subprocess.run([sys.executable, str(entry), str(source),
                                      "--config", str(config_path), "--output", str(scene_output),
@@ -246,7 +255,6 @@ def main():
         checks.append("scene CLI loads physical radii and renders full roll without changing configuration")
 
         default_output = folder / "default-scene.html"
-        default_config = ROOT / "configs" / "devtools.json"
         default_before = hashlib.sha256(default_config.read_bytes()).hexdigest()
         result = subprocess.run([sys.executable, str(entry), str(source), "--output", str(default_output),
                                  "--vehicle-position", "0.2", "-0.3", "1",

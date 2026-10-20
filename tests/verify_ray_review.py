@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 import math
 from pathlib import Path
+import tempfile
 import traceback
 from urllib.request import urlopen
 
@@ -48,14 +49,41 @@ def views(sample):
     return shared_views(sample)
 
 
+def verify_required_config_sections():
+    from tools.sensor_review.server import ReviewState
+
+    values = json.loads((ROOT / "configs" / "devtools.json").read_text())
+    missing_sections = ("sensors", "sampling_runtime", "perception")
+    with tempfile.TemporaryDirectory(prefix="review-config-check-") as temp:
+        folder = Path(temp)
+        config_path = folder / "config.json"
+        for section in missing_sections:
+            for state in ("missing", "null"):
+                invalid = dict(values)
+                if state == "missing":
+                    del invalid[section]
+                else:
+                    invalid[section] = None
+                config_path.write_text(json.dumps(invalid))
+                try:
+                    ReviewState((), config_path, folder / "uploads")
+                except ValueError:
+                    pass
+                else:
+                    raise AssertionError(f"review accepted {state} {section}")
+    return list(missing_sections)
+
+
 def verify_bootstrap(service):
+    missing_sections = verify_required_config_sections()
     detail = shared_bootstrap(service)
     config = service.bootstrap["config"]
     assert "min_visible_fraction" not in config["sensors"]
     assert config["perception"]["min_visible_fraction"] == .2
     assert config["sampling_runtime"]["max_gpu_memory_fraction"] == .5
     return {**detail, "physical_sensor_and_perception_config_separate": True,
-            "sampling_workset_fraction": .5}
+            "sampling_workset_fraction": .5,
+            "missing_config_sections_rejected_before_sampling": missing_sections}
 
 
 def foreground_fixture():
